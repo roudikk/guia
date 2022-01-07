@@ -40,7 +40,10 @@ class WelcomeScreen : Screen {
                 .navigationBarsPadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(modifier = Modifier.weight(1f)) {
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
                 LottieAnimation(
                     composition = composition,
                     progress = progress

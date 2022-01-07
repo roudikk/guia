@@ -2,10 +2,7 @@ package com.roudikk.composenavigator.ui.screens.bottomnav
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountTree
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -53,7 +50,6 @@ class BottomNavScreen : Screen {
                 backStackStrategy = BackStackStrategy.BackToInitialStack()
             )
         ) {
-
             Scaffold(
                 bottomBar = {
                     BottomNavigation()
@@ -94,7 +90,7 @@ class BottomNavScreen : Screen {
 
             NavigationBarItem(
                 modifier = Modifier.navigationBarsPadding(),
-                label = { Text("Search") },
+                label = { Text("Nested") },
                 selected = currentStackKey == AppNavigationKey.Nested,
                 onClick = {
                     navigatorToStackOrRoot(
@@ -105,15 +101,15 @@ class BottomNavScreen : Screen {
                 },
                 icon = {
                     Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Search"
+                        imageVector = Icons.Default.StackedBarChart,
+                        contentDescription = "Nested"
                     )
                 }
             )
 
             NavigationBarItem(
                 modifier = Modifier.navigationBarsPadding(),
-                label = { Text("Profile") },
+                label = { Text("Dialogs") },
                 selected = currentStackKey == AppNavigationKey.Dialogs,
                 onClick = {
                     navigatorToStackOrRoot(
@@ -124,8 +120,8 @@ class BottomNavScreen : Screen {
                 },
                 icon = {
                     Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Profile"
+                        imageVector = Icons.Default.Window,
+                        contentDescription = "Dialogs"
                     )
                 }
             )
@@ -144,7 +140,7 @@ class BottomNavScreen : Screen {
                 icon = {
                     Icon(
                         imageVector = Icons.Default.AccountTree,
-                        contentDescription = "Tree"
+                        contentDescription = "Nav Tree"
                     )
                 }
             )
