@@ -76,18 +76,6 @@ fun AppTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) = ProvideWindowInsets {
-    val systemUiController = rememberSystemUiController()
-
-    systemUiController.setNavigationBarColor(
-        color = Color.Transparent,
-        darkIcons = !isSystemInDarkTheme(),
-        navigationBarContrastEnforced = false
-    )
-
-    systemUiController.setStatusBarColor(
-        color = Color.Transparent,
-        darkIcons = !isSystemInDarkTheme(),
-    )
 
     val colors = if (useDarkTheme) {
         DarkThemeColors

@@ -1,5 +1,7 @@
 package com.roudikk.composenavigator
 
+import android.os.Parcel
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,10 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.systemBarsPadding
-import com.roudikk.compose_navigator.BottomSheetSetup
-import com.roudikk.compose_navigator.NavTransition
-import com.roudikk.compose_navigator.NavigationKey
+import com.roudikk.compose_navigator.*
 import com.roudikk.compose_navigator.animation.*
+import com.roudikk.composenavigator.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 sealed class AppNavigationKey {
@@ -81,6 +82,18 @@ fun BottomSheetSurface(
         tonalElevation = 16.dp,
         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
     ) {
+        content()
+    }
+}
+
+@Composable
+fun AppPreview(content: @Composable () -> Unit) = AppTheme {
+    NavHost(navigationConfig = NavigationConfig.SingleStack(object : Screen {
+        @Composable
+        override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {}
+        override fun describeContents() = error("Preview only")
+        override fun writeToParcel(p0: Parcel?, p1: Int) = error("Preview only")
+    })) {
         content()
     }
 }

@@ -1,5 +1,6 @@
 package com.roudikk.composenavigator.ui.screens.welcome
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -10,13 +11,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.*
 import com.google.accompanist.insets.navigationBarsPadding
+import com.roudikk.compose_navigator.NavOptions
 import com.roudikk.compose_navigator.Screen
 import com.roudikk.compose_navigator.findNavigator
+import com.roudikk.composenavigator.AppPreview
+import com.roudikk.composenavigator.MaterialSharedAxisTransitionXY
 import com.roudikk.composenavigator.R
 import com.roudikk.composenavigator.ui.screens.bottomnav.BottomNavScreen
+import com.roudikk.composenavigator.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -24,6 +31,12 @@ class WelcomeScreen : Screen {
 
     @Composable
     override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+        WelcomeContent(animatedVisibilityScope)
+    }
+
+
+    @Composable
+    private fun WelcomeContent(animatedVisibilityScope: AnimatedVisibilityScope) {
         val navigator = findNavigator()
 
         val composition by rememberLottieComposition(
@@ -59,7 +72,12 @@ class WelcomeScreen : Screen {
                             exit = slideOutVertically { it }
                         ),
                     onClick = {
-                        navigator.navigate(BottomNavScreen())
+                        navigator.navigate(
+                            BottomNavScreen(),
+                            navOptions = NavOptions(
+                                navTransition = MaterialSharedAxisTransitionXY
+                            )
+                        )
                     }
                 ) {
                     Text(text = "Navigate Home")
@@ -75,12 +93,27 @@ class WelcomeScreen : Screen {
                         .padding(top = 4.dp, bottom = 16.dp)
                         .widthIn(min = 300.dp),
                     onClick = {
-                        navigator.setRoot(BottomNavScreen())
+                        navigator.setRoot(
+                            BottomNavScreen(),
+                            navOptions = NavOptions(
+                                navTransition = MaterialSharedAxisTransitionXY
+                            )
+                        )
                     }
                 ) {
                     Text(text = "Set Root Home")
                 }
             }
+        }
+    }
+
+    @Composable
+    @Preview(
+        device = Devices.PIXEL_3
+    )
+    private fun WelcomeContentPreview() = AppPreview {
+        AnimatedVisibility(visible = true) {
+            WelcomeContent(this)
         }
     }
 }
