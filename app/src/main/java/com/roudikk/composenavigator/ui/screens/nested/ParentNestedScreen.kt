@@ -102,7 +102,7 @@ class NestedScreen(
                 ) {
                     Text(
                         text = "$count",
-                        fontSize = 40.sp
+                        style = MaterialTheme.typography.headlineLarge
                     )
                 }
             }
