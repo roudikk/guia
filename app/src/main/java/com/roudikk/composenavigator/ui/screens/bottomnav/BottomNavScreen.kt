@@ -1,0 +1,165 @@
+package com.roudikk.composenavigator.ui.screens.bottomnav
+
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountTree
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.navigationBarsHeight
+import com.google.accompanist.insets.navigationBarsPadding
+import com.roudikk.compose_navigator.*
+import com.roudikk.composenavigator.AppNavigationKey
+import com.roudikk.composenavigator.ui.screens.dialogs.DialogsScreen
+import com.roudikk.composenavigator.ui.screens.home.HomeScreen
+import com.roudikk.composenavigator.ui.screens.navigation_tree.NavigationTreeScreen
+import com.roudikk.composenavigator.ui.screens.nested.NestedScreen
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+class BottomNavScreen : Screen {
+
+    @Composable
+    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+        val stackEntries = listOf(
+            NavigationConfig.MultiStack.NavigationStackEntry(
+                key = AppNavigationKey.Home,
+                initialNavigationNode = HomeScreen()
+            ),
+            NavigationConfig.MultiStack.NavigationStackEntry(
+                key = AppNavigationKey.Nested,
+                initialNavigationNode = NestedScreen()
+            ),
+            NavigationConfig.MultiStack.NavigationStackEntry(
+                key = AppNavigationKey.Dialogs,
+                initialNavigationNode = DialogsScreen()
+            ),
+            NavigationConfig.MultiStack.NavigationStackEntry(
+                key = AppNavigationKey.NavigationTree,
+                initialNavigationNode = NavigationTreeScreen()
+            )
+        )
+
+        NavHost(
+            navigationConfig = NavigationConfig.MultiStack(
+                entries = stackEntries,
+                initialStackKey = stackEntries[0].key,
+                backStackStrategy = BackStackStrategy.BackToInitialStack()
+            )
+        ) {
+
+            Scaffold(
+                bottomBar = {
+                    BottomNavigation()
+                }
+            ) {
+                NavContainer()
+            }
+        }
+    }
+
+    @Composable
+    private fun BottomNavigation() {
+        val navigator = findNavigator()
+        val currentStackKey by navigator.currentKeyFlow.collectAsState()
+
+        NavigationBar(
+            modifier = Modifier
+                .navigationBarsHeight(80.dp)
+        ) {
+            NavigationBarItem(
+                modifier = Modifier.navigationBarsPadding(),
+                label = { Text("Home") },
+                selected = currentStackKey == AppNavigationKey.Home,
+                onClick = {
+                    navigatorToStackOrRoot(
+                        navigator,
+                        currentStackKey,
+                        AppNavigationKey.Home
+                    )
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Home,
+                        contentDescription = "Home"
+                    )
+                }
+            )
+
+            NavigationBarItem(
+                modifier = Modifier.navigationBarsPadding(),
+                label = { Text("Search") },
+                selected = currentStackKey == AppNavigationKey.Nested,
+                onClick = {
+                    navigatorToStackOrRoot(
+                        navigator,
+                        currentStackKey,
+                        AppNavigationKey.Nested
+                    )
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search"
+                    )
+                }
+            )
+
+            NavigationBarItem(
+                modifier = Modifier.navigationBarsPadding(),
+                label = { Text("Profile") },
+                selected = currentStackKey == AppNavigationKey.Dialogs,
+                onClick = {
+                    navigatorToStackOrRoot(
+                        navigator,
+                        currentStackKey,
+                        AppNavigationKey.Dialogs
+                    )
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Profile"
+                    )
+                }
+            )
+
+            NavigationBarItem(
+                modifier = Modifier.navigationBarsPadding(),
+                label = { Text("Nav Tree") },
+                selected = currentStackKey == AppNavigationKey.NavigationTree,
+                onClick = {
+                    navigatorToStackOrRoot(
+                        navigator,
+                        currentStackKey,
+                        AppNavigationKey.NavigationTree
+                    )
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.AccountTree,
+                        contentDescription = "Tree"
+                    )
+                }
+            )
+        }
+    }
+
+    private fun navigatorToStackOrRoot(
+        navigator: Navigator,
+        currentKey: NavigationKey,
+        newKey: NavigationKey
+    ) {
+        if (currentKey == newKey) {
+            navigator.popToRoot()
+        } else {
+            navigator.navigateToStack(newKey)
+        }
+    }
+}
