@@ -15,13 +15,15 @@ import com.google.accompanist.insets.statusBarsPadding
 @Composable
 fun AppTopAppBar(
     title: String,
-    lazyListState: LazyListState,
+    lazyListState: LazyListState? = null,
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     val animatedElevation by animateDpAsState(
-        if (lazyListState.firstVisibleItemIndex > 0 ||
-            lazyListState.firstVisibleItemScrollOffset > 0
-        ) 4.dp else 0.dp
+        lazyListState?.let {
+            if (lazyListState.firstVisibleItemIndex > 0 ||
+                lazyListState.firstVisibleItemScrollOffset > 0
+            ) 4.dp else 0.dp
+        } ?: 0.dp
     )
 
     Surface(

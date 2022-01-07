@@ -21,8 +21,7 @@ import com.roudikk.composenavigator.AppPreview
 import com.roudikk.composenavigator.ui.screens.dialogs.DialogsScreen
 import com.roudikk.composenavigator.ui.screens.home.HomeScreen
 import com.roudikk.composenavigator.ui.screens.navigation_tree.NavigationTreeScreen
-import com.roudikk.composenavigator.ui.screens.nested.NestedScreen
-import com.roudikk.composenavigator.ui.theme.AppTheme
+import com.roudikk.composenavigator.ui.screens.nested.ParentNestedScreen
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -43,7 +42,7 @@ private fun BottomNavContent() {
         ),
         NavigationConfig.MultiStack.NavigationStackEntry(
             key = AppNavigationKey.Nested,
-            initialNavigationNode = NestedScreen()
+            initialNavigationNode = ParentNestedScreen()
         ),
         NavigationConfig.MultiStack.NavigationStackEntry(
             key = AppNavigationKey.Dialogs,
