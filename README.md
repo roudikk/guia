@@ -296,7 +296,7 @@ Sending/receiving results are done by the type of the navigation node:
 
 Usage ex:
 
-```koltin
+```kotlin
 @Parcelize
 class Screen1 : Screen {
 
@@ -334,7 +334,6 @@ class Screen2 : Screen {
         }
     }
 }
-
 ```
   
 ## Nested Navigation
@@ -347,7 +346,7 @@ Compose navigator offers 3 navigator fetching functions:
 
 The first `NavHost` should usually use the default key (By not overriding the `key` parameter)
 
-All nested `NavHost` must provide a unique key to differentiate between them
+All nested `NavHost` must provide a unique key to differentiate between them.
 
 ```kotlin
 // NavHost1
