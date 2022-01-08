@@ -32,52 +32,52 @@ class BottomNavScreen : Screen {
 
     @Composable
     override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
-        BottomNavContent()
+        val stackEntries = listOf(
+            NavigationConfig.MultiStack.NavigationStackEntry(
+                key = AppNavigationKey.Home,
+                initialNavigationNode = HomeScreen()
+            ),
+            NavigationConfig.MultiStack.NavigationStackEntry(
+                key = AppNavigationKey.Nested,
+                initialNavigationNode = ParentNestedScreen()
+            ),
+            NavigationConfig.MultiStack.NavigationStackEntry(
+                key = AppNavigationKey.Dialogs,
+                initialNavigationNode = DialogsScreen()
+            ),
+            NavigationConfig.MultiStack.NavigationStackEntry(
+                key = AppNavigationKey.NavigationTree,
+                initialNavigationNode = NavigationTreeScreen()
+            )
+        )
+
+        NavHost(
+            key = "Home Navigation",
+            navigationConfig = NavigationConfig.MultiStack(
+                entries = stackEntries,
+                initialStackKey = stackEntries[0].key,
+                backStackStrategy = BackStackStrategy.BackToInitialStack()
+            ),
+        ) {
+            BottomNavContent()
+        }
     }
 }
 
 @Composable
 private fun BottomNavContent() {
-    val stackEntries = listOf(
-        NavigationConfig.MultiStack.NavigationStackEntry(
-            key = AppNavigationKey.Home,
-            initialNavigationNode = HomeScreen()
-        ),
-        NavigationConfig.MultiStack.NavigationStackEntry(
-            key = AppNavigationKey.Nested,
-            initialNavigationNode = ParentNestedScreen()
-        ),
-        NavigationConfig.MultiStack.NavigationStackEntry(
-            key = AppNavigationKey.Dialogs,
-            initialNavigationNode = DialogsScreen()
-        ),
-        NavigationConfig.MultiStack.NavigationStackEntry(
-            key = AppNavigationKey.NavigationTree,
-            initialNavigationNode = NavigationTreeScreen()
-        )
-    )
-
-    NavHost(
-        key = "Home Navigation",
-        navigationConfig = NavigationConfig.MultiStack(
-            entries = stackEntries,
-            initialStackKey = stackEntries[0].key,
-            backStackStrategy = BackStackStrategy.BackToInitialStack()
-        ),
-    ) {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            bottomBar = {
-                BottomNavigation()
-            }
-        ) { paddingValues ->
-            NavContainer(
-                modifier = Modifier.padding(paddingValues),
-                bottomSheetSetup = defaultBottomSheetSetup(
-                    Modifier.padding(paddingValues)
-                )
-            )
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = {
+            BottomNavigation()
         }
+    ) { paddingValues ->
+        NavContainer(
+            modifier = Modifier.padding(paddingValues),
+            bottomSheetSetup = defaultBottomSheetSetup(
+                Modifier.padding(paddingValues)
+            )
+        )
     }
 }
 
@@ -180,13 +180,12 @@ private fun navigatorToStackOrRoot(
     }
 }
 
-
 @Preview(
     device = Devices.PIXEL_3
 )
 @Composable
 private fun BottomNavContentPreview() = AppPreview {
-    BottomNavigation()
+    BottomNavContent()
 }
 
 @Preview(
@@ -195,5 +194,5 @@ private fun BottomNavContentPreview() = AppPreview {
 )
 @Composable
 private fun BottomNavContentPreviewDark() = AppPreview {
-    BottomNavigation()
+    BottomNavContent()
 }

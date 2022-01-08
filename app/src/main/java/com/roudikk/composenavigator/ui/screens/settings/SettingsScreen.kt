@@ -69,7 +69,7 @@ private fun SettingsContent(animatedVisibilityScope: AnimatedVisibilityScope) {
 
             with(animatedVisibilityScope) {
                 Text(
-                    modifier = androidx.compose.ui.Modifier
+                    modifier = Modifier
                         .animateEnterExit(
                             enter = slideInVertically(animationSpec = tween(delayMillis = 1000)) { it }
                                     + fadeIn(animationSpec = tween(delayMillis = 1000)),
@@ -78,7 +78,7 @@ private fun SettingsContent(animatedVisibilityScope: AnimatedVisibilityScope) {
                         )
                         .padding(16.dp),
                     text = "Sorry I'm late! ",
-                    style = androidx.compose.material3.MaterialTheme.typography.headlineLarge
+                    style = MaterialTheme.typography.headlineLarge
                 )
             }
         }

@@ -37,167 +37,93 @@ class ParentNestedScreen : Screen {
 
     @Composable
     override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
-        Scaffold(
-            topBar = {
-                AppTopAppBar(title = "Nested navigation")
-            }
-        ) {
-            NavHost(
-                key = "Nested Screen Navigation",
-                navigationConfig = NavigationConfig.SingleStack(NestedScreen(1))
-            ) {
-                val navigator = findNavigator()
-
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-                    Box(modifier = Modifier.weight(1f)) {
-                        NavContainer(
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .imePadding()
-                            .padding(horizontal = 16.dp)
-                            .padding(bottom = 16.dp)
-                            .height(52.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Button(
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                                .fillMaxHeight()
-                                .weight(1f),
-                            onClick = {
-                                navigator.popToRoot()
-                            }
-                        ) {
-                            Text(
-                                modifier = Modifier,
-                                text = "Pop to root"
-                            )
-                        }
-
-                        val textFieldValue = rememberSaveable { mutableStateOf("") }
-
-                        OutlinedTextField(
-                            modifier = Modifier
-                                .padding(start = 8.dp)
-                                .weight(1f),
-                            value = textFieldValue.value,
-                            onValueChange = {
-                                textFieldValue.value = it
-                            },
-                            shape = RoundedCornerShape(20.dp),
-                            trailingIcon = {
-                                IconButton(onClick = {
-                                    textFieldValue.value.toIntOrNull()?.let {
-                                        navigator.popTo("NestedScreen_$it")
-                                    }
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.Default.ArrowForward,
-                                        contentDescription = "Pop"
-                                    )
-                                }
-                            },
-                            placeholder = {
-                                Text(text = "Pop to index")
-                            },
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                textColor = MaterialTheme.colorScheme.onSurface
-                            ),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Number
-                            )
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Parcelize
-class NestedScreen(
-    private val count: Int
-) : Screen {
-
-    override val key: String
-        get() = "${super.key}_$count"
-
-    @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
-        NestedContent(count = count)
+        ParentNestedContent()
     }
 }
 
 @Composable
-private fun NestedContent(count: Int) {
-    val navigator = findNavigator()
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+private fun ParentNestedContent() {
+    Scaffold(
+        topBar = {
+            AppTopAppBar(title = "Nested navigation")
+        }
     ) {
-
-        IconButton(
-            enabled = navigator.canGoBack(),
-            onClick = {
-                navigator.popBackStack()
-            }
+        NavHost(
+            key = "Nested Screen Navigation",
+            navigationConfig = NavigationConfig.SingleStack(NestedScreen(1))
         ) {
-            Icon(
-                imageVector = Icons.Default.Remove,
-                contentDescription = "back"
-            )
-        }
+            val navigator = findNavigator()
 
-        Surface(
-            tonalElevation = 10.dp,
-            shape = RoundedCornerShape(20.dp),
-            modifier = Modifier.size(100.dp)
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "$count",
-                    style = MaterialTheme.typography.headlineLarge
-                )
-            }
-        }
 
-        IconButton(
-            onClick = {
-                navigator.navigate(
-                    NestedScreen(count + 1),
-                    navOptions = NavOptions(
-                        navTransition = NavTransition(
-                            enter = navigationSlideInVertically { it / 2 }
-                                    + navigationFadeIn(),
-                            exit = navigationSlideOutVertically { -it / 2 }
-                                    + navigationFadeOut(),
-                            popEnter = navigationSlideInVertically { -it / 2 }
-                                    + navigationFadeIn(),
-                            popExit = navigationSlideOutVertically { it / 2 }
-                                    + navigationFadeOut()
+                Box(modifier = Modifier.weight(1f)) {
+                    NavContainer(
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                Row(
+                    modifier = Modifier
+                        .imePadding()
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 16.dp)
+                        .height(52.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Button(
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .fillMaxHeight()
+                            .weight(1f),
+                        onClick = {
+                            navigator.popToRoot()
+                        }
+                    ) {
+                        Text(
+                            modifier = Modifier,
+                            text = "Pop to root"
+                        )
+                    }
+
+                    val textFieldValue = rememberSaveable { mutableStateOf("") }
+
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .weight(1f),
+                        value = textFieldValue.value,
+                        onValueChange = {
+                            textFieldValue.value = it
+                        },
+                        shape = RoundedCornerShape(20.dp),
+                        trailingIcon = {
+                            IconButton(onClick = {
+                                textFieldValue.value.toIntOrNull()?.let {
+                                    navigator.popTo("NestedScreen_$it")
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.ArrowForward,
+                                    contentDescription = "Pop"
+                                )
+                            }
+                        },
+                        placeholder = {
+                            Text(text = "Pop to index")
+                        },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            textColor = MaterialTheme.colorScheme.onSurface
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number
                         )
                     )
-                )
+                }
             }
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Add"
-            )
         }
     }
 }
@@ -207,7 +133,7 @@ private fun NestedContent(count: Int) {
 )
 @Composable
 private fun NestedContentPreview() = AppPreview {
-    NestedContent(count = 4)
+    ParentNestedContent()
 }
 
 @Preview(
@@ -216,5 +142,5 @@ private fun NestedContentPreview() = AppPreview {
 )
 @Composable
 private fun NestedContentPreviewDark() = AppPreview {
-    NestedContent(count = 4)
+    ParentNestedContent()
 }
