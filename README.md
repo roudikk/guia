@@ -223,9 +223,9 @@ findNavigator().navigateToStack(stackKey, navigationFadeIn() to NavigationFadeOu
 
 ### Animating navigation node elements with screen transitions
 
-`Content` function inside a `NavigatioNode` has reference to the `animatedVisibilityScope` used by the `AnimatedContent` that handles all transitions between navigatio nodes.
+`Content` function inside a `NavigatioNode` has reference to the `animatedVisibilityScope` used by the `AnimatedContent` that handles all transitions between navigation nodes.
 
-This means composables inside navigatio nodes can have enter/exit transitions based on the node's enter/exit state, using the `animateEnterExit` modifier.
+This means composables inside navigation nodes can have enter/exit transitions based on the node's enter/exit state, using the `animateEnterExit` modifier.
 
 For ex:
 
@@ -251,7 +251,7 @@ class MyScreen : Screen {
 
 ## Back stack management
 
-`NavContainer` uses composes's `BackHandler` to override back presses, it's defined before the navigatio node composables so navigation nodes can override back press handling by providing their own `BackHandler`
+`NavContainer` uses composes's `BackHandler` to override back presses, it's defined before the navigation node composables so navigation nodes can override back press handling by providing their own `BackHandler`
 
 For Multi stack navigation, `NavigationConfig.MultiStack` provides 3 possible back stack strategies:
 
@@ -355,7 +355,7 @@ NavHost(
 ) {
     findNavigator() // Returns navigator for NavHost1
     findParentNavigator() // Returns null
-    findDefaultNavigator() // Returns navigator NavHost1 if 'key' parameter was not overridden in 'NavHost'
+    findDefaultNavigator() // Returns navigator for NavHost1 if 'key' parameter was not overridden in 'NavHost'
 
     // NavHost2
     NavHost(
@@ -364,7 +364,7 @@ NavHost(
     ) {
         findNavigator() // Returns navigator for NavHost2
         findParentNavigator() // Returns navigator for NavHost1
-        findDefaultNavigator() // Returns navigator NavHost1 if 'key' parameter was not overridden in 'NavHost'
+        findDefaultNavigator() // Returns navigator for NavHost1 if 'key' parameter was not overridden in 'NavHost'
     }
             
     // NavHost2 will override the back press of NavHost1 until it can no longer go back
