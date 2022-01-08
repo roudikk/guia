@@ -44,6 +44,10 @@
         <entry key="../../../../layout/compose-model-1641649641489.xml" value="0.20628106642566651" />
         <entry key="../../../../layout/compose-model-1641651628751.xml" value="0.39455488331892824" />
         <entry key="../../../../layout/compose-model-1641652026701.xml" value="0.33" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.183" />
+        <entry key="app/src/main/res/drawable/splash_screen.xml" value="0.183" />
+        <entry key="app/src/main/res/drawable/splash_scren_background.xml" value="0.183" />
+        <entry key="app/src/main/res/xml/styles.xml" value="0.26810109289617484" />
       </map>
     </option>
   </component>

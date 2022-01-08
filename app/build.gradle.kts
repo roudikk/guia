@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.roudikk.compose_navigator"
-        minSdk = 21
+        minSdk = 24
         targetSdk = 32
         versionCode = 1
         versionName = "1.0"
