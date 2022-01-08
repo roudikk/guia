@@ -38,7 +38,7 @@ class ParentNestedScreen : Screen {
 private fun ParentNestedContent() {
     Scaffold(
         topBar = {
-            AppTopAppBar(title = "Nested navigation")
+            AppTopAppBar(title = "Nested Navigation")
         }
     ) {
         NavHost(

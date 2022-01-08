@@ -15,19 +15,19 @@ import com.roudikk.compose_navigator.animation.*
 import com.roudikk.composenavigator.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
-sealed class AppNavigationKey {
+sealed class AppNavigationKey : NavigationKey() {
 
     @Parcelize
-    object Home : NavigationKey()
+    object Home : AppNavigationKey()
 
     @Parcelize
-    object Nested : NavigationKey()
+    object Nested : AppNavigationKey()
 
     @Parcelize
-    object Dialogs : NavigationKey()
+    object Dialogs : AppNavigationKey()
 
     @Parcelize
-    object NavigationTree : NavigationKey()
+    object NavigationTree : AppNavigationKey()
 }
 
 

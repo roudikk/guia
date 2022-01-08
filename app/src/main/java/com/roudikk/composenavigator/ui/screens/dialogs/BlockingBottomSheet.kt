@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,6 +49,13 @@ private fun BlockingBottomSheetContent() {
         Text(
             text = "Only thing you can do is hit the back button, but that won't go back to the dialogs screen"
                     + " if the below switch is turned on. Toggle it on/off and see what happens!"
+        )
+
+        Spacer(modifier = Modifier.size(16.dp))
+
+        Text(
+            text = "This is currently not working properly until Compose rc02 is released.",
+            fontWeight = FontWeight.Bold
         )
 
         Spacer(modifier = Modifier.size(16.dp))

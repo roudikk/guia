@@ -16,6 +16,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,12 +51,15 @@ class NavigationTreeScreen : Screen {
 private fun NavigationTreeContent() {
     val navigator = findNavigator()
 
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp.dp
     val lazyListState = rememberLazyListState()
     val animatedElevation by animateDpAsState(
         targetValue = if (lazyListState.firstVisibleItemIndex > 0
             || lazyListState.firstVisibleItemScrollOffset > 0
         ) 4.dp else 0.dp
     )
+
     Scaffold(
         topBar = {
             Surface(
@@ -84,9 +88,7 @@ private fun NavigationTreeContent() {
         Column {
             TabRow(
                 backgroundColor = MaterialTheme.colorScheme.surface,
-                // Our selected tab is our current page
                 selectedTabIndex = pagerState.currentPage,
-                // Override the indicator, using the provided pagerTabIndicatorOffset modifier
                 indicator = { tabPositions ->
                     TabRowDefaults.Indicator(
                         Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
@@ -97,7 +99,7 @@ private fun NavigationTreeContent() {
                 stacks.forEachIndexed { index, (key, _) ->
                     Tab(
                         text = {
-                            Text(text = key::class.simpleName!!)
+                            Text(text = key::class.java.simpleName)
                         },
                         selected = pagerState.currentPage == index,
                         onClick = {
@@ -121,7 +123,7 @@ private fun NavigationTreeContent() {
                 Grid(
                     modifier = Modifier
                         .fillMaxSize(),
-                    columnCount = 2,
+                    columnCount = if (screenWidth > 600.dp) 4 else 2,
                     list = stack.second
                 ) { destination ->
                     Box(
