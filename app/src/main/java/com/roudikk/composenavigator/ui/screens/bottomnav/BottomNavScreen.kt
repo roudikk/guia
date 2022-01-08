@@ -1,5 +1,6 @@
 package com.roudikk.composenavigator.ui.screens.bottomnav
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.UiMode
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
@@ -178,10 +180,20 @@ private fun navigatorToStackOrRoot(
     }
 }
 
-@Composable
+
 @Preview(
     device = Devices.PIXEL_3
 )
+@Composable
 private fun BottomNavContentPreview() = AppPreview {
+    BottomNavigation()
+}
+
+@Preview(
+    uiMode = UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_3
+)
+@Composable
+private fun BottomNavContentPreviewDark() = AppPreview {
     BottomNavigation()
 }

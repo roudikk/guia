@@ -1,5 +1,6 @@
 package com.roudikk.composenavigator.ui.screens.details
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -8,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.compose_navigator.BottomSheet
@@ -139,8 +141,19 @@ private fun DetailsList(item: String) {
     }
 }
 
-@Preview
+@Preview(
+    device = Devices.PIXEL_3
+)
 @Composable
 private fun DetailsContentPreview() = AppPreview {
+    DetailsContent(item = "Test Item")
+}
+
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_3
+)
+@Composable
+private fun DetailsContentPreviewDark() = AppPreview {
     DetailsContent(item = "Test Item")
 }

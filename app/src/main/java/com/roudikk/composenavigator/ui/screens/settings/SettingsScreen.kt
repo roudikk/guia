@@ -1,5 +1,6 @@
 package com.roudikk.composenavigator.ui.screens.settings
 
+import android.content.res.Configuration
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsPadding
@@ -83,9 +85,22 @@ private fun SettingsContent(animatedVisibilityScope: AnimatedVisibilityScope) {
     }
 }
 
-@Preview
+@Preview(
+    device = Devices.PIXEL_3
+)
 @Composable
 private fun SettingsContentPreview() = AppPreview {
+    AnimatedVisibility(visible = true) {
+        SettingsContent(this)
+    }
+}
+
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_3
+)
+@Composable
+private fun SettingsContentPreviewDark() = AppPreview {
     AnimatedVisibility(visible = true) {
         SettingsContent(this)
     }

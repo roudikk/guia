@@ -1,5 +1,6 @@
 package com.roudikk.composenavigator.ui.screens.dialogs
 
+import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.Column
@@ -14,10 +15,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsPadding
 import com.roudikk.compose_navigator.BottomSheet
 import com.roudikk.compose_navigator.BottomSheetOptions
+import com.roudikk.composenavigator.AppPreview
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -28,12 +32,12 @@ class BlockingBottomSheet : BottomSheet {
 
     @Composable
     override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
-        BlockingBottomSheetScreenContent()
+        BlockingBottomSheetContent()
     }
 }
 
 @Composable
-private fun BlockingBottomSheetScreenContent() {
+private fun BlockingBottomSheetContent() {
     var lockBack by rememberSaveable { mutableStateOf(true) }
 
     Column(Modifier.padding(16.dp)) {
@@ -56,4 +60,21 @@ private fun BlockingBottomSheetScreenContent() {
     BackHandler(enabled = lockBack) {
         // Lock back button
     }
+}
+
+@Preview(
+    device = Devices.PIXEL_3
+)
+@Composable
+private fun BlockingBottomSheetContentPreview() = AppPreview {
+    BlockingBottomSheetContent()
+}
+
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_3
+)
+@Composable
+private fun BlockingBottomSheetContentPreviewDark() = AppPreview {
+    BlockingBottomSheetContent()
 }

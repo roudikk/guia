@@ -1,5 +1,6 @@
 package com.roudikk.composenavigator.ui.screens.nested
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.imePadding
@@ -200,8 +202,19 @@ private fun NestedContent(count: Int) {
     }
 }
 
-@Preview
+@Preview(
+    device = Devices.PIXEL_3
+)
 @Composable
 private fun NestedContentPreview() = AppPreview {
+    NestedContent(count = 4)
+}
+
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_3
+)
+@Composable
+private fun NestedContentPreviewDark() = AppPreview {
     NestedContent(count = 4)
 }

@@ -1,5 +1,6 @@
 package com.roudikk.composenavigator.ui.screens.navigation_tree
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
@@ -16,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
@@ -200,8 +202,19 @@ fun <T> Grid(
     }
 }
 
-@Preview
+@Preview(
+    device = Devices.PIXEL_3
+)
 @Composable
 private fun NavigationTreePreview() = AppPreview {
+    NavigationTreeContent()
+}
+
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_3
+)
+@Composable
+private fun NavigationTreePreviewDark() = AppPreview {
     NavigationTreeContent()
 }

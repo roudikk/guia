@@ -1,5 +1,6 @@
 package com.roudikk.composenavigator.ui.screens.home
 
+import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.Crossfade
@@ -22,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -209,9 +211,22 @@ private fun ListItem(
     }
 }
 
+@Preview(
+    device = Devices.PIXEL_3
+)
 @Composable
-@Preview
 private fun HomeContentPreview() = AppPreview {
+    HomeContent(
+        stateFlow = MutableStateFlow(listOf("Item 1", "Item 2", "Item 3"))
+    )
+}
+
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_3
+)
+@Composable
+private fun HomeContentPreviewDark() = AppPreview {
     HomeContent(
         stateFlow = MutableStateFlow(listOf("Item 1", "Item 2", "Item 3"))
     )

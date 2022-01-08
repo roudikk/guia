@@ -1,5 +1,6 @@
 package com.roudikk.composenavigator.ui.screens.dialogs
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.compose_navigator.Dialog
@@ -69,14 +71,36 @@ private fun CancelableDialogContent(showButton: Boolean) {
     }
 }
 
-@Preview
+@Preview(
+    device = Devices.PIXEL_3
+)
 @Composable
 private fun CancelableDialogContentPreview() = AppPreview {
     CancelableDialogContent(showButton = true)
 }
 
-@Preview
+@Preview(
+    device = Devices.PIXEL_3
+)
 @Composable
 private fun CancelableDialogContentPreviewFalse() = AppPreview {
+    CancelableDialogContent(showButton = false)
+}
+
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_3
+)
+@Composable
+private fun CancelableDialogContentPreviewDark() = AppPreview {
+    CancelableDialogContent(showButton = true)
+}
+
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_3
+)
+@Composable
+private fun CancelableDialogContentPreviewFalseDark() = AppPreview {
     CancelableDialogContent(showButton = false)
 }
