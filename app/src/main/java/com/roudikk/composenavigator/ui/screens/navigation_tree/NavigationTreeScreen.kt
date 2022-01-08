@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.statusBarsHeight
@@ -26,6 +27,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.roudikk.compose_navigator.Screen
 import com.roudikk.compose_navigator.findNavigator
 import com.roudikk.composenavigator.AppNavigationKey
+import com.roudikk.composenavigator.AppPreview
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
@@ -34,7 +36,7 @@ class NavigationTreeScreen : Screen {
 
     @Composable
     override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
-        NavigationTreeScreenContent()
+        NavigationTreeContent()
     }
 }
 
@@ -43,7 +45,7 @@ class NavigationTreeScreen : Screen {
     ExperimentalPagerApi::class
 )
 @Composable
-private fun NavigationTreeScreenContent() {
+private fun NavigationTreeContent() {
     val navigator = findNavigator()
 
     val lazyListState = rememberLazyListState()
@@ -196,4 +198,10 @@ fun <T> Grid(
 
         Spacer(modifier = Modifier.size(16.dp))
     }
+}
+
+@Preview
+@Composable
+private fun NavigationTreePreview() = AppPreview {
+    NavigationTreeContent()
 }

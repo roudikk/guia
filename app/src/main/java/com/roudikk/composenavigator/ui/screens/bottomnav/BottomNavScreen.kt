@@ -179,5 +179,5 @@ private fun navigatorToStackOrRoot(
     device = Devices.PIXEL_3
 )
 private fun BottomNavContentPreview() = AppPreview {
-    BottomNavContent()
+    BottomNavigation()
 }

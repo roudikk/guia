@@ -17,8 +17,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.imePadding
 import com.roudikk.compose_navigator.*
@@ -26,6 +26,7 @@ import com.roudikk.compose_navigator.animation.navigationFadeIn
 import com.roudikk.compose_navigator.animation.navigationFadeOut
 import com.roudikk.compose_navigator.animation.navigationSlideInVertically
 import com.roudikk.compose_navigator.animation.navigationSlideOutVertically
+import com.roudikk.composenavigator.AppPreview
 import com.roudikk.composenavigator.ui.composables.AppTopAppBar
 import kotlinx.parcelize.Parcelize
 
@@ -130,66 +131,77 @@ class NestedScreen(
 
     @Composable
     override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
-        val navigator = findNavigator()
+        NestedContent(count = count)
+    }
+}
 
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+@Composable
+private fun NestedContent(count: Int) {
+    val navigator = findNavigator()
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        IconButton(
+            enabled = navigator.canGoBack(),
+            onClick = {
+                navigator.popBackStack()
+            }
         ) {
+            Icon(
+                imageVector = Icons.Default.Remove,
+                contentDescription = "back"
+            )
+        }
 
-            IconButton(
-                enabled = navigator.canGoBack(),
-                onClick = {
-                    navigator.popBackStack()
-                }
+        Surface(
+            tonalElevation = 10.dp,
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier.size(100.dp)
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
             ) {
-                Icon(
-                    imageVector = Icons.Default.Remove,
-                    contentDescription = "back"
-                )
-            }
-
-            Surface(
-                tonalElevation = 10.dp,
-                shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.size(100.dp)
-            ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Text(
-                        text = "$count",
-                        style = MaterialTheme.typography.headlineLarge
-                    )
-                }
-            }
-
-            IconButton(
-                onClick = {
-                    navigator.navigate(
-                        NestedScreen(count + 1),
-                        navOptions = NavOptions(
-                            navTransition = NavTransition(
-                                enter = navigationSlideInVertically { it / 2 }
-                                        + navigationFadeIn(),
-                                exit = navigationSlideOutVertically { -it / 2 }
-                                        + navigationFadeOut(),
-                                popEnter = navigationSlideInVertically { -it / 2 }
-                                        + navigationFadeIn(),
-                                popExit = navigationSlideOutVertically { it / 2 }
-                                        + navigationFadeOut()
-                            )
-                        )
-                    )
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add"
+                Text(
+                    text = "$count",
+                    style = MaterialTheme.typography.headlineLarge
                 )
             }
         }
+
+        IconButton(
+            onClick = {
+                navigator.navigate(
+                    NestedScreen(count + 1),
+                    navOptions = NavOptions(
+                        navTransition = NavTransition(
+                            enter = navigationSlideInVertically { it / 2 }
+                                    + navigationFadeIn(),
+                            exit = navigationSlideOutVertically { -it / 2 }
+                                    + navigationFadeOut(),
+                            popEnter = navigationSlideInVertically { -it / 2 }
+                                    + navigationFadeIn(),
+                            popExit = navigationSlideOutVertically { it / 2 }
+                                    + navigationFadeOut()
+                        )
+                    )
+                )
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add"
+            )
+        }
     }
+}
+
+@Preview
+@Composable
+private fun NestedContentPreview() = AppPreview {
+    NestedContent(count = 4)
 }
