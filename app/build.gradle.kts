@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     id("kotlin-parcelize")
+    id("com.google.gms.google-services")
 }
 
 val composeVersion = "1.1.0-rc01"
@@ -57,6 +58,10 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.activity:activity-compose:1.4.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:29.0.3"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
 
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
