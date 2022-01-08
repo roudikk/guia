@@ -1,20 +1,26 @@
 package com.roudikk.composenavigator.ui.screens.nested
 
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.google.accompanist.insets.statusBarsPadding
+import com.google.accompanist.insets.imePadding
 import com.roudikk.compose_navigator.*
 import com.roudikk.compose_navigator.animation.navigationFadeIn
 import com.roudikk.compose_navigator.animation.navigationFadeOut
@@ -51,13 +57,62 @@ class ParentNestedScreen : Screen {
                         )
                     }
 
-                    Button(
-                        modifier = Modifier.padding(16.dp),
-                        onClick = {
-                            navigator.popToRoot()
-                        }
+                    Row(
+                        modifier = Modifier
+                            .imePadding()
+                            .padding(horizontal = 16.dp)
+                            .padding(bottom = 16.dp)
+                            .height(52.dp),
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(text = "Pop to root")
+                        Button(
+                            modifier = Modifier
+                                .padding(end = 8.dp)
+                                .fillMaxHeight()
+                                .weight(1f),
+                            onClick = {
+                                navigator.popToRoot()
+                            }
+                        ) {
+                            Text(
+                                modifier = Modifier,
+                                text = "Pop to root"
+                            )
+                        }
+
+                        val textFieldValue = rememberSaveable { mutableStateOf("") }
+
+                        OutlinedTextField(
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                                .weight(1f),
+                            value = textFieldValue.value,
+                            onValueChange = {
+                                textFieldValue.value = it
+                            },
+                            shape = RoundedCornerShape(20.dp),
+                            trailingIcon = {
+                                IconButton(onClick = {
+                                    textFieldValue.value.toIntOrNull()?.let {
+                                        navigator.popTo("NestedScreen_$it")
+                                    }
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.ArrowForward,
+                                        contentDescription = "Pop"
+                                    )
+                                }
+                            },
+                            placeholder = {
+                                Text(text = "Pop to index")
+                            },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                textColor = MaterialTheme.colorScheme.onSurface
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number
+                            )
+                        )
                     }
                 }
             }
@@ -69,6 +124,9 @@ class ParentNestedScreen : Screen {
 class NestedScreen(
     private val count: Int
 ) : Screen {
+
+    override val key: String
+        get() = "${super.key}_$count"
 
     @Composable
     override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
