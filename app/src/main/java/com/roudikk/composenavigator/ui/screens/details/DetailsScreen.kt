@@ -2,7 +2,10 @@ package com.roudikk.composenavigator.ui.screens.details
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -83,6 +86,7 @@ private fun DetailsList(item: String) {
 
     Column(
         modifier = Modifier
+            .verticalScroll(rememberScrollState())
             .fillMaxWidth()
             .padding(vertical = 16.dp),
         verticalArrangement = Arrangement.Center,

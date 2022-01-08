@@ -3,6 +3,8 @@ package com.roudikk.composenavigator.ui.screens.dialogs
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -32,61 +34,69 @@ class DialogsScreen : Screen {
 private fun DialogsContent() {
     val navigator = findNavigator()
     val defaultNavigator = findDefaultNavigator()
+    val lazyListState = rememberLazyListState()
 
     Scaffold(
         topBar = {
-            AppTopAppBar(title = "Dialogs")
+            AppTopAppBar(
+                title = "Dialogs",
+                lazyListState = lazyListState
+            )
         }
     ) {
 
-        Column(
+        LazyColumn(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
+                .fillMaxWidth(),
+            state = lazyListState,
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = PaddingValues(16.dp)
         ) {
-
-            Spacer(modifier = Modifier.size(16.dp))
-
-            Button(
-                modifier = Modifier
-                    .widthIn(min = 300.dp),
-                onClick = {
-                    navigator.navigate(CancelableDialog(false))
+            item {
+                Button(
+                    modifier = Modifier
+                        .widthIn(min = 300.dp),
+                    onClick = {
+                        navigator.navigate(CancelableDialog(false))
+                    }
+                ) {
+                    Text(text = "Cancelable Dialog")
                 }
-            ) {
-                Text(text = "Cancelable Dialog")
             }
 
-            Button(
-                modifier = Modifier
-                    .widthIn(min = 300.dp),
-                onClick = {
-                    navigator.navigate(BlockingDialog(false))
+            item {
+                Button(
+                    modifier = Modifier
+                        .widthIn(min = 300.dp),
+                    onClick = {
+                        navigator.navigate(BlockingDialog(false))
+                    }
+                ) {
+                    Text(text = "Blocking Dialog")
                 }
-            ) {
-                Text(text = "Blocking Dialog")
             }
-
-            Button(
-                modifier = Modifier
-                    .widthIn(min = 300.dp),
-                onClick = {
-                    navigator.navigate(BlockingDialog(true))
+            item {
+                Button(
+                    modifier = Modifier
+                        .widthIn(min = 300.dp),
+                    onClick = {
+                        navigator.navigate(BlockingDialog(true))
+                    }
+                ) {
+                    Text(text = "Dialog To Dialog")
                 }
-            ) {
-                Text(text = "Dialog To Dialog")
             }
-
-            Button(
-                modifier = Modifier
-                    .widthIn(min = 300.dp),
-                onClick = {
-                    defaultNavigator.navigate(BlockingBottomSheet())
+            item {
+                Button(
+                    modifier = Modifier
+                        .widthIn(min = 300.dp),
+                    onClick = {
+                        defaultNavigator.navigate(BlockingBottomSheet())
+                    }
+                ) {
+                    Text(text = "Blocking Bottom Sheet")
                 }
-            ) {
-                Text(text = "Blocking Bottom Sheet")
             }
         }
     }
