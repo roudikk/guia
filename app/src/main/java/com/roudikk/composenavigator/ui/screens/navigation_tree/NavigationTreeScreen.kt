@@ -1,6 +1,6 @@
 package com.roudikk.composenavigator.ui.screens.navigation_tree
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -134,8 +134,8 @@ private fun NavigationTreeScreenContent() {
                         ) {
                             CompositionLocalProvider(
                                 LocalDensity provides object : Density by LocalDensity.current {
-                                    override val density: Float = 1F
-                                    override val fontScale: Float = 0.1F
+                                    override val density: Float = 1.5F
+                                    override val fontScale: Float = 1F
                                 }
                             ) {
                                 androidx.compose.animation.AnimatedVisibility(
