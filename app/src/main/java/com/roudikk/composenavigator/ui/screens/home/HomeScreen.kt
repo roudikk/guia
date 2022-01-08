@@ -8,9 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ClearAll
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,10 +20,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.roudikk.compose_navigator.NavOptions
 import com.roudikk.compose_navigator.Screen
+import com.roudikk.compose_navigator.findDefaultNavigator
 import com.roudikk.compose_navigator.findNavigator
 import com.roudikk.composenavigator.AppPreview
+import com.roudikk.composenavigator.MaterialSharedAxisTransitionXY
 import com.roudikk.composenavigator.ui.composables.AppTopAppBar
+import com.roudikk.composenavigator.ui.screens.settings.SettingsScreen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.parcelize.Parcelize
@@ -37,11 +39,20 @@ class HomeScreen : Screen {
     override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
         val viewModel = viewModel<HomeViewModel>()
         val navigator = findNavigator()
+        val defaultNavigator = findDefaultNavigator()
 
         LaunchedEffect(Unit) {
             viewModel.commandsFlow
-                .collect {
-                    navigator
+                .collect { homeCommand ->
+                    when (homeCommand) {
+                        is HomeCommand.OpenDetails -> {}
+                        HomeCommand.OpenSettings -> defaultNavigator.navigate(
+                            navigationNode = SettingsScreen(),
+                            navOptions = NavOptions(
+                                navTransition = MaterialSharedAxisTransitionXY
+                            )
+                        )
+                    }
                 }
         }
 
@@ -50,7 +61,8 @@ class HomeScreen : Screen {
             onItemSelected = viewModel::onItemSelected,
             onAddItemSelected = viewModel::onAddItemSelected,
             onRemoveItemSelected = viewModel::onRemoveItemSelected,
-            onClearAllSelected = viewModel::onClearAllSelected
+            onClearAllSelected = viewModel::onClearAllSelected,
+            onSettingsSelected = viewModel::onSettingsSelected
         )
     }
 }
@@ -61,7 +73,8 @@ private fun HomeContent(
     onItemSelected: (String) -> Unit = {},
     onAddItemSelected: () -> Unit = {},
     onRemoveItemSelected: (String) -> Unit = {},
-    onClearAllSelected: () -> Unit = {}
+    onClearAllSelected: () -> Unit = {},
+    onSettingsSelected: () -> Unit = {}
 ) {
     val lazyListState = rememberLazyListState()
 
@@ -77,6 +90,14 @@ private fun HomeContent(
                         Icon(
                             imageVector = Icons.Default.ClearAll,
                             contentDescription = "Clear all items"
+                        )
+                    }
+                    IconButton(
+                        onClick = { onSettingsSelected() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Settings"
                         )
                     }
                 }

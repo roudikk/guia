@@ -34,6 +34,7 @@ class ParentNestedScreen : Screen {
             }
         ) {
             NavHost(
+                key = "Nested Screen Navigation",
                 navigationConfig = NavigationConfig.SingleStack(NestedScreen(1))
             ) {
                 val navigator = findNavigator()

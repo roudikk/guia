@@ -2,6 +2,7 @@ package com.roudikk.composenavigator.ui.screens.welcome
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.*
@@ -68,7 +69,7 @@ class WelcomeScreen : Screen {
                     modifier = Modifier
                         .widthIn(min = 300.dp)
                         .animateEnterExit(
-                            enter = slideInVertically { it },
+                            enter = slideInVertically(tween(durationMillis = 600)) { it },
                             exit = slideOutVertically { it }
                         ),
                     onClick = {
@@ -86,7 +87,7 @@ class WelcomeScreen : Screen {
                 Button(
                     modifier = Modifier
                         .animateEnterExit(
-                            enter = slideInVertically { it },
+                            enter = slideInVertically(tween(durationMillis = 600)) { it },
                             exit = slideOutVertically { it }
                         )
                         .padding(horizontal = 16.dp)

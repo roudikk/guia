@@ -16,6 +16,7 @@ import com.google.accompanist.insets.statusBarsPadding
 fun AppTopAppBar(
     title: String,
     lazyListState: LazyListState? = null,
+    navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     val animatedElevation by animateDpAsState(
@@ -33,6 +34,7 @@ fun AppTopAppBar(
             modifier = Modifier
                 .statusBarsPadding(),
             title = { Text(text = title) },
+            navigationIcon = navigationIcon,
             actions = actions
         )
     }

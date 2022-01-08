@@ -10,6 +10,7 @@ import java.util.*
 
 sealed class HomeCommand {
     data class OpenDetails(val item: String) : HomeCommand()
+    object OpenSettings : HomeCommand()
 }
 
 class HomeViewModel(
@@ -50,5 +51,9 @@ class HomeViewModel(
         val newList = emptyList<String>()
         savedStateHandle["items"] = newList
         mutableStateFlow.value = newList
+    }
+
+    fun onSettingsSelected() {
+        mutableCommandsFlow.tryEmit(HomeCommand.OpenSettings)
     }
 }

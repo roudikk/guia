@@ -55,6 +55,7 @@ private fun BottomNavContent() {
     )
 
     NavHost(
+        key = "Home Navigation",
         navigationConfig = NavigationConfig.MultiStack(
             entries = stackEntries,
             initialStackKey = stackEntries[0].key,
