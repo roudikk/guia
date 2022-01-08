@@ -2,12 +2,14 @@
 
 Navigator tailored to work nicely with composable screens.
 
+Note: This is currently experimental and API is very likely to change.
 
 |           |  Features  |
 |-----------|-------------|
 :tada: | Simple API
 :recycle: | State restoration
-:train: | Back stack handling and nested navigations
+:train: | Nested navigations
+:back: | Multiple back stack strategies
 :twisted_rightwards_arrows: | Support for Enter/Exit compose transitons
 :phone: | Result passing between navigation nodes
 
@@ -63,6 +65,10 @@ class MyBottomSheet(val myData: String) : BottomSheet {
     }
 }
 ```
+
+Bottom sheets do not get a default surface as a background. This is to enable the developer to choose which composable is the parent of a bottom sheet (For ex: Surface2 or Surface3) inside their own implementation.
+
+However, to make it easier to have a consistent bottom sheet design across all bottom sheets (if that's the case), you can override `bottomSheetSetup` inside `NavContainer` to provide a common composable parent to all bottom sheets.
 
 
 ## Usage
@@ -258,7 +264,45 @@ When the stack reaches its initial node then pressing the back button:
 - CrossStackHistory:
   - When navigating between stacks, this strategy will navigate back between stacks based on `navigate/navigateToStack` operations
   
+## State restoration
+
+`NavContainer` uses `rememberSaveableStateHolder()` to remember composables ui states.
+
+`Navigator.Saver` handles saving/restoring the navigator state upon application state saving/restoration.
   
 ## Nested Navigation
 
+Compose navigator offers 3 navigator fetching functions:
 
+- `findNavigator()` returns the closest navigator in navigation hierarchy
+- `findParentNavigator()` returns the parent navigator of the current navigator, nullable
+- `findDefaultNavigator()` returns the default navigator using `Navigator.defaultKey`
+
+The first `NavHost` should usually use the default key (By not overriding the `key` parameter)
+
+All nested `NavHost` must provide a unique key to differentiate between them
+
+```kotlin
+// NavHost1
+NavHost(
+    navigationConfig = NavigationConfig.SingleStack(FirstScreen())
+) {
+    findNavigator() // Returns navigator for NavHost1
+    findParentNavigator() // Returns null
+    findDefaultNavigator() // Returns navigator NavHost1 if 'key' parameter was not overridden in 'NavHost'
+
+    // NavHost2
+    NavHost(
+        key = "Nested Navigation",
+        navigationConfig = NavigationConfig.SingleStack(NestedFirstScreen())
+    ) {
+        findNavigator() // Returns navigator for NavHost2
+        findParentNavigator() // Returns navigator for NavHost1
+        findDefaultNavigator() // Returns navigator NavHost1 if 'key' parameter was not overridden in 'NavHost'
+    }
+            
+    // NavHost2 will override the back press of NavHost1 until it can no longer go back
+    // Then NavHost1 will take over back press handling.
+    // Both NavHost1 and NavHost2 can use any navigation node defined anywhere.
+}
+```
