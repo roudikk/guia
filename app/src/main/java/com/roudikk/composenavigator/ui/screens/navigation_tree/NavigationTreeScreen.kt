@@ -136,8 +136,8 @@ private fun NavigationTreeContent() {
                         ) {
                             CompositionLocalProvider(
                                 LocalDensity provides object : Density by LocalDensity.current {
-                                    override val density: Float = 1.5F
-                                    override val fontScale: Float = 1F
+                                    override val density: Float = 1.5f
+                                    override val fontScale: Float = 1f
                                 }
                             ) {
                                 androidx.compose.animation.AnimatedVisibility(
