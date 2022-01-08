@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.roudikk.compose_navigator.BottomSheet
 import com.roudikk.compose_navigator.NavOptions
 import com.roudikk.compose_navigator.Screen
 import com.roudikk.compose_navigator.findNavigator
@@ -28,6 +29,17 @@ class DetailsScreen(
     @Composable
     override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
         DetailsContent(item = item)
+    }
+}
+
+@Parcelize
+class DetailsBottomSheet(
+    private val item: String
+) : BottomSheet {
+
+    @Composable
+    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+        DetailsList(item = item)
     }
 }
 
@@ -54,46 +66,75 @@ private fun DetailsContent(item: String) {
             )
         },
     ) {
-
-        Column(
+        Box(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            contentAlignment = Alignment.Center
         ) {
+            DetailsList(item = item)
+        }
+    }
+}
 
-            Text(
-                text = "Item: $item",
-                style = MaterialTheme.typography.headlineMedium
-            )
+@Composable
+private fun DetailsList(item: String) {
+    val navigator = findNavigator()
 
-            Spacer(modifier = Modifier.size(16.dp))
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
-            Button(
-                modifier = Modifier
-                    .widthIn(min = 300.dp),
-                onClick = {
-                    val newItem = UUID.randomUUID().toString().split("-")[0]
-                    navigator.navigate(
-                        navigationNode = DetailsScreen(newItem),
-                        navOptions = NavOptions(
-                            navTransition = MaterialSharedAxisTransitionX
-                        )
+        Text(
+            text = "Item: $item",
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        Spacer(modifier = Modifier.size(16.dp))
+
+        Button(
+            modifier = Modifier
+                .widthIn(min = 300.dp),
+            onClick = {
+                val newItem = UUID.randomUUID().toString().split("-")[0]
+                navigator.navigate(
+                    navigationNode = DetailsScreen(newItem),
+                    navOptions = NavOptions(
+                        navTransition = MaterialSharedAxisTransitionX
                     )
-                }
-            ) {
-                Text(text = "New random item")
+                )
             }
+        ) {
+            Text(text = "New random item")
+        }
 
-            Button(
-                modifier = Modifier
-                    .widthIn(min = 300.dp),
-                onClick = {
-                    navigator.sendResult<HomeScreen>(item)
-                    navigator.popToRoot()
-                }
-            ) {
-                Text(text = "Send result back to home")
+        Button(
+            modifier = Modifier
+                .widthIn(min = 300.dp),
+            onClick = {
+                navigator.sendResult<HomeScreen>(item)
+                navigator.popToRoot()
             }
+        ) {
+            Text(text = "Send result back to home")
+        }
+
+        Button(
+            modifier = Modifier
+                .widthIn(min = 300.dp),
+            onClick = {
+                val newItem = UUID.randomUUID().toString().split("-")[0]
+                navigator.navigate(
+                    navigationNode = DetailsBottomSheet(newItem),
+                    navOptions = NavOptions(
+                        navTransition = MaterialSharedAxisTransitionX
+                    )
+                )
+            }
+        ) {
+            Text(text = "Bottom Sheet")
         }
     }
 }

@@ -18,6 +18,7 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.roudikk.compose_navigator.*
 import com.roudikk.composenavigator.AppNavigationKey
 import com.roudikk.composenavigator.AppPreview
+import com.roudikk.composenavigator.ui.composables.defaultBottomSheetSetup
 import com.roudikk.composenavigator.ui.screens.dialogs.DialogsScreen
 import com.roudikk.composenavigator.ui.screens.home.HomeScreen
 import com.roudikk.composenavigator.ui.screens.navigation_tree.NavigationTreeScreen
@@ -60,7 +61,7 @@ private fun BottomNavContent() {
             entries = stackEntries,
             initialStackKey = stackEntries[0].key,
             backStackStrategy = BackStackStrategy.BackToInitialStack()
-        )
+        ),
     ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -69,7 +70,10 @@ private fun BottomNavContent() {
             }
         ) { paddingValues ->
             NavContainer(
-                modifier = Modifier.padding(paddingValues)
+                modifier = Modifier.padding(paddingValues),
+                bottomSheetSetup = defaultBottomSheetSetup(
+                    Modifier.padding(paddingValues)
+                )
             )
         }
     }
