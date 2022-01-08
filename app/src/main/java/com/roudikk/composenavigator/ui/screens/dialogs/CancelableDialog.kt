@@ -52,8 +52,10 @@ private fun CancelableDialogContent(showButton: Boolean) {
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            Text(text = "Content of a dialog can be anything, so no" +
-                    " dialog buttons are provided")
+            Text(
+                text = "Content of a dialog can be anything, so no" +
+                        " dialog buttons are provided"
+            )
 
             if (showButton) {
                 Spacer(modifier = Modifier.height(10.dp))

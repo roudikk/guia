@@ -2,7 +2,6 @@ package com.roudikk.composenavigator.ui.screens.details
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll

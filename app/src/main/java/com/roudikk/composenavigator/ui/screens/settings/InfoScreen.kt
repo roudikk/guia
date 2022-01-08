@@ -2,7 +2,6 @@ package com.roudikk.composenavigator.ui.screens.settings
 
 import android.content.res.Configuration
 import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -16,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
@@ -103,8 +101,8 @@ private fun SettingsContent(animatedVisibilityScope: AnimatedVisibilityScope) {
                         text = "It also supports all Enter/Exit transitions provided by Compose animations"
                     )
                 }
-                
-                item { 
+
+                item {
                     Text(text = "Check out the code and usages at: ")
                 }
 
@@ -162,7 +160,7 @@ private fun SettingsContent(animatedVisibilityScope: AnimatedVisibilityScope) {
                     ),
                     modifier = Modifier
                         .animateEnterExit(
-                            enter = slideInVertically { it * 3}
+                            enter = slideInVertically { it * 3 }
                                     + fadeIn(),
                             exit = slideOutVertically { it }
                                     + fadeOut()

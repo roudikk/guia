@@ -25,7 +25,6 @@ import com.roudikk.composenavigator.AppPreview
 import com.roudikk.composenavigator.MaterialSharedAxisTransitionXY
 import com.roudikk.composenavigator.R
 import com.roudikk.composenavigator.ui.screens.bottomnav.BottomNavScreen
-import com.roudikk.composenavigator.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

@@ -2,7 +2,10 @@ package com.roudikk.composenavigator.ui.screens.dialogs
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button

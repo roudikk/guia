@@ -2,16 +2,13 @@ package com.roudikk.composenavigator.ui.screens.nested
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -24,10 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.imePadding
 import com.roudikk.compose_navigator.*
-import com.roudikk.compose_navigator.animation.navigationFadeIn
-import com.roudikk.compose_navigator.animation.navigationFadeOut
-import com.roudikk.compose_navigator.animation.navigationSlideInVertically
-import com.roudikk.compose_navigator.animation.navigationSlideOutVertically
 import com.roudikk.composenavigator.AppPreview
 import com.roudikk.composenavigator.ui.composables.AppTopAppBar
 import kotlinx.parcelize.Parcelize
