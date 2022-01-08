@@ -269,6 +269,73 @@ When the stack reaches its initial node then pressing the back button:
 `NavContainer` uses `rememberSaveableStateHolder()` to remember composables ui states.
 
 `Navigator.Saver` handles saving/restoring the navigator state upon application state saving/restoration.
+
+## Result passing
+
+`Navigator` uses coroutine flows to pass results between navigation nodes.
+
+A Result can be of any type.
+
+Sending/receiving results are done by the type of the navigation node:
+
+```kotlin
+    // Navigator.kt
+    // Listening to results
+    fun results(key: String) // Returns results for a key in case of overriding the default key inside the navigation node
+    inline fun <reified T : NavigationNode> results() // Covenience function that uses the default key for a NavigationNode
+    
+    // Sending results
+    fun sendResult(result: Pair<String, Any>) // Sends result for a given navigation node key
+    inline fun <reified T : NavigationNode> sendResult(result: Any) // Covenience function that uses the default key for a NavigationNode
+    
+    // Additionally, navigation node has an extension function on Navigator to make it even easir to listen to results
+    
+   // NavigationNode
+   fun Navigator.nodeResults() = results(resultsKey)
+```
+
+Usage ex:
+
+```koltin
+@Parcelize
+class Screen1 : Screen {
+
+    @Composable
+    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+        val context = LocalContext.current
+        val navigator = findNavigator()
+
+        Button(onClick = { navigator.navigate(Screen2()) }) {
+            Text(text = "Navigate")
+        }
+
+        LaunchedEffect(Unit) {
+            navigator.nodeResults()
+                .onEach {
+                    Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+                }
+                .launchIn(this)
+        }
+    }
+}
+
+@Parcelize
+class Screen2 : Screen {
+
+    @Composable
+    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+        val navigator = findNavigator()
+
+        Button(onClick = {
+            navigator.sendResult<Screen1>("Hello!")
+            navigator.popBackStack()
+        }) {
+            Text(text = "Send Result")
+        }
+    }
+}
+
+```
   
 ## Nested Navigation
 
