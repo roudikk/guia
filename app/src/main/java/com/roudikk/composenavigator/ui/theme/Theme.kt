@@ -109,7 +109,7 @@ fun AppTheme(
         )
     }
     MaterialTheme2(
-        colors = colors2,
+        colors = colors2
     ) {
         MaterialTheme(
             colorScheme = colors,
