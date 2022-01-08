@@ -14,3 +14,5 @@
 .cxx
 local.properties
 app/google-services.json
+app/release/app-release.aab
+app/release/app-release.apk
