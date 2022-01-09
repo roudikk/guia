@@ -28,7 +28,7 @@ Note: This is currently experimental and API is very likely to change.
 7. [State Restoration](#state-restoration)
 8. [Result passing](#result-passing)
 9. [Nested Navigation](#nested-navigation)
-10. [ViewModel](#view-models)
+10. [Working with ViewModels](#view-models)
 
 ## Navigation nodes <a name="navigation-nodes"/>
 
@@ -204,7 +204,7 @@ Animation specs supported currently are: Tween, Snap and Spring, prepend `naviga
 
 For ex: `tween()` -> `navigationTween()`
 
-### Animating between navigation nodes <a name="animatons-nodes"/>
+### Animating between navigation nodes <a name="animations-nodes"/>
 
 Example:
 
@@ -235,7 +235,7 @@ findNavigator().navigate(
 )
 ```  
 
-### Animating between stacks <a name="animatons-stacks"/>
+### Animating between stacks <a name="animations-stacks"/>
 
 Animating between stack changes can be done by using the `transitions` paramter inside `navigatToStack`
 
@@ -245,7 +245,7 @@ For ex:
 findNavigator().navigateToStack(stackKey, navigationFadeIn() to NavigationFadeOut())
 ```
 
-### Animating navigation node elements with screen transitions <a name="animatons-elements"/>
+### Animating navigation node elements with screen transitions <a name="animations-elements"/>
 
 `Content` function inside a `NavigatioNode` has reference to the `animatedVisibilityScope` used by the `AnimatedContent` that handles all transitions between navigation nodes.
 
@@ -395,6 +395,6 @@ NavHost(
 }
 ```
 
-## ViewModels <a name="#view-models"/>
+## ViewModels <a name="view-models"/>
 
 For example usage with a view model, check [Home Screen Sample](https://github.com/RoudyK/compose-navigator/blob/master/app/src/main/java/com/roudikk/composenavigator/ui/screens/home/HomeScreen.kt)
