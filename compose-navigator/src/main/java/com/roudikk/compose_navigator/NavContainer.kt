@@ -1,10 +1,9 @@
 package com.roudikk.compose_navigator
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.with
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -107,10 +106,10 @@ fun NavContainer(
     val state by navigator.stateFlow.collectAsState()
     val parentState = parentNavigator?.stateFlow?.collectAsState()
 
-    val lastDestination = state.currentStack.destinations.last()
+    val currentDestination = state.currentStack.destinations.last()
 
-    val allowBottomSheetStateChange = lastDestination.navigationNode !is BottomSheet ||
-            lastDestination.navigationNode.bottomSheetOptions.dismissOnHidden
+    val allowBottomSheetStateChange = currentDestination.navigationNode !is BottomSheet ||
+            currentDestination.navigationNode.bottomSheetOptions.dismissOnHidden
 
     val bottomSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
@@ -161,7 +160,7 @@ fun NavContainer(
             ) {
                 bottomSheetSetup.bottomSheetContainer {
                     val localDensity = LocalDensity.current
-                    val bottomSheetDestination = lastDestination.takeIf {
+                    val bottomSheetDestination = currentDestination.takeIf {
                         it.navigationNode is BottomSheet
                     }
                     var contentHeightPixels by remember {
@@ -173,14 +172,27 @@ fun NavContainer(
 
                     AnimatedContent(
                         modifier = Modifier.fillMaxWidth(),
-                        targetState = bottomSheetDestination,
+                        targetState = bottomSheetDestination to currentDestination,
                         transitionSpec = {
-                            state.transitionPair.enter.toComposeEnterTransition() with
-                                    state.transitionPair.exit.toComposeExitTransition()
+                            // Only animate bottom sheet content when navigating between
+                            // bottom sheet destinations.
+                            if (
+                                initialState.second.navigationNode !is BottomSheet
+                                && targetState.first != null
+                            ) {
+                                EnterTransition.None
+                            } else {
+                                state.transitionPair.enter.toComposeEnterTransition()
+                            } with if (
+                                initialState.first != null
+                                && targetState.second.navigationNode !is BottomSheet
+                            ) {
+                                ExitTransition.None
+                            } else {
+                                state.transitionPair.exit.toComposeExitTransition()
+                            }
                         }
-                    ) { targetDestination ->
-                        val animatedVisibilityScope = this
-
+                    ) { (targetDestination, _) ->
                         if (targetDestination != null) {
                             Box(
                                 modifier = Modifier.onGloballyPositioned {
@@ -214,10 +226,10 @@ fun NavContainer(
         Box(modifier = Modifier.fillMaxSize())
     }
 
-    if (lastDestination.navigationNode is Dialog) {
+    if (currentDestination.navigationNode is Dialog) {
         Dialog(
             onDismissRequest = { navigator.popBackStack() },
-            properties = with(lastDestination.navigationNode.dialogOptions) {
+            properties = with(currentDestination.navigationNode.dialogOptions) {
                 DialogProperties(
                     dismissOnBackPress = dismissOnBackPress,
                     dismissOnClickOutside = dismissOnClickOutside,
@@ -230,7 +242,7 @@ fun NavContainer(
                 modifier = Modifier
                     .widthIn(max = 300.dp)
                     .animateContentSize(),
-                targetState = lastDestination,
+                targetState = currentDestination,
                 transitionSpec = {
                     state.transitionPair.enter.toComposeEnterTransition() with
                             state.transitionPair.exit.toComposeExitTransition()
@@ -243,8 +255,8 @@ fun NavContainer(
         }
     }
 
-    LaunchedEffect(lastDestination) {
-        if (lastDestination.navigationNode is BottomSheet) {
+    LaunchedEffect(currentDestination) {
+        if (currentDestination.navigationNode is BottomSheet) {
             bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
         } else {
             bottomSheetState.hide()
@@ -252,7 +264,7 @@ fun NavContainer(
     }
 
     LaunchedEffect(bottomSheetState.isVisible) {
-        if (!bottomSheetState.isVisible && lastDestination.navigationNode is BottomSheet) {
+        if (!bottomSheetState.isVisible && currentDestination.navigationNode is BottomSheet) {
             navigator.popBackStack()
         }
     }

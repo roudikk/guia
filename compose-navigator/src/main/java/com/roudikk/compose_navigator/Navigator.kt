@@ -201,7 +201,7 @@ class Navigator {
                 // Find existing destination
                 val existingDestination = navigationStacks.map { it.destinations }
                     .flatten()
-                    .find { it.navigationNode.key == navigationNode.key }
+                    .lastOrNull { it.navigationNode.key == navigationNode.key }
 
                 val newDestination = Destination(
                     // Reuse destination id if possible to re-use state of already existing destination
