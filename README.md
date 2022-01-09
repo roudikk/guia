@@ -14,8 +14,23 @@ Note: This is currently experimental and API is very likely to change.
 :rocket: | Different launch modes
 :phone: | Result passing between navigation nodes
 
+### Table of Contents
 
-## Navigation nodes
+1. [Navigation Nodes](#navigation-nodes)  
+2. [Usage](#usage)  
+3. [Navigation Operations](#navigation-operations)
+4. [Launch Modes](#launch-modes)
+5. [Animations](#animations)
+    1. [Animating between navigation nodes](#animations-nodes)
+    2. [Animating between navigation stacks](#animations-stacks)
+    3. [Animating navigation node elements](#animations-elements)
+6. [Back Stack Management](#back-stack-management)
+7. [State Restoration](#state-restoration)
+8. [Result passing](#result-passing)
+9. [Nested Navigation](#nested-navigation)
+10. [Working with ViewModels](#view-models)
+
+## Navigation nodes <a name="navigation-nodes"/>
 
 Screen:
 
@@ -72,7 +87,7 @@ Bottom sheets do not get a default surface as a background. This is to enable th
 However, to make it easier to have a consistent bottom sheet design across all bottom sheets (if that's the case), you can override `bottomSheetSetup` inside `NavContainer` to provide a common composable parent to all bottom sheets.
 
 
-## Usage
+## Usage <a name="usage"/>
 
 For a single stack navigation:
 
@@ -137,8 +152,7 @@ NavHost(
 }
 ```
 
-
-## Navigation operations
+## Navigation operations <a name="navigation-operations"/>
 
 ```kotlin
 // Note: enter/exit/popEnter/popExit animations can be defined in NavOptions along with SingleTop flag.
@@ -164,7 +178,7 @@ findNavigator().setRoot(navigationNode, navOptions)
 findNavigator().canGoBack()
 ```
 
-## Launch Modes
+## Launch Modes <a name="launch-modes"/>
 
 Launch mode can be specified using the `navOptions.launchMode` parameter of `navigate` function. Available Launch modes are:
 
@@ -173,7 +187,7 @@ Launch mode can be specified using the `navOptions.launchMode` parameter of `nav
 
 Note: Currently there launch modes don't provide `newIntent` equivalent behaviour so the content will not restore the state of an existing navigation node.
 
-## Animations
+## Animations <a name="animations"/>
 
 `EnterTransition` and `ExitTransition` are not savable in a bundle and cannot be saved/restored when the state of the app is saved/restored. 
 They are sealed and final so there is no easy way to extend them and make them savable.
@@ -190,7 +204,7 @@ Animation specs supported currently are: Tween, Snap and Spring, prepend `naviga
 
 For ex: `tween()` -> `navigationTween()`
 
-### Animating between navigation nodes
+### Animating between navigation nodes <a name="animations-nodes"/>
 
 Example:
 
@@ -221,7 +235,7 @@ findNavigator().navigate(
 )
 ```  
 
-### Animating between stacks
+### Animating between stacks <a name="animations-stacks"/>
 
 Animating between stack changes can be done by using the `transitions` paramter inside `navigatToStack`
 
@@ -231,7 +245,7 @@ For ex:
 findNavigator().navigateToStack(stackKey, navigationFadeIn() to NavigationFadeOut())
 ```
 
-### Animating navigation node elements with screen transitions
+### Animating navigation node elements with screen transitions <a name="animations-elements"/>
 
 `Content` function inside a `NavigatioNode` has reference to the `animatedVisibilityScope` used by the `AnimatedContent` that handles all transitions between navigation nodes.
 
@@ -257,7 +271,7 @@ class MyScreen : Screen {
 }
 ```
 
-## Back stack management
+## Back stack management <a name="back-stack-management"/>
 
 `NavContainer` uses composes's `BackHandler` to override back presses, it's defined before the navigation node composables so navigation nodes can override back press handling by providing their own `BackHandler`
 
@@ -272,13 +286,13 @@ When the stack reaches its initial node then pressing the back button:
 - CrossStackHistory:
   - When navigating between stacks, this strategy will navigate back between stacks based on `navigate/navigateToStack` operations
   
-## State restoration
+## State restoration <a name="state-restoration"/>
 
 `NavContainer` uses `rememberSaveableStateHolder()` to remember composables ui states.
 
 `Navigator.Saver` handles saving/restoring the navigator state upon application state saving/restoration.
 
-## Result passing
+## Result passing <a name="result-passing"/>
 
 `Navigator` uses coroutine flows to pass results between navigation nodes.
 
@@ -344,7 +358,7 @@ class Screen2 : Screen {
 }
 ```
   
-## Nested Navigation
+## Nested Navigation <a name="nested-navigation"/>
 
 Compose navigator offers 3 navigator fetching functions:
 
@@ -380,3 +394,7 @@ NavHost(
     // Both NavHost1 and NavHost2 can use any navigation node defined anywhere.
 }
 ```
+
+## ViewModels <a name="view-models"/>
+
+For example usage with a view model, check [Home Screen Sample](https://github.com/RoudyK/compose-navigator/blob/master/app/src/main/java/com/roudikk/composenavigator/ui/screens/home/HomeScreen.kt)
