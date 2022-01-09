@@ -13,8 +13,8 @@
 .externalNativeBuild
 .cxx
 local.properties
-app/google-services.json
-app/release/app-release.aab
-app/release/app-release.apk
-app/release/app-release.aab
-app/release/app-release.apk
+sample/google-services.json
+sample/release/app-release.aab
+sample/release/app-release.apk
+sample/release/app-release.aab
+sample/release/app-release.apk

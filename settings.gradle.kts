@@ -6,7 +6,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = "Compose Navigator"
+rootProject.name = "compose-navigator"
 
-include(":app")
+include(":sample")
 include(":compose-navigator")
