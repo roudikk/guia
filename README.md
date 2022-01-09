@@ -11,6 +11,7 @@ Note: This is currently experimental and API is very likely to change.
 :train: | Nested navigations
 :back: | Multiple back stack strategies
 :twisted_rightwards_arrows: | Support for Enter/Exit compose transitons
+:rocket: | Different launch modes
 :phone: | Result passing between navigation nodes
 
 
@@ -137,7 +138,7 @@ NavHost(
 ```
 
 
-## Navigation operations:
+## Navigation operations
 
 ```kotlin
 // Note: enter/exit/popEnter/popExit animations can be defined in NavOptions along with SingleTop flag.
@@ -163,7 +164,14 @@ findNavigator().setRoot(navigationNode, navOptions)
 findNavigator().canGoBack()
 ```
 
-## Animations:
+## Launch Modes
+
+Launch mode can be specified using the `navOptions.launchMode` parameter of `navigate` function. Available Launch modes are:
+
+- Single Top: If the current top most navigation node has the same key, no additional navigation happens.
+- Single instance: Clears the entire backstack of navigation nodes matching same key and launches a new instance on top.
+
+## Animations
 
 `EnterTransition` and `ExitTransition` are not savable in a bundle and cannot be saved/restored when the state of the app is saved/restored. 
 They are sealed and final so there is no easy way to extend them and make them savable.
