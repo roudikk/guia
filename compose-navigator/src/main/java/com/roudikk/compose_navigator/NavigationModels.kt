@@ -268,9 +268,30 @@ sealed class NavigationConfig : Parcelable {
  */
 @Parcelize
 data class NavOptions(
-    val singleTop: Boolean = false,
+    val launchMode: LaunchMode = LaunchMode.DEFAULT,
     val navTransition: NavTransition = NavTransition()
 ) : Parcelable
+
+enum class LaunchMode {
+
+    /**
+     * Navigates to a navigation node with no rules.
+     */
+    DEFAULT,
+
+    /**
+     * If the top most navigation node of the current stack is already of the same type, the navigator
+     * will not navigate to a new instance.
+     */
+    SINGLE_TOP,
+
+    /**
+     * When using single instance, if there's an existing navigation node in the backstack
+     * of any stack defined in the navigator configuration, it will be brought to the front
+     * with the updated data.
+     */
+    SINGLE_INSTANCE
+}
 
 /**
  * This allows us to remember the history of the switching between stacks to enable

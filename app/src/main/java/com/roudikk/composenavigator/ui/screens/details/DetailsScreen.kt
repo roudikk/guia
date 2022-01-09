@@ -14,10 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.compose_navigator.BottomSheet
-import com.roudikk.compose_navigator.NavOptions
-import com.roudikk.compose_navigator.Screen
-import com.roudikk.compose_navigator.findNavigator
+import com.roudikk.compose_navigator.*
 import com.roudikk.composenavigator.AppPreview
 import com.roudikk.composenavigator.MaterialSharedAxisTransitionX
 import com.roudikk.composenavigator.ui.composables.AppTopAppBar
@@ -140,6 +137,57 @@ private fun DetailsList(item: String) {
             }
         ) {
             Text(text = "Bottom Sheet")
+        }
+
+        Button(
+            modifier = Modifier
+                .widthIn(min = 300.dp),
+            onClick = {
+                val newItem = UUID.randomUUID().toString().split("-")[0]
+                navigator.navigate(
+                    navigationNode = DetailsScreen(newItem),
+                    navOptions = NavOptions(
+                        launchMode = LaunchMode.SINGLE_TOP,
+                        navTransition = MaterialSharedAxisTransitionX
+                    )
+                )
+            }
+        ) {
+            Text(text = "Single top Screen")
+        }
+
+        Button(
+            modifier = Modifier
+                .widthIn(min = 300.dp),
+            onClick = {
+                val newItem = UUID.randomUUID().toString().split("-")[0]
+                navigator.navigate(
+                    navigationNode = DetailsBottomSheet(newItem),
+                    navOptions = NavOptions(
+                        launchMode = LaunchMode.SINGLE_TOP,
+                        navTransition = MaterialSharedAxisTransitionX
+                    )
+                )
+            }
+        ) {
+            Text(text = "Single top bottom sheet")
+        }
+
+        Button(
+            modifier = Modifier
+                .widthIn(min = 300.dp),
+            onClick = {
+                val newItem = UUID.randomUUID().toString().split("-")[0]
+                navigator.navigate(
+                    navigationNode = DetailsScreen(newItem),
+                    navOptions = NavOptions(
+                        launchMode = LaunchMode.SINGLE_INSTANCE,
+                        navTransition = MaterialSharedAxisTransitionX
+                    )
+                )
+            }
+        ) {
+            Text(text = "Single Instance")
         }
     }
 }

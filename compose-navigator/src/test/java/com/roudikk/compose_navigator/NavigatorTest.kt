@@ -616,7 +616,9 @@ class NavigatorTest {
         navigator.navigateToStack(navigationStackEntries[1].key)
         navigator.navigate(screens[1])
         navigator.navigate(screens[2])
-        navigator.navigate(screens[2], navOptions = NavOptions(singleTop = true))
+        navigator.navigate(screens[2], navOptions = NavOptions(
+            launchMode = LaunchMode.SINGLE_TOP
+        ))
         navigator.navigate(screens[3])
         navigator.navigate(screens[4])
         navigator.popTo(screens[3].key)
@@ -703,7 +705,9 @@ class NavigatorTest {
         assertThat(navigator.stateFlow.value.transitionPair)
             .isEqualTo(customTransition.enter to customTransition.exit)
 
-        navigator.navigate(screens[2], navOptions = NavOptions(singleTop = true))
+        navigator.navigate(screens[2], navOptions = NavOptions(
+            launchMode = LaunchMode.SINGLE_INSTANCE
+        ))
         assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(screenTransition)
 
         navigator.navigate(screens[3])

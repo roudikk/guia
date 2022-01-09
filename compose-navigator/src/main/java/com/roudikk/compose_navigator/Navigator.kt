@@ -10,6 +10,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.util.*
 
 class Navigator {
 
@@ -175,44 +176,62 @@ class Navigator {
         val currentStack = currentState.currentStack
         var navigationStacks = currentState.navigationStacks.toMutableList()
 
-        val newStack = if (navOptions.singleTop) {
-            val newDestination = Destination(navigationNode, navOptions)
+        val newStack = when (navOptions.launchMode) {
+            LaunchMode.DEFAULT, LaunchMode.SINGLE_TOP -> {
+                if (navOptions.launchMode == LaunchMode.SINGLE_TOP
+                    && currentStack.currentNodeKey == navigationNode.key
+                ) return
 
-            navigationStacks = navigationStacks.map {
-                it.copy(destinations = it.destinations.toMutableList().apply {
-                    removeAll { destination ->
-                        destination.navigationNode.key == navigationNode.key
-                    }
-                })
-            }.toMutableList()
+                mutableStackHistory.add(StackHistoryEntry(currentStack.key, navigationNode.key))
 
-            mutableStackHistory.removeAll { it.navigationNodeKey == navigationNode.key }
-            mutableStackHistory.add(StackHistoryEntry(currentStack.key, navigationNode.key))
+                currentStack.copy(
+                    destinations = currentStack.destinations
+                        .toMutableList()
+                        .apply {
+                            add(
+                                Destination(
+                                    navigationNode = navigationNode,
+                                    navOptions = navOptions
+                                )
+                            )
+                        }
+                )
+            }
+            LaunchMode.SINGLE_INSTANCE -> {
+                // Find existing destination
+                val existingDestination = navigationStacks.map { it.destinations }
+                    .flatten()
+                    .find { it.navigationNode.key == navigationNode.key }
 
-            currentStack.copy(destinations = currentStack.destinations
-                .toMutableList()
-                .apply {
-                    removeAll { destination ->
-                        destination.navigationNode.key == navigationNode.key
-                    }
-                    add(newDestination)
-                }
-            )
-        } else {
-            mutableStackHistory.add(StackHistoryEntry(currentStack.key, navigationNode.key))
+                val newDestination = Destination(
+                    // Reuse destination id if possible to re-use state of already existing destination
+                    id = existingDestination?.id ?: UUID.randomUUID().toString(),
+                    navigationNode = navigationNode,
+                    navOptions = navOptions
+                )
 
-            currentStack.copy(
-                destinations = currentStack.destinations
+                navigationStacks = navigationStacks.map {
+                    it.copy(destinations = it.destinations.toMutableList().apply {
+                        removeAll { destination ->
+                            destination.navigationNode.key == navigationNode.key
+                        }
+                    })
+                }.toMutableList()
+
+                // Remove all previous destinations matching node key from history
+                mutableStackHistory.removeAll { it.navigationNodeKey == navigationNode.key }
+                mutableStackHistory.add(StackHistoryEntry(currentStack.key, navigationNode.key))
+
+                currentStack.copy(destinations = currentStack.destinations
                     .toMutableList()
                     .apply {
-                        add(
-                            Destination(
-                                navigationNode = navigationNode,
-                                navOptions = navOptions
-                            )
-                        )
+                        removeAll { destination ->
+                            destination.navigationNode.key == navigationNode.key
+                        }
+                        add(newDestination)
                     }
-            )
+                )
+            }
         }
 
         navigationStacks[navigationStacks.indexOfFirst { it.key == newStack.key }] = newStack
