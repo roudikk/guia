@@ -2,7 +2,7 @@
 
 Navigator tailored to work nicely with composable screens.
 
-Note: This is currently experimental and API is very likely to change.
+Note: This is currently a WIP and experimental and API is very likely to change.
 
 |           |  Features  |
 |-----------|-------------|
