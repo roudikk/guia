@@ -397,4 +397,4 @@ NavHost(
 
 ## ViewModels <a name="view-models"/>
 
-For example usage with a view model, check [Home Screen Sample](https://github.com/RoudyK/compose-navigator/blob/master/app/src/main/java/com/roudikk/composenavigator/ui/screens/home/HomeScreen.kt)
+For example usage with a view model, check [Home Screen Sample](https://github.com/RoudyK/compose-navigator/blob/master/sample/src/main/java/com/roudikk/navigator/sample/ui/screens/home/HomeScreen.kt)
