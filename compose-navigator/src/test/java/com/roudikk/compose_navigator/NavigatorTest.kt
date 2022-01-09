@@ -708,7 +708,8 @@ class NavigatorTest {
         navigator.navigate(screens[2], navOptions = NavOptions(
             launchMode = LaunchMode.SINGLE_INSTANCE
         ))
-        assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(screenTransition)
+        assertThat(navigator.stateFlow.value.transitionPair)
+            .isEqualTo(NavigationEnterTransition.None to NavigationExitTransition.None)
 
         navigator.navigate(screens[3])
         assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(screenTransition)

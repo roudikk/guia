@@ -2,6 +2,8 @@ package com.roudikk.compose_navigator
 
 import com.roudikk.compose_navigator.NavigationNode.Companion.key
 import com.roudikk.compose_navigator.NavigationNode.Companion.resultsKey
+import com.roudikk.compose_navigator.animation.NavigationEnterTransition
+import com.roudikk.compose_navigator.animation.NavigationExitTransition
 import com.roudikk.compose_navigator.animation.navigationFadeIn
 import com.roudikk.compose_navigator.animation.navigationFadeOut
 import kotlinx.coroutines.CoroutineScope
@@ -176,12 +178,9 @@ class Navigator {
         val currentStack = currentState.currentStack
         var navigationStacks = currentState.navigationStacks.toMutableList()
 
+        var shouldAnimate = true
         val newStack = when (navOptions.launchMode) {
-            LaunchMode.DEFAULT, LaunchMode.SINGLE_TOP -> {
-                if (navOptions.launchMode == LaunchMode.SINGLE_TOP
-                    && currentStack.currentNodeKey == navigationNode.key
-                ) return
-
+            LaunchMode.DEFAULT -> {
                 mutableStackHistory.add(StackHistoryEntry(currentStack.key, navigationNode.key))
 
                 currentStack.copy(
@@ -197,15 +196,33 @@ class Navigator {
                         }
                 )
             }
-            LaunchMode.SINGLE_INSTANCE -> {
-                // Find existing destination
-                val existingDestination = navigationStacks.map { it.destinations }
-                    .flatten()
-                    .lastOrNull { it.navigationNode.key == navigationNode.key }
+            LaunchMode.SINGLE_TOP -> {
+                if (currentStack.currentNodeKey == navigationNode.key) {
+                    shouldAnimate = false
+                }
 
                 val newDestination = Destination(
-                    // Reuse destination id if possible to re-use state of already existing destination
-                    id = existingDestination?.id ?: UUID.randomUUID().toString(),
+                    navigationNode = navigationNode,
+                    navOptions = navOptions
+                )
+
+                currentStack.copy(
+                    destinations = currentStack.destinations
+                        .toMutableList()
+                        .apply {
+                            if (currentStack.currentNodeKey == navigationNode.key) {
+                                removeLast()
+                            }
+                            add(newDestination)
+                        }
+                )
+            }
+            LaunchMode.SINGLE_INSTANCE -> {
+                if (currentStack.currentNodeKey == navigationNode.key) {
+                    shouldAnimate = false
+                }
+
+                val newDestination = Destination(
                     navigationNode = navigationNode,
                     navOptions = navOptions
                 )
@@ -238,8 +255,12 @@ class Navigator {
         val newState = NavigationState(
             currentStackKey = currentStack.key,
             navigationStacks = navigationStacks,
-            transitionPair = newStack.destinations.last().navOptions.navTransition.enter to
-                    newStack.destinations.last().navOptions.navTransition.exit,
+            transitionPair = if (shouldAnimate) {
+                newStack.destinations.last().navOptions.navTransition.enter to
+                        newStack.destinations.last().navOptions.navTransition.exit
+            } else {
+                NavigationEnterTransition.None to NavigationExitTransition.None
+            },
             overrideBackPress = currentState.overrideBackPress
         )
         mutableStateFlow.value = newState

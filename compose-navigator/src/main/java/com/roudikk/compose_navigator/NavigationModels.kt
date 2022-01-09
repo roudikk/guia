@@ -151,8 +151,12 @@ open class NavigationKey : Parcelable
 data class Destination(
     val navigationNode: NavigationNode,
     val navOptions: NavOptions = NavOptions(),
-    val id: String = UUID.randomUUID().toString()
+    val id: String = UUID.randomUUID().toString(),
+    val dataKey: String = UUID.randomUUID().toString()
 ) : Parcelable {
+
+    val combinedKey: String
+        get() = id + dataKey
 
     override fun equals(other: Any?): Boolean {
         return other is Destination && other.id == id
@@ -263,7 +267,7 @@ sealed class NavigationConfig : Parcelable {
  * Used with [Navigator] navigation operations.
  *
  * @property [navTransition], used for enter/exit/popEnter/popExit transitions for given
- * @property [singleTop], flag used to clear all navigation history of nodes matching navigation node's
+ * @property [launchMode], destination launch mode
  * [NavigationNode.key] so the only node present in history is that new node.
  */
 @Parcelize

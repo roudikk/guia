@@ -87,14 +87,23 @@ data class NavigationEnterTransition(
             )
         }
 
-        var enterTransition = transitions[0]
-        transitions.forEachIndexed { index, transition ->
-            if (index != 0) {
-                enterTransition += transition
-            }
-        }
+        var enterTransition = transitions.getOrNull(0)
 
-        return enterTransition
+        return if (enterTransition != null) {
+            transitions.forEachIndexed { index, transition ->
+                if (index != 0) {
+                    enterTransition += transition
+                }
+            }
+
+            enterTransition
+        } else {
+            EnterTransition.None
+        }
+    }
+
+    companion object {
+        val None: NavigationEnterTransition = NavigationEnterTransition(NavigationTransitionData())
     }
 }
 
@@ -165,14 +174,23 @@ data class NavigationExitTransition(
             )
         }
 
-        var exitTransition = transitions[0]
-        transitions.forEachIndexed { index, transition ->
-            if (index != 0) {
-                exitTransition += transition
-            }
-        }
+        var exitTransition = transitions.getOrNull(0)
 
-        return exitTransition
+        return if (exitTransition != null) {
+            transitions.forEachIndexed { index, transition ->
+                if (index != 0) {
+                    exitTransition += transition
+                }
+            }
+            exitTransition
+        } else {
+            ExitTransition.None
+        }
+    }
+
+
+    companion object {
+        val None: NavigationExitTransition = NavigationExitTransition(NavigationTransitionData())
     }
 }
 

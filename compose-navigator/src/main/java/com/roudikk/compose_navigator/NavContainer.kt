@@ -139,7 +139,7 @@ fun NavContainer(
         }
     ) { destination ->
         savableStateHolder.SaveableStateProvider(
-            destination.id
+            destination.combinedKey
         ) { with(destination.navigationNode) { Content() } }
     }
 
@@ -200,7 +200,7 @@ fun NavContainer(
                                 }
                             ) {
                                 savableStateHolder.SaveableStateProvider(
-                                    key = targetDestination.id
+                                    key = targetDestination.combinedKey
                                 ) {
                                     with(targetDestination.navigationNode) { Content() }
                                 }
@@ -249,7 +249,7 @@ fun NavContainer(
                 }
             ) { destination ->
                 savableStateHolder.SaveableStateProvider(
-                    destination.id,
+                    destination.combinedKey,
                 ) { with(destination.navigationNode) { Content() } }
             }
         }
