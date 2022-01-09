@@ -31,13 +31,13 @@ import kotlinx.parcelize.Parcelize
 class WelcomeScreen : Screen {
 
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
-        WelcomeContent(animatedVisibilityScope)
+    override fun AnimatedVisibilityScope.Content() {
+        WelcomeContent()
     }
 }
 
 @Composable
-private fun WelcomeContent(animatedVisibilityScope: AnimatedVisibilityScope) {
+private fun AnimatedVisibilityScope.WelcomeContent() {
     val navigator = findNavigator()
 
     val composition by rememberLottieComposition(
@@ -64,46 +64,44 @@ private fun WelcomeContent(animatedVisibilityScope: AnimatedVisibilityScope) {
             )
         }
 
-        with(animatedVisibilityScope) {
-            Button(
-                modifier = Modifier
-                    .widthIn(min = 300.dp)
-                    .animateEnterExit(
-                        enter = slideInVertically(tween(durationMillis = 600)) { it },
-                        exit = slideOutVertically { it }
-                    ),
-                onClick = {
-                    navigator.navigate(
-                        BottomNavScreen(),
-                        navOptions = NavOptions(
-                            navTransition = MaterialSharedAxisTransitionXY
-                        )
+        Button(
+            modifier = Modifier
+                .widthIn(min = 300.dp)
+                .animateEnterExit(
+                    enter = slideInVertically(tween(durationMillis = 600)) { it },
+                    exit = slideOutVertically { it }
+                ),
+            onClick = {
+                navigator.navigate(
+                    BottomNavScreen(),
+                    navOptions = NavOptions(
+                        navTransition = MaterialSharedAxisTransitionXY
                     )
-                }
-            ) {
-                Text(text = "Navigate Home")
+                )
             }
+        ) {
+            Text(text = "Navigate Home")
+        }
 
-            Button(
-                modifier = Modifier
-                    .animateEnterExit(
-                        enter = slideInVertically(tween(durationMillis = 600)) { it },
-                        exit = slideOutVertically { it }
+        Button(
+            modifier = Modifier
+                .animateEnterExit(
+                    enter = slideInVertically(tween(durationMillis = 600)) { it },
+                    exit = slideOutVertically { it }
+                )
+                .padding(horizontal = 16.dp)
+                .padding(top = 4.dp, bottom = 16.dp)
+                .widthIn(min = 300.dp),
+            onClick = {
+                navigator.setRoot(
+                    BottomNavScreen(),
+                    navOptions = NavOptions(
+                        navTransition = MaterialSharedAxisTransitionXY
                     )
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 4.dp, bottom = 16.dp)
-                    .widthIn(min = 300.dp),
-                onClick = {
-                    navigator.setRoot(
-                        BottomNavScreen(),
-                        navOptions = NavOptions(
-                            navTransition = MaterialSharedAxisTransitionXY
-                        )
-                    )
-                }
-            ) {
-                Text(text = "Set Root Home")
+                )
             }
+        ) {
+            Text(text = "Set Root Home")
         }
     }
 }
@@ -114,7 +112,7 @@ private fun WelcomeContent(animatedVisibilityScope: AnimatedVisibilityScope) {
 @Composable
 private fun WelcomeContentPreview() = AppPreview {
     AnimatedVisibility(visible = true) {
-        WelcomeContent(this)
+        WelcomeContent()
     }
 }
 
@@ -125,6 +123,6 @@ private fun WelcomeContentPreview() = AppPreview {
 @Composable
 private fun WelcomeContentPreviewDark() = AppPreview {
     AnimatedVisibility(visible = true) {
-        WelcomeContent(this)
+        WelcomeContent()
     }
 }

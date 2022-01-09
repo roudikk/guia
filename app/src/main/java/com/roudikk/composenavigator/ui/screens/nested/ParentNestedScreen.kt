@@ -29,7 +29,7 @@ import kotlinx.parcelize.Parcelize
 class ParentNestedScreen : Screen {
 
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+    override fun AnimatedVisibilityScope.Content() {
         ParentNestedContent()
     }
 }

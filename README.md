@@ -23,7 +23,7 @@ Screen:
 class MyScreen(val myData: String) : Screen {
     
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+    override fun AnimatedVisibilityScope.Content() {
         
     }
 }
@@ -42,7 +42,7 @@ class MyDialog(val myData: String) : Dialog {
         )
 
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+    override fun AnimatedVisibilityScope.Content() {
 
     }
 }
@@ -60,7 +60,7 @@ class MyBottomSheet(val myData: String) : BottomSheet {
         )
     
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+    override fun AnimatedVisibilityScope.Content() {
 
     }
 }
@@ -234,7 +234,7 @@ For ex:
 class MyScreen : Screen {
 
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+    override fun AnimatedVisibilityScope.Content() {
         with(animatedVisibilityScope) {
             Text(
                 modifier = Modifier
@@ -301,7 +301,7 @@ Usage ex:
 class Screen1 : Screen {
 
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+    override fun AnimatedVisibilityScope.Content() {
         val context = LocalContext.current
         val navigator = findNavigator()
 
@@ -323,7 +323,7 @@ class Screen1 : Screen {
 class Screen2 : Screen {
 
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+    override fun AnimatedVisibilityScope.Content() {
         val navigator = findNavigator()
 
         Button(onClick = {

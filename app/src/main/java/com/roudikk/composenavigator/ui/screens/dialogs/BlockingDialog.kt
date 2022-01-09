@@ -33,7 +33,7 @@ class BlockingDialog(
         )
 
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+    override fun AnimatedVisibilityScope.Content() {
         BlockingDialogContent(showButton)
     }
 }

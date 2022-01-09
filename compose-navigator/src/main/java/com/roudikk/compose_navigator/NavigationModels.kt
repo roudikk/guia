@@ -34,7 +34,7 @@ interface NavigationNode : Parcelable {
      * Composable UI of the navigation node.
      */
     @Composable
-    fun Content(animatedVisibilityScope: AnimatedVisibilityScope)
+    fun AnimatedVisibilityScope.Content()
 
     companion object {
         inline fun <reified T : NavigationNode> key(): String = T::class.java.simpleName

@@ -36,7 +36,7 @@ class NestedScreen(
         get() = "${super.key}_$count"
 
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+    override fun AnimatedVisibilityScope.Content() {
         NestedContent(count = count)
     }
 }

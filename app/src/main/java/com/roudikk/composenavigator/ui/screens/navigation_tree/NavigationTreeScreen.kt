@@ -38,7 +38,7 @@ import kotlinx.parcelize.Parcelize
 class NavigationTreeScreen : Screen {
 
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+    override fun AnimatedVisibilityScope.Content() {
         NavigationTreeContent()
     }
 }
@@ -147,7 +147,7 @@ private fun NavigationTreeContent() {
                                 androidx.compose.animation.AnimatedVisibility(
                                     visible = true
                                 ) {
-                                    destination.navigationNode.Content(this)
+                                    with(destination.navigationNode) { Content() }
                                 }
                             }
                         }

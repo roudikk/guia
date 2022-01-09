@@ -33,7 +33,7 @@ import kotlinx.parcelize.Parcelize
 class BottomNavScreen : Screen {
 
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+    override fun AnimatedVisibilityScope.Content() {
         val stackEntries = listOf(
             NavigationConfig.MultiStack.NavigationStackEntry(
                 key = AppNavigationKey.Home,

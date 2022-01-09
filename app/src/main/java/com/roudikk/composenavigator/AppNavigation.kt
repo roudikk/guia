@@ -90,7 +90,7 @@ fun BottomSheetSurface(
 fun AppPreview(content: @Composable () -> Unit) = AppTheme {
     NavHost(navigationConfig = NavigationConfig.SingleStack(object : Screen {
         @Composable
-        override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+        override fun AnimatedVisibilityScope.Content() {
         }
 
         override fun describeContents() = error("Preview only")

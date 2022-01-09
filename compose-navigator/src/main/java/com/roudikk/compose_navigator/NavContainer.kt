@@ -141,7 +141,7 @@ fun NavContainer(
     ) { destination ->
         savableStateHolder.SaveableStateProvider(
             destination.id
-        ) { destination.navigationNode.Content(this) }
+        ) { with(destination.navigationNode) { Content() } }
     }
 
     ModalBottomSheetLayout(
@@ -190,7 +190,7 @@ fun NavContainer(
                                 savableStateHolder.SaveableStateProvider(
                                     key = targetDestination.id
                                 ) {
-                                    targetDestination.navigationNode.Content(animatedVisibilityScope)
+                                    with(targetDestination.navigationNode) { Content() }
                                 }
                             }
                         } else {
@@ -238,7 +238,7 @@ fun NavContainer(
             ) { destination ->
                 savableStateHolder.SaveableStateProvider(
                     destination.id,
-                ) { destination.navigationNode.Content(this) }
+                ) { with(destination.navigationNode) { Content() } }
             }
         }
     }

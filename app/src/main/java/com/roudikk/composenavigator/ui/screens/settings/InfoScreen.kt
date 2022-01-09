@@ -32,13 +32,13 @@ import kotlinx.parcelize.Parcelize
 class SettingsScreen : Screen {
 
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
-        SettingsContent(animatedVisibilityScope)
+    override fun AnimatedVisibilityScope.Content() {
+        SettingsContent()
     }
 }
 
 @Composable
-private fun SettingsContent(animatedVisibilityScope: AnimatedVisibilityScope) {
+private fun AnimatedVisibilityScope.SettingsContent() {
     val navigator = findNavigator()
     val lazyListState = rememberLazyListState()
 
@@ -139,43 +139,41 @@ private fun SettingsContent(animatedVisibilityScope: AnimatedVisibilityScope) {
 
             }
 
-            with(animatedVisibilityScope) {
-                val uriHandler = LocalUriHandler.current
-                val annotatedString = buildAnnotatedString {
-                    pushStringAnnotation(
-                        tag = "URL",
-                        annotation = "https://github.com/RoudyK",
-                    )
-                    withStyle(
-                        SpanStyle(
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    ) {
-                        append("By Roudi Korkis Kanaan")
-                    }
-                }
-                ClickableText(
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.onSurface
-                    ),
-                    modifier = Modifier
-                        .animateEnterExit(
-                            enter = slideInVertically { it * 3 }
-                                    + fadeIn(),
-                            exit = slideOutVertically { it }
-                                    + fadeOut()
-                        )
-                        .padding(16.dp),
-                    text = annotatedString,
-                    onClick = {
-                        annotatedString
-                            .getStringAnnotations("URL", it, it)
-                            .firstOrNull()?.let { stringAnnotation ->
-                                uriHandler.openUri(stringAnnotation.item)
-                            }
-                    }
+            val uriHandler = LocalUriHandler.current
+            val annotatedString = buildAnnotatedString {
+                pushStringAnnotation(
+                    tag = "URL",
+                    annotation = "https://github.com/RoudyK",
                 )
+                withStyle(
+                    SpanStyle(
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    append("By Roudi Korkis Kanaan")
+                }
             }
+            ClickableText(
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                ),
+                modifier = Modifier
+                    .animateEnterExit(
+                        enter = slideInVertically { it * 3 }
+                                + fadeIn(),
+                        exit = slideOutVertically { it }
+                                + fadeOut()
+                    )
+                    .padding(16.dp),
+                text = annotatedString,
+                onClick = {
+                    annotatedString
+                        .getStringAnnotations("URL", it, it)
+                        .firstOrNull()?.let { stringAnnotation ->
+                            uriHandler.openUri(stringAnnotation.item)
+                        }
+                }
+            )
         }
     }
 }
@@ -186,7 +184,7 @@ private fun SettingsContent(animatedVisibilityScope: AnimatedVisibilityScope) {
 @Composable
 private fun SettingsContentPreview() = AppPreview {
     AnimatedVisibility(visible = true) {
-        SettingsContent(this)
+        SettingsContent()
     }
 }
 
@@ -197,6 +195,6 @@ private fun SettingsContentPreview() = AppPreview {
 @Composable
 private fun SettingsContentPreviewDark() = AppPreview {
     AnimatedVisibility(visible = true) {
-        SettingsContent(this)
+        SettingsContent()
     }
 }

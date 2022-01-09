@@ -31,7 +31,7 @@ class DetailsScreen(
 ) : Screen {
 
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+    override fun AnimatedVisibilityScope.Content() {
         DetailsContent(item = item)
     }
 }
@@ -42,7 +42,7 @@ class DetailsBottomSheet(
 ) : BottomSheet {
 
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+    override fun AnimatedVisibilityScope.Content() {
         DetailsList(item = item)
     }
 }

@@ -24,7 +24,7 @@ class CancelableDialog(
 ) : Dialog {
 
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+    override fun AnimatedVisibilityScope.Content() {
         CancelableDialogContent(showButton)
     }
 }

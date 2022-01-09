@@ -47,7 +47,7 @@ import kotlinx.parcelize.Parcelize
 class HomeScreen : Screen {
 
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+    override fun AnimatedVisibilityScope.Content() {
         val viewModel = viewModel<HomeViewModel>()
         val navigator = findNavigator()
         val defaultNavigator = findDefaultNavigator()

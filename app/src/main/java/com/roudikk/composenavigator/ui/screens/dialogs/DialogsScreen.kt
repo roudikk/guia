@@ -28,7 +28,7 @@ import kotlinx.parcelize.Parcelize
 class DialogsScreen : Screen {
 
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+    override fun AnimatedVisibilityScope.Content() {
         DialogsContent()
     }
 }

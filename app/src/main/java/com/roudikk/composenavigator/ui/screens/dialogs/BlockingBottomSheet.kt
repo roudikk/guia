@@ -32,7 +32,7 @@ class BlockingBottomSheet : BottomSheet {
         get() = BottomSheetOptions(false)
 
     @Composable
-    override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+    override fun AnimatedVisibilityScope.Content() {
         BlockingBottomSheetContent()
     }
 }

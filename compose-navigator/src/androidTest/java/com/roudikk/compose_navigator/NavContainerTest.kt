@@ -21,7 +21,7 @@ class NavContainerTest {
             get() = text
 
         @Composable
-        override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+        override fun AnimatedVisibilityScope.Content() {
             Text(text = text)
         }
 
@@ -35,7 +35,7 @@ class NavContainerTest {
     ) : BottomSheet {
 
         @Composable
-        override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) {
+        override fun AnimatedVisibilityScope.Content() {
             Text(text = text)
         }
 

@@ -34,7 +34,7 @@ class NavigatorTest {
 
     open class TestScreen : Screen {
         @Composable
-        override fun Content(animatedVisibilityScope: AnimatedVisibilityScope) = error("")
+        override fun AnimatedVisibilityScope.Content() = error("")
         override fun describeContents(): Int = error("")
         override fun writeToParcel(p0: Parcel?, p1: Int) = error("")
     }

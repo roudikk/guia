@@ -161,7 +161,7 @@ class NavigationTransitionsTest {
     @Test
     fun `Navigation Slide Out Vertically maps to Compose Slide Out Vertically`() {
 
-        val navigationTransition = navigationSlideOutVertically() {
+        val navigationTransition = navigationSlideOutVertically {
             it
         }.toComposeExitTransition()
 
