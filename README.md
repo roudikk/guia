@@ -171,6 +171,8 @@ Launch mode can be specified using the `navOptions.launchMode` parameter of `nav
 - Single Top: If the current top most navigation node has the same key, no additional navigation happens.
 - Single instance: Clears the entire backstack of navigation nodes matching same key and launches a new instance on top.
 
+Note: Currently there launch modes don't provide `newIntent` equivalent behaviour so the content will not restore the state of an existing navigation node.
+
 ## Animations
 
 `EnterTransition` and `ExitTransition` are not savable in a bundle and cannot be saved/restored when the state of the app is saved/restored. 
