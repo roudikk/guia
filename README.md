@@ -235,16 +235,14 @@ class MyScreen : Screen {
 
     @Composable
     override fun AnimatedVisibilityScope.Content() {
-        with(animatedVisibilityScope) {
-            Text(
-                modifier = Modifier
-                    .animateEnterExit(
-                        enter = slideInVertically { it },
-                        exit = slideOutVertically { it }
-                    ),
-                text = "I animate with this screen's enter/exit transitions!"
-            )
-        }
+        Text(
+            modifier = Modifier
+                .animateEnterExit(
+                    enter = slideInVertically { it },
+                    exit = slideOutVertically { it }
+                ),
+            text = "I animate with this screen's enter/exit transitions!"
+        )
     }
 }
 ```
