@@ -8,9 +8,9 @@ Note: This is currently a WIP and experimental and API is very likely to change.
 |-----------|-------------|
 :tada: | Simple API
 :recycle: | State restoration
-:train: | Nested navigations
+:train: | Nested navigation
 :back: | Multiple back stack strategies
-:twisted_rightwards_arrows: | Support for Enter/Exit compose transitons
+:twisted_rightwards_arrows: | Support for Enter/Exit compose transitions
 :rocket: | Different launch modes
 :phone: | Result passing between navigation nodes
 
