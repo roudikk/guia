@@ -8,16 +8,16 @@ Note: This is currently a WIP and experimental and API is very likely to change.
 |-----------|-------------|
 :tada: | Simple API
 :recycle: | State restoration
-:train: | Nested navigations
+:train: | Nested navigation
 :back: | Multiple back stack strategies
-:twisted_rightwards_arrows: | Support for Enter/Exit compose transitons
+:twisted_rightwards_arrows: | Support for Enter/Exit compose transitions
 :rocket: | Different launch modes
 :phone: | Result passing between navigation nodes
 
 ### Table of Contents
 
 1. [Navigation Nodes](#navigation-nodes)  
-2. [Usage](#usage)  
+2. [NavHost and NavContainer](#navhost)
 3. [Navigation Operations](#navigation-operations)
 4. [Launch Modes](#launch-modes)
 5. [Animations](#animations)
@@ -82,21 +82,36 @@ class MyBottomSheet(val myData: String) : BottomSheet {
 }
 ```
 
-Bottom sheets do not get a default surface as a background. This is to enable the developer to choose which composable is the parent of a bottom sheet (For ex: Surface2 or Surface3) inside their own implementation.
+Bottom sheets do not get a default surface as a background. This is to let developers choose which composable is the parent of a bottom sheet (For ex: Surface2 or Surface3) inside their own implementation.
 
 However, to make it easier to have a consistent bottom sheet design across all bottom sheets (if that's the case), you can override `bottomSheetSetup` inside `NavContainer` to provide a common composable parent to all bottom sheets.
 
+## NavHost and NavContainer<a name="navhost"/>
 
-## Usage <a name="usage"/>
+A Navhost holds all the navigators defined in the application. 
 
 For a single stack navigation:
 
 ```kotlin
-NavHost(navigationConfig = NavigationConfig.SingleStack(FirstScreen())) {
-    // Inside this scope you have access to the navigator using findNavigator()
+NavHost(
+        Navigator.defaultKey to NavigationConfig.SingleStack(DefaultScreen()),
+        "nested-nav-key" to NavigationConfig.SingleStack(NestedScreen())
+    ) {
+    // Inside this scope you have access to the navigators using findNavigator()
     
-    NavContainer() // This will draw the FirstScreen's composable immediately
+    findNavigator() // returns closest navigator in navigation hierarchy
+    findNavigator(key) // returns navigator for given key
+    findParentNavigator() // returns parent navigator in navigation hierarchy
+    findDefaultNavigator() // returns navigator with key == Navigator.defaultKey
 }
+```
+A NavHost doesn't immediately render the initial navigation nodes, it's used to cache the navigators and save/restore them.
+
+To render the state of a navigator, use `NavContainer`:
+
+```kotlin
+NavContainer() // Renders the navigator's state that's using Navigator.defaultKey
+NavContainer(key = "some-other-navigator-key") // Renders the navigator's state for given key
 ```
 
 For multi-stacks navigation with history for each stack (For ex: Bottom navigation)
@@ -136,11 +151,13 @@ val stackEntries = listOf(
 )
 
 NavHost(
-      navigationConfig = NavigationConfig.MultiStack(
+      Navigator.defaultKey to NavigationConfig.MultiStack(
           entries = stackEntries,
           initialStackKey = stackEntries[0].key,
           backStackStrategy = BackStackStrategy.BackToInitialStack()
       ),
+      // You can have multi stack and single stack navigators within the same app with each handling its own backstack
+      "nested-nav-key" to NavigationConfig.SingleStack(NestedScreen())
 ) {
 
     NavContainer() // This will draw the initial stack's initial screen immediately
@@ -292,6 +309,8 @@ When the stack reaches its initial node then pressing the back button:
 
 `Navigator.Saver` handles saving/restoring the navigator state upon application state saving/restoration.
 
+So using `rememberSavable` inside your navigation node composables will remember the values of those fields.
+
 ## Result passing <a name="result-passing"/>
 
 `Navigator` uses coroutine flows to pass results between navigation nodes.
@@ -362,39 +381,64 @@ class Screen2 : Screen {
 
 Compose navigator offers 3 navigator fetching functions:
 
-- `findNavigator()` returns the closest navigator in navigation hierarchy
+- `findNavigator(optonalKey)` returns the closest navigator in navigation hierarchy or one matching optionalKey
 - `findParentNavigator()` returns the parent navigator of the current navigator, nullable
 - `findDefaultNavigator()` returns the default navigator using `Navigator.defaultKey`
 
-The first `NavHost` should usually use the default key (By not overriding the `key` parameter)
+You can nest navigators by calling `NavContainer(key)` inside a screen that is contained inside a parent `NavContainer`
 
-All nested `NavHost` must provide a unique key to differentiate between them.
+The first `NavContainer` should usually use the default key (Navigator.defaultKey)
+
+All nested `NavContainer` must provide a unique key to differentiate between them.
 
 ```kotlin
 // NavHost1
 NavHost(
-    navigationConfig = NavigationConfig.SingleStack(FirstScreen())
+    Navigator.defaultKey to NavigationConfig.SingleStack(FirstScreen()),
+    "nested-navigator" to NavigationConfig.SingleStack(NestedSCreen())
 ) {
-    findNavigator() // Returns navigator for NavHost1
-    findParentNavigator() // Returns null
-    findDefaultNavigator() // Returns navigator for NavHost1 if 'key' parameter was not overridden in 'NavHost'
 
-    // NavHost2
-    NavHost(
-        key = "Nested Navigation",
-        navigationConfig = NavigationConfig.SingleStack(NestedFirstScreen())
-    ) {
-        findNavigator() // Returns navigator for NavHost2
-        findParentNavigator() // Returns navigator for NavHost1
-        findDefaultNavigator() // Returns navigator for NavHost1 if 'key' parameter was not overridden in 'NavHost'
-    }
-            
-    // NavHost2 will override the back press of NavHost1 until it can no longer go back
-    // Then NavHost1 will take over back press handling.
-    // Both NavHost1 and NavHost2 can use any navigation node defined anywhere.
+    NavContainer() // Renders FirstScreen
 }
+    
+// FirstScreen.kt
+ override fun AnimatedVisibilityScope.Content() {
+    findNavigator() // Returns navigator for Navigator.defaultKey
+    findParentNavigator() // Returns null
+    findDefaultNavigator() // Returns navigator for Navigator.defaultKey
+        
+    NavContainer("nested-navigator") // Renders NestedScreen
+}
+
+// NestedSCreen.kt
+override fun AnimatedVisibilityScope.Content() {
+    findNavigator() // Returns navigator for "nested-navigator"
+    findParentNavigator() // Returns navigator for Navigator.defaultKey
+    findDefaultNavigator() // Returns navigator for Navigator.defaultKey
+}
+            
+// NavContainer in NestedScreen will override the back press of NavContainer in FirstScreen until it can no longer go back
+// Then NavContainer in FirstScreen will take over back press handling.
+// Both navigators can use any navigation node defined anywhere.
 ```
 
 ## ViewModels <a name="view-models"/>
 
 For example usage with a view model, check [Home Screen Sample](https://github.com/RoudyK/compose-navigator/blob/master/sample/src/main/java/com/roudikk/navigator/sample/ui/screens/home/HomeScreen.kt)
+
+License
+=======
+
+    Copyright 2022 Roudi Korkis Kanaan
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
