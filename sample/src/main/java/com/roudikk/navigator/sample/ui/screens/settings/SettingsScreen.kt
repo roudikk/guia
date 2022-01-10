@@ -121,7 +121,7 @@ private fun AnimatedVisibilityScope.SettingsContent() {
                     val annotatedString = buildAnnotatedString {
                         pushStringAnnotation(
                             tag = "URL",
-                            annotation = "https://github.com",
+                            annotation = "https://github.com/RoudyK/compose-navigator",
                         )
                         withStyle(
                             SpanStyle(
@@ -177,10 +177,11 @@ private fun AnimatedVisibilityScope.SettingsContent() {
                     .padding(16.dp),
                 text = annotatedString,
                 onClick = {
-                    navigator.popTo<BottomNavScreen>()
-                    homeNavigator.navigateToStack(AppNavigationKey.Home)
-                    homeNavigator.navigate(DetailsScreen("Test"))
-                    homeNavigator.navigate(DetailsScreen("Test 2"))
+                    annotatedString
+                        .getStringAnnotations("URL", it, it)
+                        .firstOrNull()?.let { stringAnnotation ->
+                            uriHandler.openUri(stringAnnotation.item)
+                        }
                 }
             )
         }
