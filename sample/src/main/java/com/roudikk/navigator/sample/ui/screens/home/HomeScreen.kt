@@ -73,7 +73,7 @@ class HomeScreen : Screen {
                 }
                 .launchIn(this)
 
-            navigator.results<HomeScreen>()
+            navigator.nodeResults()
                 .onEach {
                     Toast.makeText(context, "Result from: $it", Toast.LENGTH_SHORT).show()
                 }

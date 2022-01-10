@@ -1,5 +1,12 @@
+@file:OptIn(
+    ExperimentalMaterialApi::class,
+    ExperimentalAnimationApi::class,
+    ExperimentalComposeUiApi::class
+)
+
 package com.roudikk.navigator
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
@@ -24,16 +31,12 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import kotlinx.coroutines.android.awaitFrame
 
-/**
- * Used to store in-memory navigators so you can query for a navigator
- * regardless of the level of navigation nesting.
- *
- * @see findNavigator()
- */
-private val navigators: HashMap<String, Navigator> = hashMapOf()
-
 private val LocalNavigator = compositionLocalOf<Navigator?> {
     null
+}
+
+private val LocalNavigatorsCache = compositionLocalOf<HashMap<String, Navigator>> {
+    hashMapOf()
 }
 
 private val LocalParentNavigator = compositionLocalOf<Navigator?> { null }
@@ -41,24 +44,23 @@ private val LocalParentNavigator = compositionLocalOf<Navigator?> { null }
 @ExperimentalNavigatorApi
 @Composable
 fun NavHost(
-    key: String = Navigator.defaultKey,
-    navigationConfig: NavigationConfig,
+    vararg navigators: Pair<String, NavigationConfig>,
     content: @Composable () -> Unit
 ) {
-    val parentNavigator = LocalNavigator.current
-
-    val navigator = rememberSaveable(key = key, saver = Navigator.Saver) {
-        Navigator().apply {
-            initialize(navigationConfig)
+    val navigatorsCache = rememberSaveable(
+        key = "navigators-cache",
+        saver = NavigatorCacheSaver
+    ) {
+        val navigatorsMap = hashMapOf<String, Navigator>()
+        navigators.forEach { (key, navigationConfig) ->
+            navigatorsMap[key] = Navigator().apply {
+                initialize(navigationConfig)
+            }
         }
+        navigatorsMap
     }
 
-    navigators[key] = navigator
-
-    CompositionLocalProvider(
-        LocalNavigator provides navigator,
-        LocalParentNavigator provides parentNavigator
-    ) {
+    CompositionLocalProvider(LocalNavigatorsCache provides navigatorsCache) {
         content()
     }
 }
@@ -67,10 +69,10 @@ fun NavHost(
 @Composable
 fun findNavigator(key: String? = null): Navigator {
     if (key == null) return checkNotNull(LocalNavigator.current) {
-        "No navigator has been registered, call NavHost before using findNavigator"
+        "No navigator has been registered for key: $key, call NavHost with given key"
     }
 
-    return requireNotNull(navigators[key]) {
+    return requireNotNull(LocalNavigatorsCache.current[key]) {
         "No navigator has been registered for key: $key, call NavHost with given key"
     }
 }
@@ -85,14 +87,32 @@ fun findParentNavigator(): Navigator? {
 @Composable
 fun findDefaultNavigator() = findNavigator(Navigator.defaultKey)
 
-@OptIn(
-    ExperimentalMaterialApi::class,
-    ExperimentalAnimationApi::class,
-    ExperimentalComposeUiApi::class
-)
 @ExperimentalNavigatorApi
 @Composable
 fun NavContainer(
+    modifier: Modifier = Modifier,
+    key: String = Navigator.defaultKey,
+    bottomSheetSetup: BottomSheetSetup = BottomSheetSetup()
+) {
+    val parentNavigator = LocalNavigator.current
+    val navigator = requireNotNull(LocalNavigatorsCache.current[key]) {
+        "No navigator has been registered for key: $key, call NavHost with given key"
+    }
+
+    CompositionLocalProvider(
+        LocalParentNavigator provides parentNavigator,
+        LocalNavigator provides navigator
+    ) {
+        NavContainerContent(
+            modifier = modifier,
+            bottomSheetSetup = bottomSheetSetup
+        )
+    }
+}
+
+@ExperimentalNavigatorApi
+@Composable
+private fun NavContainerContent(
     modifier: Modifier = Modifier,
     bottomSheetSetup: BottomSheetSetup = BottomSheetSetup()
 ) {
@@ -105,6 +125,8 @@ fun NavContainer(
     val parentState = parentNavigator?.stateFlow?.collectAsState()
 
     val currentDestination = state.currentStack.destinations.last()
+
+    Log.d("TEST", "${state.currentStackKey}")
 
     val allowBottomSheetStateChange = currentDestination.navigationNode !is BottomSheet ||
             currentDestination.navigationNode.bottomSheetOptions.dismissOnHidden
@@ -293,10 +315,20 @@ data class BottomSheetSetup(
  *
  * Saves and restores the state of a navigator.
  */
-val Navigator.Companion.Saver: Saver<Navigator, *>
+private val NavigatorCacheSaver: Saver<HashMap<String, Navigator>, *>
     get() = Saver(
-        save = { it.save() },
-        restore = { Navigator().apply { restore(it) } }
+        save = {
+            it.map { (key, navigator) ->
+                key to navigator.save()
+            }.toMap()
+        },
+        restore = {
+            HashMap(it.map { (key, navigatorState) ->
+                key to Navigator().apply {
+                    restore(navigatorState)
+                }
+            }.toMap())
+        }
     )
 
 @RequiresOptIn("This API is experimental and is likely to change in the future.")

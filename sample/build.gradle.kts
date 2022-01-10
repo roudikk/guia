@@ -93,6 +93,12 @@ dependencies {
     testImplementation("com.google.truth:truth:$truthVersion")
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+    }
+}
+
 // Module wide Opt ins for experimental compose / navigator apis
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {

@@ -50,7 +50,7 @@ class NavContainerTest {
 
         rule.setContent {
             NavHost(
-                navigationConfig = NavigationConfig.SingleStack(testScreen)
+                Navigator.defaultKey to NavigationConfig.SingleStack(testScreen)
             ) {
 
                 NavContainer()
@@ -66,7 +66,7 @@ class NavContainerTest {
 
         rule.setContent {
             NavHost(
-                navigationConfig = NavigationConfig.MultiStack(
+                Navigator.defaultKey to NavigationConfig.MultiStack(
                     entries = stackEntries,
                     initialStackKey = stackEntries[1].key,
                     backStackStrategy = BackStackStrategy.Default
@@ -87,7 +87,7 @@ class NavContainerTest {
 
         rule.setContent {
             NavHost(
-                navigationConfig = NavigationConfig.SingleStack(testScreen)
+                Navigator.defaultKey to NavigationConfig.SingleStack(testScreen)
             ) {
 
                 NavContainer()
@@ -106,7 +106,7 @@ class NavContainerTest {
 
         rule.setContent {
             NavHost(
-                navigationConfig = NavigationConfig.SingleStack(testScreen)
+                Navigator.defaultKey to NavigationConfig.SingleStack(testScreen)
             ) {
 
                 NavContainer()
@@ -131,7 +131,7 @@ class NavContainerTest {
 
         rule.setContent {
             NavHost(
-                navigationConfig = NavigationConfig.MultiStack(
+                Navigator.defaultKey to NavigationConfig.MultiStack(
                     entries = stackEntries,
                     initialStackKey = stackEntries[0].key,
                     backStackStrategy = BackStackStrategy.Default
@@ -170,7 +170,7 @@ class NavContainerTest {
 
         rule.setContent {
             NavHost(
-                navigationConfig = NavigationConfig.SingleStack(testScreen)
+                Navigator.defaultKey to NavigationConfig.SingleStack(testScreen)
             ) {
                 navigator = findNavigator()
 
@@ -203,7 +203,7 @@ class NavContainerTest {
 
         rule.setContent {
             NavHost(
-                navigationConfig = NavigationConfig.SingleStack(testScreen)
+                Navigator.defaultKey to NavigationConfig.SingleStack(testScreen)
             ) {
                 navigator = findNavigator()
 

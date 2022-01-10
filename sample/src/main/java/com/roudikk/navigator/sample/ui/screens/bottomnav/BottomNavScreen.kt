@@ -21,6 +21,7 @@ import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
 import com.roudikk.navigator.*
 import com.roudikk.navigator.sample.AppNavigationKey
+import com.roudikk.navigator.sample.AppNavigator
 import com.roudikk.navigator.sample.AppPreview
 import com.roudikk.navigator.sample.ui.composables.defaultBottomSheetSetup
 import com.roudikk.navigator.sample.ui.screens.dialogs.DialogsScreen
@@ -34,35 +35,7 @@ class BottomNavScreen : Screen {
 
     @Composable
     override fun AnimatedVisibilityScope.Content() {
-        val stackEntries = listOf(
-            NavigationConfig.MultiStack.NavigationStackEntry(
-                key = AppNavigationKey.Home,
-                initialNavigationNode = HomeScreen()
-            ),
-            NavigationConfig.MultiStack.NavigationStackEntry(
-                key = AppNavigationKey.Nested,
-                initialNavigationNode = ParentNestedScreen()
-            ),
-            NavigationConfig.MultiStack.NavigationStackEntry(
-                key = AppNavigationKey.Dialogs,
-                initialNavigationNode = DialogsScreen()
-            ),
-            NavigationConfig.MultiStack.NavigationStackEntry(
-                key = AppNavigationKey.NavigationTree,
-                initialNavigationNode = NavigationTreeScreen()
-            )
-        )
-
-        NavHost(
-            key = "Home Navigation",
-            navigationConfig = NavigationConfig.MultiStack(
-                entries = stackEntries,
-                initialStackKey = stackEntries[0].key,
-                backStackStrategy = BackStackStrategy.BackToInitialStack()
-            ),
-        ) {
-            BottomNavContent()
-        }
+        BottomNavContent()
     }
 }
 
@@ -75,6 +48,7 @@ private fun BottomNavContent() {
         }
     ) { paddingValues ->
         NavContainer(
+            key = AppNavigator.BottomTab.key,
             modifier = Modifier.padding(paddingValues),
             bottomSheetSetup = defaultBottomSheetSetup(
                 Modifier.padding(paddingValues)
@@ -85,7 +59,7 @@ private fun BottomNavContent() {
 
 @Composable
 private fun BottomNavigation() {
-    val navigator = findNavigator()
+    val navigator = findNavigator(AppNavigator.BottomTab.key)
     val currentStackKey by navigator.currentKeyFlow.collectAsState()
 
     NavigationBar(

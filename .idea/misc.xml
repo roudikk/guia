@@ -60,10 +60,20 @@
         <entry key="../../../../layout/compose-model-1641702851404.xml" value="0.12962962962962962" />
         <entry key="../../../../layout/compose-model-1641703119474.xml" value="0.11481481481481481" />
         <entry key="../../../../layout/compose-model-1641703517940.xml" value="2.0" />
+        <entry key="../../../../layout/compose-model-1641774252431.xml" value="0.1" />
+        <entry key="../../../../layout/compose-model-1641776081620.xml" value="0.1" />
+        <entry key="../../../../layout/compose-model-1641776641485.xml" value="0.21961138725711704" />
+        <entry key="../../../../layout/compose-model-1641783674261.xml" value="0.23384545865341166" />
+        <entry key="../../../../layout/compose-model-1641784291986.xml" value="0.1" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.183" />
         <entry key="app/src/main/res/drawable/splash_screen.xml" value="0.183" />
         <entry key="app/src/main/res/drawable/splash_scren_background.xml" value="0.183" />
         <entry key="app/src/main/res/xml/styles.xml" value="0.26810109289617484" />
+        <entry key="sample/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1425" />
+        <entry key="sample/src/main/res/drawable/ic_launcher_background.xml" value="0.1425" />
+        <entry key="sample/src/main/res/drawable/splash_screen.xml" value="0.1425" />
+        <entry key="sample/src/main/res/drawable/splash_screen_background.xml" value="0.1425" />
+        <entry key="sample/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1425" />
       </map>
     </option>
   </component>

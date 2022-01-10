@@ -10,6 +10,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.roudikk.navigator.NavContainer
 import com.roudikk.navigator.NavHost
 import com.roudikk.navigator.NavigationConfig
+import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.sample.ui.screens.welcome.WelcomeScreen
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 
@@ -35,11 +36,12 @@ class MainActivity : ComponentActivity() {
             )
 
             AppTheme {
-                NavHost(navigationConfig = NavigationConfig.SingleStack(WelcomeScreen())) {
-
-                    NavContainer(
-                        bottomSheetSetup = defaultBottomSheetSetup()
-                    )
+                NavHost(
+                    Navigator.defaultKey to NavigationConfig.SingleStack(WelcomeScreen()),
+                    AppNavigator.BottomTab.setup,
+                    AppNavigator.NestedTab.setup
+                ) {
+                    NavContainer()
                 }
             }
         }

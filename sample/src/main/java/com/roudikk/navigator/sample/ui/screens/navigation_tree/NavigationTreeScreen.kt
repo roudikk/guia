@@ -111,7 +111,6 @@ private fun NavigationTreeContent() {
                 }
             }
 
-
             HorizontalPager(
                 modifier = Modifier.weight(1F),
                 state = pagerState,

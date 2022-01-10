@@ -12,8 +12,57 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.systemBarsPadding
 import com.roudikk.navigator.*
 import com.roudikk.navigator.animation.*
+import com.roudikk.navigator.sample.ui.screens.dialogs.DialogsScreen
+import com.roudikk.navigator.sample.ui.screens.home.HomeScreen
+import com.roudikk.navigator.sample.ui.screens.navigation_tree.NavigationTreeScreen
+import com.roudikk.navigator.sample.ui.screens.nested.NestedScreen
+import com.roudikk.navigator.sample.ui.screens.nested.ParentNestedScreen
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
+
+sealed class AppNavigator(
+    val key: String,
+    val navigationConfig: NavigationConfig
+) {
+
+    val setup: Pair<String, NavigationConfig>
+        get() = key to navigationConfig
+
+    object BottomTab : AppNavigator(
+        key = "Bottom Tab Navigator",
+        navigationConfig = with(
+            listOf(
+                NavigationConfig.MultiStack.NavigationStackEntry(
+                    key = AppNavigationKey.Home,
+                    initialNavigationNode = HomeScreen()
+                ),
+                NavigationConfig.MultiStack.NavigationStackEntry(
+                    key = AppNavigationKey.Nested,
+                    initialNavigationNode = ParentNestedScreen()
+                ),
+                NavigationConfig.MultiStack.NavigationStackEntry(
+                    key = AppNavigationKey.Dialogs,
+                    initialNavigationNode = DialogsScreen()
+                ),
+                NavigationConfig.MultiStack.NavigationStackEntry(
+                    key = AppNavigationKey.NavigationTree,
+                    initialNavigationNode = NavigationTreeScreen()
+                )
+            )
+        ) {
+            NavigationConfig.MultiStack(
+                entries = this,
+                initialStackKey = this[0].key,
+                backStackStrategy = BackStackStrategy.BackToInitialStack()
+            )
+        }
+    )
+
+    object NestedTab : AppNavigator(
+        key = "Nested Tab Navigator",
+        navigationConfig = NavigationConfig.SingleStack(NestedScreen(1))
+    )
+}
 
 sealed class AppNavigationKey : NavigationKey() {
 
@@ -88,14 +137,16 @@ fun BottomSheetSurface(
 
 @Composable
 fun AppPreview(content: @Composable () -> Unit) = AppTheme {
-    NavHost(navigationConfig = NavigationConfig.SingleStack(object : Screen {
-        @Composable
-        override fun AnimatedVisibilityScope.Content() {
-        }
+    NavHost(
+        "preview-navigator" to NavigationConfig.SingleStack(object : Screen {
+            @Composable
+            override fun AnimatedVisibilityScope.Content() {
+            }
 
-        override fun describeContents() = error("Preview only")
-        override fun writeToParcel(p0: Parcel?, p1: Int) = error("Preview only")
-    })) {
+            override fun describeContents() = error("Preview only")
+            override fun writeToParcel(p0: Parcel?, p1: Int) = error("Preview only")
+        })
+    ) {
         content()
     }
 }

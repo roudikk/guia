@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.imePadding
 import com.roudikk.navigator.*
+import com.roudikk.navigator.sample.AppNavigator
 import com.roudikk.navigator.sample.AppPreview
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import kotlinx.parcelize.Parcelize
@@ -41,81 +42,77 @@ private fun ParentNestedContent() {
             AppTopAppBar(title = "Nested Navigation")
         }
     ) {
-        NavHost(
-            key = "Nested Screen Navigation",
-            navigationConfig = NavigationConfig.SingleStack(NestedScreen(1))
+        val nestedNavigator = findNavigator(AppNavigator.NestedTab.key)
+
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val navigator = findNavigator()
 
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+            Box(modifier = Modifier.weight(1f)) {
+                NavContainer(
+                    modifier = Modifier.fillMaxSize(),
+                    key = AppNavigator.NestedTab.key
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .imePadding()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 16.dp)
+                    .height(52.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-
-                Box(modifier = Modifier.weight(1f)) {
-                    NavContainer(
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-
-                Row(
+                Button(
                     modifier = Modifier
-                        .imePadding()
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 16.dp)
-                        .height(52.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Button(
-                        modifier = Modifier
-                            .padding(end = 8.dp)
-                            .fillMaxHeight()
-                            .weight(1f),
-                        onClick = {
-                            navigator.popToRoot()
-                        }
-                    ) {
-                        Text(
-                            modifier = Modifier,
-                            text = "Pop to root"
-                        )
+                        .padding(end = 8.dp)
+                        .fillMaxHeight()
+                        .weight(1f),
+                    onClick = {
+                        nestedNavigator.popToRoot()
                     }
-
-                    val textFieldValue = rememberSaveable { mutableStateOf("") }
-
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .padding(start = 8.dp)
-                            .weight(1f),
-                        value = textFieldValue.value,
-                        onValueChange = {
-                            textFieldValue.value = it
-                        },
-                        shape = RoundedCornerShape(20.dp),
-                        trailingIcon = {
-                            IconButton(onClick = {
-                                textFieldValue.value.toIntOrNull()?.let {
-                                    navigator.popTo("NestedScreen_$it")
-                                }
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.ArrowForward,
-                                    contentDescription = "Pop"
-                                )
-                            }
-                        },
-                        placeholder = {
-                            Text(text = "Pop to index")
-                        },
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            textColor = MaterialTheme.colorScheme.onSurface
-                        ),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number
-                        )
+                ) {
+                    Text(
+                        modifier = Modifier,
+                        text = "Pop to root"
                     )
                 }
+
+                val textFieldValue = rememberSaveable { mutableStateOf("") }
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .weight(1f),
+                    value = textFieldValue.value,
+                    onValueChange = {
+                        textFieldValue.value = it
+                    },
+                    shape = RoundedCornerShape(20.dp),
+                    trailingIcon = {
+                        IconButton(onClick = {
+                            textFieldValue.value.toIntOrNull()?.let {
+                                nestedNavigator.popTo("NestedScreen_$it")
+                            }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowForward,
+                                contentDescription = "Pop"
+                            )
+                        }
+                    },
+                    placeholder = {
+                        Text(text = "Pop to index")
+                    },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = MaterialTheme.colorScheme.onSurface
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    )
+                )
             }
         }
     }
