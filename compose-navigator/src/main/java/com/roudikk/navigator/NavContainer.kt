@@ -6,7 +6,6 @@
 
 package com.roudikk.navigator
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
@@ -125,8 +124,6 @@ private fun NavContainerContent(
     val parentState = parentNavigator?.stateFlow?.collectAsState()
 
     val currentDestination = state.currentStack.destinations.last()
-
-    Log.d("TEST", "${state.currentStackKey}")
 
     val allowBottomSheetStateChange = currentDestination.navigationNode !is BottomSheet ||
             currentDestination.navigationNode.bottomSheetOptions.dismissOnHidden

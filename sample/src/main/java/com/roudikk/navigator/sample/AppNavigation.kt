@@ -109,17 +109,6 @@ val MaterialSharedAxisTransitionXY = NavTransition(
             + navigationFadeOut(animationSpec = navigationTween(durationMillis = 150))
 )
 
-fun defaultBottomSheetSetup(modifier: Modifier = Modifier) = BottomSheetSetup(
-    bottomSheetContainer = { content ->
-        BottomSheetSurface(
-            modifier = Modifier
-                .systemBarsPadding(bottom = false)
-                .then(modifier),
-            content = content
-        )
-    }
-)
-
 @Composable
 fun BottomSheetSurface(
     modifier: Modifier = Modifier,

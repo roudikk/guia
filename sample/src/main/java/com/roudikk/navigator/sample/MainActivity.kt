@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -11,6 +13,7 @@ import com.roudikk.navigator.NavContainer
 import com.roudikk.navigator.NavHost
 import com.roudikk.navigator.NavigationConfig
 import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.sample.ui.composables.defaultBottomSheetSetup
 import com.roudikk.navigator.sample.ui.screens.welcome.WelcomeScreen
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 
@@ -41,7 +44,7 @@ class MainActivity : ComponentActivity() {
                     AppNavigator.BottomTab.setup,
                     AppNavigator.NestedTab.setup
                 ) {
-                    NavContainer()
+                    NavContainer(bottomSheetSetup = defaultBottomSheetSetup())
                 }
             }
         }
