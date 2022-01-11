@@ -121,7 +121,7 @@ private fun AnimatedVisibilityScope.SettingsContent() {
                     val annotatedString = buildAnnotatedString {
                         pushStringAnnotation(
                             tag = "URL",
-                            annotation = "https://github.com/RoudyK/compose-navigator",
+                            annotation = "https://github.com/roudikk/compose-navigator",
                         )
                         withStyle(
                             SpanStyle(
@@ -129,7 +129,7 @@ private fun AnimatedVisibilityScope.SettingsContent() {
                                 textDecoration = TextDecoration.Underline
                             )
                         ) {
-                            append("https://github.com/RoudyK/compose-navigator")
+                            append("https://github.com/roudikk/compose-navigator")
                         }
                     }
                     ClickableText(
@@ -153,7 +153,7 @@ private fun AnimatedVisibilityScope.SettingsContent() {
             val annotatedString = buildAnnotatedString {
                 pushStringAnnotation(
                     tag = "URL",
-                    annotation = "https://github.com/RoudyK",
+                    annotation = "https://github.com/roudikk",
                 )
                 withStyle(
                     SpanStyle(
