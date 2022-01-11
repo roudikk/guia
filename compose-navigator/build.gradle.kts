@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("de.mannodermaus.android-junit5")
+    id("com.vanniktech.maven.publish")
 }
 
 val composeVersion = "1.1.0-rc01"
@@ -33,6 +34,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -78,4 +80,23 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
+}
+
+allprojects {
+    plugins.withId("com.vanniktech.maven.publish") {
+        mavenPublish {
+            sonatypeHost = com.vanniktech.maven.publish.SonatypeHost.S01
+        }
+    }
+}
+
+tasks.withType<Sign>().configureEach {
+    onlyIf { !project.version.toString().endsWith("SNAPSHOT") }
+}
+
+signing {
+    val signingKeyId: String? by project
+    val signingKey: String? by project
+    val signingPassword: String? by project
+    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
 }
