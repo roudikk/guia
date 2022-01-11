@@ -100,3 +100,19 @@ signing {
     val signingPassword: String? by project
     useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
 }
+
+publishing {
+    repositories {
+        maven {
+            val releasesRepoUrl = "$buildDir/repos/releases"
+            val snapshotsRepoUrl = "$buildDir/repos/snapshots"
+            setUrl(
+                if ((version.toString()).endsWith("SNAPSHOT")) {
+                    snapshotsRepoUrl
+                } else {
+                    releasesRepoUrl
+                }
+            )
+        }
+    }
+}
