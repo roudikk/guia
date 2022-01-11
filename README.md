@@ -16,19 +16,29 @@ Note: This is currently a WIP and experimental and API is very likely to change.
 
 ### Table of Contents
 
-1. [Navigation Nodes](#navigation-nodes)  
-2. [NavHost and NavContainer](#navhost)
-3. [Navigation Operations](#navigation-operations)
-4. [Launch Modes](#launch-modes)
-5. [Animations](#animations)
+1. [Installation](#installation)
+2. [Navigation Nodes](#navigation-nodes)  
+3. [NavHost and NavContainer](#navhost)
+4. [Navigation Operations](#navigation-operations)
+5. [Launch Modes](#launch-modes)
+6. [Animations](#animations)
     1. [Animating between navigation nodes](#animations-nodes)
     2. [Animating between navigation stacks](#animations-stacks)
     3. [Animating navigation node elements](#animations-elements)
-6. [Back Stack Management](#back-stack-management)
-7. [State Restoration](#state-restoration)
-8. [Result passing](#result-passing)
-9. [Nested Navigation](#nested-navigation)
-10. [Working with ViewModels](#view-models)
+7. [Back Stack Management](#back-stack-management)
+8. [State Restoration](#state-restoration)
+9. [Result passing](#result-passing)
+10. [Nested Navigation](#nested-navigation)
+11. [Working with ViewModels](#view-models)
+
+## Installation <a name="installation" />
+
+```gradle
+dependencies {
+    implementation("com.roudikk.compose-navigator:compose-navigator:1.0.0")
+}
+```
+For proguard rules check [consumer-rules.pro](https://github.com/roudikk/compose-navigator/blob/master/compose-navigator/consumer-rules.pro)
 
 ## Navigation nodes <a name="navigation-nodes"/>
 
@@ -202,7 +212,7 @@ Launch mode can be specified using the `navOptions.launchMode` parameter of `nav
 - Single Top: If the current top most navigation node has the same key, no additional navigation happens.
 - Single instance: Clears the entire backstack of navigation nodes matching same key and launches a new instance on top.
 
-Note: Currently there launch modes don't provide `newIntent` equivalent behaviour so the content will not restore the state of an existing navigation node.
+Note: Currently the launch modes don't provide `newIntent` equivalent behaviour so the content will not restore the state of an existing navigation node.
 
 ## Animations <a name="animations"/>
 
@@ -307,9 +317,9 @@ When the stack reaches its initial node then pressing the back button:
 
 `NavContainer` uses `rememberSaveableStateHolder()` to remember composables ui states.
 
-`Navigator.Saver` handles saving/restoring the navigator state upon application state saving/restoration.
+`NavigatorCacheSaver` handles saving/restoring the navigator state upon application state saving/restoration.
 
-So using `rememberSavable` inside your navigation node composables will remember the values of those fields.
+Using `rememberSavable` inside your navigation node composables will remember the values of those fields.
 
 ## Result passing <a name="result-passing"/>
 
@@ -317,7 +327,7 @@ So using `rememberSavable` inside your navigation node composables will remember
 
 A Result can be of any type.
 
-Sending/receiving results are done by the type of the navigation node:
+Sending/receiving results are done by the key of the navigation node:
 
 ```kotlin
     // Navigator.kt
