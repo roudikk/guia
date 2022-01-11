@@ -1,0 +1,15 @@
+name-template: '$NEXT_MINOR_VERSION 🌈'
+tag-template: 'v$NEXT_MINOR_VERSION'
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'enhancement'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'bug'
+  - title: '🧰 Maintenance'
+    label: 'chore'
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+template: |
+  ## What's Changed
+  $CHANGES
