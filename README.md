@@ -40,6 +40,26 @@ dependencies {
 ```
 For proguard rules check [consumer-rules.pro](https://github.com/roudikk/compose-navigator/blob/master/compose-navigator/consumer-rules.pro)
 
+Recommended to use Kotlin Parcelize, `build.gradle`:
+
+```gradle
+plugins {
+    // groovy
+    id 'kotlin-parcelize'
+    
+    // kotlin
+    id("kotlin-parcelize")
+}
+```
+
+OPTIONAL: Module OptIn for experimental navigator api:
+
+```gradle
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions.freeCompilerArgs += "-opt-in=com.roudikk.navigator.ExperimentalNavigatorApi"
+}
+```
+
 ## Navigation nodes <a name="navigation-nodes"/>
 
 Screen:
