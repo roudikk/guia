@@ -25,6 +25,7 @@ import com.roudikk.navigator.animation.navigationSlideInVertically
 import com.roudikk.navigator.animation.navigationSlideOutVertically
 import com.roudikk.navigator.findNavigator
 import com.roudikk.navigator.sample.AppPreview
+import com.roudikk.navigator.sample.VerticalSlideTransition
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -86,16 +87,7 @@ private fun NestedContent(count: Int) {
                 navigator.navigate(
                     NestedScreen(count + 1),
                     navOptions = NavOptions(
-                        navTransition = NavTransition(
-                            enter = navigationSlideInVertically { it / 2 }
-                                    + navigationFadeIn(),
-                            exit = navigationSlideOutVertically { -it / 2 }
-                                    + navigationFadeOut(),
-                            popEnter = navigationSlideInVertically { -it / 2 }
-                                    + navigationFadeIn(),
-                            popExit = navigationSlideOutVertically { it / 2 }
-                                    + navigationFadeOut()
-                        )
+                        navTransition = VerticalSlideTransition
                     )
                 )
             }
