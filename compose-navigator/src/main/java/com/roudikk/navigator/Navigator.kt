@@ -77,6 +77,12 @@ class Navigator {
     }.stateIn(scope, SharingStarted.Lazily, stateFlow.value.currentStackKey)
 
     /**
+     * Current stack's current node key.
+     */
+    val currentNodeKey: String
+        get() = stateFlow.value.currentStack.currentNodeKey
+
+    /**
      * [resultsChannel] is used for guaranteed delivery of the result
      * [resultsFlow] used to collect results.
      *

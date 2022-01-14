@@ -6,6 +6,7 @@
 
 package com.roudikk.navigator
 
+import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
@@ -23,12 +24,16 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.roudikk.navigator.deeplink.DeepLinkHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.withContext
 
 private val LocalNavigator = compositionLocalOf<Navigator?> {
     null
@@ -44,8 +49,11 @@ private val LocalParentNavigator = compositionLocalOf<Navigator?> { null }
 @Composable
 fun NavHost(
     vararg navigators: Pair<String, NavigationConfig>,
+    deepLinkHandler: DeepLinkHandler? = null,
     content: @Composable () -> Unit
 ) {
+    val context = LocalContext.current
+
     val navigatorsCache = rememberSaveable(
         key = "navigators-cache",
         saver = NavigatorCacheSaver
@@ -57,6 +65,18 @@ fun NavHost(
             }
         }
         navigatorsMap
+    }
+
+    deepLinkHandler?.navigator = { key ->
+        checkNotNull(navigatorsCache[key]) {
+            "No navigator has been registered for key: $key, call NavHost with given key"
+        }
+    }
+
+    val initialDeepLinkHandled = rememberSaveable { mutableStateOf(false) }
+    if (!initialDeepLinkHandled.value) {
+        deepLinkHandler?.onIntent((context as Activity).intent)
+        initialDeepLinkHandled.value = true
     }
 
     CompositionLocalProvider(LocalNavigatorsCache provides navigatorsCache) {

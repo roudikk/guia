@@ -109,6 +109,17 @@ val MaterialSharedAxisTransitionXY = NavTransition(
             + navigationFadeOut(animationSpec = navigationTween(durationMillis = 150))
 )
 
+val VerticalSlideTransition = NavTransition(
+    enter = navigationSlideInVertically { it / 2 }
+            + navigationFadeIn(),
+    exit = navigationSlideOutVertically { -it / 2 }
+            + navigationFadeOut(),
+    popEnter = navigationSlideInVertically { -it / 2 }
+            + navigationFadeIn(),
+    popExit = navigationSlideOutVertically { it / 2 }
+            + navigationFadeOut()
+)
+
 @Composable
 fun BottomSheetSurface(
     modifier: Modifier = Modifier,

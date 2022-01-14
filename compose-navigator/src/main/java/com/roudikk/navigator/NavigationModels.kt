@@ -214,7 +214,17 @@ data class NavTransition(
     val exit: NavigationExitTransition = navigationFadeOut(),
     val popEnter: NavigationEnterTransition = navigationFadeIn(),
     val popExit: NavigationExitTransition = navigationFadeOut()
-) : Parcelable
+) : Parcelable {
+
+    companion object {
+        val None = NavTransition(
+            enter = NavigationEnterTransition.None,
+            exit = NavigationExitTransition.None,
+            popEnter = NavigationEnterTransition.None,
+            popExit = NavigationExitTransition.None
+        )
+    }
+}
 
 /**
  * Navigation Config used to define a [Navigator] configuration.

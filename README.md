@@ -9,6 +9,7 @@ Note: This is currently a WIP and experimental and API is very likely to change.
 :tada: | Simple API
 :recycle: | State restoration
 :train: | Nested navigation
+:link: | Deep Linking
 :back: | Multiple back stack strategies
 :twisted_rightwards_arrows: | Support for Enter/Exit compose transitions
 :rocket: | Different launch modes
@@ -29,7 +30,8 @@ Note: This is currently a WIP and experimental and API is very likely to change.
 8. [State Restoration](#state-restoration)
 9. [Result passing](#result-passing)
 10. [Nested Navigation](#nested-navigation)
-11. [Working with ViewModels](#view-models)
+11. [Deeplinks](#deeplinks)
+12. [Working with ViewModels](#view-models)
 
 ## Installation <a name="installation" />
 
@@ -451,6 +453,50 @@ override fun AnimatedVisibilityScope.Content() {
 // Then NavContainer in FirstScreen will take over back press handling.
 // Both navigators can use any navigation node defined anywhere.
 ```
+
+## Deeplinks <a name="deeplinks"/>
+
+Deep links can be handled by providing a `DeepLinkHandler`:
+
+Create a `DeepLinkHandler` class:
+
+```kotlin
+class MyDeepLinkHandler : DeepLinkHandler() {
+
+    override fun handleIntent(navigator: (String) -> Navigator, intent: Intent?) {
+        // navigator can be used to get a navigator for a given key
+        // use intent data to handle deep linking
+    }
+}
+```
+
+In your activity:
+```kotlin
+class MainActivity : ComponentActivity() {
+
+    private val deepLinkHandler = MyDeepLinkHandler()
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            NavHost(
+                Navigator.defaultKey to NavigationConfig.SingleStack(MyInitialScreen()),
+                deepLinkHandler = deepLinkHandler
+            ) {
+                // content
+            }
+        }
+    }
+    
+    // Handle new intents when using launch mode as singleTop
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        deepLinkHandler.onIntent(intent)
+    }
+}
+```
+
+Check example usage in [Sample app](https://github.com/roudikk/compose-navigator/blob/feature/deep-linking/sample/src/main/java/com/roudikk/navigator/sample/ui/deeplink/SampleDeepLinkHandler.kt)
 
 ## ViewModels <a name="view-models"/>
 
