@@ -496,7 +496,7 @@ class MainActivity : ComponentActivity() {
 }
 ```
 
-Check example usage in [Sample app](https://github.com/roudikk/compose-navigator/blob/feature/deep-linking/sample/src/main/java/com/roudikk/navigator/sample/ui/deeplink/SampleDeepLinkHandler.kt)
+Check example usage in [Sample app](https://github.com/roudikk/compose-navigator/blob/master/sample/src/main/java/com/roudikk/navigator/sample/ui/deeplink/SampleDeepLinkHandler.kt)
 
 ## ViewModels <a name="view-models"/>
 
