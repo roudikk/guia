@@ -52,6 +52,11 @@ fun NavHost(
     deepLinkHandler: DeepLinkHandler? = null,
     content: @Composable () -> Unit
 ) {
+    require(navigators.isNotEmpty()) {
+        "Provide at least one navigator config in NavHost. For a default navigator use " +
+                "Navigator.defaultKey to NavigationConfig.SingleStack(FirstScreen())"
+    }
+
     val context = LocalContext.current
 
     val navigatorsCache = rememberSaveable(
