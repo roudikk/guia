@@ -92,7 +92,7 @@ class NavContainerTest {
 
                 NavContainer()
 
-                findNavigator().navigate(testScreen2)
+                findNavigator(Navigator.defaultKey).navigate(testScreen2)
             }
         }
 
@@ -111,9 +111,10 @@ class NavContainerTest {
 
                 NavContainer()
 
-                findNavigator().navigate(testScreen2)
-                assert(findNavigator().popBackStack())
-                assert(!findNavigator().popBackStack())
+                val navigator = findNavigator(Navigator.defaultKey)
+                navigator.navigate(testScreen2)
+                assert(navigator.popBackStack())
+                assert(!navigator.popBackStack())
             }
         }
 
@@ -137,7 +138,7 @@ class NavContainerTest {
                     backStackStrategy = BackStackStrategy.Default
                 )
             ) {
-                navigator = findNavigator()
+                navigator = findNavigator(Navigator.defaultKey)
 
                 NavContainer()
             }
@@ -172,7 +173,7 @@ class NavContainerTest {
             NavHost(
                 Navigator.defaultKey to NavigationConfig.SingleStack(testScreen)
             ) {
-                navigator = findNavigator()
+                navigator = findNavigator(Navigator.defaultKey)
 
                 NavContainer()
             }
@@ -205,7 +206,7 @@ class NavContainerTest {
             NavHost(
                 Navigator.defaultKey to NavigationConfig.SingleStack(testScreen)
             ) {
-                navigator = findNavigator()
+                navigator = findNavigator(Navigator.defaultKey)
 
                 NavContainer()
             }
