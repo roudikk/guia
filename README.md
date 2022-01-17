@@ -32,6 +32,7 @@ Note: This is currently a WIP and experimental and API is very likely to change.
 10. [Nested Navigation](#nested-navigation)
 11. [Deeplinks](#deeplinks)
 12. [Working with ViewModels](#view-models)
+13. [Running Sample](#running-sample)
 
 ## Installation <a name="installation" />
 
@@ -501,6 +502,24 @@ Check example usage in [Sample app](https://github.com/roudikk/compose-navigator
 ## ViewModels <a name="view-models"/>
 
 For example usage with a view model, check [Home Screen Sample](https://github.com/roudikk/compose-navigator/blob/master/sample/src/main/java/com/roudikk/navigator/sample/ui/screens/home/HomeScreen.kt)
+
+## Running sample <a name ="running-sample"/>
+
+Comment out the google services and crashlytics plugins:
+
+```gradle
+//    id("com.google.gms.google-services")
+//    id("com.google.firebase.crashlytics")
+```
+
+Comment out the firebase section of dependencies:
+
+```gradle
+    // Firebase
+//    implementation(platform("com.google.firebase:firebase-bom:$firebaseBomVersion"))
+//    implementation("com.google.firebase:firebase-analytics-ktx")
+//    implementation("com.google.firebase:firebase-crashlytics-ktx")
+```
 
 License
 =======
