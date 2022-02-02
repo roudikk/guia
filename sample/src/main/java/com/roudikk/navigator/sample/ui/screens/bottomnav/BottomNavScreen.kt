@@ -24,10 +24,6 @@ import com.roudikk.navigator.sample.AppNavigationKey
 import com.roudikk.navigator.sample.AppNavigator
 import com.roudikk.navigator.sample.AppPreview
 import com.roudikk.navigator.sample.ui.composables.defaultBottomSheetSetup
-import com.roudikk.navigator.sample.ui.screens.dialogs.DialogsScreen
-import com.roudikk.navigator.sample.ui.screens.home.HomeScreen
-import com.roudikk.navigator.sample.ui.screens.navigation_tree.NavigationTreeScreen
-import com.roudikk.navigator.sample.ui.screens.nested.ParentNestedScreen
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

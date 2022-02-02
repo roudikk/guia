@@ -2,8 +2,6 @@ plugins {
     id("com.android.application")
     kotlin("android")
     id("kotlin-parcelize")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
 }
 
 // Module wide Opt ins for experimental compose / navigator apis
@@ -32,18 +30,17 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     kotlinOptions.freeCompilerArgs += "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi"
 }
 
-val composeVersion = "1.1.0-rc01"
-val accompanistVersion = "0.22.0-rc"
+val composeVersion = "1.1.0-rc03"
+val accompanistVersion = "0.22.1-rc"
 val lottieVersion = "4.2.2"
 val kotlinCoroutinesVersion = "1.6.0"
-val firebaseBomVersion = "29.0.3"
-val materialVersion = "1.6.0-alpha01"
 val activityComposeVersion = "1.4.0"
 val viewModelComposeVersion = "2.4.0"
-val composeMaterial3Version = "1.0.0-alpha02"
+val composeMaterial3Version = "1.0.0-alpha04"
 val junitVersion = "4.13.2"
 val jupiterVersion = "5.8.2"
 val truthVersion = "1.1.3"
+val materialVersion = "1.6.0-alpha02"
 
 android {
     compileSdk = 32
@@ -75,16 +72,18 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.1.0-rc02"
+        kotlinCompilerExtensionVersion = composeVersion
     }
 }
 
 dependencies {
+    // Material
+    implementation("com.google.android.material:material:$materialVersion")
+
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
 
     // Compose
-    implementation("com.google.android.material:material:$materialVersion")
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
@@ -94,11 +93,6 @@ dependencies {
     implementation("androidx.activity:activity-compose:$activityComposeVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$viewModelComposeVersion")
     implementation("androidx.compose.material3:material3:$composeMaterial3Version")
-
-    // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:$firebaseBomVersion"))
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
 
     // Accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -115,6 +109,6 @@ dependencies {
     // Test dependencies
     testImplementation("junit:junit:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter:$jupiterVersion")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:$jupiterVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
     testImplementation("com.google.truth:truth:$truthVersion")
 }

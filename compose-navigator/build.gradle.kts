@@ -2,11 +2,10 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
-    id("de.mannodermaus.android-junit5")
     id("com.vanniktech.maven.publish")
 }
 
-val composeVersion = "1.1.0-rc01"
+val composeVersion = "1.1.0-rc03"
 val composeActivityVersion = "1.4.0"
 val kotlinCoroutinesVersion = "1.6.0"
 val kotlinVersion = "1.6.10"
@@ -45,7 +44,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.1.0-rc02"
+        kotlinCompilerExtensionVersion = composeVersion
     }
 
     buildFeatures {

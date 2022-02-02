@@ -1,8 +1,6 @@
 package com.roudikk.navigator.sample.ui.screens.settings
 
 import android.content.res.Configuration
-import android.util.Log
-import android.view.KeyEvent
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
@@ -27,14 +24,8 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsPadding
 import com.roudikk.navigator.Screen
 import com.roudikk.navigator.findNavigator
-import com.roudikk.navigator.sample.AppNavigationKey
-import com.roudikk.navigator.sample.AppNavigator
 import com.roudikk.navigator.sample.AppPreview
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
-import com.roudikk.navigator.sample.ui.screens.bottomnav.BottomNavScreen
-import com.roudikk.navigator.sample.ui.screens.details.DetailsScreen
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -49,7 +40,6 @@ class SettingsScreen : Screen {
 @Composable
 private fun AnimatedVisibilityScope.SettingsContent() {
     val navigator = findNavigator()
-    val homeNavigator = findNavigator(AppNavigator.BottomTab.key)
     val lazyListState = rememberLazyListState()
 
     Scaffold(

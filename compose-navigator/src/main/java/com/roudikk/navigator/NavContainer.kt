@@ -31,9 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.roudikk.navigator.deeplink.DeepLinkHandler
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.android.awaitFrame
-import kotlinx.coroutines.withContext
 
 private val LocalNavigator = compositionLocalOf<Navigator?> {
     null
