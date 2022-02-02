@@ -9,12 +9,10 @@ package com.roudikk.navigator
 import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
+import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -148,12 +146,16 @@ private fun NavContainerContent(
 
     val currentDestination = state.currentStack.destinations.last()
 
-    val allowBottomSheetStateChange = currentDestination.navigationNode !is BottomSheet ||
-            currentDestination.navigationNode.bottomSheetOptions.dismissOnHidden
+    val confirmStateChange = { _: ModalBottomSheetValue ->
+        val destination = navigator.stateFlow.value.currentStack.destinations.last()
+        destination.navigationNode !is BottomSheet ||
+                destination.navigationNode.bottomSheetOptions.dismissOnHidden
+    }
 
     val bottomSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
-        confirmStateChange = { allowBottomSheetStateChange }
+        animationSpec = bottomSheetSetup.animationSpec,
+        confirmStateChange = confirmStateChange
     )
 
     val parentShowingBottomSheet = parentState?.value?.currentStack?.destinations?.last()
@@ -198,18 +200,20 @@ private fun NavContainerContent(
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                bottomSheetSetup.bottomSheetContainer {
-                    val localDensity = LocalDensity.current
-                    val bottomSheetDestination = currentDestination.takeIf {
-                        it.navigationNode is BottomSheet
-                    }
-                    var contentHeightPixels by remember {
-                        mutableStateOf(with(localDensity) {
-                            1.dp.toPx()
-                        })
-                    }
-                    val contentHeightDp = with(localDensity) { contentHeightPixels.toDp() }
+                val localDensity = LocalDensity.current
+                val bottomSheetDestination = currentDestination.takeIf {
+                    it.navigationNode is BottomSheet
+                }
+                var contentHeightPixels by remember {
+                    mutableStateOf(with(localDensity) {
+                        1.dp.toPx()
+                    })
+                }
+                val contentHeightDp = with(localDensity) { contentHeightPixels.toDp() }
 
+                bottomSheetSetup.bottomSheetContainer(modifier = bottomSheetDestination?.let {
+                    (it.navigationNode as BottomSheet).bottomSheetOptions.modifier
+                } ?: Modifier) {
                     AnimatedContent(
                         modifier = Modifier.fillMaxWidth(),
                         targetState = bottomSheetDestination to currentDestination,
@@ -321,10 +325,13 @@ private fun NavContainerContent(
 data class BottomSheetSetup(
     val scrimColor: Color = Color.Black.copy(alpha = 0.4F),
 
+    val animationSpec: AnimationSpec<Float> = SwipeableDefaults.AnimationSpec,
+
     val bottomSheetContainer: @Composable (
+        modifier: Modifier,
         content: @Composable () -> Unit
-    ) -> Unit = { content ->
-        Box {
+    ) -> Unit = { modifier, content ->
+        Box(modifier = modifier) {
             content()
         }
     }

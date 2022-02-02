@@ -3,6 +3,7 @@ package com.roudikk.navigator
 import android.os.Parcelable
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.roudikk.navigator.animation.NavigationEnterTransition
 import com.roudikk.navigator.animation.NavigationExitTransition
 import com.roudikk.navigator.animation.navigationFadeIn
@@ -95,6 +96,7 @@ data class DialogOptions(
  * it reaches a hidden state.
  */
 data class BottomSheetOptions(
+    val modifier: Modifier = Modifier,
     val dismissOnHidden: Boolean = true
 )
 

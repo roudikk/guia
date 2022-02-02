@@ -1,5 +1,7 @@
 package com.roudikk.navigator.sample.ui.composables
 
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
@@ -16,21 +18,23 @@ fun BottomSheetSurface(
 ) {
     Surface(
         modifier = modifier
+            .padding(16.dp)
             .widthIn(max = 600.dp),
         tonalElevation = 16.dp,
-        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+        shape = RoundedCornerShape(16.dp)
     ) {
         content()
     }
 }
 
 fun defaultBottomSheetSetup(modifier: Modifier = Modifier) = BottomSheetSetup(
-    bottomSheetContainer = { content ->
+    bottomSheetContainer = { nodeModifier, content ->
         BottomSheetSurface(
-            modifier = Modifier
+            modifier = modifier
                 .systemBarsPadding(bottom = false)
-                .then(modifier),
+                .then(nodeModifier),
             content = content
         )
-    }
+    },
+    animationSpec = spring()
 )

@@ -30,7 +30,10 @@ import kotlinx.parcelize.Parcelize
 class BlockingBottomSheet : BottomSheet {
 
     override val bottomSheetOptions: BottomSheetOptions
-        get() = BottomSheetOptions(false)
+        get() = BottomSheetOptions(
+            modifier = Modifier.navigationBarsPadding(),
+            dismissOnHidden = false,
+        )
 
     @Composable
     override fun AnimatedVisibilityScope.Content() {
@@ -49,15 +52,7 @@ private fun BlockingBottomSheetContent() {
 
         Text(
             text = "Only thing you can do is hit the back button, but that won't go back to the dialogs screen"
-                    + " if the below switch is turned on. Toggle it on/off and see what happens!"
-        )
-
-        Spacer(modifier = Modifier.size(16.dp))
-
-        Text(
-            text = "This is currently not working properly until Compose 1.1.0-rc02 is released. (Or any version after 1.1.0-rc01)",
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFFD37575)
+                    + " if the below switch is turned on. Toggle it on/off to enable/disable back press."
         )
 
         Spacer(modifier = Modifier.size(16.dp))
