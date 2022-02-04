@@ -49,8 +49,8 @@ android {
         applicationId = "com.roudikk.navigator.sample"
         minSdk = 24
         targetSdk = 32
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
         signingConfig = signingConfigs.getByName("debug")
     }
 
