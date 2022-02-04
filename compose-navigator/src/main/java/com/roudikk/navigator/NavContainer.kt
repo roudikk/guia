@@ -73,6 +73,7 @@ fun NavHost(
             "No navigator has been registered for key: $key, call NavHost with given key"
         }
     }
+    deepLinkHandler?.initialization?.complete(Unit)
 
     val initialDeepLinkHandled = rememberSaveable { mutableStateOf(false) }
     if (!initialDeepLinkHandled.value) {

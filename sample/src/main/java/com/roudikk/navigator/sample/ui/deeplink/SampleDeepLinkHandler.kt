@@ -32,7 +32,7 @@ class SampleDeepLinkHandler : DeepLinkHandler() {
         when (data.pathSegments.getOrNull(0)) {
             "home" -> {
                 bottomTabNavigator.navigateToStack(AppNavigationKey.Home)
-                (data.pathSegments - data.pathSegments[0]).forEachIndexed { index, segment ->
+                (data.pathSegments).forEachIndexed { index, segment ->
                     when (segment) {
                         "details" -> {
                             val detailsId = data.pathSegments.getOrNull(index + 1) ?: return

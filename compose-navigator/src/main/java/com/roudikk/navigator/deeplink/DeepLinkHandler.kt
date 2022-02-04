@@ -5,14 +5,19 @@ import com.roudikk.navigator.Navigator
 import kotlinx.coroutines.*
 
 abstract class DeepLinkHandler {
+    internal val initialization = CompletableDeferred<Unit>()
+    private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
-    var navigator: (String) -> Navigator = {
+    internal var navigator: (String) -> Navigator = {
         error("Call NavHost with this deep link handler first")
     }
 
     abstract fun handleIntent(navigator: (String) -> Navigator, intent: Intent?)
 
     fun onIntent(intent: Intent?) {
-        handleIntent(navigator, intent)
+        scope.launch {
+            initialization.await()
+            handleIntent(navigator, intent)
+        }
     }
 }
