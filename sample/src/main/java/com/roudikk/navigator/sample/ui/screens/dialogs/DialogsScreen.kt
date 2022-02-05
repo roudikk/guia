@@ -17,11 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.Screen
 import com.roudikk.navigator.findDefaultNavigator
 import com.roudikk.navigator.findNavigator
-import com.roudikk.navigator.sample.AppPreview
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
+import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -34,9 +35,10 @@ class DialogsScreen : Screen {
 }
 
 @Composable
-private fun DialogsContent() {
-    val navigator = findNavigator()
-    val defaultNavigator = findDefaultNavigator()
+private fun DialogsContent(
+    navigator: Navigator = findNavigator(),
+    defaultNavigator: Navigator = findDefaultNavigator()
+) {
     val lazyListState = rememberLazyListState()
 
     Scaffold(
@@ -108,16 +110,14 @@ private fun DialogsContent() {
 @Preview(
     device = Devices.PIXEL_3
 )
-@Composable
-private fun DialogsContentPreview() = AppPreview {
-    DialogsContent()
-}
-
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     device = Devices.PIXEL_3
 )
 @Composable
-private fun DialogsContentPreviewDark() = AppPreview {
-    DialogsContent()
+private fun DialogsContentPreview() = AppTheme {
+    DialogsContent(
+        navigator = Navigator(),
+        defaultNavigator = Navigator()
+    )
 }

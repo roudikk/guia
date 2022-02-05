@@ -103,7 +103,7 @@ class Navigator {
      * @param forceInitialize, by default calling [initialize] multiple times will be ignored but
      * the navigator can be re-initialized by setting this param to true.
      */
-    internal fun initialize(navigationConfig: NavigationConfig, forceInitialize: Boolean = false) {
+    fun initialize(navigationConfig: NavigationConfig, forceInitialize: Boolean = false) {
         if (!forceInitialize && initialized) return
 
         this.navigationConfig = navigationConfig

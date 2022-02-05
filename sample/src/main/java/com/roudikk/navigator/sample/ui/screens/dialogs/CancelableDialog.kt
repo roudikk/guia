@@ -14,25 +14,27 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.Dialog
+import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.findNavigator
-import com.roudikk.navigator.sample.AppPreview
+import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class CancelableDialog(
-    private val showButton: Boolean
+    private val showNextButton: Boolean
 ) : Dialog {
 
     @Composable
     override fun AnimatedVisibilityScope.Content() {
-        CancelableDialogContent(showButton)
+        CancelableDialogContent(showNextButton = showNextButton)
     }
 }
 
 @Composable
-private fun CancelableDialogContent(showButton: Boolean) {
-    val navigator = findNavigator()
-
+private fun CancelableDialogContent(
+    navigator: Navigator = findNavigator(),
+    showNextButton: Boolean
+) {
     Surface(
         shape = RoundedCornerShape(16.dp)
     ) {
@@ -57,7 +59,7 @@ private fun CancelableDialogContent(showButton: Boolean) {
                         " dialog buttons are provided"
             )
 
-            if (showButton) {
+            if (showNextButton) {
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Button(
@@ -76,33 +78,29 @@ private fun CancelableDialogContent(showButton: Boolean) {
 @Preview(
     device = Devices.PIXEL_3
 )
-@Composable
-private fun CancelableDialogContentPreview() = AppPreview {
-    CancelableDialogContent(showButton = true)
-}
-
-@Preview(
-    device = Devices.PIXEL_3
-)
-@Composable
-private fun CancelableDialogContentPreviewFalse() = AppPreview {
-    CancelableDialogContent(showButton = false)
-}
-
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     device = Devices.PIXEL_3
 )
 @Composable
-private fun CancelableDialogContentPreviewDark() = AppPreview {
-    CancelableDialogContent(showButton = true)
+private fun CancelableDialogContentPreview() = AppTheme {
+    CancelableDialogContent(
+        navigator = Navigator(),
+        showNextButton = true
+    )
 }
 
+@Preview(
+    device = Devices.PIXEL_3
+)
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     device = Devices.PIXEL_3
 )
 @Composable
-private fun CancelableDialogContentPreviewFalseDark() = AppPreview {
-    CancelableDialogContent(showButton = false)
+private fun CancelableDialogContentPreviewFalse() = AppTheme {
+    CancelableDialogContent(
+        navigator = Navigator(),
+        showNextButton = false
+    )
 }

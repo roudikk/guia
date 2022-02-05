@@ -15,15 +15,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsPadding
 import com.roudikk.navigator.BottomSheet
 import com.roudikk.navigator.BottomSheetOptions
-import com.roudikk.navigator.sample.AppPreview
+import com.roudikk.navigator.sample.ui.composables.BottomSheetSurface
+import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -68,18 +67,15 @@ private fun BlockingBottomSheetContent() {
 }
 
 @Preview(
-    device = Devices.PIXEL_3
-)
-@Composable
-private fun BlockingBottomSheetContentPreview() = AppPreview {
-    BlockingBottomSheetContent()
-}
-
-@Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     device = Devices.PIXEL_3
 )
+@Preview(
+    device = Devices.PIXEL_3
+)
 @Composable
-private fun BlockingBottomSheetContentPreviewDark() = AppPreview {
-    BlockingBottomSheetContent()
+private fun BlockingBottomSheetContentPreview() = AppTheme {
+    BottomSheetSurface {
+        BlockingBottomSheetContent()
+    }
 }

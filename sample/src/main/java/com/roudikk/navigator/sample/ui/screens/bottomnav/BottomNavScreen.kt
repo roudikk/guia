@@ -20,9 +20,9 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
 import com.roudikk.navigator.*
+import com.roudikk.navigator.sample.AppNavHost
 import com.roudikk.navigator.sample.AppNavigationKey
 import com.roudikk.navigator.sample.AppNavigator
-import com.roudikk.navigator.sample.AppPreview
 import com.roudikk.navigator.sample.ui.composables.defaultBottomSheetSetup
 import kotlinx.parcelize.Parcelize
 
@@ -43,6 +43,7 @@ private fun BottomNavContent() {
             BottomNavigation()
         }
     ) { paddingValues ->
+
         NavContainer(
             key = AppNavigator.BottomTab.key,
             modifier = Modifier.padding(paddingValues),
@@ -155,16 +156,11 @@ private fun navigatorToStackOrRoot(
 @Preview(
     device = Devices.PIXEL_3
 )
-@Composable
-private fun BottomNavContentPreview() = AppPreview {
-    BottomNavContent()
-}
-
 @Preview(
     uiMode = UI_MODE_NIGHT_YES,
     device = Devices.PIXEL_3
 )
 @Composable
-private fun BottomNavContentPreviewDark() = AppPreview {
+private fun BottomNavContentPreviewDark() = AppNavHost {
     BottomNavContent()
 }

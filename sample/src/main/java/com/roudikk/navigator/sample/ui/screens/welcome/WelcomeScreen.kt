@@ -19,12 +19,13 @@ import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.*
 import com.google.accompanist.insets.navigationBarsPadding
 import com.roudikk.navigator.NavOptions
+import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.Screen
 import com.roudikk.navigator.findNavigator
-import com.roudikk.navigator.sample.AppPreview
 import com.roudikk.navigator.sample.MaterialSharedAxisTransitionXY
 import com.roudikk.navigator.sample.R
 import com.roudikk.navigator.sample.ui.screens.bottomnav.BottomNavScreen
+import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -37,8 +38,9 @@ class WelcomeScreen : Screen {
 }
 
 @Composable
-private fun AnimatedVisibilityScope.WelcomeContent() {
-    val navigator = findNavigator()
+private fun AnimatedVisibilityScope.WelcomeContent(
+    navigator: Navigator = findNavigator()
+) {
 
     val composition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(R.raw.welcome_animation)
@@ -109,20 +111,13 @@ private fun AnimatedVisibilityScope.WelcomeContent() {
 @Preview(
     device = Devices.PIXEL_3
 )
-@Composable
-private fun WelcomeContentPreview() = AppPreview {
-    AnimatedVisibility(visible = true) {
-        WelcomeContent()
-    }
-}
-
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     device = Devices.PIXEL_3
 )
 @Composable
-private fun WelcomeContentPreviewDark() = AppPreview {
+private fun WelcomeContentPreviewDark() = AppTheme {
     AnimatedVisibility(visible = true) {
-        WelcomeContent()
+        WelcomeContent(navigator = Navigator())
     }
 }

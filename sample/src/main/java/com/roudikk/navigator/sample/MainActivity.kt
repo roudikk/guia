@@ -41,13 +41,9 @@ class MainActivity : ComponentActivity() {
             )
 
             AppTheme {
-                NavHost(
-                    Navigator.defaultKey to NavigationConfig.SingleStack(WelcomeScreen()),
-                    AppNavigator.BottomTab.setup,
-                    AppNavigator.NestedTab.setup,
+                AppNavHost(
                     deepLinkHandler = deepLinkHandler
                 ) {
-
                     NavContainer(bottomSheetSetup = defaultBottomSheetSetup())
                 }
             }

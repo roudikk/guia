@@ -16,16 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.NavOptions
-import com.roudikk.navigator.NavTransition
-import com.roudikk.navigator.Screen
+import com.roudikk.navigator.*
 import com.roudikk.navigator.animation.navigationFadeIn
 import com.roudikk.navigator.animation.navigationFadeOut
 import com.roudikk.navigator.animation.navigationSlideInVertically
 import com.roudikk.navigator.animation.navigationSlideOutVertically
-import com.roudikk.navigator.findNavigator
-import com.roudikk.navigator.sample.AppPreview
+import com.roudikk.navigator.sample.AppNavigator
 import com.roudikk.navigator.sample.VerticalSlideTransition
+import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -43,9 +41,10 @@ class NestedScreen(
 }
 
 @Composable
-private fun NestedContent(count: Int) {
-    val navigator = findNavigator()
-
+private fun NestedContent(
+    navigator: Navigator = findNavigator(),
+    count: Int
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -103,16 +102,16 @@ private fun NestedContent(count: Int) {
 @Preview(
     device = Devices.PIXEL_3
 )
-@Composable
-private fun NestedContentPreview() = AppPreview {
-    NestedContent(count = 4)
-}
-
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     device = Devices.PIXEL_3
 )
 @Composable
-private fun NestedContentPreviewDark() = AppPreview {
-    NestedContent(count = 4)
+private fun NestedContentPreview() = AppTheme {
+    NestedContent(
+        navigator = Navigator().apply {
+            initialize(AppNavigator.NestedTab.navigationConfig)
+        },
+        count = 4
+    )
 }

@@ -22,10 +22,11 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsPadding
+import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.Screen
 import com.roudikk.navigator.findNavigator
-import com.roudikk.navigator.sample.AppPreview
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
+import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -38,8 +39,9 @@ class SettingsScreen : Screen {
 }
 
 @Composable
-private fun AnimatedVisibilityScope.SettingsContent() {
-    val navigator = findNavigator()
+private fun AnimatedVisibilityScope.SettingsContent(
+    navigator: Navigator = findNavigator()
+) {
     val lazyListState = rememberLazyListState()
 
     Scaffold(
@@ -181,20 +183,13 @@ private fun AnimatedVisibilityScope.SettingsContent() {
 @Preview(
     device = Devices.PIXEL_3
 )
-@Composable
-private fun SettingsContentPreview() = AppPreview {
-    AnimatedVisibility(visible = true) {
-        SettingsContent()
-    }
-}
-
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     device = Devices.PIXEL_3
 )
 @Composable
-private fun SettingsContentPreviewDark() = AppPreview {
+private fun SettingsContentPreview() = AppTheme {
     AnimatedVisibility(visible = true) {
-        SettingsContent()
+        SettingsContent(navigator = Navigator())
     }
 }

@@ -16,14 +16,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.Dialog
 import com.roudikk.navigator.DialogOptions
+import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.findNavigator
-import com.roudikk.navigator.sample.AppPreview
+import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @OptIn(ExperimentalMaterialApi::class)
 class BlockingDialog(
-    private val showButton: Boolean
+    private val showNextButton: Boolean
 ) : Dialog {
 
     override val dialogOptions: DialogOptions
@@ -34,14 +35,15 @@ class BlockingDialog(
 
     @Composable
     override fun AnimatedVisibilityScope.Content() {
-        BlockingDialogContent(showButton)
+        BlockingDialogContent(showNextButton = showNextButton)
     }
 }
 
 @Composable
-private fun BlockingDialogContent(showButton: Boolean) {
-    val navigator = findNavigator()
-
+private fun BlockingDialogContent(
+    navigator: Navigator = findNavigator(),
+    showNextButton: Boolean
+) {
     Surface(
         shape = RoundedCornerShape(16.dp)
     ) {
@@ -60,7 +62,7 @@ private fun BlockingDialogContent(showButton: Boolean) {
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            if (showButton) {
+            if (showNextButton) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
@@ -87,33 +89,29 @@ private fun BlockingDialogContent(showButton: Boolean) {
 @Preview(
     device = Devices.PIXEL_3
 )
-@Composable
-private fun BlockingDialogContentPreview() = AppPreview {
-    BlockingDialogContent(showButton = true)
-}
-
-@Preview(
-    device = Devices.PIXEL_3
-)
-@Composable
-private fun BlockingDialogContentPreviewFalse() = AppPreview {
-    BlockingDialogContent(showButton = false)
-}
-
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     device = Devices.PIXEL_3
 )
 @Composable
-private fun BlockingDialogContentPreviewDark() = AppPreview {
-    BlockingDialogContent(showButton = true)
+private fun BlockingDialogContentPreview() = AppTheme {
+    BlockingDialogContent(
+        navigator = Navigator(),
+        showNextButton = true
+    )
 }
 
+@Preview(
+    device = Devices.PIXEL_3
+)
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     device = Devices.PIXEL_3
 )
 @Composable
-private fun BlockingDialogContentPreviewFalseDark() = AppPreview {
-    BlockingDialogContent(showButton = false)
+private fun BlockingDialogContentPreviewCancel() = AppTheme {
+    BlockingDialogContent(
+        navigator = Navigator(),
+        showNextButton = false
+    )
 }

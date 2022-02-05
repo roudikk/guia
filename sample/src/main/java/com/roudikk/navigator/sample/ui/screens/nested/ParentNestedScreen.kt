@@ -21,9 +21,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.imePadding
 import com.roudikk.navigator.*
+import com.roudikk.navigator.sample.AppNavHost
 import com.roudikk.navigator.sample.AppNavigator
-import com.roudikk.navigator.sample.AppPreview
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
+import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -36,13 +37,14 @@ class ParentNestedScreen : Screen {
 }
 
 @Composable
-private fun ParentNestedContent() {
+private fun ParentNestedContent(
+    nestedNavigator: Navigator = findNavigator(AppNavigator.NestedTab.key)
+) {
     Scaffold(
         topBar = {
             AppTopAppBar(title = "Nested Navigation")
         }
     ) {
-        val nestedNavigator = findNavigator(AppNavigator.NestedTab.key)
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -121,16 +123,13 @@ private fun ParentNestedContent() {
 @Preview(
     device = Devices.PIXEL_3
 )
-@Composable
-private fun NestedContentPreview() = AppPreview {
-    ParentNestedContent()
-}
-
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     device = Devices.PIXEL_3
 )
 @Composable
-private fun NestedContentPreviewDark() = AppPreview {
-    ParentNestedContent()
+private fun NestedContentPreview() = AppTheme {
+    AppNavHost {
+        ParentNestedContent()
+    }
 }

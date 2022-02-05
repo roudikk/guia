@@ -16,10 +16,10 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.*
-import com.roudikk.navigator.sample.AppPreview
 import com.roudikk.navigator.sample.MaterialSharedAxisTransitionX
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.screens.home.HomeScreen
+import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
@@ -48,14 +48,18 @@ class DetailsBottomSheet(
 
     @Composable
     override fun AnimatedVisibilityScope.Content() {
-        DetailsList(item = item)
+        DetailsList(
+            navigator = findNavigator(),
+            item = item
+        )
     }
 }
 
 @Composable
-private fun DetailsContent(item: String) {
-    val navigator = findNavigator()
-
+private fun DetailsContent(
+    navigator: Navigator = findNavigator(),
+    item: String
+) {
     Scaffold(
         topBar = {
             AppTopAppBar(
@@ -79,14 +83,19 @@ private fun DetailsContent(item: String) {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            DetailsList(item = item)
+            DetailsList(
+                navigator = navigator,
+                item = item
+            )
         }
     }
 }
 
 @Composable
-private fun DetailsList(item: String) {
-    val navigator = findNavigator()
+private fun DetailsList(
+    navigator: Navigator,
+    item: String
+) {
 
     Column(
         modifier = Modifier
@@ -203,16 +212,14 @@ private fun DetailsList(item: String) {
 @Preview(
     device = Devices.PIXEL_3
 )
-@Composable
-private fun DetailsContentPreview() = AppPreview {
-    DetailsContent(item = "Test Item")
-}
-
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     device = Devices.PIXEL_3
 )
 @Composable
-private fun DetailsContentPreviewDark() = AppPreview {
-    DetailsContent(item = "Test Item")
+private fun DetailsContentPreview() = AppTheme {
+    DetailsContent(
+        navigator = Navigator(),
+        item = "Test Item"
+    )
 }

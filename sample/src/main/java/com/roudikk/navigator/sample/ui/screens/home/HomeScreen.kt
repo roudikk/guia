@@ -26,12 +26,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.NavOptions
-import com.roudikk.navigator.Screen
-import com.roudikk.navigator.findDefaultNavigator
-import com.roudikk.navigator.findNavigator
-import com.roudikk.navigator.sample.AppPreview
+import com.roudikk.navigator.*
 import com.roudikk.navigator.sample.MaterialSharedAxisTransitionX
 import com.roudikk.navigator.sample.MaterialSharedAxisTransitionXY
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
@@ -48,47 +45,53 @@ class HomeScreen : Screen {
 
     @Composable
     override fun AnimatedVisibilityScope.Content() {
-        val viewModel = viewModel<HomeViewModel>()
-        val navigator = findNavigator()
-        val defaultNavigator = findDefaultNavigator()
-        val context = LocalContext.current
-
-        LaunchedEffect(Unit) {
-            viewModel.commandsFlow
-                .onEach { homeCommand ->
-                    when (homeCommand) {
-                        is HomeCommand.OpenDetails -> navigator.navigate(
-                            navigationNode = DetailsScreen(homeCommand.item),
-                            navOptions = NavOptions(
-                                navTransition = MaterialSharedAxisTransitionX
-                            )
-                        )
-                        HomeCommand.OpenSettings -> defaultNavigator.navigate(
-                            navigationNode = SettingsScreen(),
-                            navOptions = NavOptions(
-                                navTransition = MaterialSharedAxisTransitionXY
-                            )
-                        )
-                    }
-                }
-                .launchIn(this)
-
-            navigator.nodeResults()
-                .onEach {
-                    Toast.makeText(context, "Result from: $it", Toast.LENGTH_SHORT).show()
-                }
-                .launchIn(this)
-        }
-
-        HomeContent(
-            stateFlow = viewModel.stateFlow,
-            onItemSelected = viewModel::onItemSelected,
-            onAddItemSelected = viewModel::onAddItemSelected,
-            onRemoveItemSelected = viewModel::onRemoveItemSelected,
-            onClearAllSelected = viewModel::onClearAllSelected,
-            onSettingsSelected = viewModel::onSettingsSelected
-        )
+        HomeController()
     }
+}
+
+@Composable
+private fun HomeController(
+    viewModel: HomeViewModel = viewModel(),
+    navigator: Navigator = findNavigator(),
+    defaultNavigator: Navigator = findDefaultNavigator()
+) {
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.commandsFlow
+            .onEach { homeCommand ->
+                when (homeCommand) {
+                    is HomeCommand.OpenDetails -> navigator.navigate(
+                        navigationNode = DetailsScreen(homeCommand.item),
+                        navOptions = NavOptions(
+                            navTransition = MaterialSharedAxisTransitionX
+                        )
+                    )
+                    HomeCommand.OpenSettings -> defaultNavigator.navigate(
+                        navigationNode = SettingsScreen(),
+                        navOptions = NavOptions(
+                            navTransition = MaterialSharedAxisTransitionXY
+                        )
+                    )
+                }
+            }
+            .launchIn(this)
+
+        navigator.results<HomeScreen>()
+            .onEach {
+                Toast.makeText(context, "Result from: $it", Toast.LENGTH_SHORT).show()
+            }
+            .launchIn(this)
+    }
+
+    HomeContent(
+        stateFlow = viewModel.stateFlow,
+        onItemSelected = viewModel::onItemSelected,
+        onAddItemSelected = viewModel::onAddItemSelected,
+        onRemoveItemSelected = viewModel::onRemoveItemSelected,
+        onClearAllSelected = viewModel::onClearAllSelected,
+        onSettingsSelected = viewModel::onSettingsSelected
+    )
 }
 
 @Composable
@@ -217,20 +220,16 @@ private fun ListItem(
 @Preview(
     device = Devices.PIXEL_3
 )
-@Composable
-private fun HomeContentPreview() = AppPreview {
-    HomeContent(
-        stateFlow = MutableStateFlow(listOf("Item 1", "Item 2", "Item 3"))
-    )
-}
 
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     device = Devices.PIXEL_3
 )
 @Composable
-private fun HomeContentPreviewDark() = AppPreview {
-    HomeContent(
-        stateFlow = MutableStateFlow(listOf("Item 1", "Item 2", "Item 3"))
+private fun HomeContentPreview() {
+    HomeController(
+        viewModel = HomeViewModel(SavedStateHandle()),
+        navigator = Navigator(),
+        defaultNavigator = Navigator()
     )
 }

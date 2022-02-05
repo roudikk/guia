@@ -27,10 +27,11 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
-import com.roudikk.navigator.Screen
-import com.roudikk.navigator.findNavigator
+import com.roudikk.navigator.*
+import com.roudikk.navigator.sample.AppNavHost
 import com.roudikk.navigator.sample.AppNavigationKey
-import com.roudikk.navigator.sample.AppPreview
+import com.roudikk.navigator.sample.AppNavigator
+import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
@@ -48,9 +49,9 @@ class NavigationTreeScreen : Screen {
     ExperimentalPagerApi::class
 )
 @Composable
-private fun NavigationTreeContent() {
-    val navigator = findNavigator()
-
+private fun NavigationTreeContent(
+    navigator: Navigator = findNavigator()
+) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val lazyListState = rememberLazyListState()
@@ -206,16 +207,14 @@ fun <T> Grid(
 @Preview(
     device = Devices.PIXEL_3
 )
-@Composable
-private fun NavigationTreePreview() = AppPreview {
-    NavigationTreeContent()
-}
-
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     device = Devices.PIXEL_3
 )
 @Composable
-private fun NavigationTreePreviewDark() = AppPreview {
-    NavigationTreeContent()
+private fun NavigationTreePreview() = AppTheme {
+    AppNavHost {
+        val navigator = findNavigator(AppNavigator.BottomTab.key)
+        NavigationTreeContent(navigator = navigator)
+    }
 }

@@ -12,11 +12,13 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.systemBarsPadding
 import com.roudikk.navigator.*
 import com.roudikk.navigator.animation.*
+import com.roudikk.navigator.deeplink.DeepLinkHandler
 import com.roudikk.navigator.sample.ui.screens.dialogs.DialogsScreen
 import com.roudikk.navigator.sample.ui.screens.home.HomeScreen
 import com.roudikk.navigator.sample.ui.screens.navigation_tree.NavigationTreeScreen
 import com.roudikk.navigator.sample.ui.screens.nested.NestedScreen
 import com.roudikk.navigator.sample.ui.screens.nested.ParentNestedScreen
+import com.roudikk.navigator.sample.ui.screens.welcome.WelcomeScreen
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
@@ -121,6 +123,18 @@ val VerticalSlideTransition = NavTransition(
 )
 
 @Composable
+fun AppNavHost(
+    deepLinkHandler: DeepLinkHandler? = null,
+    content: @Composable () -> Unit
+) = NavHost(
+    Navigator.defaultKey to NavigationConfig.SingleStack(WelcomeScreen()),
+    AppNavigator.BottomTab.setup,
+    AppNavigator.NestedTab.setup,
+    deepLinkHandler = deepLinkHandler,
+    content = content
+)
+
+@Composable
 fun BottomSheetSurface(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
@@ -130,22 +144,6 @@ fun BottomSheetSurface(
             .widthIn(max = 600.dp),
         tonalElevation = 16.dp,
         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
-    ) {
-        content()
-    }
-}
-
-@Composable
-fun AppPreview(content: @Composable () -> Unit) = AppTheme {
-    NavHost(
-        "preview-navigator" to NavigationConfig.SingleStack(object : Screen {
-            @Composable
-            override fun AnimatedVisibilityScope.Content() {
-            }
-
-            override fun describeContents() = error("Preview only")
-            override fun writeToParcel(p0: Parcel?, p1: Int) = error("Preview only")
-        })
     ) {
         content()
     }
