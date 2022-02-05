@@ -105,7 +105,8 @@ class MyBottomSheet(val myData: String) : BottomSheet {
 
     override val bottomSheetOptions: BottomSheetOptions
         get() = BottomSheetOptions(
-            dismissOnHidden = true // When set to false, swiping down the bottom sheet will not dismiss it. 
+            modifier = Modifier, // Controls the BottomSheet's outside Composable.
+            confirmStateChange = { true } // When set to { false }, bottom sheet state changes will be ignored and animate back to the last locked state. 
         )
     
     @Composable
