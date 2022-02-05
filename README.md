@@ -32,7 +32,7 @@ Note: This is currently a WIP and experimental and API is very likely to change.
 10. [Nested Navigation](#nested-navigation)
 11. [Deeplinks](#deeplinks)
 12. [Working with ViewModels](#view-models)
-13. [Running Sample](#running-sample)
+13. [Previews](#previews)
 
 ## Installation <a name="installation" />
 
@@ -503,22 +503,37 @@ Check example usage in [Sample app](https://github.com/roudikk/compose-navigator
 
 For example usage with a view model, check [Home Screen Sample](https://github.com/roudikk/compose-navigator/blob/master/sample/src/main/java/com/roudikk/navigator/sample/ui/screens/home/HomeScreen.kt)
 
-## Running sample <a name ="running-sample"/>
+## Previews
 
-Comment out the google services and crashlytics plugins:
+Instead of calling `findNavigator()` in the body of your composable, call it as the default value of a navigator parameter:
 
-```gradle
-//    id("com.google.gms.google-services")
-//    id("com.google.firebase.crashlytics")
+```kotlin
+@Composable
+private fun DetailsContent(
+    navigator: Navigator = findNavigator(),
+    item: String
+) {
+    // Content
+}
 ```
 
-Comment out the firebase section of dependencies:
+For Previews, you can just call `Navigator()` which provides an empty navigator to enable previews.
 
-```gradle
-    // Firebase
-//    implementation(platform("com.google.firebase:firebase-bom:$firebaseBomVersion"))
-//    implementation("com.google.firebase:firebase-analytics-ktx")
-//    implementation("com.google.firebase:firebase-crashlytics-ktx")
+```kotlin
+@Preview(
+    device = Devices.PIXEL_3
+)
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_3
+)
+@Composable
+private fun DetailsContentPreview() = AppTheme {
+    DetailsContent(
+        navigator = Navigator(),
+        item = "Test Item"
+    )
+}
 ```
 
 License
