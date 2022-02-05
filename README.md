@@ -38,7 +38,7 @@ Note: This is currently a WIP and experimental and API is very likely to change.
 
 ```gradle
 dependencies {
-    implementation("com.roudikk.compose-navigator:compose-navigator:1.0.1")
+    implementation("com.roudikk.compose-navigator:compose-navigator:1.1.0")
 }
 ```
 For proguard rules check [consumer-rules.pro](https://github.com/roudikk/compose-navigator/blob/master/compose-navigator/consumer-rules.pro)
