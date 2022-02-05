@@ -284,7 +284,7 @@ class Navigator {
      */
     fun navigateToStack(
         key: NavigationKey,
-        transitions: NavigationTransitionPair = navigationFadeIn() to navigationFadeOut(),
+        transitions: NavigationTransitionPair = DefaultNavTransition.enter to DefaultNavTransition.exit,
         addToKeyHistory: Boolean = true
     ) {
         val currentState = mutableStateFlow.value

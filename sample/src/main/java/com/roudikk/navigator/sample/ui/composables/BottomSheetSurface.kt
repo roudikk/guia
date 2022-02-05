@@ -1,6 +1,8 @@
 package com.roudikk.navigator.sample.ui.composables
 
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,5 +38,5 @@ fun defaultBottomSheetSetup(modifier: Modifier = Modifier) = BottomSheetSetup(
             content = content
         )
     },
-    animationSpec = spring()
+    animationSpec = tween(durationMillis = 300)
 )

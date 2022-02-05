@@ -10,6 +10,9 @@ import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -30,6 +33,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.roudikk.navigator.deeplink.DeepLinkHandler
 import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 private val LocalNavigator = compositionLocalOf<Navigator?> {
     null
@@ -146,10 +151,10 @@ private fun NavContainerContent(
 
     val currentDestination = state.currentStack.destinations.last()
 
-    val confirmStateChange = { _: ModalBottomSheetValue ->
+    val confirmStateChange = { sheetValue: ModalBottomSheetValue ->
         val destination = navigator.stateFlow.value.currentStack.destinations.last()
         destination.navigationNode !is BottomSheet ||
-                destination.navigationNode.bottomSheetOptions.dismissOnHidden
+                destination.navigationNode.bottomSheetOptions.confirmStateChange(sheetValue)
     }
 
     val bottomSheetState = rememberModalBottomSheetState(
@@ -231,7 +236,7 @@ private fun NavContainerContent(
                                 initialState.first != null
                                 && targetState.second.navigationNode !is BottomSheet
                             ) {
-                                ExitTransition.None
+                                fadeOut(animationSpec = snap(delayMillis = 300))
                             } else {
                                 state.transitionPair.exit.toComposeExitTransition()
                             }
@@ -239,9 +244,10 @@ private fun NavContainerContent(
                     ) { (targetDestination, _) ->
                         if (targetDestination != null) {
                             Box(
-                                modifier = Modifier.onGloballyPositioned {
-                                    contentHeightPixels = it.size.height.toFloat()
-                                }
+                                modifier = Modifier
+                                    .onGloballyPositioned {
+                                        contentHeightPixels = it.size.height.toFloat()
+                                    }
                             ) {
                                 savableStateHolder.SaveableStateProvider(
                                     key = targetDestination.id
@@ -250,17 +256,7 @@ private fun NavContainerContent(
                                 }
                             }
                         } else {
-                            Box(
-                                modifier = Modifier
-                                    .height(contentHeightDp)
-                            )
-                        }
-
-                        LaunchedEffect(transition.isRunning) {
-                            repeat(3) { awaitFrame() }
-                            if (targetDestination == null && !transition.isRunning) {
-                                contentHeightPixels = with(localDensity) { 1.dp.toPx() }
-                            }
+                            Box(modifier = Modifier.height(contentHeightDp))
                         }
                     }
                 }
@@ -284,8 +280,7 @@ private fun NavContainerContent(
         ) {
             AnimatedContent(
                 modifier = Modifier
-                    .widthIn(max = 300.dp)
-                    .animateContentSize(),
+                    .widthIn(max = 300.dp),
                 targetState = currentDestination,
                 transitionSpec = {
                     state.transitionPair.enter.toComposeEnterTransition() with

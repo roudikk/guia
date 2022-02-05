@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -37,6 +38,13 @@ class DetailsScreen(
 class DetailsBottomSheet(
     private val item: String
 ) : BottomSheet {
+
+    override val bottomSheetOptions: BottomSheetOptions
+        get() = BottomSheetOptions(
+            confirmStateChange = {
+                it != ModalBottomSheetValue.HalfExpanded
+            }
+        )
 
     @Composable
     override fun AnimatedVisibilityScope.Content() {

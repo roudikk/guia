@@ -2,6 +2,9 @@ package com.roudikk.navigator
 
 import android.os.Parcelable
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.roudikk.navigator.animation.NavigationEnterTransition
@@ -92,12 +95,14 @@ data class DialogOptions(
 /**
  * Options used in a [BottomSheet]
  *
- * @property dismissOnHidden, whether or not to dismiss the bottom sheet when
+ * @property modifier, modifier applied to the bottom sheet container
+ * @property confirmStateChange, check [rememberModalBottomSheetState]
  * it reaches a hidden state.
  */
-data class BottomSheetOptions(
+@OptIn(ExperimentalMaterialApi::class)
+data class BottomSheetOptions constructor(
     val modifier: Modifier = Modifier,
-    val dismissOnHidden: Boolean = true
+    val confirmStateChange: (state: ModalBottomSheetValue) -> Boolean = { true }
 )
 
 /**
@@ -199,7 +204,7 @@ internal val DefaultNavigationStack = NavigationStack(
 /**
  * Convenience default navigation transitions.
  */
-internal val DefaultNavTransition = NavTransition()
+internal val DefaultNavTransition = NavTransition.None
 
 /**
  * Navigation transition for a destination
@@ -212,10 +217,10 @@ internal val DefaultNavTransition = NavTransition()
  */
 @Parcelize
 data class NavTransition(
-    val enter: NavigationEnterTransition = navigationFadeIn(),
-    val exit: NavigationExitTransition = navigationFadeOut(),
-    val popEnter: NavigationEnterTransition = navigationFadeIn(),
-    val popExit: NavigationExitTransition = navigationFadeOut()
+    val enter: NavigationEnterTransition,
+    val exit: NavigationExitTransition,
+    val popEnter: NavigationEnterTransition,
+    val popExit: NavigationExitTransition
 ) : Parcelable {
 
     companion object {
@@ -281,7 +286,7 @@ sealed class NavigationConfig : Parcelable {
 @Parcelize
 data class NavOptions(
     val launchMode: LaunchMode = LaunchMode.DEFAULT,
-    val navTransition: NavTransition = NavTransition()
+    val navTransition: NavTransition = NavTransition.None
 ) : Parcelable
 
 enum class LaunchMode {

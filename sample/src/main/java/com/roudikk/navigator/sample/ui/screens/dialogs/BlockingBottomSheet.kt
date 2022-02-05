@@ -32,7 +32,7 @@ class BlockingBottomSheet : BottomSheet {
     override val bottomSheetOptions: BottomSheetOptions
         get() = BottomSheetOptions(
             modifier = Modifier.navigationBarsPadding(),
-            dismissOnHidden = false,
+            confirmStateChange = { false },
         )
 
     @Composable
