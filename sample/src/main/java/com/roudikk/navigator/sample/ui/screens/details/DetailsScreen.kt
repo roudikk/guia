@@ -206,6 +206,24 @@ private fun DetailsList(
         ) {
             Text(text = "Single Instance")
         }
+
+        Button(
+            modifier = Modifier
+                .widthIn(min = 300.dp),
+            onClick = {
+                val newItem = UUID.randomUUID().toString().split("-")[0]
+                navigator.popBackStack()
+                navigator.navigate(
+                    navigationNode = DetailsScreen(newItem),
+                    navOptions = NavOptions(
+                        launchMode = LaunchMode.SINGLE_INSTANCE,
+                        navTransition = MaterialSharedAxisTransitionX
+                    )
+                )
+            }
+        ) {
+            Text(text = "Navigate and pop last")
+        }
     }
 }
 
