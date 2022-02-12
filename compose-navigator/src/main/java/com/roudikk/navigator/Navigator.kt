@@ -474,14 +474,15 @@ class Navigator {
         val currentStack = currentState.currentStack
         val navigationStacks = currentState.navigationStacks.toMutableList()
 
+        val newDestination = Destination(navigationNode, navOptions)
         val newStack = currentStack.copy(
-            destinations = listOf(Destination(navigationNode, navOptions))
+            destinations = listOf(newDestination)
         )
         val newState = NavigationState(
             currentStackKey = currentStack.key,
             navigationStacks = navigationStacks,
-            transitionPair = newStack.destinations.last().navOptions.navTransition.enter to
-                    currentStack.destinations.last().navOptions.navTransition.exit,
+            transitionPair = newDestination.navOptions.navTransition.enter to
+                    newDestination.navOptions.navTransition.exit,
             overrideBackPress = currentState.overrideBackPress
         )
         navigationStacks[navigationStacks.indexOfFirst { it.key == newStack.key }] = newStack

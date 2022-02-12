@@ -6,6 +6,7 @@
 
 package com.roudikk.navigator
 
+import android.annotation.SuppressLint
 import android.os.Parcel
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.runtime.Composable
@@ -33,6 +34,8 @@ class NavigatorTest {
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
     open class TestScreen : Screen {
+        @Suppress("TestFunctionName")
+        @SuppressLint("ComposableNaming")
         @Composable
         override fun AnimatedVisibilityScope.Content() = error("")
         override fun describeContents(): Int = error("")
@@ -616,9 +619,10 @@ class NavigatorTest {
         navigator.navigateToStack(navigationStackEntries[1].key)
         navigator.navigate(screens[1])
         navigator.navigate(screens[2])
-        navigator.navigate(screens[2], navOptions = NavOptions(
-            launchMode = LaunchMode.SINGLE_TOP
-        )
+        navigator.navigate(
+            screens[2], navOptions = NavOptions(
+                launchMode = LaunchMode.SINGLE_TOP
+            )
         )
         navigator.navigate(screens[3])
         navigator.navigate(screens[4])
@@ -683,44 +687,56 @@ class NavigatorTest {
 
         val stackNavigationTransition = navigationSlideInHorizontally() to
                 navigationSlideOutHorizontally()
-        val screenTransition = navigationFadeIn() to navigationFadeOut()
+        val screenTransition = NavTransition(
+            enter = navigationFadeIn(),
+            exit = navigationFadeOut(),
+            popEnter = navigationFadeIn(),
+            popExit = navigationFadeOut()
+        )
+        val screenTransitionPair = navigationFadeIn() to navigationFadeOut()
 
         assertThat(navigator.currentKey).isEqualTo(navigationStackEntries[0].key)
 
         navigator.navigate(screens[0])
-        assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(screenTransition)
+        assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(
+            NavTransition.None.enter to
+                    NavTransition.None.exit
+        )
 
         navigator.navigateToStack(navigationStackEntries[1].key, stackNavigationTransition)
         assertThat(navigator.stateFlow.value.transitionPair)
             .isEqualTo(stackNavigationTransition)
         assertThat(navigator.currentKey).isEqualTo(navigationStackEntries[1].key)
 
-        navigator.navigate(screens[1])
-        assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(screenTransition)
+        navigator.navigate(screens[1], navOptions = NavOptions(navTransition = screenTransition))
+        assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(screenTransitionPair)
 
         val customTransition = NavTransition(
             enter = navigationExpandIn(),
-            exit = navigationShrinkOut()
+            exit = navigationShrinkOut(),
+            popEnter = navigationFadeIn(),
+            popExit = navigationFadeOut()
         )
         navigator.navigate(screens[2], NavOptions(navTransition = customTransition))
         assertThat(navigator.stateFlow.value.transitionPair)
             .isEqualTo(customTransition.enter to customTransition.exit)
 
-        navigator.navigate(screens[2], navOptions = NavOptions(
-            launchMode = LaunchMode.SINGLE_INSTANCE
-        )
+        navigator.navigate(
+            screens[2], navOptions = NavOptions(
+                launchMode = LaunchMode.SINGLE_INSTANCE
+            )
         )
         assertThat(navigator.stateFlow.value.transitionPair)
             .isEqualTo(NavigationEnterTransition.None to NavigationExitTransition.None)
 
-        navigator.navigate(screens[3])
-        assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(screenTransition)
+        navigator.navigate(screens[3], navOptions = NavOptions(navTransition = screenTransition))
+        assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(screenTransitionPair)
 
-        navigator.navigate(screens[4])
-        assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(screenTransition)
+        navigator.navigate(screens[4], navOptions = NavOptions(navTransition = screenTransition))
+        assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(screenTransitionPair)
 
-        navigator.popTo(screens[3].key)
-        assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(screenTransition)
+        navigator.navigate(screens[3], navOptions = NavOptions(navTransition = screenTransition))
+        assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(screenTransitionPair)
 
         navigator.navigateToStack(navigationStackEntries[2].key, stackNavigationTransition)
         assertThat(navigator.stateFlow.value.transitionPair)
@@ -728,7 +744,9 @@ class NavigatorTest {
         assertThat(navigator.currentKey).isEqualTo(navigationStackEntries[2].key)
 
         navigator.setRoot(newRootScreen)
-        assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(screenTransition)
+        assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(
+            NavTransition.None.enter to NavTransition.None.exit
+        )
 
         navigator.navigateToStack(navigationStackEntries[0].key, stackNavigationTransition)
         assertThat(navigator.stateFlow.value.transitionPair)
@@ -736,15 +754,17 @@ class NavigatorTest {
         assertThat(navigator.currentKey).isEqualTo(navigationStackEntries[0].key)
 
         navigator.popToRoot()
-        assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(screenTransition)
+        assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(
+            NavTransition.None.enter to NavTransition.None.exit
+        )
 
         navigator.navigateToStack(navigationStackEntries[1].key, stackNavigationTransition)
         assertThat(navigator.stateFlow.value.transitionPair)
             .isEqualTo(stackNavigationTransition)
 
         assertThat(navigator.canGoBack()).isTrue()
-        navigator.popBackStack()
-        assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(screenTransition)
+        navigator.popTo(screens[2].key, inclusive = false)
+        assertThat(navigator.stateFlow.value.transitionPair).isEqualTo(screenTransitionPair)
 
         val navigationState = navigator.stateFlow.value
 
