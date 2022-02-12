@@ -4,15 +4,12 @@ import com.roudikk.navigator.NavigationNode.Companion.key
 import com.roudikk.navigator.NavigationNode.Companion.resultsKey
 import com.roudikk.navigator.animation.NavigationEnterTransition
 import com.roudikk.navigator.animation.NavigationExitTransition
-import com.roudikk.navigator.animation.navigationFadeIn
-import com.roudikk.navigator.animation.navigationFadeOut
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.util.*
 
 class Navigator {
 

@@ -1,7 +1,5 @@
 package com.roudikk.navigator.sample
 
-import android.os.Parcel
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,7 +7,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.systemBarsPadding
 import com.roudikk.navigator.*
 import com.roudikk.navigator.animation.*
 import com.roudikk.navigator.deeplink.DeepLinkHandler
@@ -19,7 +16,6 @@ import com.roudikk.navigator.sample.ui.screens.navigation_tree.NavigationTreeScr
 import com.roudikk.navigator.sample.ui.screens.nested.NestedScreen
 import com.roudikk.navigator.sample.ui.screens.nested.ParentNestedScreen
 import com.roudikk.navigator.sample.ui.screens.welcome.WelcomeScreen
-import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 sealed class AppNavigator(

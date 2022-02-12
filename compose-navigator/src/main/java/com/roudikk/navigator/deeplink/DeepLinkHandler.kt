@@ -2,7 +2,10 @@ package com.roudikk.navigator.deeplink
 
 import android.content.Intent
 import com.roudikk.navigator.Navigator
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 abstract class DeepLinkHandler {
     internal val initialization = CompletableDeferred<Unit>()

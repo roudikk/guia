@@ -1,7 +1,6 @@
 package com.roudikk.navigator.sample.ui.theme
 
 import android.os.Build
-import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
@@ -9,7 +8,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.insets.ProvideWindowInsets
-import com.roudikk.navigator.sample.BuildConfig
 import androidx.compose.material.MaterialTheme as MaterialTheme2
 
 private val LightThemeColors = lightColorScheme(

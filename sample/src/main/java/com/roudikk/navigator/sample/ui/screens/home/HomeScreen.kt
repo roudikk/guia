@@ -36,7 +36,6 @@ import com.roudikk.navigator.sample.MaterialSharedAxisTransitionXY
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.screens.details.DetailsScreen
 import com.roudikk.navigator.sample.ui.screens.settings.SettingsScreen
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

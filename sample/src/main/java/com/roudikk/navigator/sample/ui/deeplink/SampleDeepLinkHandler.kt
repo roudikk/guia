@@ -1,12 +1,9 @@
 package com.roudikk.navigator.sample.ui.deeplink
 
 import android.content.Intent
-import androidx.compose.animation.ExitTransition.Companion.None
 import com.roudikk.navigator.NavOptions
-import com.roudikk.navigator.NavTransition
 import com.roudikk.navigator.NavigationNode
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.animation.navigationTween
 import com.roudikk.navigator.deeplink.DeepLinkHandler
 import com.roudikk.navigator.sample.AppNavigationKey
 import com.roudikk.navigator.sample.AppNavigator

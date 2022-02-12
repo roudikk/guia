@@ -27,7 +27,9 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
-import com.roudikk.navigator.*
+import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.Screen
+import com.roudikk.navigator.findNavigator
 import com.roudikk.navigator.sample.AppNavHost
 import com.roudikk.navigator.sample.AppNavigationKey
 import com.roudikk.navigator.sample.AppNavigator

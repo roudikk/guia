@@ -4,8 +4,6 @@ import android.os.Parcelable
 import androidx.compose.animation.core.*
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
-import com.roudikk.navigator.animation.NavigationIntOffset
-import com.roudikk.navigator.animation.NavigationIntSize
 import kotlinx.parcelize.Parcelize
 
 /**

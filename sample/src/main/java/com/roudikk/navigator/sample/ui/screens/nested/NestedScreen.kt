@@ -16,11 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.*
-import com.roudikk.navigator.animation.navigationFadeIn
-import com.roudikk.navigator.animation.navigationFadeOut
-import com.roudikk.navigator.animation.navigationSlideInVertically
-import com.roudikk.navigator.animation.navigationSlideOutVertically
+import com.roudikk.navigator.NavOptions
+import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.Screen
+import com.roudikk.navigator.findNavigator
 import com.roudikk.navigator.sample.AppNavigator
 import com.roudikk.navigator.sample.VerticalSlideTransition
 import com.roudikk.navigator.sample.ui.theme.AppTheme
