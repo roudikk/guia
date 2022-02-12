@@ -5,7 +5,7 @@ plugins {
     id("com.vanniktech.maven.publish")
 }
 
-val composeVersion = "1.1.0-rc03"
+val composeVersion = "1.1.0"
 val composeActivityVersion = "1.4.0"
 val kotlinCoroutinesVersion = "1.6.0"
 val kotlinVersion = "1.6.10"

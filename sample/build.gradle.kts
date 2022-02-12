@@ -30,13 +30,13 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     kotlinOptions.freeCompilerArgs += "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi"
 }
 
-val composeVersion = "1.1.0-rc03"
+val composeVersion = "1.1.0"
 val accompanistVersion = "0.22.1-rc"
 val lottieVersion = "4.2.2"
 val kotlinCoroutinesVersion = "1.6.0"
 val activityComposeVersion = "1.4.0"
 val viewModelComposeVersion = "2.4.0"
-val composeMaterial3Version = "1.0.0-alpha04"
+val composeMaterial3Version = "1.0.0-alpha05"
 val junitVersion = "4.13.2"
 val jupiterVersion = "5.8.2"
 val truthVersion = "1.1.3"

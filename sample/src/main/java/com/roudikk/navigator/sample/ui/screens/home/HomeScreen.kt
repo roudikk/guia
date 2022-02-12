@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
@@ -185,11 +187,12 @@ private fun ListItem(
     onRemove: (String) -> Unit
 ) {
     Surface(
-        onClick = { onClick(item) },
+        shape = RoundedCornerShape(8.dp),
         modifier = Modifier
+            .clip(RoundedCornerShape(8.dp))
+            .clickable { onClick(item) }
             .fillMaxWidth()
             .then(modifier),
-        shape = RoundedCornerShape(8.dp),
         tonalElevation = 1.dp
     ) {
         Row(
