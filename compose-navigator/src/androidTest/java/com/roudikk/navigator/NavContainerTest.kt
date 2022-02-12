@@ -197,7 +197,9 @@ class NavContainerTest {
         val testScreen = TestScreen("TestScreen")
         val bottomSheet = TestBottomSheet(
             text = "TestBottomSheet",
-            bottomSheetOptions = BottomSheetOptions(dismissOnHidden = false)
+            bottomSheetOptions = BottomSheetOptions(
+                confirmStateChange = { false }
+            )
         )
 
         lateinit var navigator: Navigator
