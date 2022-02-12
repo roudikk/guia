@@ -33,6 +33,7 @@ Note: This is currently a WIP and experimental and API is very likely to change.
 11. [Deeplinks](#deeplinks)
 12. [Working with ViewModels](#view-models)
 13. [Previews](#previews)
+14. [UI Tests](#ui-tests)
 
 ## Installation <a name="installation" />
 
@@ -536,6 +537,38 @@ private fun DetailsContentPreview() = AppTheme {
     )
 }
 ```
+
+## UI tests <a name="ui-tests" />
+
+For Individual navigation nodes, it's recommended to test that the actions that perform navigation operations to be lambdas rather than use the navigation component.
+
+This will make it easier to preview the composables and easier to assert that actions have been performed, for ex:
+
+```kotlin
+@Composable
+private fun HomeContent(
+    onItemSelected: (String) -> Unit = {} // This can be easily tested in unit tests
+) {
+    // Content
+}
+```
+
+However, when testing UI flows across multiple navigation nodes, Compose Navigator adds a test tag using the navigation node key to all navigation nodes in the Compose tree, making it easy to test whether a navigation node is displayed, using `ComposeTestRule.onNodeWithTag(tag).assertIsDisplayed()`, for ex:
+
+```kotlin
+    @Test
+    fun details_newRandomItem_addsToStack() {
+        rule.navigateDetails()
+        rule.onNodeWithText("New random item").performClick()
+        rule.onNodeWithTag(key<DetailsScreen>()).assertIsDisplayed()
+        rule.activity.onBackPressed()
+        rule.onNodeWithTag(key<DetailsScreen>()).assertIsDisplayed()
+        rule.activity.onBackPressed()
+        rule.onNodeWithTag(key<HomeScreen>()).assertIsDisplayed()
+    }
+```
+
+Check the sample app UI tests for more examples.
 
 License
 =======
