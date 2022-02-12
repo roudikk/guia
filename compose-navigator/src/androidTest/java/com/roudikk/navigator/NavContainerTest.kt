@@ -21,6 +21,7 @@ class NavContainerTest {
         override val key: String
             get() = text
 
+        @Suppress("TestFunctionName")
         @Composable
         override fun AnimatedVisibilityScope.Content() {
             Text(text = text)
@@ -35,6 +36,7 @@ class NavContainerTest {
         override val bottomSheetOptions: BottomSheetOptions
     ) : BottomSheet {
 
+        @Suppress("TestFunctionName")
         @Composable
         override fun AnimatedVisibilityScope.Content() {
             Text(text = text)
