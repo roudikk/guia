@@ -52,6 +52,7 @@ android {
         versionCode = 3
         versionName = "1.2"
         signingConfig = signingConfigs.getByName("debug")
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -107,6 +108,8 @@ dependencies {
     implementation(project(":compose-navigator"))
 
     // Test dependencies
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
     testImplementation("junit:junit:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter:$jupiterVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")

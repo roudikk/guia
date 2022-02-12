@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -183,7 +184,7 @@ private fun NavContainerContent(
     ) { destination ->
         savableStateHolder.SaveableStateProvider(
             destination.id
-        ) { with(destination.navigationNode) { Content() } }
+        ) { ContentWithTestTag(destination) }
     }
 
     ModalBottomSheetLayout(
@@ -248,7 +249,7 @@ private fun NavContainerContent(
                                 savableStateHolder.SaveableStateProvider(
                                     key = targetDestination.id
                                 ) {
-                                    with(targetDestination.navigationNode) { Content() }
+                                    ContentWithTestTag(targetDestination)
                                 }
                             }
                         } else {
@@ -285,7 +286,7 @@ private fun NavContainerContent(
             ) { destination ->
                 savableStateHolder.SaveableStateProvider(
                     destination.id,
-                ) { with(destination.navigationNode) { Content() } }
+                ) { ContentWithTestTag(destination) }
             }
         }
     }
@@ -301,6 +302,15 @@ private fun NavContainerContent(
     LaunchedEffect(bottomSheetState.isVisible) {
         if (!bottomSheetState.isVisible && currentDestination.navigationNode is BottomSheet) {
             navigator.popBackStack()
+        }
+    }
+}
+
+@Composable
+private fun AnimatedVisibilityScope.ContentWithTestTag(destination: Destination) {
+    with(destination.navigationNode) {
+        Box(modifier = Modifier.testTag(destination.navigationNode.key)) {
+            Content()
         }
     }
 }

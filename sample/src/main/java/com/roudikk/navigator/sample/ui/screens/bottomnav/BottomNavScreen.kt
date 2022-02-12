@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,7 +65,9 @@ private fun BottomNavigation() {
             .navigationBarsHeight(80.dp)
     ) {
         NavigationBarItem(
-            modifier = Modifier.navigationBarsPadding(),
+            modifier = Modifier
+                .navigationBarsPadding()
+                .testTag("tab_home"),
             label = { Text("Home") },
             selected = currentStackKey == AppNavigationKey.Home,
             onClick = {
@@ -83,7 +86,9 @@ private fun BottomNavigation() {
         )
 
         NavigationBarItem(
-            modifier = Modifier.navigationBarsPadding(),
+            modifier = Modifier
+                .navigationBarsPadding()
+                .testTag("tab_nested"),
             label = { Text("Nested") },
             selected = currentStackKey == AppNavigationKey.Nested,
             onClick = {
@@ -102,7 +107,9 @@ private fun BottomNavigation() {
         )
 
         NavigationBarItem(
-            modifier = Modifier.navigationBarsPadding(),
+            modifier = Modifier
+                .navigationBarsPadding()
+                .testTag("tab_dialogs"),
             label = { Text("Dialogs") },
             selected = currentStackKey == AppNavigationKey.Dialogs,
             onClick = {
@@ -121,7 +128,9 @@ private fun BottomNavigation() {
         )
 
         NavigationBarItem(
-            modifier = Modifier.navigationBarsPadding(),
+            modifier = Modifier
+                .navigationBarsPadding()
+                .testTag("tab_nav_tree"),
             label = { Text("Nav Tree") },
             selected = currentStackKey == AppNavigationKey.NavigationTree,
             onClick = {

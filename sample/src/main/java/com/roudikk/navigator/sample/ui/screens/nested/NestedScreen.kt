@@ -32,7 +32,11 @@ class NestedScreen(
 ) : Screen {
 
     override val key: String
-        get() = "${super.key}_$count"
+        get() = keyFor(count)
+
+    companion object {
+        fun keyFor(count: Int) = "NestedScreen_$count"
+    }
 
     @Composable
     override fun AnimatedVisibilityScope.Content() {
@@ -61,7 +65,7 @@ private fun NestedContent(
         ) {
             Icon(
                 imageVector = Icons.Default.Remove,
-                contentDescription = "back"
+                contentDescription = "Remove"
             )
         }
 
