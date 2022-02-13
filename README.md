@@ -56,14 +56,6 @@ plugins {
 }
 ```
 
-OPTIONAL: Module OptIn for experimental navigator api:
-
-```gradle
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions.freeCompilerArgs += "-opt-in=com.roudikk.navigator.ExperimentalNavigatorApi"
-}
-```
-
 ## Navigation nodes <a name="navigation-nodes"/>
 
 Screen:

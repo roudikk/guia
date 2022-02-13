@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalNavigatorApi::class)
-
 package com.roudikk.navigator
 
 import android.os.Parcel
