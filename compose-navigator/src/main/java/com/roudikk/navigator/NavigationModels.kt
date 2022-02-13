@@ -26,7 +26,7 @@ interface NavigationNode : Parcelable {
      * that case make sure to override key with something more meaningful.
      */
     val key: String
-        get() = this::class.java.simpleName
+        get() = this::class.java.name
 
     /**
      * The key for listening to results passed to this navigation node.
@@ -41,7 +41,7 @@ interface NavigationNode : Parcelable {
     fun AnimatedVisibilityScope.Content()
 
     companion object {
-        inline fun <reified T : NavigationNode> key(): String = T::class.java.simpleName
+        inline fun <reified T : NavigationNode> key(): String = T::class.java.name
         inline fun <reified T : NavigationNode> resultsKey() = "${key<T>()}_Results"
     }
 
