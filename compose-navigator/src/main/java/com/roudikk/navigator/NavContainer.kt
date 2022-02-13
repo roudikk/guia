@@ -41,7 +41,6 @@ private val LocalNavigatorsCache = compositionLocalOf<HashMap<String, Navigator>
 
 private val LocalParentNavigator = compositionLocalOf<Navigator?> { null }
 
-@ExperimentalNavigatorApi
 @Composable
 fun NavHost(
     vararg navigators: Pair<String, NavigationConfig>,
@@ -86,7 +85,6 @@ fun NavHost(
     }
 }
 
-@ExperimentalNavigatorApi
 @Composable
 fun findNavigator(key: String? = null): Navigator {
     if (key == null) return checkNotNull(LocalNavigator.current) {
@@ -98,17 +96,14 @@ fun findNavigator(key: String? = null): Navigator {
     }
 }
 
-@ExperimentalNavigatorApi
 @Composable
 fun findParentNavigator(): Navigator? {
     return LocalParentNavigator.current
 }
 
-@ExperimentalNavigatorApi
 @Composable
 fun findDefaultNavigator() = findNavigator(Navigator.defaultKey)
 
-@ExperimentalNavigatorApi
 @Composable
 fun NavContainer(
     modifier: Modifier = Modifier,
@@ -131,7 +126,6 @@ fun NavContainer(
     }
 }
 
-@ExperimentalNavigatorApi
 @Composable
 private fun NavContainerContent(
     modifier: Modifier = Modifier,
@@ -357,6 +351,3 @@ private val NavigatorCacheSaver: Saver<HashMap<String, Navigator>, *>
             }.toMap())
         }
     )
-
-@RequiresOptIn("This API is experimental and is likely to change in the future.")
-annotation class ExperimentalNavigatorApi

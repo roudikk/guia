@@ -4,14 +4,10 @@ plugins {
     id("kotlin-parcelize")
 }
 
-// Module wide Opt ins for experimental compose / navigator apis
+// Module wide Opt ins for experimental compose apis
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions.freeCompilerArgs += "-opt-in=com.roudikk.navigator.ExperimentalNavigatorApi"
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
