@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.systemBarsPadding
-import com.roudikk.navigator.BottomSheetSetup
+import com.roudikk.navigator.compose.BottomSheetOptions
 
 @Composable
 fun BottomSheetSurface(
@@ -27,7 +27,7 @@ fun BottomSheetSurface(
     }
 }
 
-fun defaultBottomSheetSetup(modifier: Modifier = Modifier) = BottomSheetSetup(
+fun sampleBottomSheetOptions(modifier: Modifier = Modifier) = BottomSheetOptions(
     bottomSheetContainer = { nodeModifier, content ->
         BottomSheetSurface(
             modifier = modifier

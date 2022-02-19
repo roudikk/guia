@@ -2,7 +2,7 @@ package com.roudikk.navigator.sample
 
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import com.roudikk.navigator.NavigationNode.Companion.key
+import com.roudikk.navigator.core.NavigationNode.Companion.key
 import com.roudikk.navigator.sample.ui.screens.dialogs.BlockingBottomSheet
 import com.roudikk.navigator.sample.ui.screens.dialogs.BlockingDialog
 import com.roudikk.navigator.sample.ui.screens.dialogs.CancelableDialog

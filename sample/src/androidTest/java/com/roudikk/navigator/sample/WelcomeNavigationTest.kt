@@ -5,7 +5,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.roudikk.navigator.NavigationNode.Companion.key
+import com.roudikk.navigator.core.NavigationNode.Companion.key
 import com.roudikk.navigator.sample.ui.screens.home.HomeScreen
 import com.roudikk.navigator.sample.ui.screens.welcome.WelcomeScreen
 import org.junit.Rule

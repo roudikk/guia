@@ -1,8 +1,6 @@
 package com.roudikk.navigator.sample.ui.screens.welcome
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -18,12 +16,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.*
 import com.google.accompanist.insets.navigationBarsPadding
-import com.roudikk.navigator.NavOptions
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.Screen
-import com.roudikk.navigator.findNavigator
-import com.roudikk.navigator.sample.MaterialSharedAxisTransitionXY
+import com.roudikk.navigator.compose.LocalNavigationAnimation
+import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.rememberNavigator
 import com.roudikk.navigator.sample.R
+import com.roudikk.navigator.sample.ui.composables.NavigationAnimationPreview
 import com.roudikk.navigator.sample.ui.screens.bottomnav.BottomNavScreen
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
@@ -32,16 +31,15 @@ import kotlinx.parcelize.Parcelize
 class WelcomeScreen : Screen {
 
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
+    override fun Content() {
         WelcomeContent()
     }
 }
 
 @Composable
-private fun AnimatedVisibilityScope.WelcomeContent(
-    navigator: Navigator = findNavigator()
+private fun WelcomeContent(
+    navigator: Navigator = requireNavigator()
 ) {
-
     val composition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(R.raw.welcome_animation)
     )
@@ -66,44 +64,36 @@ private fun AnimatedVisibilityScope.WelcomeContent(
             )
         }
 
-        Button(
-            modifier = Modifier
-                .widthIn(min = 300.dp)
-                .animateEnterExit(
-                    enter = slideInVertically(tween(durationMillis = 600)) { it },
-                    exit = slideOutVertically { it }
-                ),
-            onClick = {
-                navigator.navigate(
-                    BottomNavScreen(),
-                    navOptions = NavOptions(
-                        navTransition = MaterialSharedAxisTransitionXY
-                    )
-                )
+        with(LocalNavigationAnimation.current) {
+            Button(
+                modifier = Modifier
+                    .widthIn(min = 300.dp)
+                    .animateEnterExit(
+                        enter = slideInVertically(tween(durationMillis = 600)) { it },
+                        exit = slideOutVertically { it }
+                    ),
+                onClick = {
+                    navigator.navigate(BottomNavScreen())
+                }
+            ) {
+                Text(text = "Navigate Home")
             }
-        ) {
-            Text(text = "Navigate Home")
-        }
 
-        Button(
-            modifier = Modifier
-                .animateEnterExit(
-                    enter = slideInVertically(tween(durationMillis = 600)) { it },
-                    exit = slideOutVertically { it }
-                )
-                .padding(horizontal = 16.dp)
-                .padding(top = 4.dp, bottom = 16.dp)
-                .widthIn(min = 300.dp),
-            onClick = {
-                navigator.setRoot(
-                    BottomNavScreen(),
-                    navOptions = NavOptions(
-                        navTransition = MaterialSharedAxisTransitionXY
+            Button(
+                modifier = Modifier
+                    .animateEnterExit(
+                        enter = slideInVertically(tween(durationMillis = 600)) { it },
+                        exit = slideOutVertically { it }
                     )
-                )
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 4.dp, bottom = 16.dp)
+                    .widthIn(min = 300.dp),
+                onClick = {
+                    navigator.setRoot(BottomNavScreen())
+                }
+            ) {
+                Text(text = "Set Root Home")
             }
-        ) {
-            Text(text = "Set Root Home")
         }
     }
 }
@@ -117,7 +107,7 @@ private fun AnimatedVisibilityScope.WelcomeContent(
 )
 @Composable
 private fun WelcomeContentPreviewDark() = AppTheme {
-    AnimatedVisibility(visible = true) {
-        WelcomeContent(navigator = Navigator())
+    NavigationAnimationPreview {
+        WelcomeContent(navigator = rememberNavigator())
     }
 }

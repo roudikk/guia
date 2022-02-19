@@ -1,7 +1,6 @@
 package com.roudikk.navigator.sample.ui.screens.nested
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,12 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.NavOptions
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.Screen
-import com.roudikk.navigator.findNavigator
-import com.roudikk.navigator.sample.AppNavigator
-import com.roudikk.navigator.sample.VerticalSlideTransition
+import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.rememberNavigator
+import com.roudikk.navigator.sample.navigation.SampleNavConfig
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
@@ -38,14 +36,14 @@ class NestedScreen(
     }
 
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
+    override fun Content() {
         NestedContent(count = count)
     }
 }
 
 @Composable
 private fun NestedContent(
-    navigator: Navigator = findNavigator(),
+    navigator: Navigator = requireNavigator(),
     count: Int
 ) {
     Column(
@@ -86,12 +84,7 @@ private fun NestedContent(
 
         IconButton(
             onClick = {
-                navigator.navigate(
-                    NestedScreen(count + 1),
-                    navOptions = NavOptions(
-                        navTransition = VerticalSlideTransition
-                    )
-                )
+                navigator.navigate(NestedScreen(count + 1))
             }
         ) {
             Icon(
@@ -112,9 +105,7 @@ private fun NestedContent(
 @Composable
 private fun NestedContentPreview() = AppTheme {
     NestedContent(
-        navigator = Navigator().apply {
-            initialize(AppNavigator.NestedTab.navigationConfig)
-        },
+        navigator = rememberNavigator(SampleNavConfig.Nested),
         count = 4
     )
 }

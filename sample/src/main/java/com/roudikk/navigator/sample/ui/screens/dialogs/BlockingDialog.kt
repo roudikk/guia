@@ -1,10 +1,8 @@
 package com.roudikk.navigator.sample.ui.screens.dialogs
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -14,15 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.Dialog
-import com.roudikk.navigator.DialogOptions
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.findNavigator
+import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.core.Dialog
+import com.roudikk.navigator.core.DialogOptions
+import com.roudikk.navigator.rememberNavigator
+import com.roudikk.navigator.sample.navigation.CrossFadeTransition
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@OptIn(ExperimentalMaterialApi::class)
 class BlockingDialog(
     private val showNextButton: Boolean
 ) : Dialog {
@@ -34,14 +33,14 @@ class BlockingDialog(
         )
 
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
+    override fun Content() {
         BlockingDialogContent(showNextButton = showNextButton)
     }
 }
 
 @Composable
 private fun BlockingDialogContent(
-    navigator: Navigator = findNavigator(),
+    navigator: Navigator = requireNavigator(),
     showNextButton: Boolean
 ) {
     Surface(
@@ -66,7 +65,10 @@ private fun BlockingDialogContent(
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
-                        navigator.navigate(CancelableDialog(true))
+                        navigator.navigate(
+                            navigationNode = CancelableDialog(true),
+                            transition = CrossFadeTransition
+                        )
                     }
                 ) {
                     Text(text = "Next")
@@ -96,7 +98,7 @@ private fun BlockingDialogContent(
 @Composable
 private fun BlockingDialogContentPreview() = AppTheme {
     BlockingDialogContent(
-        navigator = Navigator(),
+        navigator = rememberNavigator(),
         showNextButton = true
     )
 }
@@ -111,7 +113,7 @@ private fun BlockingDialogContentPreview() = AppTheme {
 @Composable
 private fun BlockingDialogContentPreviewCancel() = AppTheme {
     BlockingDialogContent(
-        navigator = Navigator(),
+        navigator = rememberNavigator(),
         showNextButton = false
     )
 }

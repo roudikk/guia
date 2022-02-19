@@ -1,27 +1,24 @@
 package com.roudikk.navigator.sample.ui.screens.details
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.*
-import com.roudikk.navigator.sample.MaterialSharedAxisTransitionX
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.core.Screen
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
-import com.roudikk.navigator.sample.ui.screens.home.HomeScreen
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
-import java.util.*
 
 @Parcelize
 class DetailsScreen(
@@ -29,36 +26,43 @@ class DetailsScreen(
 ) : Screen {
 
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
-        DetailsContent(item = item)
-    }
-}
+    override fun Content() {
+        val viewModel = viewModel { DetailsViewModel(item) }
 
-@Parcelize
-class DetailsBottomSheet(
-    private val item: String
-) : BottomSheet {
-
-    override val bottomSheetOptions: BottomSheetOptions
-        get() = BottomSheetOptions(
-            confirmStateChange = {
-                it != ModalBottomSheetValue.HalfExpanded
-            }
+        DetailsContent(
+            item = viewModel.item,
+            onBackSelected = viewModel::onBackSelected,
+            onRandomItemSelected = viewModel::onRandomItemSelected,
+            onSendResultSelected = viewModel::onSendResultSelected,
+            onBottomSheetSelected = viewModel::onBottomSheetSelected,
+            onNewSingleInstanceSelected = viewModel::onNewSingleInstanceSelected,
+            onExistingSingleInstanceSelected = viewModel::onExistingSingleInstanceSelected,
+            onSingleTopSelected = viewModel::onSingleTopSelected,
+            onSingleTopBottomSheetSelected = viewModel::onSingleTopBottomSheetSelected,
+            onReplaceSelected = viewModel::onReplaceSelected,
+            onOpenDialogSelected = viewModel::onOpenDialogSelected
         )
 
-    @Composable
-    override fun AnimatedVisibilityScope.Content() {
-        DetailsList(
-            navigator = findNavigator(),
-            item = item
+        DetailsCommandHandler(
+            navigator = requireNavigator(),
+            viewModel = viewModel
         )
     }
 }
 
 @Composable
 private fun DetailsContent(
-    navigator: Navigator = findNavigator(),
-    item: String
+    item: String,
+    onBackSelected: () -> Unit,
+    onRandomItemSelected: () -> Unit,
+    onSendResultSelected: () -> Unit,
+    onBottomSheetSelected: () -> Unit,
+    onNewSingleInstanceSelected: () -> Unit,
+    onExistingSingleInstanceSelected: () -> Unit,
+    onSingleTopSelected: () -> Unit,
+    onSingleTopBottomSheetSelected: () -> Unit,
+    onReplaceSelected: () -> Unit,
+    onOpenDialogSelected: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -66,9 +70,7 @@ private fun DetailsContent(
                 title = "Details",
                 navigationIcon = {
                     IconButton(
-                        onClick = {
-                            navigator.popBackStack()
-                        }
+                        onClick = onBackSelected
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
@@ -84,145 +86,17 @@ private fun DetailsContent(
             contentAlignment = Alignment.Center
         ) {
             DetailsList(
-                navigator = navigator,
-                item = item
+                item = item,
+                onRandomItemSelected = onRandomItemSelected,
+                onSendResultSelected = onSendResultSelected,
+                onBottomSheetSelected = onBottomSheetSelected,
+                onNewSingleInstanceSelected = onNewSingleInstanceSelected,
+                onExistingSingleInstanceSelected = onExistingSingleInstanceSelected,
+                onSingleTopSelected = onSingleTopSelected,
+                onSingleTopBottomSheetSelected = onSingleTopBottomSheetSelected,
+                onReplaceSelected = onReplaceSelected,
+                onOpenDialogSelected = onOpenDialogSelected
             )
-        }
-    }
-}
-
-@Composable
-private fun DetailsList(
-    navigator: Navigator,
-    item: String
-) {
-
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .fillMaxWidth()
-            .padding(vertical = 16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Text(
-            text = "Item: $item",
-            style = MaterialTheme.typography.headlineMedium
-        )
-
-        Spacer(modifier = Modifier.size(16.dp))
-
-        Button(
-            modifier = Modifier
-                .widthIn(min = 300.dp),
-            onClick = {
-                val newItem = UUID.randomUUID().toString().split("-")[0]
-                navigator.navigate(
-                    navigationNode = DetailsScreen(newItem),
-                    navOptions = NavOptions(
-                        navTransition = MaterialSharedAxisTransitionX
-                    )
-                )
-            }
-        ) {
-            Text(text = "New random item")
-        }
-
-        Button(
-            modifier = Modifier
-                .widthIn(min = 300.dp),
-            onClick = {
-                navigator.sendResult<HomeScreen>(item)
-                navigator.popToRoot()
-            }
-        ) {
-            Text(text = "Send result back to home")
-        }
-
-        Button(
-            modifier = Modifier
-                .widthIn(min = 300.dp),
-            onClick = {
-                val newItem = UUID.randomUUID().toString().split("-")[0]
-                navigator.navigate(
-                    navigationNode = DetailsBottomSheet(newItem),
-                    navOptions = NavOptions(
-                        navTransition = MaterialSharedAxisTransitionX
-                    )
-                )
-            }
-        ) {
-            Text(text = "Bottom Sheet")
-        }
-
-        Button(
-            modifier = Modifier
-                .widthIn(min = 300.dp),
-            onClick = {
-                val newItem = UUID.randomUUID().toString().split("-")[0]
-                navigator.navigate(
-                    navigationNode = DetailsScreen(newItem),
-                    navOptions = NavOptions(
-                        launchMode = LaunchMode.SINGLE_TOP,
-                        navTransition = MaterialSharedAxisTransitionX
-                    )
-                )
-            }
-        ) {
-            Text(text = "Single top Screen")
-        }
-
-        Button(
-            modifier = Modifier
-                .widthIn(min = 300.dp),
-            onClick = {
-                val newItem = UUID.randomUUID().toString().split("-")[0]
-                navigator.navigate(
-                    navigationNode = DetailsBottomSheet(newItem),
-                    navOptions = NavOptions(
-                        launchMode = LaunchMode.SINGLE_TOP,
-                        navTransition = MaterialSharedAxisTransitionX
-                    )
-                )
-            }
-        ) {
-            Text(text = "Single top bottom sheet")
-        }
-
-        Button(
-            modifier = Modifier
-                .widthIn(min = 300.dp),
-            onClick = {
-                val newItem = UUID.randomUUID().toString().split("-")[0]
-                navigator.navigate(
-                    navigationNode = DetailsScreen(newItem),
-                    navOptions = NavOptions(
-                        launchMode = LaunchMode.SINGLE_INSTANCE,
-                        navTransition = MaterialSharedAxisTransitionX
-                    )
-                )
-            }
-        ) {
-            Text(text = "Single Instance")
-        }
-
-        Button(
-            modifier = Modifier
-                .widthIn(min = 300.dp),
-            onClick = {
-                val newItem = UUID.randomUUID().toString().split("-")[0]
-                navigator.popBackStack()
-                navigator.navigate(
-                    navigationNode = DetailsScreen(newItem),
-                    navOptions = NavOptions(
-                        launchMode = LaunchMode.SINGLE_INSTANCE,
-                        navTransition = MaterialSharedAxisTransitionX
-                    )
-                )
-            }
-        ) {
-            Text(text = "Navigate and pop last")
         }
     }
 }
@@ -237,7 +111,16 @@ private fun DetailsList(
 @Composable
 private fun DetailsContentPreview() = AppTheme {
     DetailsContent(
-        navigator = Navigator(),
-        item = "Test Item"
+        item = "Test Item!",
+        onBackSelected = { },
+        onRandomItemSelected = { },
+        onSendResultSelected = { },
+        onBottomSheetSelected = { },
+        onNewSingleInstanceSelected = { },
+        onExistingSingleInstanceSelected = { },
+        onSingleTopSelected = { },
+        onSingleTopBottomSheetSelected = { },
+        onReplaceSelected = { },
+        onOpenDialogSelected = { }
     )
 }

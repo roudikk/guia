@@ -1,9 +1,18 @@
 package com.roudikk.navigator
 
-import com.roudikk.navigator.NavigationNode.Companion.key
-import com.roudikk.navigator.NavigationNode.Companion.resultsKey
-import com.roudikk.navigator.animation.NavigationEnterTransition
-import com.roudikk.navigator.animation.NavigationExitTransition
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisallowComposableCalls
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import com.roudikk.navigator.animation.NavEnterExitTransition
+import com.roudikk.navigator.animation.NavTransition
+import com.roudikk.navigator.animation.to
+import com.roudikk.navigator.compose.NavContainer
+import com.roudikk.navigator.core.*
+import com.roudikk.navigator.core.NavigationNode.Companion.key
+import com.roudikk.navigator.core.NavigationNode.Companion.resultsKey
+import com.roudikk.navigator.savedstate.NavigatorSaver
+import com.roudikk.navigator.savedstate.NavigatorState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -11,65 +20,97 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class Navigator {
+/**
+ * Remembers and returns a [Navigator].
+ *
+ * @see [NavigationConfig] for the different navigator configurations.
+ *
+ * @param navigationConfig, navigation config for the [Navigator], this cannot be changed later.
+ */
+@Composable
+fun rememberNavigator(
+    navigationConfig: NavigationConfig = NavigationConfig.SingleStack(EmptyNavigationNode),
+    initializer: @DisallowComposableCalls (Navigator) -> Unit = {}
+) = rememberSaveable(saver = NavigatorSaver) { Navigator(navigationConfig).apply(initializer) }
 
-    companion object {
-        /**
-         * Default key used to create a default [Navigator] instance.
-         */
-        const val defaultKey = "Navigator_DefaultKey"
-    }
+/**
+ * Remembers and returns a single stack [Navigator].
+ *
+ * @param initialNavigationNode, the initial navigation node to render.
+ * If the navigator should start with an empty node to be replaced later, use [EmptyNavigationNode]
+ * @param defaultTransition, default transition used when no transition is given when navigating.
+ */
+@Composable
+fun rememberNavigator(
+    initialNavigationNode: NavigationNode,
+    defaultTransition: NavTransition = NavTransition.None,
+    initializer: @DisallowComposableCalls (Navigator) -> Unit = {}
+) = rememberNavigator(
+    navigationConfig = NavigationConfig.SingleStack(
+        initialNavigationNode = initialNavigationNode,
+        defaultTransition = defaultTransition,
+    ),
+    initializer = initializer
+)
 
-    /**
-     * Whether or not this [Navigator] has been initialized.
-     *
-     * True if [initialize] was called with a [NavigationConfig].
-     */
-    private var initialized = false
+/**
+ * Main component of the navigation system.
+ *
+ * To start use one of the [rememberNavigator] functions to create a navigator instance.
+ * To render the state of a [Navigator] use a [NavContainer].
+ * To define a screen use one of [Screen], [Dialog] or [BottomSheet].
+ */
+class Navigator internal constructor(
+    @PublishedApi
+    internal val navigationConfig: NavigationConfig = NavigationConfig
+        .SingleStack(EmptyNavigationNode)
+) {
 
     /**
      * Coroutine scope used for [Navigator] coroutine operations.
      *
-     * @see [currentKeyFlow]
+     * @see [currentStackKeyFlow]
      * @see [resultsFlow]
      * @see [sendResult]
      */
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     /**
-     * ]
-     */
-    private lateinit var navigationConfig: NavigationConfig
-
-    /**
      * The navigation stack history across all the stacks defined in [NavigationConfig.SingleStack]
      * or [NavigationConfig.MultiStack].
      *
-     * @see [StackHistoryEntry] for more information on how this works.
+     * @see [NavHistoryEntry] for more information on how this works.
      */
-    private var mutableStackHistory = mutableListOf<StackHistoryEntry>()
-    val stackHistory: List<StackHistoryEntry>
-        get() = mutableStackHistory
+    private var mutableNavHistory = mutableListOf<NavHistoryEntry>()
+    internal val navHistory: List<NavHistoryEntry>
+        get() = mutableNavHistory
 
     /**
-     * The current state of the navigator.
+     * The current state of the navigator as a [StateFlow].
      */
     private val mutableStateFlow = MutableStateFlow(
         NavigationState(
-            navigationStacks = listOf(DefaultNavigationStack),
+            navigationStacks = mutableStateListOf(DefaultNavigationStack),
             currentStackKey = DefaultNavigationStack.key,
-            transitionPair = DefaultNavTransition.enter to DefaultNavTransition.exit,
+            transition = navigationConfig.defaultTransition.enter
+                    to navigationConfig.defaultTransition.exit,
             overrideBackPress = true
         )
     )
     val stateFlow: StateFlow<NavigationState> = mutableStateFlow
 
     /**
+     * The current state of the navigator.
+     */
+    val currentState: NavigationState
+        get() = mutableStateFlow.value
+
+    /**
      * Current stack key.
      */
-    val currentKey: NavigationKey
+    val currentStackKey: StackKey
         get() = stateFlow.value.currentStackKey
-    val currentKeyFlow: StateFlow<NavigationKey> = stateFlow.map {
+    val currentStackKeyFlow: StateFlow<StackKey> = stateFlow.map {
         it.currentStackKey
     }.stateIn(scope, SharingStarted.Lazily, stateFlow.value.currentStackKey)
 
@@ -78,6 +119,12 @@ class Navigator {
      */
     val currentNodeKey: String
         get() = stateFlow.value.currentStack.currentNodeKey
+
+    /**
+     * Current destinations for current stack.
+     */
+    private val currentDestinations
+        get() = currentState.currentStack.destinations.toMutableList()
 
     /**
      * [resultsChannel] is used for guaranteed delivery of the result
@@ -91,26 +138,23 @@ class Navigator {
         .receiveAsFlow()
         .shareIn(scope, started = SharingStarted.WhileSubscribed())
 
-    /**
-     * Initializes the [Navigator]
-     *
-     * @param navigationConfig, configuration used to initialize the [Navigator].
-     * @see [NavigationConfig] for the different available configs.
-     *
-     * @param forceInitialize, by default calling [initialize] multiple times will be ignored but
-     * the navigator can be re-initialized by setting this param to true.
-     */
-    fun initialize(navigationConfig: NavigationConfig, forceInitialize: Boolean = false) {
-        if (!forceInitialize && initialized) return
+    init {
+        initialize(navigationConfig)
+    }
 
-        this.navigationConfig = navigationConfig
-
+    private fun initialize(navigationConfig: NavigationConfig) {
+        mutableNavHistory.clear()
         when (navigationConfig) {
             is NavigationConfig.MultiStack -> initialize(
                 navigationStacks = navigationConfig.entries.map {
                     NavigationStack(
                         key = it.key,
-                        destinations = listOf(Destination(it.initialNavigationNode))
+                        destinations = listOf(
+                            Destination(
+                                navigationNode = it.initialNavigationNode,
+                                transition = navigationConfig.defaultTransition
+                            )
+                        )
                     )
                 },
                 initialStackKey = navigationConfig.initialStackKey
@@ -119,32 +163,28 @@ class Navigator {
                 initialNavigationNode = navigationConfig.initialNavigationNode
             )
         }
-        initialized = true
-
-        mutableStackHistory.clear()
-        mutableStackHistory.add(
-            StackHistoryEntry(
-                mutableStateFlow.value.currentStackKey,
-                mutableStateFlow.value.currentStack.currentNodeKey
-            )
-        )
     }
 
     /**
      * Initializes the [Navigator] with a single stack using [DefaultNavigationStack]
-     * and [DefaultNavTransition].
      */
     private fun initialize(initialNavigationNode: NavigationNode) {
+        val destination = Destination(
+            navigationNode = initialNavigationNode,
+            transition = navigationConfig.defaultTransition
+        )
+
         mutableStateFlow.value = NavigationState(
             navigationStacks = listOf(
-                DefaultNavigationStack.copy(
-                    destinations = listOf(Destination(initialNavigationNode))
-                )
+                DefaultNavigationStack.copy(destinations = listOf(destination))
             ),
             currentStackKey = DefaultNavigationStack.key,
-            transitionPair = DefaultNavTransition.enter to DefaultNavTransition.exit,
+            transition = navigationConfig.defaultTransition.enter to
+                    navigationConfig.defaultTransition.exit,
             overrideBackPress = true
         )
+
+        mutableNavHistory.add(destination.navHistoryEntry())
     }
 
     /**
@@ -153,144 +193,316 @@ class Navigator {
      */
     private fun initialize(
         navigationStacks: List<NavigationStack>,
-        initialStackKey: NavigationKey
+        initialStackKey: StackKey
     ) {
         check(navigationStacks.any { it.key == initialStackKey }) {
             "Initial stack must be in the list of provided navigation stacks"
         }
+
         mutableStateFlow.value = NavigationState(
             navigationStacks = navigationStacks,
             currentStackKey = initialStackKey,
-            transitionPair = DefaultNavTransition.enter to DefaultNavTransition.exit,
+            transition = navigationConfig.defaultTransition.enter to
+                    navigationConfig.defaultTransition.exit,
             overrideBackPress = true
         )
+
+        mutableNavHistory.add(currentDestinations.last().navHistoryEntry())
     }
 
     /**
      * Navigate to a given destination.
      *
      * @param navigationNode, the new node to navigate to.
-     * @param navOptions, navigation options.
-     * @see [NavOptions]
+     * @param transition, transition animation.
      *
-     *  The new node is added as a new [Destination] along with its [navOptions] on top
+     *  The new node is added as a new [Destination] along with its [transition] on top
      *  of [NavigationStack.destinations] in [NavigationState.currentStack].
      */
-    fun navigate(navigationNode: NavigationNode, navOptions: NavOptions = NavOptions()) {
-        val currentState = mutableStateFlow.value
-        val currentStack = currentState.currentStack
-        var navigationStacks = currentState.navigationStacks.toMutableList()
-
-        var shouldAnimate = true
-        val newStack = when (navOptions.launchMode) {
-            LaunchMode.DEFAULT -> {
-                mutableStackHistory.add(StackHistoryEntry(currentStack.key, navigationNode.key))
-
-                currentStack.copy(
-                    destinations = currentStack.destinations
-                        .toMutableList()
-                        .apply {
-                            add(
-                                Destination(
-                                    navigationNode = navigationNode,
-                                    navOptions = navOptions
-                                )
-                            )
-                        }
-                )
-            }
-            LaunchMode.SINGLE_TOP -> {
-                if (currentStack.currentNodeKey == navigationNode.key) {
-                    shouldAnimate = false
-                }
-
-                val newDestination = Destination(
-                    navigationNode = navigationNode,
-                    navOptions = navOptions
-                )
-
-                currentStack.copy(
-                    destinations = currentStack.destinations
-                        .toMutableList()
-                        .apply {
-                            if (currentStack.currentNodeKey == navigationNode.key) {
-                                removeLast()
-                            }
-                            add(newDestination)
-                        }
-                )
-            }
-            LaunchMode.SINGLE_INSTANCE -> {
-                if (currentStack.currentNodeKey == navigationNode.key) {
-                    shouldAnimate = false
-                }
-
-                val newDestination = Destination(
-                    navigationNode = navigationNode,
-                    navOptions = navOptions
-                )
-
-                navigationStacks = navigationStacks.map {
-                    it.copy(destinations = it.destinations.toMutableList().apply {
-                        removeAll { destination ->
-                            destination.navigationNode.key == navigationNode.key
-                        }
-                    })
-                }.toMutableList()
-
-                // Remove all previous destinations matching node key from history
-                mutableStackHistory.removeAll { it.navigationNodeKey == navigationNode.key }
-                mutableStackHistory.add(StackHistoryEntry(currentStack.key, navigationNode.key))
-
-                currentStack.copy(destinations = currentStack.destinations
-                    .toMutableList()
-                    .apply {
-                        removeAll { destination ->
-                            destination.navigationNode.key == navigationNode.key
-                        }
-                        add(newDestination)
-                    }
-                )
-            }
-        }
-
-        navigationStacks[navigationStacks.indexOfFirst { it.key == newStack.key }] = newStack
-        val newState = NavigationState(
-            currentStackKey = currentStack.key,
-            navigationStacks = navigationStacks,
-            transitionPair = if (shouldAnimate) {
-                newStack.destinations.last().navOptions.navTransition.enter to
-                        newStack.destinations.last().navOptions.navTransition.exit
-            } else {
-                NavigationEnterTransition.None to NavigationExitTransition.None
-            },
-            overrideBackPress = currentState.overrideBackPress
-        )
-        mutableStateFlow.value = newState
+    fun navigate(
+        navigationNode: NavigationNode,
+        transition: NavTransition = navigationConfig.defaultTransition
+    ) {
+        val destinations = currentDestinations
+        val destination = Destination(navigationNode, transition)
+        destinations.add(destination)
+        mutableNavHistory.add(destination.navHistoryEntry())
+        updateStateWithDestinations(destinations, false)
     }
 
     /**
-     * Navigates to a given [NavigationKey]
+     * Replaces the current last destination in the current stack.
+     *
+     * @param navigationNode, the new navigation node.
+     * @param transition, transition animation.
+     */
+    fun replaceLast(
+        navigationNode: NavigationNode,
+        transition: NavTransition = navigationConfig.defaultTransition
+    ) {
+        val destinations = currentDestinations
+        val destination = Destination(navigationNode, transition)
+        destinations.removeLast()
+        mutableNavHistory.removeLast()
+        destinations.add(destination)
+        mutableNavHistory.add(destination.navHistoryEntry())
+        updateStateWithDestinations(destinations, false)
+    }
+
+    /**
+     * Replace all entries matching [predicate].
+     *
+     * @param navigationNode, the new navigation node to replace root.
+     * @param transition, transition animation.
+     * @param inclusive, pop the last [NavigationNode] not matching [predicate] too.
+     * @param predicate, return true for the up-to [NavigationNode].
+     */
+    fun replaceUpTo(
+        navigationNode: NavigationNode,
+        transition: NavTransition = navigationConfig.defaultTransition,
+        inclusive: Boolean = false,
+        predicate: (NavigationNode) -> Boolean,
+    ) {
+        var destinations = currentDestinations
+        val destination = Destination(navigationNode, transition)
+
+        destinations = destinations
+            .dropLastWhile { !predicate(it.navigationNode) }
+            .toMutableList()
+
+        if (inclusive) destinations.removeLast()
+
+        mutableNavHistory.removeAll { entry ->
+            !destinations.any { it.id == entry.destinationId } &&
+                    entry.stackKey == currentStackKey
+        }
+
+        destinations.add(destination)
+        mutableNavHistory.add(destination.navHistoryEntry())
+        updateStateWithDestinations(destinations, false)
+    }
+
+    /**
+     * Replace all entries in the back stack until the first occurrence of [key].
+     *
+     * @param navigationNode, the new navigation node to replace root.
+     * @param transition, transition animation.
+     * @param inclusive, pop the [NavigationNode] with [key] too.
+     */
+    inline fun <reified T : NavigationNode> replaceUpTo(
+        navigationNode: NavigationNode,
+        transition: NavTransition = navigationConfig.defaultTransition,
+        inclusive: Boolean = false
+    ) = replaceUpTo(
+        predicate = { it.key == key<T>() },
+        navigationNode = navigationNode,
+        transition = transition,
+        inclusive = inclusive
+    )
+
+    /**
+     * Moves the navigation node matching [predicate] to the top.
+     *
+     * @param transition, transition animation.
+     * @param matchLast, whether or not to matching from the top of the back stack ro the start.
+     * @param predicate, whether or not the [NavigationNode] matches.
+     *
+     * @return true if a destination was found in the back stack.
+     */
+    fun moveToTop(
+        matchLast: Boolean = true,
+        transition: NavTransition? = navigationConfig.defaultTransition,
+        predicate: (NavigationNode) -> Boolean
+    ): Boolean {
+        val destinations = currentDestinations
+
+        val destination = if (matchLast) {
+            destinations.findLast { predicate(it.navigationNode) }
+        } else {
+            destinations.find { predicate(it.navigationNode) }
+        }
+
+        if (destinations.last() == destination) return true
+
+        if (destination != null) {
+            destinations.remove(destination)
+            destinations.add(
+                destination.copy(
+                    transition = transition ?: navigationConfig.defaultTransition
+                )
+            )
+
+            mutableNavHistory.removeAll { it.destinationId == destination.id }
+            mutableNavHistory.add(destination.navHistoryEntry())
+            updateStateWithDestinations(destinations, false)
+            return true
+        }
+        return false
+    }
+
+    /**
+     * Moves the navigation node matching [key] to the top.
+     *
+     * @param transition, transition animation.
+     * @param matchLast, whether or not to matching from the top of the back stack ro the start.
+     *
+     * @return true if a destination was found in the back stack.
+     */
+    inline fun <reified T : NavigationNode> moveToTop(
+        matchLast: Boolean = true,
+        transition: NavTransition? = null,
+    ) = moveToTop(
+        predicate = { it.key == key<T>() },
+        transition = transition,
+        matchLast = matchLast
+    )
+
+    /**
+     * Navigates to a single instance of [NavigationNode].
+     *
+     * @param useExistingInstance, if true, then use an existing navigation node if any matches [key].
+     * @param navigationNode, the new navigation node.
+     * @param transition, transition animation.
+     */
+    fun singleInstance(
+        navigationNode: NavigationNode,
+        useExistingInstance: Boolean = true,
+        transition: NavTransition = navigationConfig.defaultTransition
+    ) {
+        val destinations = currentDestinations
+        val existingDestination = if (useExistingInstance) {
+            destinations.lastOrNull { it.navigationNode.key == navigationNode.key }
+        } else {
+            null
+        }
+        destinations.removeAll { it.navigationNode.key == navigationNode.key }
+        mutableNavHistory.removeAll { entry ->
+            !destinations.any { it.id == entry.destinationId } &&
+                    entry.stackKey == currentStackKey
+        }
+
+        val destination = existingDestination ?: Destination(
+            navigationNode = navigationNode,
+            transition = transition
+        )
+
+        destinations.add(destination)
+        mutableNavHistory.add(destination.navHistoryEntry())
+        updateStateWithDestinations(destinations, false)
+    }
+
+    /**
+     * Navigates to [NavigationNode] if the current top destination doesn't have the same [key].
+     *
+     * @param navigationNode, the navigation node.
+     * @param transition, transition animation.
+     */
+    fun singleTop(
+        navigationNode: NavigationNode,
+        transition: NavTransition = navigationConfig.defaultTransition
+    ) {
+        if (currentNodeKey == navigationNode.key) return
+        navigate(navigationNode, transition)
+    }
+
+    /**
+     * Check if any node in the back stack matches predicate.
+     *
+     * @param predicate, whether or not the given navigation node satisfies the condition.
+     */
+    fun any(predicate: (NavigationNode) -> Boolean): Boolean {
+        return currentDestinations.any { predicate(it.navigationNode) }
+    }
+
+    /**
+     * Pop to a specific navigation node
+     *
+     * @param key, used to find the navigation node in history matching this key. If none exist,
+     * nothing happens.
+     * @param inclusive, if set to true, the navigation node with given [key] will also be removed
+     * from history.
+     *
+     * @return true, if the navigation state changed after popping.
+     * @return false, if the navigation state is unchanged.
+     */
+    fun popTo(key: String, inclusive: Boolean = false): Boolean {
+        var destinations = currentDestinations
+        val destination = destinations.find { it.navigationNode.key == key }
+            ?: return false
+
+        destinations = destinations.dropLastWhile { it != destination }.toMutableList()
+        mutableNavHistory = mutableNavHistory.dropLastWhile { it.destinationId != destination.id }
+            .toMutableList()
+
+        if (inclusive) {
+            destinations.removeLast()
+            mutableNavHistory.removeLast()
+        }
+
+        return updateStateWithDestinations(destinations, true)
+    }
+
+    /**
+     * Convenience method to pop to a node using its [NavigationNode.Companion.key] as key.
+     *
+     * This only works if [NavigationNode.key] was not overridden.
+     */
+    inline fun <reified T : NavigationNode> popTo(inclusive: Boolean = false) =
+        popTo(key<T>(), inclusive)
+
+    /**
+     * Pops all the way back to the root [NavigationNode] for [NavigationState.currentStack].
+     */
+    fun popToRoot() {
+        val destination = currentDestinations[0]
+        mutableNavHistory = mutableNavHistory.dropLastWhile {
+            it.stackKey == currentStackKey && it.destinationId != destination.id
+        }.toMutableList()
+        updateStateWithDestinations(listOf(destination), true)
+    }
+
+    /**
+     * Clears the history for [NavigationState.currentStack] and sets a new root node.
+     *
+     * @param navigationNode, the new root node for the current stack.
+     * @param transition, transition animation.
+     */
+    fun setRoot(
+        navigationNode: NavigationNode,
+        transition: NavTransition = navigationConfig.defaultTransition
+    ) {
+        val destinations = currentDestinations
+        val destination = Destination(navigationNode, transition)
+        destinations.clear()
+        destinations.add(destination)
+        mutableNavHistory.removeAll { it.stackKey == currentStackKey }
+        mutableNavHistory.add(destination.navHistoryEntry())
+        updateStateWithDestinations(destinations, false)
+    }
+
+    /**
+     * Navigates to a given [StackKey]
      *
      * @param key, the new stack navigation key, must be present in [NavigationState.navigationStacks].
-     * @param transitions, enter/exit transitions for switching between stacks.
+     * @param transition, enter/exit transitions for switching between stacks.
      * @param addToKeyHistory, when this is true and navigator is using [BackStackStrategy.CrossStackHistory].
      * when navigating to a different stack and then pressing the back button (Assuming
      * [NavigationState.overrideBackPress] is true) the navigator will navigate back to the previous
      * back stack, however if it's set to false, the navigator will not go back to previous stack.
      */
-    fun navigateToStack(
-        key: NavigationKey,
-        transitions: NavigationTransitionPair = DefaultNavTransition.enter to DefaultNavTransition.exit,
+    private fun navigateToStack(
+        key: StackKey,
+        transition: NavEnterExitTransition = requireNotNull(navigationConfig as? NavigationConfig.MultiStack) {
+            "Stack navigation can only be done on a Navigator initialised with NavigationConfig.MultiStack"
+        }.stackEnterExitTransition,
         addToKeyHistory: Boolean = true
     ) {
-        val currentState = mutableStateFlow.value
         val navigationStacks = currentState.navigationStacks
 
         check(navigationStacks.any { it.key == key }) {
             """
                 Given key: $key, is not part of the navigation stacks defined.
-                Make sure to call initialize(navigationStacks) with the given key.
+                Make sure to call rememberNavigator(NavigationConfig.MultiStack) with the given key.
             """.trimIndent()
         }
 
@@ -299,14 +511,27 @@ class Navigator {
         mutableStateFlow.value = NavigationState(
             navigationStacks = navigationStacks,
             currentStackKey = newStack.key,
-            transitionPair = transitions,
+            transition = transition,
             overrideBackPress = currentState.overrideBackPress
         )
 
         if (addToKeyHistory) {
-            mutableStackHistory.add(StackHistoryEntry(newStack.key, newStack.currentNodeKey))
+            mutableNavHistory.add((newStack.destinations.last().navHistoryEntry()))
         }
     }
+
+    /**
+     * Navigates to a given [StackKey]
+     *
+     * @param key, the new stack navigation key, must be present in [NavigationState.navigationStacks].
+     * @param transition, enter/exit transitions for switching between stacks.
+     */
+    fun navigateToStack(
+        key: StackKey,
+        transition: NavEnterExitTransition = requireNotNull(navigationConfig as? NavigationConfig.MultiStack) {
+            "Stack navigation can only be done on a Navigator initialised with NavigationConfig.MultiStack"
+        }.stackEnterExitTransition
+    ) = navigateToStack(key = key, transition = transition, addToKeyHistory = true)
 
     /**
      * Pops navigator back stack.
@@ -323,51 +548,47 @@ class Navigator {
      * @return false, if the navigation state is unchanged.
      */
     fun popBackStack(): Boolean {
-        val currentState = mutableStateFlow.value
-
-        return when (val navigationConfig = navigationConfig) {
-            is NavigationConfig.MultiStack -> {
-                when (val backStackStrategy = navigationConfig.backStackStrategy) {
-                    is BackStackStrategy.BackToInitialStack -> {
-                        if (currentState.currentStack.destinations.size == 1
-                            && currentState.currentStackKey != navigationConfig.initialStackKey
-                        ) {
-                            navigateToStack(
-                                key = navigationConfig.initialStackKey,
-                                transitions = backStackStrategy.transitions,
-                                addToKeyHistory = false
-                            )
-                            true
-                        } else {
-                            defaultPopBackStack()
-                        }
-                    }
-                    is BackStackStrategy.CrossStackHistory -> {
-                        val lastStackKey = if (mutableStackHistory.size == 1) {
-                            mutableStackHistory[0].navigationKey
-                        } else {
-                            mutableStackHistory[mutableStackHistory.lastIndex - 1].navigationKey
-                        }
-                        if (mutableStackHistory.size > 1) {
-                            if (currentState.currentStackKey != lastStackKey) {
-                                mutableStackHistory.removeLastButFirst()
-                                navigateToStack(
-                                    key = lastStackKey,
-                                    transitions = backStackStrategy.transitions,
-                                    addToKeyHistory = false
-                                )
-                                true
-                            } else {
-                                defaultPopBackStack()
-                            }
-                        } else {
-                            defaultPopBackStack()
-                        }
-                    }
-                    BackStackStrategy.Default -> defaultPopBackStack()
-                }
-            }
+        return when (navigationConfig) {
+            is NavigationConfig.MultiStack -> popBackStackMultiStack(navigationConfig)
             is NavigationConfig.SingleStack -> defaultPopBackStack()
+        }
+    }
+
+    /**
+     * Pops back stack of a [NavigationConfig.MultiStack].
+     *
+     * @see [BackStackStrategy] for multi stack back stack behaviour.
+     */
+    private fun popBackStackMultiStack(navigationConfig: NavigationConfig.MultiStack): Boolean {
+        return when (navigationConfig.backStackStrategy) {
+            is BackStackStrategy.BackToInitialStack -> {
+                if (currentDestinations.size == 1 &&
+                    currentStackKey != navigationConfig.initialStackKey
+                ) {
+                    navigateToStack(
+                        key = navigationConfig.initialStackKey,
+                        transition = navigationConfig.stackEnterExitTransition,
+                        addToKeyHistory = false
+                    )
+                    return true
+                }
+                return defaultPopBackStack()
+            }
+            is BackStackStrategy.CrossStackHistory -> {
+                if (navHistory.size == 1) return false
+                val historyStackKey = navHistory[navHistory.lastIndex - 1].stackKey
+                if (currentStackKey != historyStackKey) {
+                    mutableNavHistory.removeLast()
+                    navigateToStack(
+                        key = historyStackKey,
+                        transition = navigationConfig.stackEnterExitTransition,
+                        addToKeyHistory = false
+                    )
+                    return true
+                }
+                return defaultPopBackStack()
+            }
+            BackStackStrategy.Default -> defaultPopBackStack()
         }
     }
 
@@ -382,112 +603,18 @@ class Navigator {
      *      - CrossStackHistory, when stack history contains more than one entry
      */
     fun canGoBack(): Boolean {
-        val currentState = mutableStateFlow.value
-
         return when (val navigationConfig = navigationConfig) {
             is NavigationConfig.MultiStack -> {
                 when (navigationConfig.backStackStrategy) {
                     is BackStackStrategy.BackToInitialStack -> {
-                        currentState.currentStack.destinations.size > 1 ||
-                                currentState.currentStackKey != navigationConfig.initialStackKey
+                        currentDestinations.size > 1 || currentStackKey != navigationConfig.initialStackKey
                     }
-                    is BackStackStrategy.CrossStackHistory -> stackHistory.size > 1
-                    BackStackStrategy.Default -> currentState.currentStack.destinations.size > 1
+                    is BackStackStrategy.CrossStackHistory -> navHistory.size > 1
+                    BackStackStrategy.Default -> currentDestinations.size > 1
                 }
             }
-            is NavigationConfig.SingleStack -> currentState.currentStack.destinations.size > 1
+            is NavigationConfig.SingleStack -> currentDestinations.size > 1
         }
-    }
-
-    /**
-     * Pop to a specific navigation node
-     *
-     * @param key, used to find the navigation node in history matching this key. If none exist,
-     * nothing happens.
-     * @param inclusive, if set to true, the navigation node with given [key] will also be removed
-     * from history.
-     *
-     * @return true, if the navigation state changed after popping.
-     * @return false, if the navigation state is unchanged.
-     */
-    fun popTo(key: String, inclusive: Boolean = false): Boolean {
-        val currentDestinations = mutableStateFlow.value.currentStack.destinations
-        val screen = currentDestinations.find { it.navigationNode.key == key }
-            ?: return false
-
-        val newDestinations = currentDestinations.subList(
-            fromIndex = 0,
-            toIndex = currentDestinations.indexOf(screen) + if (inclusive) 0 else 1
-        )
-
-        val newStackHistory = mutableStackHistory.subList(
-            fromIndex = 0,
-            toIndex = currentDestinations.indexOf(screen) + if (inclusive) 0 else 1
-        )
-
-        mutableStackHistory = newStackHistory
-
-        return updateStateWithDestinations(newDestinations)
-    }
-
-    /**
-     * Convenience method to pop to a node using its [NavigationNode.Companion.key] as key.
-     *
-     * This only works if [NavigationNode.key] was not overridden.
-     */
-    inline fun <reified T : NavigationNode> popTo(inclusive: Boolean = false) =
-        popTo(key<T>(), inclusive)
-
-    /**
-     * Pops all the way back to the root [NavigationNode] for [NavigationState.currentStack].
-     */
-    fun popToRoot() {
-        val currentStackKey = mutableStateFlow.value.currentStackKey
-        val rootDestination = mutableStateFlow.value.currentStack.destinations[0]
-
-        while (mutableStackHistory.lastOrNull()?.navigationKey == currentStackKey) {
-            mutableStackHistory.removeLast()
-        }
-
-        mutableStackHistory.add(
-            StackHistoryEntry(
-                currentStackKey,
-                rootDestination.navigationNode.key
-            )
-        )
-
-        updateStateWithDestinations(listOf(rootDestination))
-    }
-
-    /**
-     * Clears the history for [NavigationState.currentStack] and sets a new root node.
-     *
-     * @param navigationNode the new root node for the current stack.
-     * @param navOptions navigation options.
-     * @see [NavOptions]
-     */
-    fun setRoot(navigationNode: NavigationNode, navOptions: NavOptions = NavOptions()) {
-        val currentState = mutableStateFlow.value
-        val currentStack = currentState.currentStack
-        val navigationStacks = currentState.navigationStacks.toMutableList()
-
-        val newDestination = Destination(navigationNode, navOptions)
-        val newStack = currentStack.copy(
-            destinations = listOf(newDestination)
-        )
-        val newState = NavigationState(
-            currentStackKey = currentStack.key,
-            navigationStacks = navigationStacks,
-            transitionPair = newDestination.navOptions.navTransition.enter to
-                    newDestination.navOptions.navTransition.exit,
-            overrideBackPress = currentState.overrideBackPress
-        )
-        navigationStacks[navigationStacks.indexOfFirst { it.key == newStack.key }] = newStack
-
-        mutableStackHistory.removeAll { it.navigationKey == currentStack.key }
-        mutableStackHistory.add(StackHistoryEntry(currentStack.key, navigationNode.key))
-
-        mutableStateFlow.value = newState
     }
 
     /**
@@ -496,19 +623,17 @@ class Navigator {
      * @param enabled, whether or not to enable auto back press handling.
      */
     fun overrideBackPress(enabled: Boolean) {
-        mutableStateFlow.value = mutableStateFlow.value.copy(
-            overrideBackPress = enabled
-        )
+        mutableStateFlow.value = mutableStateFlow.value.copy(overrideBackPress = enabled)
     }
 
     /**
      * Saves the state of the navigator in a [NavigatorState] that can be used
      * to restore the state of the [Navigator] on app state restoration using [restore].
      */
-    internal fun save() = NavigatorState(
+    internal fun save(): NavigatorState = NavigatorState(
         navigationState = stateFlow.value,
         navigationConfig = navigationConfig,
-        stackHistory = mutableStackHistory
+        stackHistory = mutableNavHistory
     )
 
     /**
@@ -517,8 +642,7 @@ class Navigator {
      * @param navigatorState, used to restore the state of the navigator saved using [save].
      */
     internal fun restore(navigatorState: NavigatorState) {
-        navigationConfig = navigatorState.navigationConfig
-        mutableStackHistory = navigatorState.stackHistory.toMutableList()
+        mutableNavHistory = navigatorState.stackHistory.toMutableList()
         mutableStateFlow.value = navigatorState.navigationState
     }
 
@@ -552,42 +676,52 @@ class Navigator {
         .filter { it.first == key }
         .map { it.second }
 
-    private fun MutableList<StackHistoryEntry>.removeLastButFirst() {
-        if (size > 1) {
-            removeLast()
-        }
+    private fun defaultPopBackStack(): Boolean {
+        val destinations = currentDestinations
+        if (destinations.size == 1) return false
+
+        destinations.removeLast()
+        mutableNavHistory.removeLast()
+
+        updateStateWithDestinations(destinations, true)
+        return true
     }
 
-    private fun updateStateWithDestinations(newDestinations: List<Destination>): Boolean {
-        val currentState = mutableStateFlow.value
-        val navigationStacks = mutableStateFlow.value.navigationStacks.toMutableList()
+    private fun updateStateWithDestinations(
+        newDestinations: List<Destination>,
+        popping: Boolean
+    ): Boolean {
+        if (newDestinations == currentDestinations) return false
+        val navigationStacks = currentState.navigationStacks.toMutableList()
+        val currentStack = currentState.currentStack
 
-        val newStack = currentState.currentStack.copy(destinations = newDestinations)
+        val newStack = currentStack.copy(destinations = newDestinations)
         navigationStacks[navigationStacks.indexOfFirst { it.key == newStack.key }] = newStack
+
+        val transition = if (popping) {
+            currentStack.destinations.last().transition.popEnterExit
+        } else {
+            newStack.destinations.last().transition.enterExit
+        }
+
+        mutableNavHistory.removeAll { entry ->
+            !navigationStacks.map { it.destinations }.flatten().any {
+                it.id == entry.destinationId
+            }
+        }
 
         mutableStateFlow.value = NavigationState(
             navigationStacks = navigationStacks,
             currentStackKey = newStack.key,
-            transitionPair = currentState.currentStack.destinations.last().navOptions.navTransition.popEnter to
-                    currentState.currentStack.destinations.last().navOptions.navTransition.popExit,
+            transition = transition,
             overrideBackPress = currentState.overrideBackPress
         )
-
         return true
     }
 
-    private fun defaultPopBackStack(): Boolean {
-        val currentState = mutableStateFlow.value
-
-        if (currentState.currentStack.destinations.size == 1) return false
-
-        mutableStackHistory.removeLastButFirst()
-
-        updateStateWithDestinations(
-            currentState.currentStack.destinations
-                .toMutableList()
-                .apply { removeLast() }
-        )
-        return true
-    }
+    private fun Destination.navHistoryEntry() = NavHistoryEntry(
+        stackKey = currentStackKey,
+        destinationId = id,
+        navigationNodeKey = navigationNode.key
+    )
 }

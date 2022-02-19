@@ -3,7 +3,7 @@ package com.roudikk.navigator.sample.utils
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import com.roudikk.navigator.NavigationNode
+import com.roudikk.navigator.core.NavigationNode
 import com.roudikk.navigator.sample.MainActivity
 import com.roudikk.navigator.sample.ui.screens.details.DetailsScreen
 import com.roudikk.navigator.sample.ui.screens.dialogs.DialogsScreen

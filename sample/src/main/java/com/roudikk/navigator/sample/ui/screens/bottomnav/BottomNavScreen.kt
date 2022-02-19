@@ -1,7 +1,6 @@
 package com.roudikk.navigator.sample.ui.screens.bottomnav
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -11,6 +10,7 @@ import androidx.compose.material.icons.filled.StackedBarChart
 import androidx.compose.material.icons.filled.Window
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -18,37 +18,74 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
-import com.roudikk.navigator.*
-import com.roudikk.navigator.sample.AppNavHost
-import com.roudikk.navigator.sample.AppNavigationKey
-import com.roudikk.navigator.sample.AppNavigator
-import com.roudikk.navigator.sample.ui.composables.defaultBottomSheetSetup
+import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.compose.NavContainer
+import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.core.StackKey
+import com.roudikk.navigator.rememberNavigator
+import com.roudikk.navigator.sample.DeepLinkViewModel
+import com.roudikk.navigator.sample.TabDestination
+import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
+import com.roudikk.navigator.sample.navigation.SampleNavConfig
+import com.roudikk.navigator.sample.navigation.SampleStackKey
+import com.roudikk.navigator.sample.ui.composables.sampleBottomSheetOptions
+import com.roudikk.navigator.sample.ui.screens.details.DetailsScreen
+import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class BottomNavScreen : Screen {
 
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
-        BottomNavContent()
+    override fun Content() {
+        val mainViewModel = viewModel<DeepLinkViewModel>(
+            viewModelStoreOwner = LocalNavHostViewModelStoreOwner.current
+        )
+        val bottomTabNavigator = rememberNavigator(SampleNavConfig.BottomTab) { navigator ->
+            navigator.deeplink(mainViewModel.tabDestinations)
+        }
+
+        LaunchedEffect(Unit) {
+            mainViewModel.tabDestinationsFlow.collect { destinations ->
+                bottomTabNavigator.deeplink(destinations)
+            }
+        }
+
+        BottomNavContent(bottomTabNavigator)
+    }
+
+    private fun Navigator.deeplink(destinations: List<TabDestination>) {
+        destinations.forEach { destination ->
+            when (destination) {
+                is TabDestination.Details -> navigate(DetailsScreen(destination.item))
+                TabDestination.DialogsTab -> navigateToStack(SampleStackKey.Dialogs)
+                TabDestination.HomeTab -> navigateToStack(SampleStackKey.Home)
+                TabDestination.NestedTab -> navigateToStack(SampleStackKey.Nested)
+                TabDestination.StackTreeTab -> navigateToStack(SampleStackKey.StackTree)
+            }
+        }
     }
 }
 
 @Composable
-private fun BottomNavContent() {
+private fun BottomNavContent(
+    bottomTabNavigator: Navigator
+) {
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            BottomNavigation()
+            BottomNavigation(bottomTabNavigator)
         }
     ) { paddingValues ->
 
         NavContainer(
-            key = AppNavigator.BottomTab.key,
+            navigator = bottomTabNavigator,
             modifier = Modifier.padding(paddingValues),
-            bottomSheetSetup = defaultBottomSheetSetup(
+            bottomSheetOptions = sampleBottomSheetOptions(
                 Modifier.padding(paddingValues)
             )
         )
@@ -56,9 +93,8 @@ private fun BottomNavContent() {
 }
 
 @Composable
-private fun BottomNavigation() {
-    val navigator = findNavigator(AppNavigator.BottomTab.key)
-    val currentStackKey by navigator.currentKeyFlow.collectAsState()
+private fun BottomNavigation(navigator: Navigator) {
+    val currentStackKey by navigator.currentStackKeyFlow.collectAsState()
 
     NavigationBar(
         modifier = Modifier
@@ -69,12 +105,12 @@ private fun BottomNavigation() {
                 .navigationBarsPadding()
                 .testTag("tab_home"),
             label = { Text("Home") },
-            selected = currentStackKey == AppNavigationKey.Home,
+            selected = currentStackKey == SampleStackKey.Home,
             onClick = {
                 navigatorToStackOrRoot(
                     navigator,
                     currentStackKey,
-                    AppNavigationKey.Home
+                    SampleStackKey.Home
                 )
             },
             icon = {
@@ -90,12 +126,12 @@ private fun BottomNavigation() {
                 .navigationBarsPadding()
                 .testTag("tab_nested"),
             label = { Text("Nested") },
-            selected = currentStackKey == AppNavigationKey.Nested,
+            selected = currentStackKey == SampleStackKey.Nested,
             onClick = {
                 navigatorToStackOrRoot(
                     navigator,
                     currentStackKey,
-                    AppNavigationKey.Nested
+                    SampleStackKey.Nested
                 )
             },
             icon = {
@@ -111,12 +147,12 @@ private fun BottomNavigation() {
                 .navigationBarsPadding()
                 .testTag("tab_dialogs"),
             label = { Text("Dialogs") },
-            selected = currentStackKey == AppNavigationKey.Dialogs,
+            selected = currentStackKey == SampleStackKey.Dialogs,
             onClick = {
                 navigatorToStackOrRoot(
                     navigator,
                     currentStackKey,
-                    AppNavigationKey.Dialogs
+                    SampleStackKey.Dialogs
                 )
             },
             icon = {
@@ -132,12 +168,12 @@ private fun BottomNavigation() {
                 .navigationBarsPadding()
                 .testTag("tab_nav_tree"),
             label = { Text("Nav Tree") },
-            selected = currentStackKey == AppNavigationKey.NavigationTree,
+            selected = currentStackKey == SampleStackKey.StackTree,
             onClick = {
                 navigatorToStackOrRoot(
                     navigator,
                     currentStackKey,
-                    AppNavigationKey.NavigationTree
+                    SampleStackKey.StackTree
                 )
             },
             icon = {
@@ -152,8 +188,8 @@ private fun BottomNavigation() {
 
 private fun navigatorToStackOrRoot(
     navigator: Navigator,
-    currentKey: NavigationKey,
-    newKey: NavigationKey
+    currentKey: StackKey,
+    newKey: StackKey
 ) {
     if (currentKey == newKey) {
         navigator.popToRoot()
@@ -170,6 +206,6 @@ private fun navigatorToStackOrRoot(
     device = Devices.PIXEL_3
 )
 @Composable
-private fun BottomNavContentPreviewDark() = AppNavHost {
-    BottomNavContent()
+private fun BottomNavContentPreviewDark() = AppTheme {
+    BottomNavContent(rememberNavigator())
 }

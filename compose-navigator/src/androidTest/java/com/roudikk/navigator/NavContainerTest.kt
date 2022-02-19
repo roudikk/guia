@@ -1,14 +1,14 @@
 package com.roudikk.navigator
 
 import android.os.Parcel
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
+import com.roudikk.navigator.compose.NavContainer
+import com.roudikk.navigator.core.*
 import org.junit.Rule
 import org.junit.Test
-import kotlin.to
 
 class NavContainerTest {
 
@@ -21,7 +21,7 @@ class NavContainerTest {
 
         @Suppress("TestFunctionName")
         @Composable
-        override fun AnimatedVisibilityScope.Content() {
+        override fun Content() {
             Text(text = text)
         }
 
@@ -36,7 +36,7 @@ class NavContainerTest {
 
         @Suppress("TestFunctionName")
         @Composable
-        override fun AnimatedVisibilityScope.Content() {
+        override fun Content() {
             Text(text = text)
         }
 
@@ -49,12 +49,7 @@ class NavContainerTest {
         val testScreen = TestScreen("Test Screen")
 
         rule.setContent {
-            NavHost(
-                Navigator.defaultKey to NavigationConfig.SingleStack(testScreen)
-            ) {
-
-                NavContainer()
-            }
+            NavContainer(navigator = rememberNavigator(NavigationConfig.SingleStack(testScreen)))
         }
 
         rule.onNodeWithText(testScreen.text).assertIsDisplayed()
@@ -65,16 +60,15 @@ class NavContainerTest {
         val stackEntries = createStackEntries()
 
         rule.setContent {
-            NavHost(
-                Navigator.defaultKey to NavigationConfig.MultiStack(
-                    entries = stackEntries,
-                    initialStackKey = stackEntries[1].key,
-                    backStackStrategy = BackStackStrategy.Default
+            NavContainer(
+                navigator = rememberNavigator(
+                    NavigationConfig.MultiStack(
+                        entries = stackEntries,
+                        initialStackKey = stackEntries[1].key,
+                        backStackStrategy = BackStackStrategy.Default
+                    )
                 )
-            ) {
-
-                NavContainer()
-            }
+            )
         }
 
         rule.onNodeWithText(stackEntries[1].initialNavigationNode.key).assertIsDisplayed()
@@ -86,14 +80,9 @@ class NavContainerTest {
         val testScreen2 = TestScreen("TestScreen2")
 
         rule.setContent {
-            NavHost(
-                Navigator.defaultKey to NavigationConfig.SingleStack(testScreen)
-            ) {
-
-                NavContainer()
-
-                findNavigator(Navigator.defaultKey).navigate(testScreen2)
-            }
+            val navigator = rememberNavigator(testScreen)
+            NavContainer(navigator = navigator)
+            navigator.navigate(testScreen2)
         }
 
         rule.onNodeWithText(testScreen2.text).assertIsDisplayed()
@@ -105,17 +94,13 @@ class NavContainerTest {
         val testScreen2 = TestScreen("TestScreen2")
 
         rule.setContent {
-            NavHost(
-                Navigator.defaultKey to NavigationConfig.SingleStack(testScreen)
-            ) {
+            val navigator = rememberNavigator(testScreen)
 
-                NavContainer()
+            NavContainer(navigator = navigator)
 
-                val navigator = findNavigator(Navigator.defaultKey)
-                navigator.navigate(testScreen2)
-                assert(navigator.popBackStack())
-                assert(!navigator.popBackStack())
-            }
+            navigator.navigate(testScreen2)
+            assert(navigator.popBackStack())
+            assert(!navigator.popBackStack())
         }
 
         rule.onNodeWithText(testScreen.text).assertIsDisplayed()
@@ -128,34 +113,27 @@ class NavContainerTest {
 
         val stackEntries = createStackEntries()
 
-        lateinit var navigator: Navigator
+        val navigator = Navigator(
+            NavigationConfig.MultiStack(
+                entries = stackEntries,
+                initialStackKey = stackEntries[0].key,
+                backStackStrategy = BackStackStrategy.Default
+            )
+        )
 
         rule.setContent {
-            NavHost(
-                Navigator.defaultKey to NavigationConfig.MultiStack(
-                    entries = stackEntries,
-                    initialStackKey = stackEntries[0].key,
-                    backStackStrategy = BackStackStrategy.Default
-                )
-            ) {
-                navigator = findNavigator(Navigator.defaultKey)
-
-                NavContainer()
-            }
+            NavContainer(navigator = navigator)
         }
 
         rule.onNodeWithText(stackEntries[0].initialNavigationNode.key).assertIsDisplayed()
 
         navigator.navigate(testScreen)
-
         rule.onNodeWithText(testScreen.key).assertIsDisplayed()
 
         navigator.navigateToStack(stackEntries[1].key)
-
         rule.onNodeWithText(stackEntries[1].initialNavigationNode.key).assertIsDisplayed()
 
         navigator.navigate(testScreen2)
-
         rule.onNodeWithText(testScreen2.key).assertIsDisplayed()
     }
 
@@ -167,16 +145,10 @@ class NavContainerTest {
             bottomSheetOptions = BottomSheetOptions()
         )
 
-        lateinit var navigator: Navigator
+        val navigator = Navigator(NavigationConfig.SingleStack(testScreen))
 
         rule.setContent {
-            NavHost(
-                Navigator.defaultKey to NavigationConfig.SingleStack(testScreen)
-            ) {
-                navigator = findNavigator(Navigator.defaultKey)
-
-                NavContainer()
-            }
+            NavContainer(navigator = navigator)
         }
 
         rule.onNodeWithText(testScreen.text).assertIsDisplayed()
@@ -201,17 +173,10 @@ class NavContainerTest {
                 confirmStateChange = { false }
             )
         )
-
-        lateinit var navigator: Navigator
+        val navigator = Navigator(NavigationConfig.SingleStack(testScreen))
 
         rule.setContent {
-            NavHost(
-                Navigator.defaultKey to NavigationConfig.SingleStack(testScreen)
-            ) {
-                navigator = findNavigator(Navigator.defaultKey)
-
-                NavContainer()
-            }
+            NavContainer(navigator = navigator)
         }
 
         rule.onNodeWithText(testScreen.text).assertIsDisplayed()
@@ -230,7 +195,7 @@ class NavContainerTest {
     private fun createStackEntries(): List<NavigationConfig.MultiStack.NavigationStackEntry> {
         val keyScreenPair = (0..3).map {
             val key = "BaseTestScreen-$it"
-            NavigationKey() to object : TestScreen(key) {
+            StackKey() to object : TestScreen(key) {
                 override val key: String = key
             }
         }

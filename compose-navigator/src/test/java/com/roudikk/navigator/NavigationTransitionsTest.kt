@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import com.google.common.truth.Truth.assertThat
 import com.roudikk.navigator.animation.*
+import com.roudikk.navigator.animation.transitions.*
 import org.junit.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.reflect.full.memberProperties
@@ -29,11 +30,11 @@ class NavigationTransitionsTest {
     @Test
     fun `Navigation Tween Spec maps to Compose Tween Spec`() {
 
-        NavigationEasing.values().forEach { easing ->
+        NavEasing.values().forEach { easing ->
             val durationMillis = (0..300).random()
             val delayMillis = (0..300).random()
 
-            val navigationTween = navigationTween<Any>(
+            val navTween = navTween<Any>(
                 durationMillis = durationMillis,
                 delayMillis = delayMillis,
                 easing = easing
@@ -45,7 +46,7 @@ class NavigationTransitionsTest {
                 easing = easing.toComposeEasing()
             )
 
-            assertThat(navigationTween).isEqualTo(composeTween)
+            assertThat(navTween).isEqualTo(composeTween)
         }
     }
 
@@ -60,7 +61,7 @@ class NavigationTransitionsTest {
             val dampingRatio = Spring.DampingRatioLowBouncy
             val stiffness = Spring.StiffnessVeryLow
 
-            val navigationSpringSpec = navigationSpring(
+            val navSpringSpec = navSpring(
                 dampingRatio = dampingRatio,
                 stiffness = stiffness,
                 visibilityThreshold = it
@@ -72,81 +73,79 @@ class NavigationTransitionsTest {
                 visibilityThreshold = it
             )
 
-            assertThat(navigationSpringSpec).isEqualTo(composeSpringSpec)
+            assertThat(navSpringSpec).isEqualTo(composeSpringSpec)
         }
 
         // Assert that other types should throw an exception
-        assertThrows<IllegalStateException> { navigationSpring(visibilityThreshold = 1) }
-        assertThrows<IllegalStateException> { navigationSpring(visibilityThreshold = "Test") }
-        assertThrows<IllegalStateException> { navigationSpring(visibilityThreshold = 1.0) }
+        assertThrows<IllegalStateException> { navSpring(visibilityThreshold = 1) }
+        assertThrows<IllegalStateException> { navSpring(visibilityThreshold = "Test") }
+        assertThrows<IllegalStateException> { navSpring(visibilityThreshold = 1.0) }
     }
 
     @Test
     fun `Navigation Snap Spec maps to Compose Snap Spec`() {
 
-        val navigationSnapSpec = navigationSnap<Any>(delayMillis = 100)
+        val navSnapSpec = navSnap<Any>(delayMillis = 100)
             .toComposeSpec()
         val composeSpec = snap<Any>(delayMillis = 100)
 
-        assertThat(navigationSnapSpec).isEqualTo(composeSpec)
+        assertThat(navSnapSpec).isEqualTo(composeSpec)
     }
 
     @Test
     fun `Navigation Fade In maps to Compose Fade In`() {
 
-        val navigationTransition = navigationFadeIn(initialAlpha = 0.5f)
+        val navTransition = navFadeIn(initialAlpha = 0.5f)
             .toComposeEnterTransition()
 
         val composeTransition = fadeIn(initialAlpha = 0.5f)
 
-        assertThat(navigationTransition).isEqualTo(composeTransition)
+        assertThat(navTransition).isEqualTo(composeTransition)
     }
 
     @Test
     fun `Navigation Fade Out maps to Compose Fade Out`() {
 
-        val navigationTransition = navigationFadeOut(targetAlpha = 0.5f)
+        val navTransition = navFadeOut(targetAlpha = 0.5f)
             .toComposeExitTransition()
 
         val composeTransition = fadeOut(targetAlpha = 0.5f)
 
-        assertThat(navigationTransition).isEqualTo(composeTransition)
+        assertThat(navTransition).isEqualTo(composeTransition)
     }
 
     @Test
     fun `Navigation Slide In maps to Compose Slide In`() {
 
-        val navigationTransition = navigationSlideIn {
-            NavigationIntOffset(it.width, it.height)
-        }.toComposeEnterTransition()
+        val navTransition = navSlideIn { NavIntOffset(it.width, it.height) }
+            .toComposeEnterTransition()
 
         val composeTransition = slideIn(initialOffset = { fullSize: IntSize ->
             IntOffset(fullSize.width, fullSize.height)
         })
 
         assertThat(enterDataField.get(composeTransition).toString())
-            .isEqualTo(enterDataField.get(navigationTransition).toString())
+            .isEqualTo(enterDataField.get(navTransition).toString())
     }
 
     @Test
     fun `Navigation Slide Out maps to Compose Slide Out`() {
 
-        val navigationTransition = navigationSlideOut {
-            NavigationIntOffset(it.width, it.height)
-        }.toComposeExitTransition()
+        val navTransition = navSlideOut { NavIntOffset(it.width, it.height) }
+            .toComposeExitTransition()
 
         val composeTransition = slideOut {
             IntOffset(it.width, it.height)
         }
 
         assertThat(exitDataField.get(composeTransition).toString())
-            .isEqualTo(exitDataField.get(navigationTransition).toString())
+            .isEqualTo(exitDataField.get(navTransition).toString())
     }
 
     @Test
     fun `Navigation Slide In Vertically maps to Compose Slide In Vertically`() {
 
-        val navigationTransition = navigationSlideInVertically {
+        val navTransition = navSlideInVertically {
             it
         }.toComposeEnterTransition()
 
@@ -155,13 +154,13 @@ class NavigationTransitionsTest {
         }
 
         assertThat(enterDataField.get(composeTransition).toString())
-            .isEqualTo(enterDataField.get(navigationTransition).toString())
+            .isEqualTo(enterDataField.get(navTransition).toString())
     }
 
     @Test
     fun `Navigation Slide Out Vertically maps to Compose Slide Out Vertically`() {
 
-        val navigationTransition = navigationSlideOutVertically {
+        val navTransition = navSlideOutVertically {
             it
         }.toComposeExitTransition()
 
@@ -170,13 +169,13 @@ class NavigationTransitionsTest {
         }
 
         assertThat(exitDataField.get(composeTransition).toString())
-            .isEqualTo(exitDataField.get(navigationTransition).toString())
+            .isEqualTo(exitDataField.get(navTransition).toString())
     }
 
     @Test
     fun `Navigation Slide In Horizontally maps to Compose Slide In Horizontally`() {
 
-        val navigationTransition = navigationSlideInHorizontally {
+        val navTransition = navSlideInHorizontally {
             it
         }.toComposeEnterTransition()
 
@@ -185,13 +184,13 @@ class NavigationTransitionsTest {
         }
 
         assertThat(enterDataField.get(composeTransition).toString())
-            .isEqualTo(enterDataField.get(navigationTransition).toString())
+            .isEqualTo(enterDataField.get(navTransition).toString())
     }
 
     @Test
     fun `Navigation Slide Out Horizontally maps to Compose Slide Out Horizontally`() {
 
-        val navigationTransition = navigationSlideOutHorizontally {
+        val navTransition = navSlideOutHorizontally {
             it
         }.toComposeExitTransition()
 
@@ -200,13 +199,13 @@ class NavigationTransitionsTest {
         }
 
         assertThat(exitDataField.get(composeTransition).toString())
-            .isEqualTo(exitDataField.get(navigationTransition).toString())
+            .isEqualTo(exitDataField.get(navTransition).toString())
     }
 
     @Test
     fun `Navigation Scale In maps to Compose Scale In`() {
 
-        val navigationTransition = navigationScaleIn(
+        val navTransition = navScaleIn(
             initialScale = 0.5f,
             transformOrigin = TransformOrigin.Center
         ).toComposeEnterTransition()
@@ -216,13 +215,13 @@ class NavigationTransitionsTest {
             transformOrigin = TransformOrigin.Center
         )
 
-        assertThat(navigationTransition).isEqualTo(composeTransition)
+        assertThat(navTransition).isEqualTo(composeTransition)
     }
 
     @Test
     fun `Navigation Scale Out maps to Compose Scale Out`() {
 
-        val navigationTransition = navigationScaleOut(
+        val navTransition = navScaleOut(
             targetScale = 0.5f,
             transformOrigin = TransformOrigin.Center
         ).toComposeExitTransition()
@@ -232,13 +231,13 @@ class NavigationTransitionsTest {
             transformOrigin = TransformOrigin.Center
         )
 
-        assertThat(navigationTransition).isEqualTo(composeTransition)
+        assertThat(navTransition).isEqualTo(composeTransition)
     }
 
     @Test
     fun `Navigation Expand In maps to Compose Expand In`() {
 
-        val navigationTransition = navigationExpandIn {
+        val navTransition = navExpandIn {
             it
         }.toComposeEnterTransition()
 
@@ -247,13 +246,13 @@ class NavigationTransitionsTest {
         }
 
         assertThat(enterDataField.get(composeTransition).toString())
-            .isEqualTo(enterDataField.get(navigationTransition).toString())
+            .isEqualTo(enterDataField.get(navTransition).toString())
     }
 
     @Test
     fun `Navigation Shrink Out maps to Compose Shrink Out`() {
 
-        val navigationTransition = navigationShrinkOut {
+        val navTransition = navShrinkOut {
             it
         }.toComposeExitTransition()
 
@@ -262,13 +261,13 @@ class NavigationTransitionsTest {
         }
 
         assertThat(exitDataField.get(composeTransition).toString())
-            .isEqualTo(exitDataField.get(navigationTransition).toString())
+            .isEqualTo(exitDataField.get(navTransition).toString())
     }
 
     @Test
     fun `Navigation Expand Vertically maps to Compose Expand Vertically`() {
 
-        val navigationTransition = navigationExpandVertically {
+        val navTransition = navExpandVertically {
             it
         }.toComposeEnterTransition()
 
@@ -277,13 +276,13 @@ class NavigationTransitionsTest {
         }
 
         assertThat(enterDataField.get(composeTransition).toString())
-            .isEqualTo(enterDataField.get(navigationTransition).toString())
+            .isEqualTo(enterDataField.get(navTransition).toString())
     }
 
     @Test
     fun `Navigation Shrink Vertically maps to Compose Shrink Vertically`() {
 
-        val navigationTransition = navigationShrinkVertically {
+        val navTransition = navShrinkVertically {
             it
         }.toComposeExitTransition()
 
@@ -292,13 +291,13 @@ class NavigationTransitionsTest {
         }
 
         assertThat(exitDataField.get(composeTransition).toString())
-            .isEqualTo(exitDataField.get(navigationTransition).toString())
+            .isEqualTo(exitDataField.get(navTransition).toString())
     }
 
     @Test
     fun `Navigation Expand Horizontally maps to Compose Expand Horizontally`() {
 
-        val navigationTransition = navigationExpandHorizontally {
+        val navTransition = navExpandHorizontally {
             it
         }.toComposeEnterTransition()
 
@@ -307,13 +306,13 @@ class NavigationTransitionsTest {
         }
 
         assertThat(enterDataField.get(composeTransition).toString())
-            .isEqualTo(enterDataField.get(navigationTransition).toString())
+            .isEqualTo(enterDataField.get(navTransition).toString())
     }
 
     @Test
     fun `Navigation Shrink Horizontally maps to Compose Shrink Horizontally`() {
 
-        val navigationTransition = navigationShrinkHorizontally {
+        val navTransition = navShrinkHorizontally {
             it
         }.toComposeExitTransition()
 
@@ -322,15 +321,22 @@ class NavigationTransitionsTest {
         }
 
         assertThat(exitDataField.get(composeTransition).toString())
-            .isEqualTo(exitDataField.get(navigationTransition).toString())
+            .isEqualTo(exitDataField.get(navTransition).toString())
     }
 
     @Test
-    fun `Combined navigation enter transitions maps to combined compose transitions`() {
+    fun `Combined nav enter transitions maps to combined compose transitions`() {
 
-        val navigationTransition = (navigationFadeIn() + navigationScaleIn() +
-                navigationExpandIn(expandFrom = NavigationAlignment.Center) { it } +
-                navigationSlideIn { NavigationIntOffset(it.width, it.height) })
+        val navTransition = (
+                navFadeIn() + navScaleIn() +
+                        navExpandIn(expandFrom = NavAlignment.Center) { it } +
+                        navSlideIn {
+                            NavIntOffset(
+                                it.width,
+                                it.height
+                            )
+                        }
+                )
             .toComposeEnterTransition()
 
         val composeTransition = fadeIn() + scaleIn() +
@@ -338,15 +344,22 @@ class NavigationTransitionsTest {
                 slideIn { IntOffset(it.width, it.height) }
 
         assertThat(enterDataField.get(composeTransition).toString())
-            .isEqualTo(enterDataField.get(navigationTransition).toString())
+            .isEqualTo(enterDataField.get(navTransition).toString())
     }
 
     @Test
-    fun `Combined navigation exit transitions maps to combined compose transitions`() {
+    fun `Combined nav exit transitions maps to combined compose transitions`() {
 
-        val navigationTransition = (navigationFadeOut() + navigationScaleOut() +
-                navigationShrinkOut(shrinkTowards = NavigationAlignment.Center) { it } +
-                navigationSlideOut { NavigationIntOffset(it.width, it.height) })
+        val navTransition = (
+                navFadeOut() + navScaleOut() +
+                        navShrinkOut(shrinkTowards = NavAlignment.Center) { it } +
+                        navSlideOut {
+                            NavIntOffset(
+                                it.width,
+                                it.height
+                            )
+                        }
+                )
             .toComposeExitTransition()
 
         val composeTransition = fadeOut() + scaleOut() +
@@ -354,6 +367,6 @@ class NavigationTransitionsTest {
                 slideOut { IntOffset(it.width, it.height) }
 
         assertThat(exitDataField.get(composeTransition).toString())
-            .isEqualTo(exitDataField.get(navigationTransition).toString())
+            .isEqualTo(exitDataField.get(navTransition).toString())
     }
 }

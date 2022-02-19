@@ -2,7 +2,6 @@ package com.roudikk.navigator.sample.ui.screens.home
 
 import android.content.res.Configuration
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -30,22 +29,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.*
-import com.roudikk.navigator.sample.MaterialSharedAxisTransitionX
-import com.roudikk.navigator.sample.MaterialSharedAxisTransitionXY
+import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.rememberNavigator
+import com.roudikk.navigator.sample.navigation.findDefaultNavigator
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.screens.details.DetailsScreen
 import com.roudikk.navigator.sample.ui.screens.settings.SettingsScreen
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class HomeScreen : Screen {
 
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
+    override fun Content() {
         HomeController()
     }
 }
@@ -53,36 +52,24 @@ class HomeScreen : Screen {
 @Composable
 private fun HomeController(
     viewModel: HomeViewModel = viewModel(),
-    navigator: Navigator = findNavigator(),
+    navigator: Navigator = requireNavigator(),
     defaultNavigator: Navigator = findDefaultNavigator()
 ) {
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.commandsFlow
-            .onEach { homeCommand ->
-                when (homeCommand) {
-                    is HomeCommand.OpenDetails -> navigator.navigate(
-                        navigationNode = DetailsScreen(homeCommand.item),
-                        navOptions = NavOptions(
-                            navTransition = MaterialSharedAxisTransitionX
-                        )
-                    )
-                    HomeCommand.OpenSettings -> defaultNavigator.navigate(
-                        navigationNode = SettingsScreen(),
-                        navOptions = NavOptions(
-                            navTransition = MaterialSharedAxisTransitionXY
-                        )
-                    )
-                }
+        viewModel.commandsFlow.collect { homeCommand ->
+            when (homeCommand) {
+                is HomeCommand.OpenDetails -> navigator.navigate(DetailsScreen(homeCommand.item))
+                HomeCommand.OpenSettings -> defaultNavigator.navigate(SettingsScreen())
             }
-            .launchIn(this)
+        }
+    }
 
-        navigator.results<HomeScreen>()
-            .onEach {
-                Toast.makeText(context, "Result from: $it", Toast.LENGTH_SHORT).show()
-            }
-            .launchIn(this)
+    LaunchedEffect(Unit) {
+        navigator.results<HomeScreen>().collect {
+            Toast.makeText(context, "Result from: $it", Toast.LENGTH_SHORT).show()
+        }
     }
 
     HomeContent(
@@ -222,7 +209,6 @@ private fun ListItem(
 @Preview(
     device = Devices.PIXEL_3
 )
-
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     device = Devices.PIXEL_3
@@ -231,7 +217,7 @@ private fun ListItem(
 private fun HomeContentPreview() {
     HomeController(
         viewModel = HomeViewModel(SavedStateHandle()),
-        navigator = Navigator(),
-        defaultNavigator = Navigator()
+        navigator = rememberNavigator(),
+        defaultNavigator = rememberNavigator()
     )
 }

@@ -2,7 +2,6 @@ package com.roudikk.navigator.sample.ui.screens.dialogs
 
 import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -19,8 +18,8 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsPadding
-import com.roudikk.navigator.BottomSheet
-import com.roudikk.navigator.BottomSheetOptions
+import com.roudikk.navigator.core.BottomSheet
+import com.roudikk.navigator.core.BottomSheetOptions
 import com.roudikk.navigator.sample.ui.composables.BottomSheetSurface
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
@@ -35,7 +34,7 @@ class BlockingBottomSheet : BottomSheet {
         )
 
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
+    override fun Content() {
         BlockingBottomSheetContent()
     }
 }
@@ -50,8 +49,8 @@ private fun BlockingBottomSheetContent() {
         Spacer(modifier = Modifier.size(16.dp))
 
         Text(
-            text = "Only thing you can do is hit the back button, but that won't go back to the dialogs screen"
-                    + " if the below switch is turned on. Toggle it on/off to enable/disable back press."
+            text = "Only thing you can do is hit the back button, but that won't go back to the dialogs screen" +
+                " if the below switch is turned on. Toggle it on/off to enable/disable back press."
         )
 
         Spacer(modifier = Modifier.size(16.dp))
