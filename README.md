@@ -17,7 +17,7 @@ Navigator tailored to work nicely with composable screens.
 
 1. [Installation](#installation)
 2. [Navigation Nodes](#navigation-nodes)  
-    2. [Lifecycle](#lifeycle)
+    1. [Lifecycle](#lifecycle)
 3. [Navigator](#navigator)
 4. [NavContainer](#nav-container)
 5. [Navigation Operations](#navigation-operations)
