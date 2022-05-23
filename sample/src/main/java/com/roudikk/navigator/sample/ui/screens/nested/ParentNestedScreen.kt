@@ -1,7 +1,6 @@
 package com.roudikk.navigator.sample.ui.screens.nested
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -11,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -19,13 +19,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.insets.imePadding
-import com.roudikk.navigator.NavContainer
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.Screen
-import com.roudikk.navigator.findNavigator
-import com.roudikk.navigator.sample.AppNavHost
-import com.roudikk.navigator.sample.AppNavigator
+import com.roudikk.navigator.compose.NavContainer
+import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.rememberNavigator
+import com.roudikk.navigator.sample.DeepLinkViewModel
+import com.roudikk.navigator.sample.NestedDestination
+import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
+import com.roudikk.navigator.sample.navigation.SampleNavConfig
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
@@ -34,15 +37,34 @@ import kotlinx.parcelize.Parcelize
 class ParentNestedScreen : Screen {
 
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
-        ParentNestedContent()
+    override fun Content() {
+        val mainViewModel = viewModel<DeepLinkViewModel>(
+            viewModelStoreOwner = LocalNavHostViewModelStoreOwner.current
+        )
+        val nestedNavigator = rememberNavigator(SampleNavConfig.Nested) { navigator ->
+            navigator.deeplink(mainViewModel.nestedDestinations)
+        }
+
+        LaunchedEffect(Unit) {
+            mainViewModel.nestedDestinationsFlow.collect { destinations ->
+                nestedNavigator.deeplink(destinations)
+            }
+        }
+
+        ParentNestedContent(nestedNavigator)
+    }
+
+    private fun Navigator.deeplink(destinations: List<NestedDestination>) {
+        destinations.forEach { destination ->
+            when (destination) {
+                is NestedDestination.Nested -> navigate(NestedScreen(destination.count))
+            }
+        }
     }
 }
 
 @Composable
-private fun ParentNestedContent(
-    nestedNavigator: Navigator = findNavigator(AppNavigator.NestedTab.key)
-) {
+private fun ParentNestedContent(nestedNavigator: Navigator) {
     Scaffold(
         topBar = {
             AppTopAppBar(title = "Nested Navigation")
@@ -56,10 +78,7 @@ private fun ParentNestedContent(
         ) {
 
             Box(modifier = Modifier.weight(1f)) {
-                NavContainer(
-                    modifier = Modifier.fillMaxSize(),
-                    key = AppNavigator.NestedTab.key
-                )
+                NavContainer(navigator = nestedNavigator)
             }
 
             Row(
@@ -132,7 +151,5 @@ private fun ParentNestedContent(
 )
 @Composable
 private fun NestedContentPreview() = AppTheme {
-    AppNavHost {
-        ParentNestedContent()
-    }
+    ParentNestedContent(rememberNavigator(SampleNavConfig.Nested))
 }

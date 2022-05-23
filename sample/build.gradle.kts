@@ -1,7 +1,24 @@
+import io.gitlab.arturbosch.detekt.Detekt
+import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
+
+val composeVersion = "1.1.1"
+val accompanistVersion = "0.23.1"
+val lottieVersion = "5.1.1"
+val kotlinCoroutinesVersion = "1.6.0"
+val activityComposeVersion = "1.5.0-rc01"
+val viewModelComposeVersion = "2.5.0-rc01"
+val composeMaterial3Version = "1.0.0-alpha08"
+val junitVersion = "4.13.2"
+val jupiterVersion = "5.8.2"
+val truthVersion = "1.1.3"
+val materialVersion = "1.6.0"
+val detektVersion = "1.20.0"
+
 plugins {
     id("com.android.application")
     kotlin("android")
     id("kotlin-parcelize")
+    id("io.gitlab.arturbosch.detekt")
 }
 
 // Module wide Opt ins for experimental compose apis
@@ -25,18 +42,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions.freeCompilerArgs += "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi"
 }
-
-val composeVersion = "1.1.0"
-val accompanistVersion = "0.22.1-rc"
-val lottieVersion = "4.2.2"
-val kotlinCoroutinesVersion = "1.6.0"
-val activityComposeVersion = "1.4.0"
-val viewModelComposeVersion = "2.4.0"
-val composeMaterial3Version = "1.0.0-alpha05"
-val junitVersion = "4.13.2"
-val jupiterVersion = "5.8.2"
-val truthVersion = "1.1.3"
-val materialVersion = "1.6.0-alpha02"
 
 android {
     compileSdk = 32
@@ -71,6 +76,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = composeVersion
     }
+    namespace = "com.roudikk.navigator.sample"
 }
 
 dependencies {
@@ -97,6 +103,9 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
 
+    // Detekt
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")
+
     // Lottie
     implementation("com.airbnb.android:lottie-compose:$lottieVersion")
 
@@ -110,4 +119,29 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:$jupiterVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
     testImplementation("com.google.truth:truth:$truthVersion")
+    implementation("androidx.navigation:navigation-compose:2.4.1")
+}
+
+detekt {
+    autoCorrect = true
+    buildUponDefaultConfig = true // preconfigure defaults
+    allRules = false // activate all available (even unstable) rules.
+}
+
+tasks.withType<Detekt>().configureEach {
+    autoCorrect = true
+    reports {
+        html.required.set(true) // observe findings in your browser with structure and code snippets
+        xml.required.set(true) // checkstyle like format mainly for integrations like Jenkins
+        txt.required.set(true) // similar to the console output, contains issue signature to manually edit baseline files
+        sarif.required.set(true) // standardized SARIF format (https://sarifweb.azurewebsites.net/) to support integrations with Github Code Scanning
+    }
+}
+
+tasks.withType<Detekt>().configureEach {
+    jvmTarget = "1.8"
+}
+
+tasks.withType<DetektCreateBaselineTask>().configureEach {
+    jvmTarget = "1.8"
 }

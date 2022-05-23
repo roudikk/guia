@@ -2,8 +2,6 @@
 
 Navigator tailored to work nicely with composable screens.
 
-Note: This is currently a WIP and experimental and API is very likely to change.
-
 |           |  Features  |
 |-----------|-------------|
 :tada: | Simple API
@@ -12,16 +10,17 @@ Note: This is currently a WIP and experimental and API is very likely to change.
 :link: | Deep Linking
 :back: | Multiple back stack strategies
 :twisted_rightwards_arrows: | Support for Enter/Exit compose transitions
-:rocket: | Different launch modes
+:rocket: | Extensive navigation operations
 :phone: | Result passing between navigation nodes
 
 ### Table of Contents
 
 1. [Installation](#installation)
 2. [Navigation Nodes](#navigation-nodes)  
-3. [NavHost and NavContainer](#navhost)
-4. [Navigation Operations](#navigation-operations)
-5. [Launch Modes](#launch-modes)
+    2. [Lifecycle](#lifeycle)
+3. [Navigator](#navigator)
+4. [NavContainer](#nav-container)
+5. [Navigation Operations](#navigation-operations)
 6. [Animations](#animations)
     1. [Animating between navigation nodes](#animations-nodes)
     2. [Animating between navigation stacks](#animations-stacks)
@@ -31,7 +30,7 @@ Note: This is currently a WIP and experimental and API is very likely to change.
 9. [Result passing](#result-passing)
 10. [Nested Navigation](#nested-navigation)
 11. [Deeplinks](#deeplinks)
-12. [Working with ViewModels](#view-models)
+12. [ViewModels](#view-models)
 13. [Previews](#previews)
 14. [UI Tests](#ui-tests)
 
@@ -39,12 +38,12 @@ Note: This is currently a WIP and experimental and API is very likely to change.
 
 ```gradle
 dependencies {
-    implementation("com.roudikk.compose-navigator:compose-navigator:1.1.4")
+    implementation("com.roudikk.compose-navigator:compose-navigator:2.0.0")
 }
 ```
 For proguard rules check [consumer-rules.pro](https://github.com/roudikk/compose-navigator/blob/master/compose-navigator/consumer-rules.pro)
 
-Recommended to use Kotlin Parcelize, `build.gradle`:
+Compose navigator usses `Parcelable` interfaces, it's recommended to use `Parcelize` in your project. `build.gradle`:
 
 ```gradle
 plugins {
@@ -65,7 +64,7 @@ Screen:
 class MyScreen(val myData: String) : Screen {
     
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
+    override fun Content() {
         
     }
 }
@@ -79,12 +78,14 @@ class MyDialog(val myData: String) : Dialog {
 
     override val dialogOptions: DialogOptions
         get() = DialogOptions(
+            modifier: Modifier = Modifier.widthIn(max = 300.dp), // The Dialog container Modifier
             dismissOnBackPress = true, // When set to false, back press will not cancel this dialog
-            dismissOnClickOutside = true // When set to false, clicking outside the dialog doesn't dismiss it
+            dismissOnClickOutside = true, // When set to false, clicking outside the dialog doesn't dismiss it
+            securePolicy: SecureFlagPolicy = SecureFlagPolicy.Inherit // Policy setting for the window
         )
 
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
+    override fun Content() {
 
     }
 }
@@ -103,150 +104,180 @@ class MyBottomSheet(val myData: String) : BottomSheet {
         )
     
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
+    override fun Content() {
 
     }
 }
 ```
 
-Bottom sheets do not get a default surface as a background. This is to let developers choose which composable is the parent of a bottom sheet (For ex: Surface2 or Surface3) inside their own implementation.
+Bottom sheets do not have a default surface as a background. This is to
+let developers choose which composable is the parent of a bottom sheet 
+(For ex: Surface2 or Surface3) inside their own implementation.
 
-However, to make it easier to have a consistent bottom sheet design across all bottom sheets (if that's the case), you can override `bottomSheetSetup` inside `NavContainer` to provide a common composable parent to all bottom sheets.
+However, to make it easier to have a consistent bottom sheet design
+across all bottom sheets (if that's the case), you can override 
+`bottomSheetOptions` inside `NavContainer` to provide a common composable parent 
+to all bottom sheets.
 
-## NavHost and NavContainer<a name="navhost"/>
+### Lifeycle <a name="lifecycle"/>
 
-A Navhost holds all the navigators defined in the application. 
+Each `NavigationNode` will have a corresponding `BackStackEntry` when added to the backstack.
 
-For a single stack navigation:
+A `BackStackEntry` is a `LifecycleOwner`, `ViewModelStoreOwner` and a `SavedStateRegistryOwner` which means
+every navigation node has its own lifecycle and can have its own scoped ViewModels and supporting `SavedStateHandle`.
 
-```kotlin
-NavHost(
-        Navigator.defaultKey to NavigationConfig.SingleStack(DefaultScreen()),
-        "nested-nav-key" to NavigationConfig.SingleStack(NestedScreen())
-    ) {
-    // Inside this scope you have access to the navigators using findNavigator()
-    
-    findNavigator() // returns closest navigator in navigation hierarchy
-    findNavigator(key) // returns navigator for given key
-    findParentNavigator() // returns parent navigator in navigation hierarchy
-    findDefaultNavigator() // returns navigator with key == Navigator.defaultKey
-}
-```
-A NavHost doesn't immediately render the initial navigation nodes, it's used to cache the navigators and save/restore them.
-
-To render the state of a navigator, use `NavContainer`:
+In addition, the library provides `LifecycleEffect` to listen to lifecycle events:
 
 ```kotlin
-NavContainer() // Renders the navigator's state that's using Navigator.defaultKey
-NavContainer(key = "some-other-navigator-key") // Renders the navigator's state for given key
-```
-
-For multi-stacks navigation with history for each stack (For ex: Bottom navigation)
-
-Each stack should have a unique `NavigationKey`:
-
-```kotlin
-sealed class AppNavigationKey : NavigationKey() {
-
-    @Parcelize
-    object Home : AppNavigationKey()
-
-    @Parcelize
-    object Profile : AppNavigationKey()
-
-    @Parcelize
-    object Settings : AppNavigationKey()
-}
-```
-
-Then define your `NavHost`:
-
-```kotlin
-val stackEntries = listOf(
-    NavigationConfig.MultiStack.NavigationStackEntry(
-        key = AppNavigationKey.Home,
-        initialNavigationNode = HomeScreen()
-    ),
-    NavigationConfig.MultiStack.NavigationStackEntry(
-        key = AppNavigationKey.Profile,
-        initialNavigationNode = ProfileScreen()
-    ),
-    NavigationConfig.MultiStack.NavigationStackEntry(
-        key = AppNavigationKey.Settings,
-        initialNavigationNode = SettingsScreen()
-    )
+/**
+ * Lifecycle listener for a [NavigationNode]
+ *
+ * @param onEnter, called when the node enters composition, this can be called when the node is initially rendered
+ * or when the node is revisited.
+ * @param onResume, called when the [NavigationNode] is resumed. This is called right after [onEnter]
+ * and when the activity is resumed.
+ * @param onPause, called when the [NavigationNode] is paused. This is called right before [onExit]
+ * and when the activity is paused.
+ * @param onExit, called when the node leaves composition. This doesn't mean the node is necessarily
+ * not going to be revisited.
+ * @param onDestroy, called the node is completely destroyed, this means the node will never be
+ * revisited again.
+ */
+@Composable
+fun NavigationNode.LifecycleEffect(
+    onEnter: () -> Unit = {},
+    onResume: () -> Unit = {},
+    onPause: () -> Unit = {},
+    onExit: () -> Unit = {},
+    onDestroy: () -> Unit = {}
 )
+```
 
-NavHost(
-      Navigator.defaultKey to NavigationConfig.MultiStack(
-          entries = stackEntries,
-          initialStackKey = stackEntries[0].key,
-          backStackStrategy = BackStackStrategy.BackToInitialStack()
-      ),
-      // You can have multi stack and single stack navigators within the same app with each handling its own backstack
-      "nested-nav-key" to NavigationConfig.SingleStack(NestedScreen())
-) {
+## Navigator <a name="navigator"/>
 
-    NavContainer() // This will draw the initial stack's initial screen immediately
-    
-    val navigator = findNavigator()
-    val currentStackKey by navigator.currentKeyFlow.collectAsState()
-    
-    // Use currentStackKey to change which tab is selected in case of a bottom navigation
+A Navigator is the essential component for navigation and can be used to navigate between navigation nodes.
+
+To initialize a navigator call:
+
+```kotlin
+val myNavigator = rememberNavigator(initialNavigationNode = MyScreen())
+```
+`rememberNavigator` can also take a `NavigationConfig` which can either be `SingleStack` or `MultiStack`.
+
+For multi-stacks navigation with history for each stack (For ex: Bottom navigation),
+each stack should have a unique `StackKey`
+
+To initialize a Navigator with multiple stacks call:
+
+```kotlin
+val myNavigator = remmeberNavigator(
+    navigationConfig = with(
+        listOf(
+            NavigationConfig.MultiStack.NavigationStackEntry(
+                key = AppStackKey.Stack1,
+                initialNavigationNode = Stack1Screen()
+            ),
+            NavigationConfig.MultiStack.NavigationStackEntry(
+                key = AppStackKey.Stack2,
+                initialNavigationNode = Stack2Screen()
+            ),
+            NavigationConfig.MultiStack.NavigationStackEntry(
+                key = AppStackKey.Stack3,
+                initialNavigationNode = Stack3Screen()
+            )
+        )
+    ) {
+        NavigationConfig.MultiStack(
+            entries = this,
+            initialStackKey = this[0].key,
+            backStackStrategy = BackStackStrategy.Default,
+            defaultTransition = MaterialSharedAxisTransitionX, // Optional
+            stackEnterExitTransition = navFadeIn() to navFadeOut() // Optional
+        )
+    }
+)
+```
+
+## NavContainer <a name="nav-container"/>
+
+To render the current state of a `Navigator`, call:
+
+```kotlin
+NavContainer(navigator = myNavigator)
+```
+
+For nested navigation, simply nest `NavContainer` in the `Content` of a parent `NavigationNode`:
+
+```kotlin
+class BottomNavScreen {
+    @Composable
+    override fun Content() {
+        val bottomTabNavigator = rememberNavigator(navigationConfig = NavigationConfig.MultiStack..)
+        NavContainer(bottomTabNavigator)
+    }
 }
 ```
 
 ## Navigation operations <a name="navigation-operations"/>
 
 ```kotlin
-// Note: enter/exit/popEnter/popExit animations can be defined in NavOptions along with SingleTop flag.
 
 // Navigate to a navigation node, 
-findNavigator().navigate(navigationNode, navOptions) 
+requireNavigator().navigate(navigationNode, transition) // Navigates the new node in the current stack.
 
 // Navigate to a different stack
-findNavigator().navigateToStack(stackKey, transitions, addKeyToHistory)
+requireNavigator().navigateToStack(stackKey, transition) // Navigates to a stack with stack key.
 
 // Pop back stack
-findNavigator().popBackStack() 
+requireNavigator().popBackStack() // Pops the last node from the current stack.
 
 // Pop to
-findNavigator().popTo<Screen>(inclusive) 
-findNavigator().popTo(navigationNodeKey, inclusive) // In case overriding key inside NavigationNode
+requireNavigator().popTo<NavigationNode>(inclusive)
+requireNavigator().popTo(navigationNodeKey, inclusive) // In case overriding key inside NavigationNode.
 
 // Pop to root
-findNavigator().popToRoot() // This will navigate to the root of the current stack
-findNavigator().setRoot(navigationNode, navOptions)
+requireNavigator().popToRoot() // This will navigate to the root of the current stack.
+
+// Set root
+requireNavigator().setRoot(navigationNode, transition) // Replaces the root of the current stack.
+
+// Replace last
+requireNavigator().replaceLast(navigationNode, transition) // Replaces the last node.
+
+// Replace Up To
+requireNavigator().replaceUpTo(navigationNode, transition, inclusive, predicate) // Replaces all nodes until the node matching predicate.
+requireNavigator().replaceUpTo<NavigationNode>(navigationNode, transition, inclusive) // Replaces all nodes until the node matching navigationNode.key.
+
+// Move To Top
+requireNavigator().moveToTop(matchLast, transition, predicate) // Moves the node matching predicate to the top of the stack, returns true if one exists.
+requireNavigator().moveToTop<NavigationNode>(matchLast, transition) // Moves the node with a matching key to the top of the stack, returns true if one exists.
+
+// Single instance
+requireNavigator().singleInstance(navigatioNode, useExistingInstance, transition) // If useExistingInstance is true, then move the existing node to the top else creates a new instance, if useExistingInstance is false, then always navigate to a new instance, clearing the backstack of any matching keys.
+
+// Single top
+requireNavigator().singleTop(navigationNode, transition) // Only navigate if the top most node doesn't have the same key as navigationNode.
 
 // Check if you can navigate back
-findNavigator().canGoBack()
+requireNavigator().canGoBack()
+
+// Any
+requireNavigator().any(predicate) // Returns true if any navigation node in the current stack matches predicate condition.
 ```
-
-## Launch Modes <a name="launch-modes"/>
-
-Launch mode can be specified using the `navOptions.launchMode` parameter of `navigate` function. Available Launch modes are:
-
-- Single Top: If the current top most navigation node has the same key, no additional navigation happens.
-- Single instance: Clears the entire backstack of navigation nodes matching same key and launches a new instance on top.
-
-Note: Currently the launch modes don't provide `newIntent` equivalent behaviour so the content will not restore the state of an existing navigation node.
 
 ## Animations <a name="animations"/>
 
-`EnterTransition` and `ExitTransition` are not savable in a bundle and cannot be saved/restored when the state of the app is saved/restored. 
-They are sealed and final so there is no easy way to extend them and make them savable.
+Compose navigator provides a one to one match of all the `EnterTransition` and `ExitTransition` defined in compose-animation.
+Prepend `nav` to compose equivalent function to find the navigation version of it.
 
-Compose navigator provides a one to one match of all the `EnterTransition` and `ExitTransition` defined.
-Prepend `navigation` to the compose equivalent function to find the navigation version of it.
+For ex: `fadeIn()` -> `navFadeIn()`
 
-For ex: `fadeIn()` -> `navigationFadeIn()`
+`EnterTransition` is converted to `NavEnterTranstion` and `ExitTransition` is converted to `NavExitTransition`
 
-`EnterTransition` is converted to `NavigationEnterTransition`
-`ExitTransition` is converted to `NavigationExitTransition`
+Animation specs supported currently are: Tween, Snap and Spring. 
+Prepend `nav` to compose equivalent function to find the navigation version of it.
 
-Animation specs supported currently are: Tween, Snap and Spring, prepend `navigation` to compose equivalent.
-
-For ex: `tween()` -> `navigationTween()`
+For ex: `tween()` -> `navTween()`
 
 ### Animating between navigation nodes <a name="animations-nodes"/>
 
@@ -254,46 +285,50 @@ Example:
 
 ```kotlin
 val MaterialSharedAxisTransitionX = NavTransition(
-    enter = navigationSlideInHorizontally { (it * 0.2f).toInt() }
-            + navigationFadeIn(animationSpec = navigationTween(300)),
+    enter = navSlideInHorizontally { (it * 0.2f).toInt() }
+            + navFadeIn(animationSpec = navTween(300)),
 
-    exit = navigationSlideOutHorizontally { -(it * 0.1f).toInt() }
-            + navigationFadeOut(animationSpec = navigationTween(150)),
+    exit = navSlideOutHorizontally { -(it * 0.1f).toInt() }
+            + navFadeOut(animationSpec = navTween(150)),
 
-    popEnter = navigationSlideInHorizontally { -(it * 0.1f).toInt() }
-            + navigationFadeIn(animationSpec = navigationTween(300)),
+    popEnter = navSlideInHorizontally { -(it * 0.1f).toInt() }
+            + navFadeIn(animationSpec = navTween(300)),
 
-    popExit = navigationSlideOutHorizontally { (it * 0.2f).toInt() }
-            + navigationFadeOut(animationSpec = navigationTween(150))
+    popExit = navSlideOutHorizontally { (it * 0.2f).toInt() }
+            + navFadeOut(animationSpec = navTween(150))
 )
 ```
 
 Usage:
 
 ```kotlin
-findNavigator().navigate(
+requireNavigator().navigate(
   navigatioNode = navigationNode, 
-  navOptions = navOptions(
-      navTransition = MaterialSharedAxisTransitionX,
-  )
+  transition = MaterialSharedAxisTransitionX
 )
 ```  
 
+`NavigationConfig` contains `defaultTransition` to define a default transition if none was provided in the navigation operation.
+
 ### Animating between stacks <a name="animations-stacks"/>
 
-Animating between stack changes can be done by using the `transitions` paramter inside `navigatToStack`
+Animating between stack changes can be done by using the `transition` parameter inside `navigatToStack`
 
 For ex:
 
 ```kotlin
-findNavigator().navigateToStack(stackKey, navigationFadeIn() to NavigationFadeOut())
+findNavigator().navigateToStack(stackKey, navFadeIn() to navFadeOut())
 ```
+
+`NavigationConfig.MultiStack` contains `stackEnterExitTransition` for default stack transition. 
 
 ### Animating navigation node elements with screen transitions <a name="animations-elements"/>
 
-`Content` function inside a `NavigatioNode` has reference to the `animatedVisibilityScope` used by the `AnimatedContent` that handles all transitions between navigation nodes.
+`Content` function inside a `NavigatioNode` has reference to the `AnimatedVisibilityScope` used by the `AnimatedContent` that handles all transitions between navigation nodes.
 
-This means composables inside navigation nodes can have enter/exit transitions based on the node's enter/exit state, using the `animateEnterExit` modifier.
+To get access the `AnimatedVisibilityScope` use `LocalNavigationAnimation.current`
+
+This means Composables inside navigation nodes can have enter/exit transitions based on the node's enter/exit state, using the `animateEnterExit` modifier.
 
 For ex:
 
@@ -302,7 +337,7 @@ For ex:
 class MyScreen : Screen {
 
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
+    override fun Content() = with(LocalNavigationAnimation.current) {
         Text(
             modifier = Modifier
                 .animateEnterExit(
@@ -317,7 +352,7 @@ class MyScreen : Screen {
 
 ## Back stack management <a name="back-stack-management"/>
 
-`NavContainer` uses composes's `BackHandler` to override back presses, it's defined before the navigation node composables so navigation nodes can override back press handling by providing their own `BackHandler`
+`NavContainer` uses Compose's `BackHandler` to override back presses, it's defined before the navigation node's composable so navigation nodes can override back press handling by providing their own `BackHandler`
 
 For Multi stack navigation, `NavigationConfig.MultiStack` provides 3 possible back stack strategies:
 
@@ -334,29 +369,29 @@ When the stack reaches its initial node then pressing the back button:
 
 `NavContainer` uses `rememberSaveableStateHolder()` to remember composables ui states.
 
-`NavigatorCacheSaver` handles saving/restoring the navigator state upon application state saving/restoration.
+`NavigatorSaver` handles saving/restoring the navigator state upon application state saving/restoration internally.
 
 Using `rememberSavable` inside your navigation node composables will remember the values of those fields.
 
 ## Result passing <a name="result-passing"/>
 
-`Navigator` uses coroutine flows to pass results between navigation nodes.
+`Navigator` uses a coroutine `Channel` to pass results between navigation nodes.
 
 A Result can be of any type.
 
-Sending/receiving results are done by the key of the navigation node:
+Sending/receiving results are done by the key of the navigation node or a given string key:
 
 ```kotlin
     // Navigator.kt
     // Listening to results
-    fun results(key: String) // Returns results for a key in case of overriding the default key inside the navigation node
-    inline fun <reified T : NavigationNode> results() // Covenience function that uses the default key for a NavigationNode
+    fun results(key: String) // Return results for a key in case of overriding the default key inside the navigation node
+    inline fun <reified T : NavigationNode> results() // Convenience function that uses the default key for a NavigationNode
     
     // Sending results
     fun sendResult(result: Pair<String, Any>) // Sends result for a given navigation node key
-    inline fun <reified T : NavigationNode> sendResult(result: Any) // Covenience function that uses the default key for a NavigationNode
+    inline fun <reified T : NavigationNode> sendResult(result: Any) // Convenience function that uses the default key for a NavigationNode
     
-    // Additionally, navigation node has an extension function on Navigator to make it even easir to listen to results
+    // Additionally, navigation node has an extension function on Navigator to make it even easier to listen to results
     
    // NavigationNode
    fun Navigator.nodeResults() = results(resultsKey)
@@ -369,7 +404,7 @@ Usage ex:
 class Screen1 : Screen {
 
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
+    override fun Content() {
         val context = LocalContext.current
         val navigator = findNavigator()
 
@@ -391,7 +426,7 @@ class Screen1 : Screen {
 class Screen2 : Screen {
 
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
+    override fun Content() {
         val navigator = findNavigator()
 
         Button(onClick = {
@@ -406,42 +441,35 @@ class Screen2 : Screen {
   
 ## Nested Navigation <a name="nested-navigation"/>
 
-Compose navigator offers 3 navigator fetching functions:
+Compose navigator offers navigator fetching functions:
 
-- `findNavigator(optonalKey)` returns the closest navigator in navigation hierarchy or one matching optionalKey
+- `findNavigator()` returns the closest navigator in navigation hierarchy, nullable
+- `requireNavigator()` returns the closes navigator in navigation hierarchy, throws error if none exist.
 - `findParentNavigator()` returns the parent navigator of the current navigator, nullable
-- `findDefaultNavigator()` returns the default navigator using `Navigator.defaultKey`
 
-You can nest navigators by calling `NavContainer(key)` inside a screen that is contained inside a parent `NavContainer`
-
-The first `NavContainer` should usually use the default key (Navigator.defaultKey)
-
-All nested `NavContainer` must provide a unique key to differentiate between them.
+You can nest navigators by calling `NavContainer()` inside a screen that is contained inside a parent `NavContainer()`
 
 ```kotlin
-// NavHost1
-NavHost(
-    Navigator.defaultKey to NavigationConfig.SingleStack(FirstScreen()),
-    "nested-navigator" to NavigationConfig.SingleStack(NestedSCreen())
-) {
 
-    NavContainer() // Renders FirstScreen
-}
+val parentNavigator = rememberNavigator(FirstScreen())
+
+findNavigator() // Returns null
+
+NavContainer(parentNavigator)
     
 // FirstScreen.kt
- override fun AnimatedVisibilityScope.Content() {
-    findNavigator() // Returns navigator for Navigator.defaultKey
+ override fun Content() {
+    findNavigator() // Returns parentNavigator
     findParentNavigator() // Returns null
-    findDefaultNavigator() // Returns navigator for Navigator.defaultKey
         
-    NavContainer("nested-navigator") // Renders NestedScreen
+    val nestedNavigator = rememberNavigator(NestedScreen())
+    NavContainer(nestedNavigator) // Renders NestedScreen
 }
 
 // NestedSCreen.kt
-override fun AnimatedVisibilityScope.Content() {
-    findNavigator() // Returns navigator for "nested-navigator"
-    findParentNavigator() // Returns navigator for Navigator.defaultKey
-    findDefaultNavigator() // Returns navigator for Navigator.defaultKey
+override fun Content() {
+    findNavigator() // Returns nestedNavigator
+    findParentNavigator() // Returns parentNavigator
 }
             
 // NavContainer in NestedScreen will override the back press of NavContainer in FirstScreen until it can no longer go back
@@ -451,84 +479,71 @@ override fun AnimatedVisibilityScope.Content() {
 
 ## Deeplinks <a name="deeplinks"/>
 
-Deep links can be handled by providing a `DeepLinkHandler`:
+`rememberNavigator` has an `initializer` argument which can be used to initialize the state of the navigator, this can be used
+to start the navigator with navigation nodes given the initial activity's intent.
 
-Create a `DeepLinkHandler` class:
-
-```kotlin
-class MyDeepLinkHandler : DeepLinkHandler() {
-
-    override fun handleIntent(navigator: (String) -> Navigator, intent: Intent?) {
-        // navigator can be used to get a navigator for a given key
-        // use intent data to handle deep linking
-    }
-}
-```
-
-In your activity:
-```kotlin
-class MainActivity : ComponentActivity() {
-
-    private val deepLinkHandler = MyDeepLinkHandler()
-    
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            NavHost(
-                Navigator.defaultKey to NavigationConfig.SingleStack(MyInitialScreen()),
-                deepLinkHandler = deepLinkHandler
-            ) {
-                // content
-            }
-        }
-    }
-    
-    // Handle new intents when using launch mode as singleTop
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        deepLinkHandler.onIntent(intent)
-    }
-}
-```
-
-Check example usage in [Sample app](https://github.com/roudikk/compose-navigator/blob/master/sample/src/main/java/com/roudikk/navigator/sample/ui/deeplink/SampleDeepLinkHandler.kt)
+For more details on how deeplinking can be implemented check [DeepLinkViewModel](https://github.com/roudikk/compose-navigator/blob/wip-2.0.0/sample/src/main/java/com/roudikk/navigator/sample/DeepLinkViewModel.kt)
 
 ## ViewModels <a name="view-models"/>
 
-For example usage with a view model, check [Home Screen Sample](https://github.com/roudikk/compose-navigator/blob/master/sample/src/main/java/com/roudikk/navigator/sample/ui/screens/home/HomeScreen.kt)
+Each Navigation node is wrapped around a `BackStackEntry` that has its own Lifecycle, viewModelStoreOwner and savedStateRegistry.
+
+This means calling `viewModel()` inside a Navigation Node will provide a `ViewModel` tied to the node's lifecycle and will be disposed
+when the `NavigationNode` is no longer used.
+
+To use a singleton `ViewModel` across multiple `NavigationNode`, it's recommended to define a `LocalNavHostViewModelStoreOwner`:
+
+```kotlin
+val LocalNavHostViewModelStoreOwner = staticCompositionLocalOf<ViewModelStoreOwner> {
+    error("Must be provided")
+}
+```
+
+Which can then be used in your main activity to provide the activity's `ViewModelStoreOwner`:
+
+```kotlin
+CompositionLocalProvider(
+    LocalNavHostViewModelStoreOwner provides requireNotNull(LocalViewModelStoreOwner.current)
+) {
+    NavContainer(navigator = myNavigator)
+}
+```
+
+And to retrieve the `ViewModel`:
+
+```kotlin
+val sharedViewModel = viewModel<SharedViewModel>(viewModelStoreOwner = LocalNavHostViewModelStoreOwner.current)
+```
 
 ## Previews
 
-Instead of calling `findNavigator()` in the body of your composable, call it as the default value of a navigator parameter:
+It's recommended to separate the navigation logic from the composable previews.
+
+Instead of doing:
 
 ```kotlin
 @Composable
-private fun DetailsContent(
-    navigator: Navigator = findNavigator(),
-    item: String
-) {
-    // Content
+fun MyComposable() {
+    val navigator = requireNavigator()
+    
+    Button(onClick = { navigator.navigator(SomeScreen()) }) {
+        Text("Navigate")
+    }
 }
 ```
 
-For Previews, you can just call `Navigator()` which provides an empty navigator to enable previews.
+You should do:
 
 ```kotlin
-@Preview(
-    device = Devices.PIXEL_3
-)
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
-)
 @Composable
-private fun DetailsContentPreview() = AppTheme {
-    DetailsContent(
-        navigator = Navigator(),
-        item = "Test Item"
-    )
+fun MyComposable(onClick: () -> Unit) {
+    Button(onClick = onClick) {
+        Text("Navigate")
+    }
 }
 ```
+
+And delegate the navigation to the caller instead.
 
 ## UI tests <a name="ui-tests" />
 
@@ -545,7 +560,9 @@ private fun HomeContent(
 }
 ```
 
-However, when testing UI flows across multiple navigation nodes, Compose Navigator adds a test tag using the navigation node key to all navigation nodes in the Compose tree, making it easy to test whether a navigation node is displayed, using `ComposeTestRule.onNodeWithTag(tag).assertIsDisplayed()`, for ex:
+However, when testing UI flows across multiple navigation nodes, Compose Navigator adds a test tag
+using the navigation node key to all navigation nodes in the Compose tree, making it easy to test whether
+a navigation node is displayed, using `ComposeTestRule.onNodeWithTag(tag).assertIsDisplayed()`, for ex:
 
 ```kotlin
     @Test

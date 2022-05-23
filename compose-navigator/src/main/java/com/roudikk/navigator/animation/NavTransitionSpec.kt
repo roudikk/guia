@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.roudikk.navigator.animation
 
 import android.os.Parcelable
@@ -7,16 +9,15 @@ import androidx.compose.ui.unit.IntSize
 import kotlinx.parcelize.Parcelize
 
 /**
- * Mapped specs from Compose to savable navigation specs.
+ * One to one match of Compose [AnimationSpec] but [Parcelable] so it can be saved and restored.
  *
  * Currently the supported animation specs are: tween, spring and snap.
  *
- * [TweenSpec] is converted to [NavigationTweenSpec]
- * [SpringSpec] is converted to [NavigationSpringSpec]
- * [SnapSpec] is converted to [NavigationSnapSpec]
+ * [TweenSpec] is converted to [NavTweenSpec]
+ * [SpringSpec] is converted to [NavSpringSpec]
+ * [SnapSpec] is converted to [NavSnapSpec]
  */
-
-sealed interface NavigationFiniteAnimationSpec<T> : Parcelable {
+sealed interface NavFiniteAnimationSpec<T> : Parcelable {
 
     fun toComposeSpec(): FiniteAnimationSpec<T>
 }
@@ -26,11 +27,11 @@ sealed interface NavigationFiniteAnimationSpec<T> : Parcelable {
 value class SpecFloat(val value: Float) : Parcelable
 
 @Parcelize
-data class NavigationSpringSpec<T : Parcelable>(
+data class NavSpringSpec<T : Parcelable>(
     private val dampingRatio: Float = Spring.DampingRatioNoBouncy,
     private val stiffness: Float = Spring.StiffnessMedium,
     private val visibilityThreshold: T? = null
-) : NavigationFiniteAnimationSpec<T> {
+) : NavFiniteAnimationSpec<T> {
 
     @Suppress("UNCHECKED_CAST")
     override fun toComposeSpec(): FiniteAnimationSpec<T> {
@@ -39,8 +40,8 @@ data class NavigationSpringSpec<T : Parcelable>(
             stiffness = stiffness,
             visibilityThreshold = when (visibilityThreshold) {
                 is SpecFloat -> visibilityThreshold.value
-                is NavigationIntOffset -> visibilityThreshold.toComposeIntOffset()
-                is NavigationIntSize -> visibilityThreshold.toComposeIntSize()
+                is NavIntOffset -> visibilityThreshold.toComposeIntOffset()
+                is NavIntSize -> visibilityThreshold.toComposeIntSize()
                 else -> null
             }
         ) as FiniteAnimationSpec<T>
@@ -48,11 +49,11 @@ data class NavigationSpringSpec<T : Parcelable>(
 }
 
 @Parcelize
-data class NavigationTweenSpec<T>(
+data class NavTweenSpec<T>(
     val durationMillis: Int,
     val delay: Int,
-    val easing: NavigationEasing
-) : NavigationFiniteAnimationSpec<T> {
+    val easing: NavEasing
+) : NavFiniteAnimationSpec<T> {
 
     override fun toComposeSpec(): FiniteAnimationSpec<T> {
         return TweenSpec(
@@ -64,9 +65,9 @@ data class NavigationTweenSpec<T>(
 }
 
 @Parcelize
-data class NavigationSnapSpec<T>(
+data class NavSnapSpec<T>(
     val delayMillis: Int
-) : NavigationFiniteAnimationSpec<T> {
+) : NavFiniteAnimationSpec<T> {
 
     override fun toComposeSpec(): FiniteAnimationSpec<T> {
         return SnapSpec(delayMillis)
@@ -74,7 +75,7 @@ data class NavigationSnapSpec<T>(
 }
 
 @Parcelize
-enum class NavigationEasing : Parcelable {
+enum class NavEasing : Parcelable {
     FastOutSlowIn,
     LinearOutSlowIn,
     FastOutLinearIn,
@@ -89,35 +90,35 @@ enum class NavigationEasing : Parcelable {
 }
 
 @Suppress("UNCHECKED_CAST")
-inline fun <reified T> navigationSpring(
+inline fun <reified T> navSpring(
     dampingRatio: Float = Spring.DampingRatioNoBouncy,
     stiffness: Float = Spring.StiffnessMedium,
     visibilityThreshold: T? = null
-): NavigationFiniteAnimationSpec<T> {
-    return NavigationSpringSpec(
+): NavFiniteAnimationSpec<T> {
+    return NavSpringSpec(
         dampingRatio = dampingRatio,
         stiffness = stiffness,
         visibilityThreshold = visibilityThreshold?.let {
             when (it) {
                 is Float -> SpecFloat(it)
-                is IntSize -> NavigationIntSize.fromComposeIntSize(it)
-                is IntOffset -> NavigationIntOffset.fromComposeIntOffset(it)
+                is IntSize -> NavIntSize.fromComposeIntSize(it)
+                is IntOffset -> NavIntOffset.fromComposeIntOffset(it)
                 else -> error("Type: ${it::class.simpleName} is not supported.")
             }
         }
-    ) as NavigationFiniteAnimationSpec<T>
+    ) as NavFiniteAnimationSpec<T>
 }
 
-inline fun <reified T> navigationTween(
+inline fun <reified T> navTween(
     durationMillis: Int = AnimationConstants.DefaultDurationMillis,
     delayMillis: Int = 0,
-    easing: NavigationEasing = NavigationEasing.FastOutSlowIn
-): NavigationFiniteAnimationSpec<T> {
-    return NavigationTweenSpec(
+    easing: NavEasing = NavEasing.FastOutSlowIn
+): NavFiniteAnimationSpec<T> {
+    return NavTweenSpec(
         durationMillis = durationMillis,
         delay = delayMillis,
         easing = easing
     )
 }
 
-fun <T> navigationSnap(delayMillis: Int = 0) = NavigationSnapSpec<T>(delayMillis)
+fun <T> navSnap(delayMillis: Int = 0) = NavSnapSpec<T>(delayMillis)

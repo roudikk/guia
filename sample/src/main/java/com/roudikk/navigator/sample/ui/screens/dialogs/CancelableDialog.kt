@@ -1,7 +1,6 @@
 package com.roudikk.navigator.sample.ui.screens.dialogs
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -13,9 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.Dialog
+import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.findNavigator
+import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.rememberNavigator
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
@@ -25,14 +25,14 @@ class CancelableDialog(
 ) : Dialog {
 
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
+    override fun Content() {
         CancelableDialogContent(showNextButton = showNextButton)
     }
 }
 
 @Composable
 private fun CancelableDialogContent(
-    navigator: Navigator = findNavigator(),
+    navigator: Navigator = requireNavigator(),
     showNextButton: Boolean
 ) {
     Surface(
@@ -85,7 +85,7 @@ private fun CancelableDialogContent(
 @Composable
 private fun CancelableDialogContentPreview() = AppTheme {
     CancelableDialogContent(
-        navigator = Navigator(),
+        navigator = rememberNavigator(),
         showNextButton = true
     )
 }
@@ -100,7 +100,7 @@ private fun CancelableDialogContentPreview() = AppTheme {
 @Composable
 private fun CancelableDialogContentPreviewFalse() = AppTheme {
     CancelableDialogContent(
-        navigator = Navigator(),
+        navigator = rememberNavigator(),
         showNextButton = false
     )
 }

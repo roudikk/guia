@@ -1,7 +1,10 @@
 package com.roudikk.navigator.sample.ui.screens.settings
 
 import android.content.res.Configuration
-import androidx.compose.animation.*
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -22,9 +25,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsPadding
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.Screen
-import com.roudikk.navigator.findNavigator
+import com.roudikk.navigator.compose.LocalNavigationAnimation
+import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.rememberNavigator
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
+import com.roudikk.navigator.sample.ui.composables.NavigationAnimationPreview
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
@@ -32,14 +38,14 @@ import kotlinx.parcelize.Parcelize
 class SettingsScreen : Screen {
 
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
+    override fun Content() {
         SettingsContent()
     }
 }
 
 @Composable
-private fun AnimatedVisibilityScope.SettingsContent(
-    navigator: Navigator = findNavigator()
+private fun SettingsContent(
+    navigator: Navigator = requireNavigator()
 ) {
     val lazyListState = rememberLazyListState()
 
@@ -154,27 +160,30 @@ private fun AnimatedVisibilityScope.SettingsContent(
                     append("By Roudi Korkis Kanaan")
                 }
             }
-            ClickableText(
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    color = MaterialTheme.colorScheme.onSurface
-                ),
-                modifier = Modifier
-                    .animateEnterExit(
-                        enter = slideInVertically { it * 3 }
-                                + fadeIn(),
-                        exit = slideOutVertically { it }
-                                + fadeOut()
-                    )
-                    .padding(16.dp),
-                text = annotatedString,
-                onClick = {
-                    annotatedString
-                        .getStringAnnotations("URL", it, it)
-                        .firstOrNull()?.let { stringAnnotation ->
-                            uriHandler.openUri(stringAnnotation.item)
-                        }
-                }
-            )
+
+            with(LocalNavigationAnimation.current) {
+                ClickableText(
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.onSurface
+                    ),
+                    modifier = Modifier
+                        .animateEnterExit(
+                            enter = slideInVertically { it * 3 }
+                                    + fadeIn(),
+                            exit = slideOutVertically { it }
+                                    + fadeOut()
+                        )
+                        .padding(16.dp),
+                    text = annotatedString,
+                    onClick = {
+                        annotatedString
+                            .getStringAnnotations("URL", it, it)
+                            .firstOrNull()?.let { stringAnnotation ->
+                                uriHandler.openUri(stringAnnotation.item)
+                            }
+                    }
+                )
+            }
         }
     }
 }
@@ -188,7 +197,7 @@ private fun AnimatedVisibilityScope.SettingsContent(
 )
 @Composable
 private fun SettingsContentPreview() = AppTheme {
-    AnimatedVisibility(visible = true) {
-        SettingsContent(navigator = Navigator())
+    NavigationAnimationPreview {
+        SettingsContent(navigator = rememberNavigator())
     }
 }

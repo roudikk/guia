@@ -1,7 +1,6 @@
 package com.roudikk.navigator.sample.ui.screens.navigation_tree
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -28,11 +27,10 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.Screen
-import com.roudikk.navigator.findNavigator
-import com.roudikk.navigator.sample.AppNavHost
-import com.roudikk.navigator.sample.AppNavigationKey
-import com.roudikk.navigator.sample.AppNavigator
+import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.rememberNavigator
+import com.roudikk.navigator.sample.navigation.SampleStackKey
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -41,7 +39,7 @@ import kotlinx.parcelize.Parcelize
 class NavigationTreeScreen : Screen {
 
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
+    override fun Content() {
         NavigationTreeContent()
     }
 }
@@ -52,14 +50,14 @@ class NavigationTreeScreen : Screen {
 )
 @Composable
 private fun NavigationTreeContent(
-    navigator: Navigator = findNavigator()
+    navigator: Navigator = requireNavigator()
 ) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val lazyListState = rememberLazyListState()
     val animatedElevation by animateDpAsState(
-        targetValue = if (lazyListState.firstVisibleItemIndex > 0
-            || lazyListState.firstVisibleItemScrollOffset > 0
+        targetValue = if (lazyListState.firstVisibleItemIndex > 0 ||
+            lazyListState.firstVisibleItemScrollOffset > 0
         ) 4.dp else 0.dp
     )
 
@@ -85,7 +83,7 @@ private fun NavigationTreeContent(
         val pagerState = rememberPagerState()
         val state by navigator.stateFlow.collectAsState()
 
-        val stacks = state.navigationStacks.filter { it.key != AppNavigationKey.NavigationTree }
+        val stacks = state.navigationStacks.filter { it.key != SampleStackKey.StackTree }
             .map { it.key to it.destinations }
 
         Column {
@@ -215,8 +213,6 @@ fun <T> Grid(
 )
 @Composable
 private fun NavigationTreePreview() = AppTheme {
-    AppNavHost {
-        val navigator = findNavigator(AppNavigator.BottomTab.key)
-        NavigationTreeContent(navigator = navigator)
-    }
+    val navigator = rememberNavigator()
+    NavigationTreeContent(navigator = navigator)
 }

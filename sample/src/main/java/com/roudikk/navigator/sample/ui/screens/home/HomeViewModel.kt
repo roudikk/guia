@@ -14,7 +14,7 @@ sealed class HomeCommand {
 }
 
 class HomeViewModel(
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val mutableStateFlow = MutableStateFlow<List<String>>(

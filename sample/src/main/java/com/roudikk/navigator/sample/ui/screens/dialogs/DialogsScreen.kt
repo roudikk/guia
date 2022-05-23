@@ -1,7 +1,6 @@
 package com.roudikk.navigator.sample.ui.screens.dialogs
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,9 +17,10 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.Screen
-import com.roudikk.navigator.findDefaultNavigator
-import com.roudikk.navigator.findNavigator
+import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.rememberNavigator
+import com.roudikk.navigator.sample.navigation.findDefaultNavigator
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
@@ -29,14 +29,14 @@ import kotlinx.parcelize.Parcelize
 class DialogsScreen : Screen {
 
     @Composable
-    override fun AnimatedVisibilityScope.Content() {
+    override fun Content() {
         DialogsContent()
     }
 }
 
 @Composable
 private fun DialogsContent(
-    navigator: Navigator = findNavigator(),
+    navigator: Navigator = requireNavigator(),
     defaultNavigator: Navigator = findDefaultNavigator()
 ) {
     val lazyListState = rememberLazyListState()
@@ -117,7 +117,7 @@ private fun DialogsContent(
 @Composable
 private fun DialogsContentPreview() = AppTheme {
     DialogsContent(
-        navigator = Navigator(),
-        defaultNavigator = Navigator()
+        navigator = rememberNavigator(),
+        defaultNavigator = rememberNavigator()
     )
 }
