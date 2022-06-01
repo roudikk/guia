@@ -18,7 +18,10 @@ sealed class DetailsCommand {
     data class OpenDialog(val item: String) : DetailsCommand()
 }
 
-class DetailsViewModel(val item: String) : ViewModel() {
+class DetailsViewModel(
+    val item: String,
+    val isScreen: Boolean
+) : ViewModel() {
 
     private val mutableCommandsFlow = MutableSharedFlow<DetailsCommand>(extraBufferCapacity = 1)
     val commandsFlow: Flow<DetailsCommand> = mutableCommandsFlow

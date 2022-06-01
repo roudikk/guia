@@ -13,7 +13,7 @@ import kotlinx.parcelize.Parcelize
  * [NavigationConfig.MultiStack].
  * @property currentStackKey, the current [StackKey].
  * @property transition, the current transition based on the last navigation operation.
- * @property overrideBackPress, whether or not to override back press.
+ * @property overrideBackPress, whether to override back press.
  * @property currentStack, the current stack matching [currentStackKey].
  */
 @Parcelize

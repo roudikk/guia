@@ -1,7 +1,6 @@
 package com.roudikk.navigator.compose
 
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier

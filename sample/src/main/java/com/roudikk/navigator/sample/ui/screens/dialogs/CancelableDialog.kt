@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.rememberNavigator
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize

@@ -1,6 +1,5 @@
 package com.roudikk.navigator.sample
 
-import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

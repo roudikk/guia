@@ -19,7 +19,7 @@ sealed interface NavigationNode : Parcelable {
 
     /**
      * The key for a navigation node, make sure this is unique across nodes or the navigator might
-     * run into unexpected behaviours. By default this uses the class name as a key, this means
+     * run into unexpected behaviours. By default, this uses the class name as a key, this means
      * when creating an instance using object: NavigationNode for ex, the key will be empty, in
      * that case make sure to override key with something more meaningful.
      */
@@ -78,11 +78,38 @@ interface BottomSheet : NavigationNode {
 }
 
 /**
+ * Returns the [NavigationNode] as a [BottomSheet].
+ * The [NavigationNode] must implement [BottomSheet].
+ */
+fun NavigationNode.asBottomSheet(): BottomSheet {
+    require(this is BottomSheet) { "NavigationNode: $this is not a BottomSheet, make sure it implements a BottomSheet" }
+    return object : BottomSheet by this {}
+}
+
+/**
+ * Returns the [NavigationNode] as a [Screen].
+ * The [NavigationNode] must implement [Screen].
+ */
+fun NavigationNode.asScreen(): Screen {
+    require(this is Screen) { "NavigationNode: $this is not a Screen, make sure it implements a Screen" }
+    return object : Screen by this {}
+}
+
+/**
+ * Returns the [NavigationNode] as a [Dialog].
+ * The [NavigationNode] must implement [Dialog].
+ */
+fun NavigationNode.asDialog(): Dialog {
+    require(this is Dialog) { "NavigationNode: $this is not a Dialog, make sure it implements a Dialog" }
+    return object : Dialog by this {}
+}
+
+/**
  * Options used in a [Dialog].
  *
- * @property dismissOnClickOutside, whether or not to dismiss the dialog when clicking outside
+ * @property dismissOnClickOutside, whether to dismiss the dialog when clicking outside
  * its bounds.
- * @property dismissOnBackPress, whether or not to dismiss the dialog when pressing the back
+ * @property dismissOnBackPress, whether to dismiss the dialog when pressing the back
  * button.
  */
 data class DialogOptions(

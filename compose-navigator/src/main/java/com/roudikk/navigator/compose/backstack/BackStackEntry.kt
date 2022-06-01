@@ -1,10 +1,8 @@
 package com.roudikk.navigator.compose.backstack
 
 import android.app.Application
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSavedStateRegistryOwner
