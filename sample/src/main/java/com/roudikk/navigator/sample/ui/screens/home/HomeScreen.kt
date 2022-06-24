@@ -2,6 +2,7 @@ package com.roudikk.navigator.sample.ui.screens.home
 
 import android.content.res.Configuration
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,10 +16,7 @@ import androidx.compose.material.icons.filled.ClearAll
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,12 +30,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.core.asScreen
 import com.roudikk.navigator.rememberNavigator
 import com.roudikk.navigator.sample.navigation.findDefaultNavigator
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.screens.details.DetailsScreen
 import com.roudikk.navigator.sample.ui.screens.settings.SettingsScreen
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -60,7 +60,9 @@ private fun HomeController(
     LaunchedEffect(Unit) {
         viewModel.commandsFlow.collect { homeCommand ->
             when (homeCommand) {
-                is HomeCommand.OpenDetails -> navigator.navigate(DetailsScreen(homeCommand.item))
+                is HomeCommand.OpenDetails -> navigator.navigate(
+                    DetailsScreen(homeCommand.item).asScreen()
+                )
                 HomeCommand.OpenSettings -> defaultNavigator.navigate(SettingsScreen())
             }
         }
@@ -92,6 +94,17 @@ private fun HomeContent(
     onSettingsSelected: () -> Unit = {}
 ) {
     val lazyListState = rememberLazyListState()
+
+    val scope = rememberCoroutineScope()
+
+    BackHandler(
+        enabled = lazyListState.firstVisibleItemIndex > 0 ||
+                lazyListState.firstVisibleItemScrollOffset > 0
+    ) {
+        scope.launch {
+            lazyListState.scrollToItem(0)
+        }
+    }
 
     Scaffold(
         topBar = {

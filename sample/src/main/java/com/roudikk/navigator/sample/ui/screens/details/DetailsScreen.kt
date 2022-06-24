@@ -3,6 +3,7 @@ package com.roudikk.navigator.sample.ui.screens.details
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -13,24 +14,34 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.core.BottomSheet
+import com.roudikk.navigator.core.Dialog
+import com.roudikk.navigator.core.DialogOptions
 import com.roudikk.navigator.core.Screen
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
+import com.roudikk.navigator.sample.ui.composables.BottomSheetSurface
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class DetailsScreen(
-    private val item: String
-) : Screen {
+    private val item: String,
+    private val isScreen: Boolean = true
+) : Screen, Dialog, BottomSheet {
+
+    override val dialogOptions: DialogOptions
+        get() = DialogOptions(modifier = Modifier.widthIn(max = 320.dp))
 
     @Composable
     override fun Content() {
-        val viewModel = viewModel { DetailsViewModel(item) }
+        val viewModel = viewModel { DetailsViewModel(item, isScreen) }
 
         DetailsContent(
             item = viewModel.item,
+            isScreen = viewModel.isScreen,
             onBackSelected = viewModel::onBackSelected,
             onRandomItemSelected = viewModel::onRandomItemSelected,
             onSendResultSelected = viewModel::onSendResultSelected,
@@ -53,6 +64,7 @@ class DetailsScreen(
 @Composable
 private fun DetailsContent(
     item: String,
+    isScreen: Boolean,
     onBackSelected: () -> Unit,
     onRandomItemSelected: () -> Unit,
     onSendResultSelected: () -> Unit,
@@ -64,39 +76,47 @@ private fun DetailsContent(
     onReplaceSelected: () -> Unit,
     onOpenDialogSelected: () -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            AppTopAppBar(
-                title = "Details",
-                navigationIcon = {
-                    IconButton(
-                        onClick = onBackSelected
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back"
-                        )
+    val content = @Composable {
+        DetailsList(
+            item = item,
+            onRandomItemSelected = onRandomItemSelected,
+            onSendResultSelected = onSendResultSelected,
+            onBottomSheetSelected = onBottomSheetSelected,
+            onNewSingleInstanceSelected = onNewSingleInstanceSelected,
+            onExistingSingleInstanceSelected = onExistingSingleInstanceSelected,
+            onSingleTopSelected = onSingleTopSelected,
+            onSingleTopBottomSheetSelected = onSingleTopBottomSheetSelected,
+            onReplaceSelected = onReplaceSelected,
+            onOpenDialogSelected = onOpenDialogSelected
+        )
+    }
+
+    if (isScreen) {
+        Scaffold(
+            topBar = {
+                AppTopAppBar(
+                    title = "Details",
+                    navigationIcon = {
+                        IconButton(onClick = onBackSelected) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Back"
+                            )
+                        }
                     }
-                }
-            )
-        },
-    ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+                )
+            },
         ) {
-            DetailsList(
-                item = item,
-                onRandomItemSelected = onRandomItemSelected,
-                onSendResultSelected = onSendResultSelected,
-                onBottomSheetSelected = onBottomSheetSelected,
-                onNewSingleInstanceSelected = onNewSingleInstanceSelected,
-                onExistingSingleInstanceSelected = onExistingSingleInstanceSelected,
-                onSingleTopSelected = onSingleTopSelected,
-                onSingleTopBottomSheetSelected = onSingleTopBottomSheetSelected,
-                onReplaceSelected = onReplaceSelected,
-                onOpenDialogSelected = onOpenDialogSelected
-            )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                content()
+            }
+        }
+    } else {
+        BottomSheetSurface {
+            content()
         }
     }
 }
@@ -112,6 +132,32 @@ private fun DetailsContent(
 private fun DetailsContentPreview() = AppTheme {
     DetailsContent(
         item = "Test Item!",
+        isScreen = true,
+        onBackSelected = { },
+        onRandomItemSelected = { },
+        onSendResultSelected = { },
+        onBottomSheetSelected = { },
+        onNewSingleInstanceSelected = { },
+        onExistingSingleInstanceSelected = { },
+        onSingleTopSelected = { },
+        onSingleTopBottomSheetSelected = { },
+        onReplaceSelected = { },
+        onOpenDialogSelected = { }
+    )
+}
+
+@Preview(
+    device = Devices.PIXEL_3
+)
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_3
+)
+@Composable
+private fun DetailsContentPreviewOverlay() = AppTheme {
+    DetailsContent(
+        item = "Test Item!",
+        isScreen = false,
         onBackSelected = { },
         onRandomItemSelected = { },
         onSendResultSelected = { },

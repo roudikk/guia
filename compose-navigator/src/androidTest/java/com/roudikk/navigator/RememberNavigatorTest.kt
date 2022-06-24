@@ -10,7 +10,7 @@ import kotlinx.parcelize.Parcelize
 import org.junit.Rule
 import org.junit.Test
 
-class NavigatorTest {
+class RememberNavigatorTest {
 
     @Parcelize
     open class TestScreen : Screen {

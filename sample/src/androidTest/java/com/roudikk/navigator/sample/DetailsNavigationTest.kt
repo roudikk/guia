@@ -3,7 +3,6 @@ package com.roudikk.navigator.sample
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.roudikk.navigator.core.NavigationNode.Companion.key
-import com.roudikk.navigator.sample.ui.screens.details.DetailsBottomSheet
 import com.roudikk.navigator.sample.ui.screens.details.DetailsScreen
 import com.roudikk.navigator.sample.ui.screens.home.HomeScreen
 import com.roudikk.navigator.sample.utils.navigateDetails
@@ -36,7 +35,7 @@ class DetailsNavigationTest {
     fun details_bottomSheet_opensBottomSheet() {
         rule.navigateDetails()
         rule.onNodeWithText("BottomSheet").performClick()
-        rule.onNodeWithTag(key<DetailsBottomSheet>()).assertIsDisplayed()
+        rule.onNodeWithTag(key<DetailsScreen>()).assertIsDisplayed()
         rule.activity.onBackPressed()
         rule.onNodeWithTag(key<DetailsScreen>()).assertIsDisplayed()
     }
@@ -45,11 +44,11 @@ class DetailsNavigationTest {
     fun details_bottomSheet_toBottomSheet() {
         rule.navigateDetails()
         rule.onNodeWithText("BottomSheet").performClick()
-        rule.onNodeWithTag(key<DetailsBottomSheet>()).assertIsDisplayed()
+        rule.onNodeWithTag(key<DetailsScreen>()).assertIsDisplayed()
         rule.onAllNodesWithText("BottomSheet")[1].performClick()
-        rule.onNodeWithTag(key<DetailsBottomSheet>()).assertIsDisplayed()
+        rule.onNodeWithTag(key<DetailsScreen>()).assertIsDisplayed()
         rule.activity.onBackPressed()
-        rule.onNodeWithTag(key<DetailsBottomSheet>()).assertIsDisplayed()
+        rule.onNodeWithTag(key<DetailsScreen>()).assertIsDisplayed()
         rule.activity.onBackPressed()
         rule.onNodeWithTag(key<DetailsScreen>()).assertIsDisplayed()
     }
@@ -58,9 +57,9 @@ class DetailsNavigationTest {
     fun details_bottomSheet_toScreen() {
         rule.navigateDetails()
         rule.onNodeWithText("BottomSheet").performClick()
-        rule.onNodeWithTag(key<DetailsBottomSheet>()).assertIsDisplayed()
+        rule.onNodeWithTag(key<DetailsScreen>()).assertIsDisplayed()
         rule.onAllNodesWithText("New random item")[1].performClick()
-        rule.onNodeWithTag(key<DetailsBottomSheet>()).assertDoesNotExist()
+        rule.onNodeWithTag(key<DetailsScreen>()).assertDoesNotExist()
         rule.onNodeWithTag(key<DetailsScreen>()).assertIsDisplayed()
     }
 
@@ -120,6 +119,6 @@ class DetailsNavigationTest {
         rule.onAllNodesWithText("Send result back to home")[1].performClick()
         rule.onNodeWithTag(key<HomeScreen>()).assertIsDisplayed()
         rule.onNodeWithTag(key<DetailsScreen>()).assertDoesNotExist()
-        rule.onNodeWithTag(key<DetailsBottomSheet>()).assertDoesNotExist()
+        rule.onNodeWithTag(key<DetailsScreen>()).assertDoesNotExist()
     }
 }

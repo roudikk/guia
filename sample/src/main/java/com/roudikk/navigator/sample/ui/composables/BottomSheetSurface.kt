@@ -18,7 +18,6 @@ fun BottomSheetSurface(
 ) {
     Surface(
         modifier = modifier
-            .padding(16.dp)
             .widthIn(max = 600.dp),
         tonalElevation = 16.dp,
         shape = RoundedCornerShape(16.dp)
@@ -31,6 +30,7 @@ fun sampleBottomSheetOptions(modifier: Modifier = Modifier) = BottomSheetOptions
     bottomSheetContainer = { nodeModifier, content ->
         BottomSheetSurface(
             modifier = modifier
+                .padding(16.dp)
                 .systemBarsPadding(bottom = false)
                 .then(nodeModifier),
             content = content

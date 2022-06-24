@@ -304,8 +304,8 @@ class Navigator internal constructor(
      * Moves the navigation node matching [predicate] to the top.
      *
      * @param transition, transition animation.
-     * @param matchLast, whether or not to matching from the top of the back stack ro the start.
-     * @param predicate, whether or not the [NavigationNode] matches.
+     * @param matchLast, whether to matching from the top of the back stack ro the start.
+     * @param predicate, whether the [NavigationNode] matches.
      *
      * @return true if a destination was found in the back stack.
      */
@@ -344,7 +344,7 @@ class Navigator internal constructor(
      * Moves the navigation node matching [key] to the top.
      *
      * @param transition, transition animation.
-     * @param matchLast, whether or not to matching from the top of the back stack ro the start.
+     * @param matchLast, whether to matching from the top of the back stack ro the start.
      *
      * @return true if a destination was found in the back stack.
      */
@@ -408,7 +408,7 @@ class Navigator internal constructor(
     /**
      * Check if any node in the back stack matches predicate.
      *
-     * @param predicate, whether or not the given navigation node satisfies the condition.
+     * @param predicate, whether the given navigation node satisfies the condition.
      */
     fun any(predicate: (NavigationNode) -> Boolean): Boolean {
         return currentDestinations.any { predicate(it.navigationNode) }
@@ -593,7 +593,7 @@ class Navigator internal constructor(
     }
 
     /**
-     * Whether or not the navigator is able to navigate back.
+     * Whether the navigator is able to navigate back.
      *
      * - Single stack, when there's more than one destination in the current stack
      * - Multi stack:
@@ -620,7 +620,7 @@ class Navigator internal constructor(
     /**
      * Enables/Disables automatic back press handling.
      *
-     * @param enabled, whether or not to enable auto back press handling.
+     * @param enabled, whether to enable auto back press handling.
      */
     fun overrideBackPress(enabled: Boolean) {
         mutableStateFlow.value = mutableStateFlow.value.copy(overrideBackPress = enabled)
