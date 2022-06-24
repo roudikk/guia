@@ -29,9 +29,7 @@ import kotlinx.parcelize.Parcelize
 class DialogsScreen : Screen {
 
     @Composable
-    override fun Content() {
-        DialogsContent()
-    }
+    override fun Content() = DialogsContent()
 }
 
 @Composable
