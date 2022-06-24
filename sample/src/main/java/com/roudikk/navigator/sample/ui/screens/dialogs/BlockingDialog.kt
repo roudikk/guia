@@ -22,9 +22,7 @@ import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class BlockingDialog(
-    private val showNextButton: Boolean
-) : Dialog {
+class BlockingDialog(private val showNextButton: Boolean) : Dialog {
 
     override val dialogOptions: DialogOptions
         get() = DialogOptions(
@@ -33,9 +31,7 @@ class BlockingDialog(
         )
 
     @Composable
-    override fun Content() {
-        BlockingDialogContent(showNextButton = showNextButton)
-    }
+    override fun Content() = BlockingDialogContent(showNextButton = showNextButton)
 }
 
 @Composable
@@ -43,9 +39,8 @@ private fun BlockingDialogContent(
     navigator: Navigator = requireNavigator(),
     showNextButton: Boolean
 ) {
-    Surface(
-        shape = RoundedCornerShape(16.dp)
-    ) {
+    Surface(shape = RoundedCornerShape(16.dp)) {
+
         Column(Modifier.padding(16.dp)) {
             Text(
                 text = "None Cancelable",

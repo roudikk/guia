@@ -44,9 +44,7 @@ import kotlinx.parcelize.Parcelize
 class HomeScreen : Screen {
 
     @Composable
-    override fun Content() {
-        HomeController()
-    }
+    override fun Content() = HomeController()
 }
 
 @Composable
@@ -94,7 +92,6 @@ private fun HomeContent(
     onSettingsSelected: () -> Unit = {}
 ) {
     val lazyListState = rememberLazyListState()
-
     val scope = rememberCoroutineScope()
 
     BackHandler(

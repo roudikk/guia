@@ -3,7 +3,6 @@ package com.roudikk.navigator.compose.backstack
 import android.app.Application
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.Saver
@@ -111,41 +110,47 @@ internal class BackStackManager(
         val destinations = navigationState.currentStack.destinations
         val currentDestination = destinations.last()
 
-        BackStackEntryGroup(
-            screenEntry = destinations.lastOrNull { it.navigationNode is Screen }
-                ?.let(::createBackStackEntry),
-            dialogEntry = currentDestination.takeIf { it.navigationNode is Dialog }
-                ?.let(::createBackStackEntry),
-            bottomSheetEntry = destinations.lastOrNull { it.navigationNode is BottomSheet }
-                .takeIf {
-                    currentDestination == it || (destinations.last().navigationNode is Dialog &&
-                            destinations.getOrNull(destinations.lastIndex - 1) == it)
-                }
-                ?.let(::createBackStackEntry)
-        ).also { backStackEntryGroup ->
-            backStackEntries.values
-                .filter { it !in backStackEntryGroup.entries }
-                .forEach {
-                    it.maxLifecycleState = minOf(it.maxLifecycleState, Lifecycle.State.STARTED)
-                }
+        val screenEntry = destinations.lastOrNull { it.navigationNode is Screen }?.let(::createBackStackEntry)
+        val dialogEntry = currentDestination.takeIf { it.navigationNode is Dialog }?.let(::createBackStackEntry)
+        val bottomSheetEntry = destinations.lastOrNull { it.navigationNode is BottomSheet }.takeIf {
+            if (currentDestination == it) return@takeIf true
 
-            backStackEntryGroup.entries
-                .forEach {
-                    if ((currentDestination.navigationNode is Dialog
-                                && destinations.getOrNull(destinations.lastIndex - 1)?.navigationNode !is Dialog) ||
-                        currentDestination.navigationNode is BottomSheet
-                        && destinations.getOrNull(destinations.lastIndex - 1)?.navigationNode !is BottomSheet
-                    ) {
-                        if (it.id == navigator.currentState.currentStack.destinations.last().id) {
-                            it.maxLifecycleState = Lifecycle.State.RESUMED
-                        } else {
-                            it.maxLifecycleState = Lifecycle.State.STARTED
-                        }
-                    } else {
-                        it.maxLifecycleState = Lifecycle.State.STARTED
-                    }
+            val bottomSheetIndex = destinations.indexOf(it)
+            val destinationsAfter = destinations.subList(bottomSheetIndex + 1, destinations.size)
+            val onlyDialogsAfter = destinationsAfter.all { destination -> destination.navigationNode is Dialog }
+
+            onlyDialogsAfter
+        }?.let(::createBackStackEntry)
+
+        val backStackEntryGroup = BackStackEntryGroup(
+            screenEntry = screenEntry,
+            dialogEntry = dialogEntry,
+            bottomSheetEntry = bottomSheetEntry
+        )
+
+        backStackEntries.values
+            .filter { it !in backStackEntryGroup.entries }
+            .forEach { it.maxLifecycleState = minOf(it.maxLifecycleState, Lifecycle.State.STARTED) }
+
+        val goingToDialog = currentDestination.navigationNode is Dialog
+                && destinations.getOrNull(destinations.lastIndex - 1)?.navigationNode !is Dialog
+
+        val goingToBottomSheet = currentDestination.navigationNode is BottomSheet
+                && destinations.getOrNull(destinations.lastIndex - 1)?.navigationNode !is BottomSheet
+
+        backStackEntryGroup.entries.forEach {
+            if (goingToDialog || goingToBottomSheet) {
+                if (it.id == currentDestination.id) {
+                    it.maxLifecycleState = Lifecycle.State.RESUMED
+                } else {
+                    it.maxLifecycleState = Lifecycle.State.STARTED
                 }
+            } else {
+                it.maxLifecycleState = Lifecycle.State.STARTED
+            }
         }
+
+        backStackEntryGroup
     }
 
     init {

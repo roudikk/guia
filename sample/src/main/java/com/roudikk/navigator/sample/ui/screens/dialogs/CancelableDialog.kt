@@ -20,14 +20,10 @@ import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class CancelableDialog(
-    private val showNextButton: Boolean
-) : Dialog {
+class CancelableDialog(private val showNextButton: Boolean) : Dialog {
 
     @Composable
-    override fun Content() {
-        CancelableDialogContent(showNextButton = showNextButton)
-    }
+    override fun Content() = CancelableDialogContent(showNextButton = showNextButton)
 }
 
 @Composable

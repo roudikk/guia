@@ -34,9 +34,7 @@ class BlockingBottomSheet : BottomSheet {
         )
 
     @Composable
-    override fun Content() {
-        BlockingBottomSheetContent()
-    }
+    override fun Content() = BlockingBottomSheetContent()
 }
 
 @Composable
@@ -50,7 +48,7 @@ private fun BlockingBottomSheetContent() {
 
         Text(
             text = "Only thing you can do is hit the back button, but that won't go back to the dialogs screen" +
-                " if the below switch is turned on. Toggle it on/off to enable/disable back press."
+                    " if the below switch is turned on. Toggle it on/off to enable/disable back press."
         )
 
         Spacer(modifier = Modifier.size(16.dp))
