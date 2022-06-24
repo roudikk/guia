@@ -18,6 +18,7 @@ Navigator tailored to work nicely with composable screens.
 1. [Installation](#installation)
 2. [Navigation Nodes](#navigation-nodes)  
     1. [Lifecycle](#lifecycle)
+    2. [Reusing NavigatioNode](#reuse-navigation-node)
 3. [Navigator](#navigator)
 4. [NavContainer](#nav-container)
 5. [Navigation Operations](#navigation-operations)
@@ -152,6 +153,14 @@ fun NavigationNode.LifecycleEffect(
     onDestroy: () -> Unit = {}
 )
 ```
+
+### Reusing Navigation Nodes <a name="reuse-navigation-node"/>
+
+A `NavigationNode` can be a `Screen`, `Dialog` and a `BottomSheet` at the same time! 
+
+To decide which type it is when navigation, use `NavigationNode.asScreen()/asDialog()/asBottomSheet()`.
+
+Please note that if a `NavigationNode` does support multiple types then you must use the `asX()` when navigating, otherwise the navigator will not know which type you want and might result in weird behavior.
 
 ## Navigator <a name="navigator"/>
 
