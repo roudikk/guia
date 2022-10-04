@@ -2,18 +2,56 @@
 
 package com.roudikk.navigator
 
-import androidx.compose.animation.*
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.shrinkOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOut
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import com.google.common.truth.Truth.assertThat
-import com.roudikk.navigator.animation.*
-import com.roudikk.navigator.animation.transitions.*
+import com.roudikk.navigator.animation.NavAlignment
+import com.roudikk.navigator.animation.NavEasing
+import com.roudikk.navigator.animation.NavIntOffset
+import com.roudikk.navigator.animation.navSnap
+import com.roudikk.navigator.animation.navSpring
+import com.roudikk.navigator.animation.navTween
+import com.roudikk.navigator.animation.transitions.navExpandHorizontally
+import com.roudikk.navigator.animation.transitions.navExpandIn
+import com.roudikk.navigator.animation.transitions.navExpandVertically
+import com.roudikk.navigator.animation.transitions.navFadeIn
+import com.roudikk.navigator.animation.transitions.navFadeOut
+import com.roudikk.navigator.animation.transitions.navScaleIn
+import com.roudikk.navigator.animation.transitions.navScaleOut
+import com.roudikk.navigator.animation.transitions.navShrinkHorizontally
+import com.roudikk.navigator.animation.transitions.navShrinkOut
+import com.roudikk.navigator.animation.transitions.navShrinkVertically
+import com.roudikk.navigator.animation.transitions.navSlideIn
+import com.roudikk.navigator.animation.transitions.navSlideInHorizontally
+import com.roudikk.navigator.animation.transitions.navSlideInVertically
+import com.roudikk.navigator.animation.transitions.navSlideOut
+import com.roudikk.navigator.animation.transitions.navSlideOutHorizontally
+import com.roudikk.navigator.animation.transitions.navSlideOutVertically
 import org.junit.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.reflect.full.memberProperties
@@ -328,20 +366,20 @@ class NavigationTransitionsTest {
     fun `Combined nav enter transitions maps to combined compose transitions`() {
 
         val navTransition = (
-                navFadeIn() + navScaleIn() +
-                        navExpandIn(expandFrom = NavAlignment.Center) { it } +
-                        navSlideIn {
-                            NavIntOffset(
-                                it.width,
-                                it.height
-                            )
-                        }
-                )
+            navFadeIn() + navScaleIn() +
+                navExpandIn(expandFrom = NavAlignment.Center) { it } +
+                navSlideIn {
+                    NavIntOffset(
+                        it.width,
+                        it.height
+                    )
+                }
+            )
             .toComposeEnterTransition()
 
         val composeTransition = fadeIn() + scaleIn() +
-                expandIn(expandFrom = Alignment.Center) { it } +
-                slideIn { IntOffset(it.width, it.height) }
+            expandIn(expandFrom = Alignment.Center) { it } +
+            slideIn { IntOffset(it.width, it.height) }
 
         assertThat(enterDataField.get(composeTransition).toString())
             .isEqualTo(enterDataField.get(navTransition).toString())
@@ -351,20 +389,20 @@ class NavigationTransitionsTest {
     fun `Combined nav exit transitions maps to combined compose transitions`() {
 
         val navTransition = (
-                navFadeOut() + navScaleOut() +
-                        navShrinkOut(shrinkTowards = NavAlignment.Center) { it } +
-                        navSlideOut {
-                            NavIntOffset(
-                                it.width,
-                                it.height
-                            )
-                        }
-                )
+            navFadeOut() + navScaleOut() +
+                navShrinkOut(shrinkTowards = NavAlignment.Center) { it } +
+                navSlideOut {
+                    NavIntOffset(
+                        it.width,
+                        it.height
+                    )
+                }
+            )
             .toComposeExitTransition()
 
         val composeTransition = fadeOut() + scaleOut() +
-                shrinkOut(shrinkTowards = Alignment.Center) { it } +
-                slideOut { IntOffset(it.width, it.height) }
+            shrinkOut(shrinkTowards = Alignment.Center) { it } +
+            slideOut { IntOffset(it.width, it.height) }
 
         assertThat(exitDataField.get(composeTransition).toString())
             .isEqualTo(exitDataField.get(navTransition).toString())

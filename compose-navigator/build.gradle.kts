@@ -1,15 +1,16 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 
-val composeVersion = "1.1.1"
-val composeActivityVersion = "1.5.0-rc01"
-val kotlinCoroutinesVersion = "1.6.0"
-val kotlinVersion = "1.6.10"
+val composeVersion = "1.3.0-beta03"
+val composeCompilerVersion = "1.3.1"
+val composeActivityVersion = "1.6.0"
+val kotlinCoroutinesVersion = "1.6.4"
+val kotlinVersion = "1.7.10"
 val junit4Version = "4.13.2"
 val junit5Version = "5.8.2"
 val truthVersion = "1.1.3"
-val detektVersion = "1.20.0"
-val viewModelVersion = "2.5.0-rc01"
+val detektVersion = "1.21.0"
+val viewModelVersion = "2.5.1"
 
 plugins {
     id("com.android.library")
@@ -20,11 +21,11 @@ plugins {
 }
 
 android {
-    compileSdk = 32
+    compileSdk = 33
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 32
+        targetSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -50,7 +51,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = composeVersion
+        kotlinCompilerExtensionVersion = composeCompilerVersion
     }
 
     buildFeatures {

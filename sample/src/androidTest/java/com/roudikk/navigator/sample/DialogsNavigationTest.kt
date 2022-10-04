@@ -1,7 +1,11 @@
 package com.roudikk.navigator.sample
 
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.isToggleable
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import com.roudikk.navigator.core.NavigationNode.Companion.key
 import com.roudikk.navigator.sample.ui.screens.dialogs.BlockingBottomSheet
 import com.roudikk.navigator.sample.ui.screens.dialogs.BlockingDialog
@@ -21,7 +25,7 @@ class DialogsNavigationTest {
         rule.navigateDialogsTab()
         rule.onNodeWithText("Cancelable Dialog").performClick()
         rule.onNodeWithTag(key<CancelableDialog>()).assertIsDisplayed()
-        rule.activity.onBackPressed()
+        rule.activity.onBackPressedDispatcher.onBackPressed()
         rule.onNodeWithTag(key<CancelableDialog>()).assertDoesNotExist()
         rule.onNodeWithTag(key<DialogsScreen>()).assertIsDisplayed()
     }
@@ -35,7 +39,7 @@ class DialogsNavigationTest {
         // instead give it some time to display first
         rule.mainClock.autoAdvance = false
         rule.mainClock.advanceTimeBy(100)
-        rule.activity.onBackPressed()
+        rule.activity.onBackPressedDispatcher.onBackPressed()
         rule.onNodeWithTag(key<BlockingDialog>()).assertIsDisplayed()
     }
 
@@ -57,11 +61,11 @@ class DialogsNavigationTest {
         rule.navigateDialogsTab()
         rule.onNodeWithText("Blocking Bottom Sheet").performClick()
         rule.onNodeWithTag(key<BlockingBottomSheet>()).assertIsDisplayed()
-        rule.activity.onBackPressed()
+        rule.activity.onBackPressedDispatcher.onBackPressed()
         rule.onNodeWithTag(key<BlockingBottomSheet>()).assertIsDisplayed()
         rule.onNode(isToggleable()).performClick()
         rule.waitForIdle()
-        rule.activity.onBackPressed()
+        rule.activity.onBackPressedDispatcher.onBackPressed()
         rule.onNodeWithTag(key<BlockingBottomSheet>()).assertDoesNotExist()
         rule.onNodeWithTag(key<DialogsScreen>()).assertIsDisplayed()
     }

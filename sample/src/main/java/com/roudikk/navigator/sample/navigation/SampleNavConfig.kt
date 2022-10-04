@@ -7,7 +7,7 @@ import com.roudikk.navigator.core.BackStackStrategy
 import com.roudikk.navigator.core.NavigationConfig
 import com.roudikk.navigator.sample.ui.screens.dialogs.DialogsScreen
 import com.roudikk.navigator.sample.ui.screens.home.HomeScreen
-import com.roudikk.navigator.sample.ui.screens.navigation_tree.NavigationTreeScreen
+import com.roudikk.navigator.sample.ui.screens.navigationtree.NavigationTreeScreen
 import com.roudikk.navigator.sample.ui.screens.nested.NestedScreen
 import com.roudikk.navigator.sample.ui.screens.nested.ParentNestedScreen
 import com.roudikk.navigator.sample.ui.screens.welcome.WelcomeScreen

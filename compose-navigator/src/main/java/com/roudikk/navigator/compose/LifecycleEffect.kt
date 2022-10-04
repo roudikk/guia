@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.roudikk.navigator.compose
 
 import androidx.compose.runtime.Composable

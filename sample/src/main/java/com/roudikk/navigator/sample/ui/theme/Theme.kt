@@ -4,10 +4,14 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.google.accompanist.insets.ProvideWindowInsets
 import androidx.compose.material.MaterialTheme as MaterialTheme2
 
 private val LightThemeColors = lightColorScheme(
@@ -71,7 +75,7 @@ fun AppTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     useDynamicColorScheme: Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S,
     content: @Composable () -> Unit
-) = ProvideWindowInsets {
+) {
     val context = LocalContext.current
 
     val colors = when {
@@ -114,7 +118,6 @@ fun AppTheme(
             colorScheme = colors,
             typography = AppTypography,
         ) {
-
             Surface(content = content)
         }
     }
