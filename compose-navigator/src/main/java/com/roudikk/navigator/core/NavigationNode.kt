@@ -2,15 +2,18 @@ package com.roudikk.navigator.core
 
 import android.os.Parcelable
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.roudikk.navigator.Navigator
 import kotlinx.parcelize.Parcelize
+import kotlin.reflect.KClass
 
 /**
  * Represents a navigation node in the navigation tree.
@@ -41,6 +44,14 @@ sealed interface NavigationNode : Parcelable {
     companion object {
         inline fun <reified T : NavigationNode> key(): String = T::class.java.name
         inline fun <reified T : NavigationNode> resultsKey() = "${key<T>()}_Results"
+
+        inline fun <reified T : NavigationNode> bottomSheetKey() = bottomSheetKey(T::class)
+        fun <T : NavigationNode> bottomSheetKey(kClass: KClass<T>) =
+            "${kClass.java.name}_BottomSheet"
+
+        inline fun <reified T : NavigationNode> dialogKey() = dialogKey(T::class)
+        fun <T : NavigationNode> dialogKey(kClass: KClass<T>) =
+            "${kClass.java.name}_Dialog"
     }
 
     /**
@@ -83,7 +94,11 @@ interface BottomSheet : NavigationNode {
  */
 fun NavigationNode.asBottomSheet(): BottomSheet {
     require(this is BottomSheet) { "NavigationNode: $this is not a BottomSheet, make sure it implements a BottomSheet" }
-    return object : BottomSheet by this {}
+    val key = NavigationNode.bottomSheetKey(this::class)
+    return object : BottomSheet by this {
+        override val key: String
+            get() = key
+    }
 }
 
 /**
@@ -92,7 +107,11 @@ fun NavigationNode.asBottomSheet(): BottomSheet {
  */
 fun NavigationNode.asScreen(): Screen {
     require(this is Screen) { "NavigationNode: $this is not a Screen, make sure it implements a Screen" }
-    return object : Screen by this {}
+    val key = this::class.java.name
+    return object : Screen by this {
+        override val key: String
+            get() = key
+    }
 }
 
 /**
@@ -101,7 +120,11 @@ fun NavigationNode.asScreen(): Screen {
  */
 fun NavigationNode.asDialog(): Dialog {
     require(this is Dialog) { "NavigationNode: $this is not a Dialog, make sure it implements a Dialog" }
-    return object : Dialog by this {}
+    val key = NavigationNode.dialogKey(this::class)
+    return object : Dialog by this {
+        override val key: String
+            get() = key
+    }
 }
 
 /**
@@ -116,7 +139,15 @@ data class DialogOptions(
     val modifier: Modifier = Modifier.widthIn(max = 300.dp),
     val dismissOnClickOutside: Boolean = true,
     val dismissOnBackPress: Boolean = true,
-    val securePolicy: SecureFlagPolicy = SecureFlagPolicy.Inherit,
+    val securePolicy: SecureFlagPolicy = SecureFlagPolicy.SecureOn,
+)
+
+@OptIn(ExperimentalComposeUiApi::class)
+fun DialogOptions.toDialogProperties() = DialogProperties(
+    dismissOnBackPress = dismissOnBackPress,
+    dismissOnClickOutside = dismissOnClickOutside,
+    securePolicy = securePolicy,
+    usePlatformDefaultWidth = false
 )
 
 /**
@@ -129,7 +160,7 @@ data class DialogOptions(
 @OptIn(ExperimentalMaterialApi::class)
 data class BottomSheetOptions(
     val modifier: Modifier = Modifier,
-    val confirmStateChange: (state: ModalBottomSheetValue) -> Boolean = { true }
+    val confirmStateChange: (state: BottomSheetValue) -> Boolean = { true }
 )
 
 /**

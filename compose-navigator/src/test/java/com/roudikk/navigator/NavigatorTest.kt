@@ -14,8 +14,19 @@ import com.roudikk.navigator.animation.NavEnterTransition
 import com.roudikk.navigator.animation.NavExitTransition
 import com.roudikk.navigator.animation.NavTransition
 import com.roudikk.navigator.animation.to
-import com.roudikk.navigator.animation.transitions.*
-import com.roudikk.navigator.core.*
+import com.roudikk.navigator.animation.transitions.navExpandIn
+import com.roudikk.navigator.animation.transitions.navFadeIn
+import com.roudikk.navigator.animation.transitions.navFadeOut
+import com.roudikk.navigator.animation.transitions.navShrinkOut
+import com.roudikk.navigator.animation.transitions.navSlideInHorizontally
+import com.roudikk.navigator.animation.transitions.navSlideOutHorizontally
+import com.roudikk.navigator.core.BackStackStrategy
+import com.roudikk.navigator.core.DefaultStackKey
+import com.roudikk.navigator.core.NavHistoryEntry
+import com.roudikk.navigator.core.NavigationConfig
+import com.roudikk.navigator.core.NavigationNode
+import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.core.StackKey
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -43,7 +54,7 @@ class NavigatorTest {
         @Composable
         override fun Content() = error("")
         override fun describeContents(): Int = error("")
-        override fun writeToParcel(p0: Parcel?, p1: Int) = error("")
+        override fun writeToParcel(dest: Parcel, flags: Int) = error("")
     }
 
     @Before

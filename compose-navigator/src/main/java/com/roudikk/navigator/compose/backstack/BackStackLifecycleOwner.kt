@@ -4,7 +4,14 @@ import android.app.Application
 import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.SaveableStateHolder
-import androidx.lifecycle.*
+import androidx.lifecycle.HasDefaultViewModelProviderFactory
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.SavedStateViewModelFactory
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner

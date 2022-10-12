@@ -3,22 +3,35 @@ package com.roudikk.navigator.compose.backstack
 import android.app.Application
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.compose.runtime.*
+import android.util.Log
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSavedStateRegistryOwner
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistry
 import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.compose.NavContainer
-import com.roudikk.navigator.core.*
-import kotlinx.parcelize.Parcelize
+import com.roudikk.navigator.core.BottomSheet
+import com.roudikk.navigator.core.Destination
+import com.roudikk.navigator.core.Dialog
+import com.roudikk.navigator.core.Screen
 import java.util.*
+import kotlinx.parcelize.Parcelize
 
 @Composable
 internal fun rememberBackStackManager(navigator: Navigator): BackStackManager {

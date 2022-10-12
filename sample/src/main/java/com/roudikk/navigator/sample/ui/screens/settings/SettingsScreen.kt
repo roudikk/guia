@@ -5,13 +5,24 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,7 +34,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.navigationBarsPadding
 import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.compose.LocalNavigationAnimation
 import com.roudikk.navigator.compose.requireNavigator
@@ -69,10 +79,12 @@ private fun SettingsContent(
                 }
             )
         },
-    ) {
+    ) { padding ->
 
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             LazyColumn(
@@ -91,15 +103,17 @@ private fun SettingsContent(
 
                 item {
                     Text(
-                        text = "The main difference is that, unlike navigation component, destinations don't"
-                                + " need to be declared beforehand with their transitions (With Accompanist navigation transitions). "
+                        text = "The main difference is that, unlike navigation component, destinations don't" +
+                                " need to be declared beforehand with their transitions " +
+                                "(With Accompanist navigation transitions). "
                     )
                 }
 
                 item {
                     Text(
                         text = "Compose navigator also supports dialog and bottom sheet navigation out of the box. " +
-                                "A navigation node can be defined by simply extending any of Screen, Dialog or BottomSheet"
+                                "A navigation node can be defined by simply extending " +
+                                "any of Screen, Dialog or BottomSheet"
                     )
                 }
 

@@ -29,7 +29,7 @@ class WelcomeNavigationTest {
 
         rule.mainClock.autoAdvance = true
         rule.onNodeWithTag(key<HomeScreen>()).assertIsDisplayed()
-        rule.activity.onBackPressed()
+        rule.activity.onBackPressedDispatcher.onBackPressed()
 
         rule.mainClock.autoAdvance = false
         rule.mainClock.advanceTimeBy(100)
@@ -49,9 +49,9 @@ class WelcomeNavigationTest {
         rule.onNodeWithTag(key<HomeScreen>()).assertIsDisplayed()
 
         try {
-            rule.activity.onBackPressed()
+            rule.activity.onBackPressedDispatcher.onBackPressed()
             assert(false)
-        } catch (exception: Exception) {
+        } catch (_: Exception) {
             assert(true)
         }
     }

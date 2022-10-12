@@ -1,27 +1,46 @@
-package com.roudikk.navigator.sample.ui.screens.navigation_tree
+package com.roudikk.navigator.sample.ui.screens.navigationtree
 
 import android.content.res.Configuration
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.statusBarsHeight
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -52,13 +71,16 @@ class NavigationTreeScreen : Screen {
 private fun NavigationTreeContent(
     navigator: Navigator = requireNavigator()
 ) {
-    val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp.dp
     val lazyListState = rememberLazyListState()
+    val elevation by remember {
+        derivedStateOf {
+            if (lazyListState.firstVisibleItemIndex > 0 ||
+                lazyListState.firstVisibleItemScrollOffset > 0
+            ) 4.dp else 0.dp
+        }
+    }
     val animatedElevation by animateDpAsState(
-        targetValue = if (lazyListState.firstVisibleItemIndex > 0 ||
-            lazyListState.firstVisibleItemScrollOffset > 0
-        ) 4.dp else 0.dp
+        targetValue = elevation
     )
 
     Scaffold(
@@ -67,8 +89,8 @@ private fun NavigationTreeContent(
                 tonalElevation = animatedElevation
             ) {
                 Column {
-                    Spacer(modifier = Modifier.statusBarsHeight())
-                    SmallTopAppBar(
+                    Spacer(modifier = Modifier.statusBarsPadding())
+                    TopAppBar(
                         title = {
                             Text(
                                 text = "Navigation Tree"
@@ -78,7 +100,7 @@ private fun NavigationTreeContent(
                 }
             }
         }
-    ) {
+    ) { padding ->
         val scope = rememberCoroutineScope()
         val pagerState = rememberPagerState()
         val state by navigator.stateFlow.collectAsState()
@@ -86,7 +108,7 @@ private fun NavigationTreeContent(
         val stacks = state.navigationStacks.filter { it.key != SampleStackKey.StackTree }
             .map { it.key to it.destinations }
 
-        Column {
+        Column(modifier = Modifier.padding(padding)) {
             TabRow(
                 backgroundColor = MaterialTheme.colorScheme.surface,
                 selectedTabIndex = pagerState.currentPage,
@@ -120,34 +142,38 @@ private fun NavigationTreeContent(
             ) { page ->
                 val stack = stacks[page]
 
-                Grid(
+                LazyVerticalGrid(
                     modifier = Modifier
                         .fillMaxSize(),
-                    columnCount = if (screenWidth > 600.dp) 4 else 2,
-                    list = stack.second
-                ) { destination ->
-                    Box(
-                        Modifier
-                            .weight(1F)
-                            .aspectRatio(9F / 16F)
-                            .clip(RoundedCornerShape(2.dp))
-                            .background(MaterialTheme.colorScheme.primary)
-                            .padding(2.dp)
-                    ) {
+                    columns = GridCells.Adaptive(100.dp),
+                    contentPadding = PaddingValues(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    items(stack.second) { destination ->
                         Box(
                             Modifier
+                                .sizeIn(minWidth = 100.dp)
+                                .aspectRatio(9F / 16F)
                                 .clip(RoundedCornerShape(2.dp))
+                                .background(MaterialTheme.colorScheme.primary)
+                                .padding(2.dp)
                         ) {
-                            CompositionLocalProvider(
-                                LocalDensity provides object : Density by LocalDensity.current {
-                                    override val density: Float = 1.5f
-                                    override val fontScale: Float = 1f
-                                }
+                            Box(
+                                Modifier
+                                    .clip(RoundedCornerShape(2.dp))
                             ) {
-                                androidx.compose.animation.AnimatedVisibility(
-                                    visible = true
+                                CompositionLocalProvider(
+                                    LocalDensity provides object : Density by LocalDensity.current {
+                                        override val density: Float = 1.5f
+                                        override val fontScale: Float = 1f
+                                    }
                                 ) {
-                                    with(destination.navigationNode) { Content() }
+                                    androidx.compose.animation.AnimatedVisibility(
+                                        visible = true
+                                    ) {
+                                        with(destination.navigationNode) { Content() }
+                                    }
                                 }
                             }
                         }
@@ -155,52 +181,6 @@ private fun NavigationTreeContent(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun <T> Grid(
-    modifier: Modifier = Modifier,
-    columnCount: Int = 1,
-    list: List<T>,
-    child: @Composable RowScope.(data: T) -> Unit
-) {
-    val rows = (list.size / columnCount) + (if (list.size % columnCount > 0) 1 else 0)
-    var listSize = list.size
-    var extraItems = 0
-    while (listSize > 0 && listSize % columnCount != 0) {
-        extraItems++
-        listSize++
-    }
-
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
-    ) {
-        for (row in 0 until rows) {
-            Row(
-                modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                for (cell in 0 until columnCount) {
-                    val rowIndex = (row * columnCount) + cell
-                    if (rowIndex < list.size) {
-                        child(list[rowIndex])
-                    } else {
-                        break
-                    }
-                }
-
-                if (row == rows - 1) {
-                    for (i in 0 until extraItems) {
-                        Box(Modifier.weight(1f))
-                    }
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.size(16.dp))
     }
 }
 

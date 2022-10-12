@@ -5,7 +5,11 @@ package com.roudikk.navigator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.junit4.StateRestorationTester
 import androidx.compose.ui.test.junit4.createComposeRule
-import com.roudikk.navigator.core.*
+import com.roudikk.navigator.core.BackStackStrategy
+import com.roudikk.navigator.core.EmptyNavigationNode
+import com.roudikk.navigator.core.NavigationConfig
+import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.core.StackKey
 import kotlinx.parcelize.Parcelize
 import org.junit.Rule
 import org.junit.Test
@@ -16,8 +20,7 @@ class RememberNavigatorTest {
     open class TestScreen : Screen {
 
         @Composable
-        override fun Content() {
-        }
+        override fun Content() = Unit
     }
 
     @get:Rule
@@ -39,8 +42,10 @@ class RememberNavigatorTest {
                 navigator.navigate(screen2)
                 initialized = true
             } else {
-                assert(navigator.currentState.currentStack.destinations.map { it.navigationNode } ==
-                        listOf(EmptyNavigationNode, screen1, screen2))
+                assert(
+                    navigator.currentState.currentStack.destinations.map { it.navigationNode } ==
+                        listOf(EmptyNavigationNode, screen1, screen2)
+                )
             }
         }
         stateRestorationTester.emulateSavedInstanceStateRestore()
@@ -82,19 +87,22 @@ class RememberNavigatorTest {
                 initialized = true
             } else {
                 assert(navigator.currentState.currentStackKey == stackEntries[1].key)
-                assert(navigator.currentState.navigationStacks[0].destinations.map { it.navigationNode } ==
+                assert(
+                    navigator.currentState.navigationStacks[0].destinations.map { it.navigationNode } ==
                         listOf(
                             stackEntries[0].initialNavigationNode,
                             screens[0], screens[1], screens[2]
                         )
                 )
-                assert(navigator.currentState.navigationStacks[1].destinations.map { it.navigationNode } ==
+                assert(
+                    navigator.currentState.navigationStacks[1].destinations.map { it.navigationNode } ==
                         listOf(
                             stackEntries[1].initialNavigationNode,
                             screens[3], screens[4], screens[5]
                         )
                 )
-                assert(navigator.currentState.navigationStacks[2].destinations.map { it.navigationNode } ==
+                assert(
+                    navigator.currentState.navigationStacks[2].destinations.map { it.navigationNode } ==
                         listOf(
                             stackEntries[2].initialNavigationNode,
                             screens[6], screens[7], screens[8], screens[9]

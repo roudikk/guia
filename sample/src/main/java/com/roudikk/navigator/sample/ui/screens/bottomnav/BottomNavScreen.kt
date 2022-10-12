@@ -2,13 +2,18 @@ package com.roudikk.navigator.sample.ui.screens.bottomnav
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountTree
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.StackedBarChart
 import androidx.compose.material.icons.filled.Window
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -19,8 +24,6 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.accompanist.insets.navigationBarsHeight
-import com.google.accompanist.insets.navigationBarsPadding
 import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.compose.NavContainer
 import com.roudikk.navigator.core.Screen
@@ -74,19 +77,16 @@ class BottomNavScreen : Screen {
 private fun BottomNavContent(
     bottomTabNavigator: Navigator
 ) {
-
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        bottomBar = {
-            BottomNavigation(bottomTabNavigator)
-        }
-    ) { paddingValues ->
-
+        modifier = Modifier
+            .fillMaxSize(),
+        bottomBar = { BottomNavigation(bottomTabNavigator) }
+    ) { padding ->
         NavContainer(
+            modifier = Modifier.padding(bottom = 80.dp),
             navigator = bottomTabNavigator,
-            modifier = Modifier.padding(paddingValues),
             bottomSheetOptions = sampleBottomSheetOptions(
-                Modifier.padding(paddingValues)
+                Modifier.padding(padding)
             )
         )
     }
@@ -96,10 +96,7 @@ private fun BottomNavContent(
 private fun BottomNavigation(navigator: Navigator) {
     val currentStackKey by navigator.currentStackKeyFlow.collectAsState()
 
-    NavigationBar(
-        modifier = Modifier
-            .navigationBarsHeight(80.dp)
-    ) {
+    NavigationBar {
         NavigationBarItem(
             modifier = Modifier
                 .navigationBarsPadding()

@@ -4,7 +4,6 @@ import android.os.Parcelable
 import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.animation.NavEnterExitTransition
 import com.roudikk.navigator.animation.NavTransition
-import com.roudikk.navigator.animation.to
 import kotlinx.parcelize.Parcelize
 
 /**

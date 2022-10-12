@@ -5,17 +5,13 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.with
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.roudikk.navigator.animation.NavEnterExitTransition
 import com.roudikk.navigator.compose.backstack.BackStackEntry
 import com.roudikk.navigator.core.Dialog
+import com.roudikk.navigator.core.toDialogProperties
 
-@OptIn(
-    ExperimentalComposeUiApi::class,
-    ExperimentalAnimationApi::class
-)
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun DialogContainer(
     dialogEntry: BackStackEntry,
@@ -27,15 +23,7 @@ internal fun DialogContainer(
 
     Dialog(
         onDismissRequest = onDismissRequest,
-        properties = with(dialog.dialogOptions) {
-            DialogProperties(
-                dismissOnBackPress = dismissOnBackPress,
-                dismissOnClickOutside = dismissOnClickOutside,
-                securePolicy = securePolicy,
-                // This is used because there's a bug with updating content of a Dialog
-                usePlatformDefaultWidth = false,
-            )
-        }
+        properties = dialog.dialogOptions.toDialogProperties()
     ) {
         AnimatedContent(
             targetState = dialogEntry,

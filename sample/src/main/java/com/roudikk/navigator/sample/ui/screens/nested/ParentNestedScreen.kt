@@ -69,10 +69,12 @@ private fun ParentNestedContent(nestedNavigator: Navigator) {
         topBar = {
             AppTopAppBar(title = "Nested Navigation")
         }
-    ) {
+    ) { padding ->
 
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

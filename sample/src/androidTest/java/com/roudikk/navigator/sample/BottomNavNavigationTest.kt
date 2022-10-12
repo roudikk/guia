@@ -7,7 +7,7 @@ import androidx.compose.ui.test.performClick
 import com.roudikk.navigator.core.NavigationNode.Companion.key
 import com.roudikk.navigator.sample.ui.screens.dialogs.DialogsScreen
 import com.roudikk.navigator.sample.ui.screens.home.HomeScreen
-import com.roudikk.navigator.sample.ui.screens.navigation_tree.NavigationTreeScreen
+import com.roudikk.navigator.sample.ui.screens.navigationtree.NavigationTreeScreen
 import com.roudikk.navigator.sample.ui.screens.nested.ParentNestedScreen
 import com.roudikk.navigator.sample.utils.navigateHome
 import org.junit.Rule
