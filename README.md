@@ -39,7 +39,7 @@ Navigator tailored to work nicely with composable screens.
 
 ```gradle
 dependencies {
-    implementation("com.roudikk.compose-navigator:compose-navigator:2.0.0")
+    implementation("com.roudikk.compose-navigator:compose-navigator:2.0.2")
 }
 ```
 For proguard rules check [consumer-rules.pro](https://github.com/roudikk/compose-navigator/blob/master/compose-navigator/consumer-rules.pro)
@@ -491,7 +491,7 @@ override fun Content() {
 `rememberNavigator` has an `initializer` argument which can be used to initialize the state of the navigator, this can be used
 to start the navigator with navigation nodes given the initial activity's intent.
 
-For more details on how deeplinking can be implemented check [DeepLinkViewModel](https://github.com/roudikk/compose-navigator/blob/wip-2.0.0/sample/src/main/java/com/roudikk/navigator/sample/DeepLinkViewModel.kt)
+For more details on how deeplinking can be implemented check [DeepLinkViewModel](https://github.com/roudikk/compose-navigator/blob/master/sample/src/main/java/com/roudikk/navigator/sample/DeepLinkViewModel.kt)
 
 ## ViewModels <a name="view-models"/>
 
