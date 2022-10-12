@@ -1,18 +1,19 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 
-val composeVersion = "1.1.1"
-val accompanistVersion = "0.23.1"
+val composeVersion = "1.3.0-beta03"
+val composeCompilerVersion = "1.3.1"
+val accompanistVersion = "0.25.1"
 val lottieVersion = "5.1.1"
-val kotlinCoroutinesVersion = "1.6.0"
-val activityComposeVersion = "1.5.0-rc01"
-val viewModelComposeVersion = "2.5.0-rc01"
-val composeMaterial3Version = "1.0.0-alpha08"
+val kotlinCoroutinesVersion = "1.6.4"
+val activityComposeVersion = "1.6.0"
+val viewModelVersion = "2.5.1"
+val composeMaterial3Version = "1.0.0-beta03"
 val junitVersion = "4.13.2"
-val jupiterVersion = "5.8.2"
+val jupiterVersion = "5.9.1"
 val truthVersion = "1.1.3"
-val materialVersion = "1.6.0"
-val detektVersion = "1.20.0"
+val materialVersion = "1.7.0-rc01"
+val detektVersion = "1.21.0"
 
 plugins {
     id("com.android.application")
@@ -44,12 +45,12 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 android {
-    compileSdk = 32
+    compileSdk = 33
 
     defaultConfig {
         applicationId = "com.roudikk.navigator.sample"
         minSdk = 24
-        targetSdk = 32
+        targetSdk = 33
         versionCode = 3
         versionName = "1.2"
         signingConfig = signingConfigs.getByName("debug")
@@ -74,7 +75,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = composeVersion
+        kotlinCompilerExtensionVersion = composeCompilerVersion
     }
     namespace = "com.roudikk.navigator.sample"
 }
@@ -94,7 +95,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-core:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.activity:activity-compose:$activityComposeVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$viewModelComposeVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$viewModelVersion")
     implementation("androidx.compose.material3:material3:$composeMaterial3Version")
 
     // Accompanist
@@ -119,7 +120,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:$jupiterVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
     testImplementation("com.google.truth:truth:$truthVersion")
-    implementation("androidx.navigation:navigation-compose:2.4.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0-beta01")
 }
 
 detekt {
@@ -133,8 +134,12 @@ tasks.withType<Detekt>().configureEach {
     reports {
         html.required.set(true) // observe findings in your browser with structure and code snippets
         xml.required.set(true) // checkstyle like format mainly for integrations like Jenkins
-        txt.required.set(true) // similar to the console output, contains issue signature to manually edit baseline files
-        sarif.required.set(true) // standardized SARIF format (https://sarifweb.azurewebsites.net/) to support integrations with Github Code Scanning
+        // Similar to the console output, contains issue signature to
+        // manually edit baseline files
+        txt.required.set(true)
+        // Standardized SARIF format (https://sarifweb.azurewebsites.net/)
+        // to support integrations with Github Code Scanning
+        sarif.required.set(true)
     }
 }
 

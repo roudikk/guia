@@ -3,7 +3,12 @@
 package com.roudikk.navigator.animation
 
 import android.os.Parcelable
-import androidx.compose.animation.*
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkOut
+import androidx.compose.animation.slideOut
 import com.roudikk.navigator.core.NavigationNode
 import kotlinx.parcelize.Parcelize
 

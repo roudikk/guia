@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -17,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.animation.NavTransition
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.Screen
 import com.roudikk.navigator.rememberNavigator
@@ -46,10 +48,11 @@ private fun DialogsContent(
                 lazyListState = lazyListState
             )
         }
-    ) {
+    ) { padding ->
 
         LazyColumn(
             modifier = Modifier
+                .padding(padding)
                 .fillMaxWidth(),
             state = lazyListState,
             verticalArrangement = Arrangement.Center,
@@ -95,7 +98,7 @@ private fun DialogsContent(
                     modifier = Modifier
                         .widthIn(min = 300.dp),
                     onClick = {
-                        defaultNavigator.navigate(BlockingBottomSheet())
+                        defaultNavigator.navigate(BlockingBottomSheet(), NavTransition.None)
                     }
                 ) {
                     Text(text = "Blocking Bottom Sheet")

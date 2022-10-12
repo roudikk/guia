@@ -3,7 +3,16 @@
 package com.roudikk.navigator.animation
 
 import android.os.Parcelable
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.AnimationConstants
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.SnapSpec
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.SpringSpec
+import androidx.compose.animation.core.TweenSpec
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import kotlinx.parcelize.Parcelize

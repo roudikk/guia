@@ -2,7 +2,14 @@ package com.roudikk.navigator.sample.navigation
 
 import com.roudikk.navigator.animation.NavTransition
 import com.roudikk.navigator.animation.navTween
-import com.roudikk.navigator.animation.transitions.*
+import com.roudikk.navigator.animation.transitions.navFadeIn
+import com.roudikk.navigator.animation.transitions.navFadeOut
+import com.roudikk.navigator.animation.transitions.navScaleIn
+import com.roudikk.navigator.animation.transitions.navScaleOut
+import com.roudikk.navigator.animation.transitions.navSlideInHorizontally
+import com.roudikk.navigator.animation.transitions.navSlideInVertically
+import com.roudikk.navigator.animation.transitions.navSlideOutHorizontally
+import com.roudikk.navigator.animation.transitions.navSlideOutVertically
 
 val MaterialSharedAxisTransitionX = NavTransition(
     enter = navSlideInHorizontally { (it * 0.2f).toInt() } +

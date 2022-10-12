@@ -8,7 +8,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.systemBarsPadding
 import com.roudikk.navigator.compose.BottomSheetOptions
 
 @Composable
@@ -31,7 +30,6 @@ fun sampleBottomSheetOptions(modifier: Modifier = Modifier) = BottomSheetOptions
         BottomSheetSurface(
             modifier = modifier
                 .padding(16.dp)
-                .systemBarsPadding(bottom = false)
                 .then(nodeModifier),
             content = content
         )

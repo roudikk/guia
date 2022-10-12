@@ -3,10 +3,19 @@ package com.roudikk.navigator
 import android.os.Parcel
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.click
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performTouchInput
 import com.roudikk.navigator.compose.NavContainer
-import com.roudikk.navigator.core.*
+import com.roudikk.navigator.core.BackStackStrategy
+import com.roudikk.navigator.core.BottomSheet
+import com.roudikk.navigator.core.BottomSheetOptions
+import com.roudikk.navigator.core.NavigationConfig
+import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.core.StackKey
 import org.junit.Rule
 import org.junit.Test
 
@@ -26,7 +35,7 @@ class NavContainerTest {
         }
 
         override fun describeContents(): Int = error("")
-        override fun writeToParcel(p0: Parcel?, p1: Int) = error("")
+        override fun writeToParcel(dest: Parcel, flags: Int) = error("")
     }
 
     open class TestBottomSheet(
@@ -41,7 +50,7 @@ class NavContainerTest {
         }
 
         override fun describeContents(): Int = error("")
-        override fun writeToParcel(p0: Parcel?, p1: Int) = error("")
+        override fun writeToParcel(dest: Parcel, flags: Int) = error("")
     }
 
     @Test
@@ -158,8 +167,8 @@ class NavContainerTest {
         rule.onNodeWithText(testScreen.text).assertIsDisplayed()
         rule.onNodeWithText(bottomSheet.text).assertIsDisplayed()
 
-        rule.onNodeWithTag("NavContainerBottomSheet")
-            .performTouchInput { swipeDown() }
+        rule.onNodeWithTag("BottomSheetContainer")
+            .performTouchInput { click() }
 
         rule.onNodeWithText(bottomSheet.text).assertDoesNotExist()
     }
@@ -186,8 +195,8 @@ class NavContainerTest {
         rule.onNodeWithText(testScreen.text).assertIsDisplayed()
         rule.onNodeWithText(bottomSheet.text).assertIsDisplayed()
 
-        rule.onNodeWithTag("NavContainerBottomSheet")
-            .performTouchInput { swipeDown() }
+        rule.onNodeWithTag("BottomSheetContainer")
+            .performTouchInput { click() }
 
         rule.onNodeWithText(bottomSheet.text).assertIsDisplayed()
     }

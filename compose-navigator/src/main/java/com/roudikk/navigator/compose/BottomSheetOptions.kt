@@ -1,8 +1,8 @@
 package com.roudikk.navigator.compose
 
 import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
-import androidx.compose.material.SwipeableDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,7 +19,7 @@ import com.roudikk.navigator.Navigator
 data class BottomSheetOptions(
     val scrimColor: Color = Color.Black.copy(alpha = 0.4F),
 
-    val animationSpec: AnimationSpec<Float> = SwipeableDefaults.AnimationSpec,
+    val animationSpec: AnimationSpec<Float> = tween(300),
 
     val bottomSheetContainer: @Composable (
         modifier: Modifier,
