@@ -10,3 +10,4 @@ rootProject.name = "compose-navigator"
 
 include(":sample")
 include(":compose-navigator")
+include(":compose-navigator-new")
