@@ -1,6 +1,7 @@
 package com.roudikk.navigator.sample.ui.screens.details
 
 import android.content.res.Configuration
+import android.os.Parcelable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -17,49 +18,60 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.roudikk.navigator.NavigationKey
+import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.compose.requireNavigator
-import com.roudikk.navigator.core.BottomSheet
-import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.DialogOptions
-import com.roudikk.navigator.core.Screen
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.composables.BottomSheetSurface
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class DetailsScreen(
-    private val item: String,
-    private val isScreen: Boolean = true
-) : Screen, Dialog, BottomSheet {
+data class DetailsKey(val item: String) : Parcelable, NavigationKey
 
-    override val dialogOptions: DialogOptions
-        get() = DialogOptions(modifier = Modifier.widthIn(max = 320.dp))
+@Parcelize
+data class DetailsDialogKey(val item: String) : Parcelable, NavigationKey
 
-    @Composable
-    override fun Content() {
-        val viewModel = viewModel { DetailsViewModel(item, isScreen) }
+@Parcelize
+data class DetailsBottomSheetKey(val item: String) : Parcelable, NavigationKey
 
-        DetailsContent(
-            item = viewModel.item,
-            isScreen = viewModel.isScreen,
-            onBackSelected = viewModel::onBackSelected,
-            onRandomItemSelected = viewModel::onRandomItemSelected,
-            onSendResultSelected = viewModel::onSendResultSelected,
-            onBottomSheetSelected = viewModel::onBottomSheetSelected,
-            onNewSingleInstanceSelected = viewModel::onNewSingleInstanceSelected,
-            onExistingSingleInstanceSelected = viewModel::onExistingSingleInstanceSelected,
-            onSingleTopSelected = viewModel::onSingleTopSelected,
-            onSingleTopBottomSheetSelected = viewModel::onSingleTopBottomSheetSelected,
-            onReplaceSelected = viewModel::onReplaceSelected,
-            onOpenDialogSelected = viewModel::onOpenDialogSelected
-        )
+fun NavigatorRulesScope.detailsNavigation() {
+    screen<DetailsKey> { key -> DetailsScreen(item = key.item, isScreen = true) }
 
-        DetailsCommandHandler(
-            navigator = requireNavigator(),
-            viewModel = viewModel
-        )
-    }
+    dialog<DetailsDialogKey>(
+        dialogOptions = DialogOptions(modifier = Modifier.widthIn(max = 320.dp))
+    ) { key -> DetailsScreen(item = key.item, isScreen = false) }
+
+    bottomSheet<DetailsBottomSheetKey> { key -> DetailsScreen(item = key.item, isScreen = false) }
+}
+
+@Composable
+private fun DetailsScreen(
+    item: String,
+    isScreen: Boolean
+) {
+    val viewModel: DetailsViewModel = viewModel { DetailsViewModel(item, isScreen) }
+
+    DetailsContent(
+        item = viewModel.item,
+        isScreen = viewModel.isScreen,
+        onBackSelected = viewModel::onBackSelected,
+        onRandomItemSelected = viewModel::onRandomItemSelected,
+        onSendResultSelected = viewModel::onSendResultSelected,
+        onBottomSheetSelected = viewModel::onBottomSheetSelected,
+        onNewSingleInstanceSelected = viewModel::onNewSingleInstanceSelected,
+        onExistingSingleInstanceSelected = viewModel::onExistingSingleInstanceSelected,
+        onSingleTopSelected = viewModel::onSingleTopSelected,
+        onSingleTopBottomSheetSelected = viewModel::onSingleTopBottomSheetSelected,
+        onReplaceSelected = viewModel::onReplaceSelected,
+        onOpenDialogSelected = viewModel::onOpenDialogSelected
+    )
+
+    DetailsCommandHandler(
+        navigator = requireNavigator(),
+        viewModel = viewModel
+    )
 }
 
 @Composable

@@ -18,42 +18,36 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.roudikk.navigator.NavigationKey
 import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.NavigatorRulesScope
+import com.roudikk.navigator.canGoBack
 import com.roudikk.navigator.compose.requireNavigator
-import com.roudikk.navigator.core.Screen
-import com.roudikk.navigator.rememberNavigator
-import com.roudikk.navigator.sample.navigation.SampleNavConfig
+import com.roudikk.navigator.navigate
+import com.roudikk.navigator.popBackStack
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class NestedScreen(
-    private val count: Int
-) : Screen {
+data class NestedKey(val count: Int) : NavigationKey
 
-    override val key: String
-        get() = keyFor(count)
-
-    companion object {
-        fun keyFor(count: Int) = "NestedScreen_$count"
-    }
-
-    @Composable
-    override fun Content() {
-        NestedContent(count = count)
-    }
+fun NavigatorRulesScope.nestedNavigation() {
+    screen<NestedKey> { NestedScreen(count = it.count) }
 }
 
 @Composable
-private fun NestedContent(
+private fun NestedScreen(
     navigator: Navigator = requireNavigator(),
     count: Int
 ) {
+    val canGoBack by navigator.canGoBack()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -63,7 +57,7 @@ private fun NestedContent(
     ) {
 
         IconButton(
-            enabled = navigator.canGoBack(),
+            enabled = canGoBack,
             onClick = {
                 navigator.popBackStack()
             }
@@ -92,7 +86,7 @@ private fun NestedContent(
 
         IconButton(
             onClick = {
-                navigator.navigate(NestedScreen(count + 1))
+                navigator.navigate(NestedKey(count + 1))
             }
         ) {
             Icon(
@@ -112,8 +106,8 @@ private fun NestedContent(
 )
 @Composable
 private fun NestedContentPreview() = AppTheme {
-    NestedContent(
-        navigator = rememberNavigator(SampleNavConfig.Nested),
-        count = 4
-    )
+//    NestedScreen(
+//        navigator = rememberNavigator(SampleNavConfig.Nested),
+//        count = 4
+//    )
 }

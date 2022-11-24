@@ -3,11 +3,12 @@ package com.roudikk.navigator.sample.ui.screens.details
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.core.asBottomSheet
-import com.roudikk.navigator.core.asDialog
-import com.roudikk.navigator.core.asScreen
-import com.roudikk.navigator.sample.navigation.CrossFadeTransition
-import com.roudikk.navigator.sample.ui.screens.home.HomeScreen
+import com.roudikk.navigator.navigate
+import com.roudikk.navigator.popBackStack
+import com.roudikk.navigator.popToRoot
+import com.roudikk.navigator.replaceLast
+import com.roudikk.navigator.singleInstance
+import com.roudikk.navigator.singleTop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -22,43 +23,33 @@ fun DetailsCommandHandler(
                 when (command) {
                     DetailsCommand.GoBack -> navigator.popBackStack()
                     is DetailsCommand.OpenBottomSheet -> navigator.navigate(
-                        navigationNode = DetailsScreen(command.item, false)
-                            .asBottomSheet(),
-                        transition = CrossFadeTransition
+                        navigationKey = DetailsBottomSheetKey(command.item)
                     )
                     is DetailsCommand.OpenExistingSingleInstance -> navigator.singleInstance(
-                        navigationNode = DetailsScreen(command.item)
-                            .asScreen(),
+                        navigationKey = DetailsKey(command.item),
                         useExistingInstance = true
                     )
                     is DetailsCommand.OpenNewSingleInstance -> navigator.singleInstance(
-                        navigationNode = DetailsScreen(command.item)
-                            .asScreen(),
+                        navigationKey = DetailsKey(command.item),
                         useExistingInstance = false
                     )
                     is DetailsCommand.OpenRandomItem -> navigator.navigate(
-                        navigationNode = DetailsScreen(command.item)
-                            .asScreen(),
+                        navigationKey = DetailsKey(command.item),
                     )
                     is DetailsCommand.OpenReplaced -> navigator.replaceLast(
-                        navigationNode = DetailsScreen(command.item)
-                            .asScreen(),
+                        navigationKey = DetailsKey(command.item),
                     )
                     is DetailsCommand.OpenSingleTop -> navigator.singleTop(
-                        navigationNode = DetailsScreen(command.item)
-                            .asScreen(),
+                        navigationKey = DetailsKey(command.item),
                     )
                     is DetailsCommand.OpenSingleTopBottomSheet -> navigator.singleTop(
-                        navigationNode = DetailsScreen(command.item, false)
-                            .asBottomSheet(),
-                        transition = CrossFadeTransition
+                        navigationKey = DetailsBottomSheetKey(command.item)
                     )
                     is DetailsCommand.OpenDialog -> navigator.navigate(
-                        navigationNode = DetailsScreen(command.item, false)
-                            .asDialog(),
+                        navigationKey = DetailsDialogKey(command.item)
                     )
                     is DetailsCommand.SendResult -> {
-                        navigator.sendResult<HomeScreen>(command.result)
+//                        navigator.sendResult<HomeScreen>(command.result)
                         navigator.popToRoot()
                     }
                 }

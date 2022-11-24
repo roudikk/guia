@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -20,35 +19,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.core.BottomSheet
+import com.roudikk.navigator.NavigationKey
+import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.core.BottomSheetOptions
 import com.roudikk.navigator.sample.ui.composables.BottomSheetSurface
 import com.roudikk.navigator.sample.ui.theme.AppTheme
-import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class BlockingBottomSheet : BottomSheet {
+class BlockingBottomSheetKey: NavigationKey
 
-    @IgnoredOnParcel
-    private var sheetOptions: BottomSheetOptions = BottomSheetOptions(
-        modifier = Modifier.navigationBarsPadding(),
-        confirmStateChange = { false },
-    )
-
-    override val bottomSheetOptions: BottomSheetOptions
-        get() = sheetOptions
-
-    @Composable
-    override fun Content() = BlockingBottomSheetContent { confirm ->
-        sheetOptions = sheetOptions.copy(confirmStateChange = { !confirm })
+fun NavigatorRulesScope.blockingBottomSheetNavigation() {
+    bottomSheet<BlockingBottomSheetKey>(
+        bottomSheetOptions = BottomSheetOptions(
+            modifier = Modifier.navigationBarsPadding(),
+            confirmStateChange = { false },
+        )
+    ) {
+        BlockingBottomSheetScreen()
     }
 }
 
 @Composable
-private fun BlockingBottomSheetContent(
-    onToggle: (Boolean) -> Unit
-) {
+private fun BlockingBottomSheetScreen() {
     var lockBack by rememberSaveable { mutableStateOf(true) }
 
     Column(
@@ -75,10 +68,6 @@ private fun BlockingBottomSheetContent(
     BackHandler(enabled = lockBack) {
         // Lock back button
     }
-
-    LaunchedEffect(lockBack) {
-        onToggle(lockBack)
-    }
 }
 
 @Preview(
@@ -91,6 +80,6 @@ private fun BlockingBottomSheetContent(
 @Composable
 private fun BlockingBottomSheetContentPreview() = AppTheme {
     BottomSheetSurface {
-        BlockingBottomSheetContent { }
+        BlockingBottomSheetScreen()
     }
 }

@@ -28,7 +28,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -36,6 +35,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.animation.NavEnterExitTransition
 import com.roudikk.navigator.compose.BottomSheetOptions
 import com.roudikk.navigator.compose.backstack.BackStackEntry
@@ -44,10 +44,10 @@ import com.roudikk.navigator.core.Destination
 
 @OptIn(
     ExperimentalMaterialApi::class,
-    ExperimentalAnimationApi::class, ExperimentalComposeUiApi::class
+    ExperimentalAnimationApi::class,
 )
 @Composable
-internal fun BottomSheetContainer(
+internal fun Navigator.BottomSheetContainer(
     content: @Composable AnimatedVisibilityScope.(BackStackEntry) -> Unit,
     bottomSheetEntry: BackStackEntry?,
     bottomSheetOptions: BottomSheetOptions,
@@ -56,10 +56,11 @@ internal fun BottomSheetContainer(
     onSheetHidden: () -> Unit,
     container: @Composable () -> Unit
 ) {
+    val navigationNode = bottomSheetEntry?.destination?.let(::navigationNode)
     val confirmStateChange = { sheetValue: BottomSheetValue ->
         val destination = currentDestination()
-        destination.navigationNode !is BottomSheet ||
-            destination.navigationNode.bottomSheetOptions.confirmStateChange(sheetValue)
+        val node = navigationNode(destination)
+         node !is BottomSheet || node.bottomSheetOptions.confirmStateChange(sheetValue)
     }
 
     val scaffoldState = rememberBottomSheetScaffoldState(
@@ -84,7 +85,6 @@ internal fun BottomSheetContainer(
         }
     }
 
-
     BottomSheetScaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -103,7 +103,7 @@ internal fun BottomSheetContainer(
                 bottomSheetOptions.bottomSheetContainer(
                     modifier = bottomSheetEntry?.destination
                         ?.let {
-                            (it.navigationNode as BottomSheet).bottomSheetOptions.modifier
+                            (navigationNode as BottomSheet).bottomSheetOptions.modifier
                         } ?: Modifier
                 ) {
                     AnimatedContent(
@@ -114,11 +114,11 @@ internal fun BottomSheetContainer(
                             // bottom sheet destinations.
                             val destination = currentDestination()
 
-                            if (destination.navigationNode !is BottomSheet && targetState != null) {
+                            if (navigationNode(destination) !is BottomSheet && targetState != null) {
                                 EnterTransition.None
                             } else {
                                 transition.enter.toComposeEnterTransition()
-                            } with if (initialState != null && destination.navigationNode !is BottomSheet) {
+                            } with if (initialState != null && navigationNode !is BottomSheet) {
                                 fadeOut(animationSpec = snap(delayMillis = 300))
                             } else {
                                 transition.exit.toComposeExitTransition()

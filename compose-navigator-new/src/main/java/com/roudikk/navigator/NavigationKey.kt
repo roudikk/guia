@@ -1,5 +1,5 @@
 package com.roudikk.navigator
 
-import com.roudikk.navigator.core.NavigationNode
+import android.os.Parcelable
 
-open class NavigationKey<out NavigationNodeType : NavigationNode>
+interface NavigationKey: Parcelable

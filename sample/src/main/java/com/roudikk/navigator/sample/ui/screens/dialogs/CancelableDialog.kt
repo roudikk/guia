@@ -16,22 +16,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.roudikk.navigator.NavigationKey
 import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.compose.requireNavigator
-import com.roudikk.navigator.core.Dialog
-import com.roudikk.navigator.rememberNavigator
+import com.roudikk.navigator.popToRoot
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class CancelableDialog(private val showNextButton: Boolean) : Dialog {
+data class CancelableDialogKey(val showNextButton: Boolean) : NavigationKey
 
-    @Composable
-    override fun Content() = CancelableDialogContent(showNextButton = showNextButton)
+fun NavigatorRulesScope.cancelableDialogNavigation() {
+    dialog<CancelableDialogKey> {
+        CancelableDialogScreen(showNextButton = it.showNextButton)
+    }
 }
 
 @Composable
-private fun CancelableDialogContent(
+private fun CancelableDialogScreen(
     navigator: Navigator = requireNavigator(),
     showNextButton: Boolean
 ) {
@@ -84,10 +87,10 @@ private fun CancelableDialogContent(
 )
 @Composable
 private fun CancelableDialogContentPreview() = AppTheme {
-    CancelableDialogContent(
-        navigator = rememberNavigator(),
-        showNextButton = true
-    )
+//    CancelableDialogScreen(
+//        navigator = rememberNavigator(),
+//        showNextButton = true
+//    )
 }
 
 @Preview(
@@ -99,8 +102,8 @@ private fun CancelableDialogContentPreview() = AppTheme {
 )
 @Composable
 private fun CancelableDialogContentPreviewFalse() = AppTheme {
-    CancelableDialogContent(
-        navigator = rememberNavigator(),
-        showNextButton = false
-    )
+//    CancelableDialogScreen(
+//        navigator = rememberNavigator(),
+//        showNextButton = false
+//    )
 }

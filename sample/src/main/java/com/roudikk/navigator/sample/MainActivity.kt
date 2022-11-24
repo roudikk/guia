@@ -7,21 +7,20 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.compose.NavContainer
-import com.roudikk.navigator.core.NavigationNode
 import com.roudikk.navigator.rememberNavigator
 import com.roudikk.navigator.sample.navigation.LocalDefaultNavigator
 import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
-import com.roudikk.navigator.sample.navigation.SampleNavConfig
 import com.roudikk.navigator.sample.ui.composables.sampleBottomSheetOptions
-import com.roudikk.navigator.sample.ui.screens.bottomnav.BottomNavScreen
-import com.roudikk.navigator.sample.ui.screens.settings.SettingsScreen
+import com.roudikk.navigator.sample.ui.screens.bottomnav.bottomTabNavigation
+import com.roudikk.navigator.sample.ui.screens.dialogs.blockingBottomSheetNavigation
+import com.roudikk.navigator.sample.ui.screens.settings.settingsNavigation
+import com.roudikk.navigator.sample.ui.screens.welcome.WelcomeKey
+import com.roudikk.navigator.sample.ui.screens.welcome.welcomeNavigation
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
@@ -50,40 +49,21 @@ class MainActivity : ComponentActivity() {
             )
 
             AppTheme {
-                val defaultNavigator = rememberNavigator(SampleNavConfig.Default) { navigator ->
-                    navigator.deeplink(viewModel.mainDestinations)
+                val defaultNavigator = rememberNavigator(initialKey = WelcomeKey()) {
+                    welcomeNavigation()
+                    bottomTabNavigation()
+                    settingsNavigation()
+                    blockingBottomSheetNavigation()
                 }
 
                 CompositionLocalProvider(
                     LocalDefaultNavigator provides defaultNavigator,
                     LocalNavHostViewModelStoreOwner provides requireNotNull(LocalViewModelStoreOwner.current)
                 ) {
-                    NavContainer(
-                        navigator = defaultNavigator,
+                    defaultNavigator.NavContainer(
                         bottomSheetOptions = sampleBottomSheetOptions()
                     )
                 }
-
-                LaunchedEffect(Unit) {
-                    viewModel.mainDestinationsFlow.collect {
-                        defaultNavigator.deeplink(it)
-                    }
-                }
-            }
-        }
-    }
-
-    private fun Navigator.deeplink(destinations: List<MainDestination>) {
-        destinations.forEach { destination ->
-            when (destination) {
-                MainDestination.BottomNav -> {
-                    if (!any { it.key == NavigationNode.key<BottomNavScreen>() }) {
-                        navigate(BottomNavScreen())
-                    } else {
-                        popTo<BottomNavScreen>()
-                    }
-                }
-                MainDestination.Settings -> navigate(SettingsScreen())
             }
         }
     }

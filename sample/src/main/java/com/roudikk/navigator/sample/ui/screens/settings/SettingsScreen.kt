@@ -34,10 +34,13 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.roudikk.navigator.NavigationKey
 import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.compose.LocalNavigationAnimation
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.popBackStack
 import com.roudikk.navigator.rememberNavigator
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.composables.NavigationAnimationPreview
@@ -45,16 +48,14 @@ import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class SettingsScreen : Screen {
+class SettingsKey: NavigationKey
 
-    @Composable
-    override fun Content() {
-        SettingsContent()
-    }
+fun NavigatorRulesScope.settingsNavigation() {
+    screen<SettingsKey> { SettingsScreen()  }
 }
 
 @Composable
-private fun SettingsContent(
+private fun SettingsScreen(
     navigator: Navigator = requireNavigator()
 ) {
     val lazyListState = rememberLazyListState()
@@ -212,6 +213,6 @@ private fun SettingsContent(
 @Composable
 private fun SettingsContentPreview() = AppTheme {
     NavigationAnimationPreview {
-        SettingsContent(navigator = rememberNavigator())
+//        SettingsContent(navigator = rememberNavigator())
     }
 }

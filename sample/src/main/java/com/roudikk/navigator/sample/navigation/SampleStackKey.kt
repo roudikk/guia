@@ -3,7 +3,7 @@ package com.roudikk.navigator.sample.navigation
 import com.roudikk.navigator.core.StackKey
 import kotlinx.parcelize.Parcelize
 
-sealed class SampleStackKey : StackKey() {
+sealed class SampleStackKey : StackKey {
 
     @Parcelize
     object Home : SampleStackKey()

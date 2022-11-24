@@ -5,18 +5,20 @@ import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.animation.NavEnterExitTransition
+import com.roudikk.navigator.canGoBack
 import com.roudikk.navigator.compose.backstack.rememberBackStackManager
 import com.roudikk.navigator.compose.containers.BottomSheetContainer
 import com.roudikk.navigator.compose.containers.DialogContainer
 import com.roudikk.navigator.compose.containers.ScreenContainer
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.popBackStack
 
 /**
  * [NavContainer] renders the current state of a [Navigator].
@@ -47,15 +49,14 @@ fun Navigator.NavContainer(
 }
 
 @Composable
-private fun NavContainerContent(
+private fun Navigator.NavContainerContent(
     modifier: Modifier = Modifier,
     navigator: Navigator,
     bottomSheetOptions: BottomSheetOptions = BottomSheetOptions()
 ) {
     val parentNavigator = findParentNavigator()
 
-    val state by navigator.stateFlow.collectAsState()
-    val parentState = parentNavigator?.stateFlow?.collectAsState()
+    val canGoBack by navigator.canGoBack()
 
     val backStackManager = rememberBackStackManager(navigator = navigator)
 
@@ -63,12 +64,12 @@ private fun NavContainerContent(
 
     val parentShowingBottomSheet by remember {
         derivedStateOf {
-            parentState?.value?.currentStack?.destinations?.last()
-                ?.navigationNode is BottomSheet
+            parentNavigator?.destinations?.last()
+                ?.let(parentNavigator::navigationNode) is BottomSheet
         }
     }
 
-    val enabled = navigator.canGoBack() && state.overrideBackPress && !parentShowingBottomSheet
+    val enabled = canGoBack && navigator.overrideBackPress && !parentShowingBottomSheet
 
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
 
@@ -86,15 +87,15 @@ private fun NavContainerContent(
     BottomSheetContainer(
         bottomSheetEntry = backStackEntryGroup.bottomSheetEntry,
         bottomSheetOptions = bottomSheetOptions,
-        transition = state.transition,
-        currentDestination = { navigator.currentState.currentStack.destinations.last() },
+        transition = NavEnterExitTransition.None,
+        currentDestination = { navigator.destinations.last() },
         onSheetHidden = { navigator.popBackStack() },
         content = { entry -> NavigationEntry(backStackManager, entry) }
     ) {
         // Screen content
         ScreenContainer(
             modifier = modifier,
-            transition = state.transition,
+            transition = NavEnterExitTransition.None,
             screenEntry = backStackEntryGroup.screenEntry
         ) { entry ->
             NavigationEntry(backStackManager, entry)
@@ -105,7 +106,7 @@ private fun NavContainerContent(
     backStackEntryGroup.dialogEntry?.let { dialogEntry ->
         DialogContainer(
             dialogEntry = dialogEntry,
-            transition = state.transition,
+            transition = NavEnterExitTransition.None,
             onDismissRequest = { navigator.popBackStack() },
         ) { entry ->
             NavigationEntry(backStackManager, entry)

@@ -1,6 +1,7 @@
 package com.roudikk.navigator.core
 
 import android.os.Parcelable
+import com.roudikk.navigator.NavigationKey
 import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
@@ -13,12 +14,14 @@ import java.util.UUID
  */
 @Parcelize
 data class Destination internal constructor(
-    val navigationNode: NavigationNode,
+    val navigationKey: NavigationKey,
     val id: String
-) : Parcelable {
+): Parcelable {
 
-    constructor(navigationNode: NavigationNode) : this(
-        navigationNode = navigationNode,
+    constructor(
+        navigationKey: NavigationKey
+    ) : this(
+        navigationKey = navigationKey,
         id = UUID.randomUUID().toString()
     )
 

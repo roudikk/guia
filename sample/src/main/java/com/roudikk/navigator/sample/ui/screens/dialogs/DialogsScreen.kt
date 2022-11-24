@@ -17,25 +17,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.roudikk.navigator.NavigationKey
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.animation.NavTransition
+import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.compose.requireNavigator
-import com.roudikk.navigator.core.Screen
-import com.roudikk.navigator.rememberNavigator
+import com.roudikk.navigator.navigate
 import com.roudikk.navigator.sample.navigation.findDefaultNavigator
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class DialogsScreen : Screen {
+class DialogsKey: NavigationKey
 
-    @Composable
-    override fun Content() = DialogsContent()
+fun NavigatorRulesScope.dialogsNavigation() {
+    screen<DialogsKey> { DialogScreen() }
 }
 
 @Composable
-private fun DialogsContent(
+private fun DialogScreen(
     navigator: Navigator = requireNavigator(),
     defaultNavigator: Navigator = findDefaultNavigator()
 ) {
@@ -64,7 +64,7 @@ private fun DialogsContent(
                     modifier = Modifier
                         .widthIn(min = 300.dp),
                     onClick = {
-                        navigator.navigate(CancelableDialog(false))
+                        navigator.navigate(CancelableDialogKey(false))
                     }
                 ) {
                     Text(text = "Cancelable Dialog")
@@ -76,7 +76,7 @@ private fun DialogsContent(
                     modifier = Modifier
                         .widthIn(min = 300.dp),
                     onClick = {
-                        navigator.navigate(BlockingDialog(false))
+                        navigator.navigate(BlockingDialogKey(false))
                     }
                 ) {
                     Text(text = "Blocking Dialog")
@@ -87,7 +87,7 @@ private fun DialogsContent(
                     modifier = Modifier
                         .widthIn(min = 300.dp),
                     onClick = {
-                        navigator.navigate(BlockingDialog(true))
+                        navigator.navigate(BlockingDialogKey(true))
                     }
                 ) {
                     Text(text = "Dialog To Dialog")
@@ -98,7 +98,7 @@ private fun DialogsContent(
                     modifier = Modifier
                         .widthIn(min = 300.dp),
                     onClick = {
-                        defaultNavigator.navigate(BlockingBottomSheet(), NavTransition.None)
+                        defaultNavigator.navigate(BlockingBottomSheetKey())
                     }
                 ) {
                     Text(text = "Blocking Bottom Sheet")
@@ -117,8 +117,8 @@ private fun DialogsContent(
 )
 @Composable
 private fun DialogsContentPreview() = AppTheme {
-    DialogsContent(
-        navigator = rememberNavigator(),
-        defaultNavigator = rememberNavigator()
-    )
+//    DialogScreen(
+//        navigator = rememberNavigator(),
+//        defaultNavigator = rememberNavigator()
+//    )
 }

@@ -1,149 +1,108 @@
 package com.roudikk.navigator
 
 import androidx.compose.runtime.derivedStateOf
-import com.roudikk.navigator.core.Destination
-import com.roudikk.navigator.core.NavigationNode
-
-private fun NavigationKey<NavigationNode>.notFoundError(): String {
-    return "NavigationKey: $this was not declared. " +
-            "Call associate<MyKey, MyNavigationNode> {} inside your Navigator rules."
-}
-
-private fun Navigator.navigationNodeForKey(
-    navigationKey: NavigationKey<NavigationNode>
-): NavigationNode {
-    return navigatorRules.associations[navigationKey]?.invoke()
-        ?: error(navigationKey.notFoundError())
-}
 
 fun Navigator.navigate(
-    navigationNode: NavigationNode
+    navigationKey: NavigationKey
 ) {
-    setBackstack(backStack + Destination(navigationNode))
-}
-
-fun Navigator.navigate(
-    navigationKey: NavigationKey<NavigationNode>
-) = navigate(navigationNodeForKey(navigationKey))
-
-fun Navigator.replaceLast(
-    navigationNode: NavigationNode
-) {
-    setBackstack(backStack.drop(1) + Destination(navigationNode))
+    setBackstack(backStack + navigationKey)
 }
 
 fun Navigator.replaceLast(
-    navigationKey: NavigationKey<NavigationNode>
-) = replaceLast(navigationNodeForKey(navigationKey))
+    navigationKey: NavigationKey
+) {
+    setBackstack(backStack.dropLast(1) + navigationKey)
+}
 
 fun Navigator.replaceUpTo(
-    navigationNode: NavigationNode,
+    navigationKey: NavigationKey,
     inclusive: Boolean = true,
-    predicate: (NavigationNode) -> Boolean
+    predicate: (NavigationKey) -> Boolean
 ) {
-    val newBackstack = backStack.dropLastWhile {
-        !predicate(it.navigationNode)
-    }.toMutableList()
+    val newBackstack = backStack.dropLastWhile { !predicate(it) }.toMutableList()
 
     if (inclusive) newBackstack.removeLast()
 
-    newBackstack.add(Destination(navigationNode))
+    newBackstack.add(navigationKey)
     setBackstack(newBackstack)
 }
 
-fun Navigator.replaceUpTo(
-    navigationKey: NavigationKey<NavigationNode>,
-    inclusive: Boolean = true,
-    predicate: (NavigationNode) -> Boolean
-) = replaceUpTo(
-    navigationNode = navigationNodeForKey(navigationKey),
-    inclusive = inclusive,
-    predicate = predicate
-)
-
-inline fun <reified T : NavigationNode> Navigator.replaceUpTo(
-    navigationNode: NavigationNode,
+inline fun <reified Key : NavigationKey> Navigator.replaceUpTo(
+    navigationKey: NavigationKey,
     inclusive: Boolean = false
 ) = replaceUpTo(
-    navigationNode = navigationNode,
+    navigationKey = navigationKey,
     inclusive = inclusive,
-    predicate = { it.key == NavigationNode.key<T>() }
-)
-
-inline fun <reified T : NavigationNode> Navigator.replaceUpTo(
-    navigationKey: NavigationKey<T>,
-    inclusive: Boolean = false
-) = replaceUpTo(
-    navigationNode = NavigationNode.key<T>(),
-    inclusive = inclusive,
-    predicate = { it.key == NavigationNode.key<T>() }
+    predicate = { it::class == Key::class }
 )
 
 fun Navigator.moveToTop(
     matchLast: Boolean = true,
-    predicate: (NavigationNode) -> Boolean
+    predicate: (NavigationKey) -> Boolean
 ): Boolean {
-    val destination = if (matchLast) {
-        backStack.findLast { predicate(it.navigationNode) }
+    val navigationKey = if (matchLast) {
+        backStack.findLast { predicate(it) }
     } else {
-        backStack.find { predicate(it.navigationNode) }
+        backStack.find { predicate(it) }
     }
 
-    return destination?.let {
+    return navigationKey?.let {
         setBackstack(backStack.toMutableList().apply {
-            remove(destination)
-            add(destination)
+            remove(navigationKey)
+            add(navigationKey)
         })
         true
     } ?: false
 }
 
-inline fun <reified T : NavigationNode> Navigator.moveToTop(
+inline fun <reified Key : NavigationKey> Navigator.moveToTop(
     matchLast: Boolean = true,
 ) = moveToTop(
-    predicate = { it.key == NavigationNode.key<T>() },
+    predicate = { it::class == Key::class },
     matchLast = matchLast
 )
 
 fun Navigator.singleInstance(
-    navigationNode: NavigationNode,
+    navigationKey: NavigationKey,
+    predicate: (NavigationKey) -> Boolean = { it::class == navigationKey::class },
     useExistingInstance: Boolean = true,
 ) {
-    val existingDestination = backStack.lastOrNull { it.navigationNode.key == navigationNode.key }
+    val existingKey = backStack.lastOrNull { predicate(it) }
         .takeIf { useExistingInstance }
     val newBackStack = backStack.toMutableList()
-    newBackStack.removeAll { it.navigationNode.key == navigationNode.key }
-    val destination = existingDestination ?: Destination(navigationNode)
-    newBackStack.add(destination)
+    newBackStack.removeAll { predicate(it) }
+    val newKey = existingKey ?: navigationKey
+    newBackStack.add(newKey)
     setBackstack(newBackStack)
 }
 
 fun Navigator.singleTop(
-    navigationNode: NavigationNode
+    navigationKey: NavigationKey,
+    predicate: (NavigationKey) -> Boolean = { it::class == navigationKey::class },
 ) {
-    if (backStack.lastOrNull()?.navigationNode?.key == navigationNode.key) return
-    navigate(navigationNode)
+    if (backStack.last().let(predicate)) return
+    navigate(navigationKey)
 }
 
 fun Navigator.any(
-    predicate: (NavigationNode) -> Boolean
-) = backStack.map { it.navigationNode }.any(predicate)
+    predicate: (NavigationKey) -> Boolean
+) = backStack.any(predicate)
 
 fun Navigator.popTo(
-    key: String,
+    predicate: (NavigationKey) -> Boolean,
     inclusive: Boolean = false
 ): Boolean {
-    val destination = backStack.find { it.navigationNode.key == key } ?: return false
-    var newBackStack = backStack.dropLastWhile { it.id != destination.id }
+    val existingKey = backStack.find(predicate) ?: return false
+    var newBackStack = backStack.dropLastWhile { it != existingKey }
     if (inclusive) newBackStack = newBackStack.drop(1)
     setBackstack(newBackStack)
     return true
 }
 
-inline fun <reified T : NavigationNode> Navigator.popTo(
+inline fun <reified Key : NavigationKey> Navigator.popTo(
     inclusive: Boolean = false
 ) = popTo(
-    key = NavigationNode.key<T>(),
+    predicate = { it::class == Key::class },
     inclusive = inclusive
 )
 
@@ -152,18 +111,15 @@ fun Navigator.popToRoot() {
 }
 
 fun Navigator.setRoot(
-    navigationNode: NavigationNode
+    navigationKey: NavigationKey
 ) {
-    setBackstack(Destination(navigationNode))
+    setBackstack(navigationKey)
 }
 
 fun Navigator.popBackStack() {
-    setBackstack(backStack.drop(1))
+    setBackstack(backStack.dropLast(1))
 }
 
 fun Navigator.canGoBack() = derivedStateOf {
     backStack.size > 1
 }
-
-
-

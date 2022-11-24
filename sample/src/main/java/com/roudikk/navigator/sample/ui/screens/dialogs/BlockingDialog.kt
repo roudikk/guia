@@ -16,30 +16,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.roudikk.navigator.NavigationKey
 import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.compose.requireNavigator
-import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.DialogOptions
-import com.roudikk.navigator.rememberNavigator
-import com.roudikk.navigator.sample.navigation.CrossFadeTransition
+import com.roudikk.navigator.navigate
+import com.roudikk.navigator.popBackStack
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class BlockingDialog(private val showNextButton: Boolean) : Dialog {
+data class BlockingDialogKey(val showNextButton: Boolean) : NavigationKey
 
-    override val dialogOptions: DialogOptions
-        get() = DialogOptions(
-            dismissOnBackPress = false,
-            dismissOnClickOutside = false
-        )
-
-    @Composable
-    override fun Content() = BlockingDialogContent(showNextButton = showNextButton)
+fun NavigatorRulesScope.blockingDialogNavigation() {
+    dialog<BlockingDialogKey>(
+        DialogOptions(dismissOnBackPress = false, dismissOnClickOutside = false)
+    ) {
+        BlockingDialogScreen(showNextButton = it.showNextButton)
+    }
 }
 
 @Composable
-private fun BlockingDialogContent(
+private fun BlockingDialogScreen(
     navigator: Navigator = requireNavigator(),
     showNextButton: Boolean
 ) {
@@ -64,10 +63,7 @@ private fun BlockingDialogContent(
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
-                        navigator.navigate(
-                            navigationNode = CancelableDialog(true),
-                            transition = CrossFadeTransition
-                        )
+                        navigator.navigate(CancelableDialogKey(true))
                     }
                 ) {
                     Text(text = "Next")
@@ -96,10 +92,10 @@ private fun BlockingDialogContent(
 )
 @Composable
 private fun BlockingDialogContentPreview() = AppTheme {
-    BlockingDialogContent(
-        navigator = rememberNavigator(),
-        showNextButton = true
-    )
+//    BlockingDialogScreen(
+//        navigator = rememberNavigator(),
+//        showNextButton = true
+//    )
 }
 
 @Preview(
@@ -111,8 +107,8 @@ private fun BlockingDialogContentPreview() = AppTheme {
 )
 @Composable
 private fun BlockingDialogContentPreviewCancel() = AppTheme {
-    BlockingDialogContent(
-        navigator = rememberNavigator(),
-        showNextButton = false
-    )
+//    BlockingDialogScreen(
+//        navigator = rememberNavigator(),
+//        showNextButton = false
+//    )
 }

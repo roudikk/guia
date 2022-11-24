@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
@@ -45,9 +44,10 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
+import com.roudikk.navigator.NavigationKey
 import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.compose.requireNavigator
-import com.roudikk.navigator.core.Screen
 import com.roudikk.navigator.rememberNavigator
 import com.roudikk.navigator.sample.navigation.SampleStackKey
 import com.roudikk.navigator.sample.ui.theme.AppTheme
@@ -55,12 +55,10 @@ import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class NavigationTreeScreen : Screen {
+class NavigationTreeKey : NavigationKey
 
-    @Composable
-    override fun Content() {
-        NavigationTreeContent()
-    }
+fun NavigatorRulesScope.navigationTreeNavigation() {
+    screen<NavigationTreeKey> { NavigationTreeScreen() }
 }
 
 @OptIn(
@@ -68,7 +66,7 @@ class NavigationTreeScreen : Screen {
     ExperimentalPagerApi::class
 )
 @Composable
-private fun NavigationTreeContent(
+private fun NavigationTreeScreen(
     navigator: Navigator = requireNavigator()
 ) {
     val lazyListState = rememberLazyListState()
@@ -101,86 +99,86 @@ private fun NavigationTreeContent(
             }
         }
     ) { padding ->
-        val scope = rememberCoroutineScope()
-        val pagerState = rememberPagerState()
-        val state by navigator.stateFlow.collectAsState()
-
-        val stacks = state.navigationStacks.filter { it.key != SampleStackKey.StackTree }
-            .map { it.key to it.destinations }
-
-        Column(modifier = Modifier.padding(padding)) {
-            TabRow(
-                backgroundColor = MaterialTheme.colorScheme.surface,
-                selectedTabIndex = pagerState.currentPage,
-                indicator = { tabPositions ->
-                    TabRowDefaults.Indicator(
-                        Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-                    )
-                }
-            ) {
-                // Add tabs for all of our pages
-                stacks.forEachIndexed { index, (key, _) ->
-                    Tab(
-                        text = {
-                            Text(text = key::class.java.simpleName)
-                        },
-                        selected = pagerState.currentPage == index,
-                        onClick = {
-                            scope.launch {
-                                pagerState.scrollToPage(index)
-                            }
-                        },
-                    )
-                }
-            }
-
-            HorizontalPager(
-                modifier = Modifier.weight(1F),
-                state = pagerState,
-                count = stacks.size,
-                key = { stacks[it].first.toString() }
-            ) { page ->
-                val stack = stacks[page]
-
-                LazyVerticalGrid(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    columns = GridCells.Adaptive(100.dp),
-                    contentPadding = PaddingValues(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    items(stack.second) { destination ->
-                        Box(
-                            Modifier
-                                .sizeIn(minWidth = 100.dp)
-                                .aspectRatio(9F / 16F)
-                                .clip(RoundedCornerShape(2.dp))
-                                .background(MaterialTheme.colorScheme.primary)
-                                .padding(2.dp)
-                        ) {
-                            Box(
-                                Modifier
-                                    .clip(RoundedCornerShape(2.dp))
-                            ) {
-                                CompositionLocalProvider(
-                                    LocalDensity provides object : Density by LocalDensity.current {
-                                        override val density: Float = 1.5f
-                                        override val fontScale: Float = 1f
-                                    }
-                                ) {
-                                    androidx.compose.animation.AnimatedVisibility(
-                                        visible = true
-                                    ) {
-                                        with(destination.navigationNode) { Content() }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//        val scope = rememberCoroutineScope()
+//        val pagerState = rememberPagerState()
+//        val state by navigator.stateFlow.collectAsState()
+//
+//        val stacks = state.navigationStacks.filter { it.key != SampleStackKey.StackTree }
+//            .map { it.key to it.destinations }
+//
+//        Column(modifier = Modifier.padding(padding)) {
+//            TabRow(
+//                backgroundColor = MaterialTheme.colorScheme.surface,
+//                selectedTabIndex = pagerState.currentPage,
+//                indicator = { tabPositions ->
+//                    TabRowDefaults.Indicator(
+//                        Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+//                    )
+//                }
+//            ) {
+//                // Add tabs for all of our pages
+//                stacks.forEachIndexed { index, (key, _) ->
+//                    Tab(
+//                        text = {
+//                            Text(text = key::class.java.simpleName)
+//                        },
+//                        selected = pagerState.currentPage == index,
+//                        onClick = {
+//                            scope.launch {
+//                                pagerState.scrollToPage(index)
+//                            }
+//                        },
+//                    )
+//                }
+//            }
+//
+//            HorizontalPager(
+//                modifier = Modifier.weight(1F),
+//                state = pagerState,
+//                count = stacks.size,
+//                key = { stacks[it].first.toString() }
+//            ) { page ->
+//                val stack = stacks[page]
+//
+//                LazyVerticalGrid(
+//                    modifier = Modifier
+//                        .fillMaxSize(),
+//                    columns = GridCells.Adaptive(100.dp),
+//                    contentPadding = PaddingValues(16.dp),
+//                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+//                    verticalArrangement = Arrangement.spacedBy(8.dp),
+//                ) {
+//                    items(stack.second) { destination ->
+//                        Box(
+//                            Modifier
+//                                .sizeIn(minWidth = 100.dp)
+//                                .aspectRatio(9F / 16F)
+//                                .clip(RoundedCornerShape(2.dp))
+//                                .background(MaterialTheme.colorScheme.primary)
+//                                .padding(2.dp)
+//                        ) {
+//                            Box(
+//                                Modifier
+//                                    .clip(RoundedCornerShape(2.dp))
+//                            ) {
+//                                CompositionLocalProvider(
+//                                    LocalDensity provides object : Density by LocalDensity.current {
+//                                        override val density: Float = 1.5f
+//                                        override val fontScale: Float = 1f
+//                                    }
+//                                ) {
+//                                    androidx.compose.animation.AnimatedVisibility(
+//                                        visible = true
+//                                    ) {
+//                                        with(destination.navigationNode) { Content() }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 }
 
@@ -193,6 +191,6 @@ private fun NavigationTreeContent(
 )
 @Composable
 private fun NavigationTreePreview() = AppTheme {
-    val navigator = rememberNavigator()
-    NavigationTreeContent(navigator = navigator)
+//    val navigator = rememberNavigator()
+//    NavigationTreeScreen(navigator = navigator)
 }
