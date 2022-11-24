@@ -3,6 +3,7 @@ package com.roudikk.navigator.compose.backstack
 import android.app.Application
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -118,8 +119,9 @@ internal class BackStackManager(
             navigator.navigationNode(it) is Dialog
         }?.let(::createBackStackEntry)
 
-        val bottomSheetEntry =
-            destinations.lastOrNull { navigator.navigationNode(it) is BottomSheet }.takeIf {
+        val bottomSheetEntry = destinations
+            .lastOrNull { navigator.navigationNode(it) is BottomSheet }
+            .takeIf {
                 if (currentDestination == it) return@takeIf true
 
                 val bottomSheetIndex = destinations.indexOf(it)
@@ -136,6 +138,8 @@ internal class BackStackManager(
             dialogEntry = dialogEntry,
             bottomSheetEntry = bottomSheetEntry
         )
+
+        Log.d("TEST1", "$backStackEntryGroup")
 
         backStackEntries.values
             .filter { it !in backStackEntryGroup.entries }

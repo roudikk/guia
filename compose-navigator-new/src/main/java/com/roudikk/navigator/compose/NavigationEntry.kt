@@ -28,7 +28,7 @@ internal fun AnimatedVisibilityScope.NavigationEntry(
             val destination = backStackEntry.destination
 
             Box(modifier = Modifier.testTag(destination.navigationKey::class.simpleName!!)) {
-                backStackManager.navigationNode(backStackEntry.destination).Content()
+                backStackManager.navigationNode(destination).Content()
             }
 
             DisposableEffect(backStackManager, backStackEntry) {

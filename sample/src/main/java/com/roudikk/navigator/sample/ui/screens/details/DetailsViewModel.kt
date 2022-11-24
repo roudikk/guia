@@ -19,8 +19,7 @@ sealed class DetailsCommand {
 }
 
 class DetailsViewModel(
-    val item: String,
-    val isScreen: Boolean
+    val item: String
 ) : ViewModel() {
 
     private val mutableCommandsFlow = MutableSharedFlow<DetailsCommand>(extraBufferCapacity = 1)

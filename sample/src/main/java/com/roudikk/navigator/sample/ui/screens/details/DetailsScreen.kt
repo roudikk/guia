@@ -22,9 +22,11 @@ import com.roudikk.navigator.NavigationKey
 import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.DialogOptions
+import com.roudikk.navigator.dialogNode
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.composables.BottomSheetSurface
 import com.roudikk.navigator.sample.ui.theme.AppTheme
+import com.roudikk.navigator.screenNode
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -36,7 +38,20 @@ data class DetailsDialogKey(val item: String) : Parcelable, NavigationKey
 @Parcelize
 data class DetailsBottomSheetKey(val item: String) : Parcelable, NavigationKey
 
-fun NavigatorRulesScope.detailsNavigation() {
+@Parcelize
+data class DynamicDetailsKey(val item: String) : Parcelable, NavigationKey
+
+fun NavigatorRulesScope.detailsNavigation(screenWidth: Int) {
+    navigationNode<DynamicDetailsKey> {
+        if (screenWidth <= 600) {
+            dialogNode(
+                dialogOptions = DialogOptions(modifier = Modifier.widthIn(max = 320.dp))
+            ) { DetailsScreen(item = it.item, isScreen = false) }
+        } else {
+            screenNode { DetailsScreen(item = it.item, isScreen = true) }
+        }
+    }
+
     screen<DetailsKey> { key -> DetailsScreen(item = key.item, isScreen = true) }
 
     dialog<DetailsDialogKey>(
@@ -51,11 +66,11 @@ private fun DetailsScreen(
     item: String,
     isScreen: Boolean
 ) {
-    val viewModel: DetailsViewModel = viewModel { DetailsViewModel(item, isScreen) }
+    val viewModel: DetailsViewModel = viewModel { DetailsViewModel(item) }
 
     DetailsContent(
         item = viewModel.item,
-        isScreen = viewModel.isScreen,
+        isScreen = isScreen,
         onBackSelected = viewModel::onBackSelected,
         onRandomItemSelected = viewModel::onRandomItemSelected,
         onSendResultSelected = viewModel::onSendResultSelected,

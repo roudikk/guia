@@ -16,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,9 +56,10 @@ fun NavigatorRulesScope.bottomTabNavigation() {
 
 @Composable
 fun BottomNavScreen() {
+    val configuration = LocalConfiguration.current
     val homeNavigator = rememberNavigator(initialKey = HomeKey()) {
         homeNavigation()
-        detailsNavigation()
+        detailsNavigation(configuration.screenWidthDp)
     }
 
     val nestedNavigator = rememberNavigator(initialKey = ParentNestedKey()) {

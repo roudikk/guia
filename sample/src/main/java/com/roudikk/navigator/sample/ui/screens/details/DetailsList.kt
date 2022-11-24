@@ -13,9 +13,18 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.navigate
+import kotlinx.coroutines.delay
+import java.util.UUID
 
 @Composable
 fun DetailsList(
@@ -38,13 +47,29 @@ fun DetailsList(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        var counter by rememberSaveable { mutableStateOf(0) }
+
+        LaunchedEffect(key1 = Unit) {
+            while (true) {
+                delay(1000)
+                counter++
+            }
+        }
 
         Text(
-            text = "Item: $item",
+            text = "Item: $item, $counter",
             style = MaterialTheme.typography.headlineMedium
         )
 
         Spacer(modifier = Modifier.size(16.dp))
+
+        val navigator = requireNavigator()
+        DetailsAction(
+            title = "New dynamic item",
+            onClick = {
+                navigator.navigate(DynamicDetailsKey(UUID.randomUUID().toString().split("-")[0]))
+            }
+        )
 
         DetailsAction(
             title = "New random item",
