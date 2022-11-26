@@ -19,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import com.roudikk.navigator.compose.BottomSheetSetup
 import com.roudikk.navigator.compose.NavContainer
 import com.roudikk.navigator.core.StackKey
 
@@ -81,11 +82,11 @@ class NavHost(
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavHost.NavContainer(
-    modifier: Modifier = Modifier,
+    modifier: (StackKey) -> Modifier = { Modifier },
     transitionSpec: AnimatedContentScope<StackKey>.() -> ContentTransform = {
         EnterTransition.None with ExitTransition.None
     },
-    bottomSheetOptions: com.roudikk.navigator.compose.BottomSheetOptions
+    bottomSheetSetup: (StackKey) -> BottomSheetSetup
 ) {
     AnimatedContent(
         targetState = activeKey,
@@ -93,8 +94,8 @@ fun NavHost.NavContainer(
     ) { targetKey ->
         saveableStateHolder.SaveableStateProvider(key = targetKey) {
             remember(targetKey) { requireNotNull(navigatorKeyMap[targetKey]) }.NavContainer(
-                modifier = modifier,
-                bottomSheetOptions = bottomSheetOptions,
+                modifier = modifier(targetKey),
+                bottomSheetOptions = bottomSheetSetup(targetKey),
             )
         }
     }

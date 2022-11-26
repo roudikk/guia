@@ -31,7 +31,7 @@ import com.roudikk.navigator.popBackStack
 @Composable
 fun Navigator.NavContainer(
     modifier: Modifier = Modifier,
-    bottomSheetOptions: BottomSheetOptions = BottomSheetOptions()
+    bottomSheetOptions: BottomSheetSetup = BottomSheetSetup()
 ) {
     val parentNavigator = LocalNavigator.current
 
@@ -42,7 +42,7 @@ fun Navigator.NavContainer(
         NavContainerContent(
             navigator = this,
             modifier = modifier,
-            bottomSheetOptions = bottomSheetOptions
+            bottomSheetSetup = bottomSheetOptions
         )
     }
 }
@@ -51,7 +51,7 @@ fun Navigator.NavContainer(
 private fun Navigator.NavContainerContent(
     modifier: Modifier = Modifier,
     navigator: Navigator,
-    bottomSheetOptions: BottomSheetOptions = BottomSheetOptions()
+    bottomSheetSetup: BottomSheetSetup = BottomSheetSetup()
 ) {
     val parentNavigator = findParentNavigator()
 
@@ -85,7 +85,7 @@ private fun Navigator.NavContainerContent(
     // Bottom sheet content
     BottomSheetContainer(
         bottomSheetEntry = backStackEntryGroup.bottomSheetEntry,
-        bottomSheetOptions = bottomSheetOptions,
+        bottomSheetSetup = bottomSheetSetup,
         transition = navigator.transition,
         currentDestination = { navigator.destinations.last() },
         onSheetHidden = { navigator.popBackStack() },

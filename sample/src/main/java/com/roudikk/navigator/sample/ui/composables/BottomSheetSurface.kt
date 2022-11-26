@@ -8,7 +8,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.compose.BottomSheetOptions
+import com.roudikk.navigator.compose.BottomSheetSetup
 
 @Composable
 fun BottomSheetSurface(
@@ -25,7 +25,7 @@ fun BottomSheetSurface(
     }
 }
 
-fun sampleBottomSheetOptions(modifier: Modifier = Modifier) = BottomSheetOptions(
+fun sampleBottomSheetOptions(modifier: Modifier = Modifier) = BottomSheetSetup(
     bottomSheetContainer = { nodeModifier, content ->
         BottomSheetSurface(
             modifier = modifier

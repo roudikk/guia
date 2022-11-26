@@ -36,7 +36,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.compose.BottomSheetOptions
+import com.roudikk.navigator.compose.BottomSheetSetup
 import com.roudikk.navigator.compose.animation.EnterExitTransition
 import com.roudikk.navigator.compose.backstack.BackStackEntry
 import com.roudikk.navigator.core.BottomSheet
@@ -50,7 +50,7 @@ import com.roudikk.navigator.core.Destination
 internal fun Navigator.BottomSheetContainer(
     content: @Composable AnimatedVisibilityScope.(BackStackEntry) -> Unit,
     bottomSheetEntry: BackStackEntry?,
-    bottomSheetOptions: BottomSheetOptions,
+    bottomSheetSetup: BottomSheetSetup,
     transition: EnterExitTransition,
     currentDestination: () -> Destination,
     onSheetHidden: () -> Unit,
@@ -66,7 +66,7 @@ internal fun Navigator.BottomSheetContainer(
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberBottomSheetState(
             initialValue = BottomSheetValue.Collapsed,
-            animationSpec = bottomSheetOptions.animationSpec,
+            animationSpec = bottomSheetSetup.animationSpec,
             confirmStateChange = confirmStateChange
         )
     )
@@ -100,7 +100,7 @@ internal fun Navigator.BottomSheetContainer(
                     .fillMaxWidth(),
                 contentAlignment = Alignment.BottomCenter
             ) {
-                bottomSheetOptions.bottomSheetContainer(
+                bottomSheetSetup.bottomSheetContainer(
                     modifier = bottomSheetEntry?.destination
                         ?.let {
                             (navigationNode as BottomSheet).bottomSheetOptions.modifier
@@ -163,7 +163,7 @@ internal fun Navigator.BottomSheetContainer(
                             ) {}
                         }
                         .fillMaxSize()
-                        .background(bottomSheetOptions.scrimColor)
+                        .background(bottomSheetSetup.scrimColor)
                 )
             }
         }

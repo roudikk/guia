@@ -109,11 +109,13 @@ private fun BottomNavContent(
         bottomBar = { BottomNavigation(navHost) }
     ) { padding ->
         navHost.NavContainer(
-            modifier = Modifier.padding(bottom = 80.dp),
+            modifier = { Modifier.padding(bottom = 80.dp) },
             transitionSpec = { fadeIn() with fadeOut() },
-            bottomSheetOptions = sampleBottomSheetOptions(
-                Modifier.padding(padding)
-            )
+            bottomSheetSetup = {
+                sampleBottomSheetOptions(
+                    Modifier.padding(padding)
+                )
+            }
         )
     }
 }
