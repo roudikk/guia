@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.roudikk.navigator.CrossStackBackHandler
 import com.roudikk.navigator.NavContainer
 import com.roudikk.navigator.NavHost
 import com.roudikk.navigator.NavigationKey
@@ -102,7 +103,9 @@ fun rememberBottomNavHost(): NavHost {
 
 @Composable
 fun BottomNavScreen() {
-    BottomNavContent(rememberBottomNavHost())
+    val navHost = rememberBottomNavHost()
+    navHost.CrossStackBackHandler()
+    BottomNavContent(navHost)
 }
 
 @Composable

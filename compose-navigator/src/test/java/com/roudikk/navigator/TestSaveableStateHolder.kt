@@ -9,12 +9,9 @@ class TestSaveableStateHolder : SaveableStateHolder {
     @Suppress("TestFunctionName")
     @Composable
     override fun SaveableStateProvider(key: Any, content: @Composable () -> Unit) {
-
     }
 
-    override fun removeState(key: Any) {
-
-    }
+    override fun removeState(key: Any) {}
 }
 
 @Parcelize

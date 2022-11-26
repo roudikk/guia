@@ -1,5 +1,6 @@
 package com.roudikk.navigator
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ContentTransform
@@ -9,6 +10,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.with
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -85,6 +87,56 @@ class NavHost(
         }
 
         activeKey = stackKey
+    }
+}
+
+@Composable
+fun NavHost.DefaultStackBackHandler(stackKey: StackKey) {
+    BackHandler(stackKey != activeKey) {
+        setActive(stackKey)
+    }
+}
+
+// A1 A2 A3
+// A3 A0 A1 A2
+
+@Composable
+fun NavHost.CrossStackBackHandler() {
+    var entries by remember { mutableStateOf(emptyList<StackKey>()) }
+    var backKey by remember { mutableStateOf<StackKey?>(null) }
+//
+//    LaunchedEffect(activeNavigator.backStack) {
+//        val newEntries = mutableListOf<Pair<StackKey, NavigationKey>>().apply {
+//            addAll(entries.filter { (_, key) ->
+//                navigatorKeyMap.values.any { it.backStack.contains(key) }
+//            })
+//        }
+//
+//        activeNavigator.backStack
+//            .filter { entry -> !entries.any { it.second == entry } }
+//            .forEach {
+//
+//            }
+//
+//        entries = newEntries
+//    }
+
+    LaunchedEffect(activeKey) {
+        entries = entries.toMutableList().apply {
+            add(activeKey)
+        }
+    }
+
+    LaunchedEffect(key1 = backKey) {
+        backKey?.let { key ->
+            entries = entries.dropLast(1)
+            setActive(key)
+            backKey = null
+        }
+    }
+
+    BackHandler(entries.size > 1) {
+        backKey = entries.last()
     }
 }
 
