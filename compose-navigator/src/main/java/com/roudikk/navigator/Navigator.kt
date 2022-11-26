@@ -58,8 +58,14 @@ class Navigator internal constructor(
 
     val destinations by derivedStateOf {
         backStack.forEach {
-            destinationsMap.getOrPut(it) { Destination(navigationKey = it) }
+            destinationsMap.getOrPut(it) {
+                Destination(navigationKey = it)
+            }
         }
+
+        destinationsMap.keys
+            .filter { it !in backStack }
+            .forEach { destinationsMap.remove(it) }
 
         val destinations = destinationsMap.values
             .toList()
@@ -68,10 +74,6 @@ class Navigator internal constructor(
         navigationNodesMap.keys
             .filter { it !in destinations }
             .forEach { navigationNodesMap.remove(it) }
-
-        destinationsMap.keys
-            .filter { it !in backStack }
-            .forEach { destinationsMap.remove(it) }
 
         destinations
     }
