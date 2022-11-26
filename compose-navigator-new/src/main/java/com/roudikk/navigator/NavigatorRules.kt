@@ -109,6 +109,7 @@ class NavigatorRulesScope {
         dialogOptions: DialogOptions = DialogOptions(),
         content: @Composable () -> Unit
     ) = object : Dialog {
+
         override val dialogOptions: DialogOptions
             get() = dialogOptions
 
@@ -120,6 +121,7 @@ class NavigatorRulesScope {
         bottomSheetOptions: BottomSheetOptions = BottomSheetOptions(),
         content: @Composable () -> Unit
     ) = object : BottomSheet {
+
         override val bottomSheetOptions: BottomSheetOptions
             get() = bottomSheetOptions
 
