@@ -1,6 +1,9 @@
 package com.roudikk.navigator.sample.ui.screens.bottomnav
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -107,6 +110,7 @@ private fun BottomNavContent(
     ) { padding ->
         navHost.NavContainer(
             modifier = Modifier.padding(bottom = 80.dp),
+            transitionSpec = { fadeIn() with fadeOut() },
             bottomSheetOptions = sampleBottomSheetOptions(
                 Modifier.padding(padding)
             )

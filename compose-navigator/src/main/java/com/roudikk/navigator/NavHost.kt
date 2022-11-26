@@ -1,9 +1,17 @@
 package com.roudikk.navigator
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.with
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -47,7 +55,7 @@ fun rememberNavHost(
 class NavHost(
     initialKey: StackKey,
     internal val saveableStateHolder: SaveableStateHolder,
-    private val navigatorKeyMap: HashMap<StackKey, Navigator>
+    internal val navigatorKeyMap: HashMap<StackKey, Navigator>
 ) {
 
     init {
@@ -70,15 +78,24 @@ class NavHost(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavHost.NavContainer(
     modifier: Modifier = Modifier,
+    transitionSpec: AnimatedContentScope<StackKey>.() -> ContentTransform = {
+        EnterTransition.None with ExitTransition.None
+    },
     bottomSheetOptions: com.roudikk.navigator.compose.BottomSheetOptions
 ) {
-    saveableStateHolder.SaveableStateProvider(key = activeKey) {
-        activeNavigator.NavContainer(
-            modifier = modifier,
-            bottomSheetOptions = bottomSheetOptions,
-        )
+    AnimatedContent(
+        targetState = activeKey,
+        transitionSpec = transitionSpec
+    ) { targetKey ->
+        saveableStateHolder.SaveableStateProvider(key = targetKey) {
+            remember(targetKey) { requireNotNull(navigatorKeyMap[targetKey]) }.NavContainer(
+                modifier = modifier,
+                bottomSheetOptions = bottomSheetOptions,
+            )
+        }
     }
 }
