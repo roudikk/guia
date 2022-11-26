@@ -99,6 +99,12 @@ fun Navigator.popTo(
     return true
 }
 
+fun Navigator.removeAll(
+    predicate: (NavigationKey) -> Boolean
+) {
+    setBackstack(backStack.toMutableList().apply { removeAll(predicate) })
+}
+
 inline fun <reified Key : NavigationKey> Navigator.popTo(
     inclusive: Boolean = false
 ) = popTo(
