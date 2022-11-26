@@ -1,11 +1,13 @@
+@file:Suppress("UnstableApiUsage")
+
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 
-val composeVersion = "1.3.0-beta03"
-val composeCompilerVersion = "1.3.1"
-val composeActivityVersion = "1.6.0"
+val composeVersion = "1.3.1"
+val composeCompilerVersion = "1.3.2"
+val composeActivityVersion = "1.6.1"
 val kotlinCoroutinesVersion = "1.6.4"
-val kotlinVersion = "1.7.10"
+val kotlinVersion = "1.7.20"
 val junit4Version = "4.13.2"
 val junit5Version = "5.8.2"
 val truthVersion = "1.1.3"
@@ -57,6 +59,7 @@ android {
     buildFeatures {
         compose = true
     }
+
     namespace = "com.roudikk.navigator"
 }
 
@@ -84,8 +87,8 @@ dependencies {
 
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
 
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.4")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {

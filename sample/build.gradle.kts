@@ -1,18 +1,20 @@
+@file:Suppress("UnstableApiUsage")
+
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 
-val composeVersion = "1.3.0-beta03"
-val composeCompilerVersion = "1.3.1"
-val accompanistVersion = "0.25.1"
-val lottieVersion = "5.1.1"
+val composeVersion = "1.3.1"
+val composeCompilerVersion = "1.3.2"
+val composeMaterial3Version = "1.0.1"
+val accompanistVersion = "0.27.1"
+val lottieVersion = "5.2.0"
 val kotlinCoroutinesVersion = "1.6.4"
-val activityComposeVersion = "1.6.0"
+val activityComposeVersion = "1.6.1"
 val viewModelVersion = "2.5.1"
-val composeMaterial3Version = "1.0.0-beta03"
 val junitVersion = "4.13.2"
 val jupiterVersion = "5.9.1"
 val truthVersion = "1.1.3"
-val materialVersion = "1.7.0-rc01"
+val materialVersion = "1.7.0"
 val detektVersion = "1.21.0"
 
 plugins {
@@ -120,7 +122,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:$jupiterVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
     testImplementation("com.google.truth:truth:$truthVersion")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0-beta01")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
 }
 
 detekt {

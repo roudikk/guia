@@ -104,7 +104,6 @@ private fun NavigationTreeScreen(
                 key = { keyedNavigators[it].first.toString() }
             ) { page ->
                 val navigator = keyedNavigators[page].second
-                val destinations = navigator.destinations
 
                 LazyVerticalGrid(
                     modifier = Modifier
@@ -114,7 +113,7 @@ private fun NavigationTreeScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    items(destinations) { destination ->
+                    items(navigator.backStack) { navigationKey ->
                         Box(
                             Modifier
                                 .sizeIn(minWidth = 100.dp)
@@ -134,7 +133,7 @@ private fun NavigationTreeScreen(
                                         .background(MaterialTheme.colorScheme.surface),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    Text(text = destination.navigationKey.tag())
+                                    Text(text = navigationKey.tag())
                                 }
                             }
                         }

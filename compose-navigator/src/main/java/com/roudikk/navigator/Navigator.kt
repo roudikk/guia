@@ -31,11 +31,10 @@ fun rememberNavigator(
         saver = navigatorSaver(saveableStateHolder, navigatorRules)
     ) {
         Navigator(
+            initialKey = initialKey,
             saveableStateHolder = saveableStateHolder,
             navigatorRules = navigatorRules
-        ).apply {
-            setBackstack(initialKey)
-        }
+        )
     }
 }
 
@@ -47,6 +46,7 @@ fun rememberNavigator(
  * To define a screen use one of [Screen], [Dialog] or [BottomSheet].
  */
 class Navigator internal constructor(
+    internal val initialKey: NavigationKey,
     internal val saveableStateHolder: SaveableStateHolder,
     internal val navigatorRules: NavigatorRules
 ) {
@@ -56,7 +56,7 @@ class Navigator internal constructor(
     var backStack by mutableStateOf(listOf<NavigationKey>())
         private set
 
-    val destinations by derivedStateOf {
+    internal val destinations by derivedStateOf {
         backStack.forEach {
             destinationsMap.getOrPut(it) {
                 Destination(navigationKey = it)
@@ -78,12 +78,16 @@ class Navigator internal constructor(
         destinations
     }
 
+    init {
+        setBackstack(initialKey)
+    }
+
     var overrideBackPress by mutableStateOf(true)
 
     var transition by mutableStateOf(EnterExitTransition.None)
         private set
 
-    fun navigationNode(destination: Destination) = navigationNodesMap.getOrPut(destination) {
+    internal fun navigationNode(destination: Destination) = navigationNodesMap.getOrPut(destination) {
         if (destination.navigationKey is SimpleNavigationKey<*>) {
             destination.navigationKey.navigationNode()
         } else {

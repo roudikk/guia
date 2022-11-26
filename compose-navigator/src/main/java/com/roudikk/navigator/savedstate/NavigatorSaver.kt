@@ -3,6 +3,7 @@ package com.roudikk.navigator.savedstate
 import android.os.Parcelable
 import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.Saver
+import com.roudikk.navigator.NavigationKey
 import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.NavigatorRules
 import com.roudikk.navigator.core.Destination
@@ -13,6 +14,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 internal data class NavigatorState(
+    val initialKey: NavigationKey,
     val destinations: List<Destination>,
 ) : Parcelable
 
@@ -30,13 +32,17 @@ internal fun navigatorSaver(
         save = { it.save() },
         restore = { navigatorState ->
             Navigator(
+                initialKey = navigatorState.initialKey,
                 saveableStateHolder = saveableStateHolder,
                 navigatorRules = navigatorRules
             ).apply { restore(navigatorState) }
         }
     )
 
-private fun Navigator.save() = NavigatorState(destinations = destinations)
+private fun Navigator.save() = NavigatorState(
+    initialKey = initialKey,
+    destinations = destinations
+)
 
 private fun Navigator.restore(
     navigatorState: NavigatorState
