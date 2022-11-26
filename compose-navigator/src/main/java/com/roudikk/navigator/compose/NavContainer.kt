@@ -17,7 +17,7 @@ import com.roudikk.navigator.compose.containers.DialogContainer
 import com.roudikk.navigator.compose.containers.ScreenContainer
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Screen
-import com.roudikk.navigator.popBackStack
+import com.roudikk.navigator.popBackstack
 
 /**
  * [NavContainer] renders the current state of a [Navigator].
@@ -75,7 +75,7 @@ private fun Navigator.NavContainerContent(
     DisposableEffect(enabled) {
         val callback = object : OnBackPressedCallback(enabled) {
             override fun handleOnBackPressed() {
-                navigator.popBackStack()
+                navigator.popBackstack()
             }
         }
         backDispatcher.addCallback(callback)
@@ -88,7 +88,7 @@ private fun Navigator.NavContainerContent(
         bottomSheetSetup = bottomSheetSetup,
         transition = navigator.transition,
         currentDestination = { navigator.destinations.last() },
-        onSheetHidden = { navigator.popBackStack() },
+        onSheetHidden = { navigator.popBackstack() },
         content = { entry -> NavigationEntry(backStackManager, entry) }
     ) {
         // Screen content
@@ -106,7 +106,7 @@ private fun Navigator.NavContainerContent(
         DialogContainer(
             dialogEntry = dialogEntry,
             transition = navigator.transition,
-            onDismissRequest = { navigator.popBackStack() },
+            onDismissRequest = { navigator.popBackstack() },
         ) { entry ->
             NavigationEntry(backStackManager, entry)
         }

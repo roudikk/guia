@@ -25,14 +25,13 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.roudikk.navigator.NavigationKey
-import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.compose.LocalNavigationAnimation
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.navigate
 import com.roudikk.navigator.sample.R
 import com.roudikk.navigator.sample.ui.composables.NavigationAnimationPreview
-import com.roudikk.navigator.sample.ui.screens.bottomnav.BottomTabKey
+import com.roudikk.navigator.sample.ui.screens.bottomnav.BottomNavKey
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import com.roudikk.navigator.setRoot
 import kotlinx.parcelize.Parcelize
@@ -41,12 +40,23 @@ import kotlinx.parcelize.Parcelize
 class WelcomeKey : NavigationKey
 
 fun NavigatorRulesScope.welcomeNavigation() {
-    screen<WelcomeKey> { WelcomeScreen()  }
+    screen<WelcomeKey> { WelcomeScreen() }
 }
 
 @Composable
-private fun WelcomeScreen(
-    navigator: Navigator = requireNavigator()
+private fun WelcomeScreen() {
+    val navigator = requireNavigator()
+
+    WelcomeContent(
+        onNavigateBottomNav = { navigator.navigate(BottomNavKey()) },
+        onSetRooBottomNav = { navigator.setRoot(BottomNavKey()) },
+    )
+}
+
+@Composable
+private fun WelcomeContent(
+    onNavigateBottomNav: () -> Unit = {},
+    onSetRooBottomNav: () -> Unit = {}
 ) {
     val composition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(R.raw.welcome_animation)
@@ -80,9 +90,7 @@ private fun WelcomeScreen(
                         enter = slideInVertically(tween(durationMillis = 600)) { it },
                         exit = slideOutVertically { it }
                     ),
-                onClick = {
-                    navigator.navigate(BottomTabKey())
-                }
+                onClick = onNavigateBottomNav
             ) {
                 Text(text = "Navigate Home")
             }
@@ -96,9 +104,7 @@ private fun WelcomeScreen(
                     .padding(horizontal = 16.dp)
                     .padding(top = 4.dp, bottom = 16.dp)
                     .widthIn(min = 300.dp),
-                onClick = {
-                    navigator.setRoot(BottomTabKey())
-                }
+                onClick = onSetRooBottomNav
             ) {
                 Text(text = "Set Root Home")
             }
@@ -116,6 +122,6 @@ private fun WelcomeScreen(
 @Composable
 private fun WelcomeContentPreviewDark() = AppTheme {
     NavigationAnimationPreview {
-//        WelcomeScreen(navigator = rememberNavigator())
+        WelcomeContent()
     }
 }

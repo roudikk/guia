@@ -92,6 +92,10 @@ class Navigator internal constructor(
     }
 
     fun setBackstack(vararg navigationKeys: NavigationKey) {
+        require(navigationKeys.isNotEmpty()) {
+            "Backstack cannot be empty. Please pass at least one NavigationKey"
+        }
+
         val currentKey = navigationKeys.last()
         val popping = backStack.contains(currentKey)
 

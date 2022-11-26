@@ -8,6 +8,7 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.with
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +28,11 @@ internal val LocalNavHost = staticCompositionLocalOf<NavHost?> { error("Must be 
 
 @Composable
 fun findNavHost() = LocalNavHost.current
+
+@Composable
+fun requireNavHost() = requireNotNull(LocalNavHost.current) {
+    "No NavHost found, Call requireNavHost inside a NavigationKey hosted by a NavHost."
+}
 
 private fun navHostSaver(
     saveableStateHolder: SaveableStateHolder,
@@ -70,6 +76,9 @@ class NavHost(
         requireNotNull(navigatorKeyMap[activeKey])
     }
 
+    val keyedNavigators: List<Pair<StackKey, Navigator>>
+        get() = navigatorKeyMap.map { it.key to it.value }
+
     fun setActive(stackKey: StackKey) {
         require(navigatorKeyMap.containsKey(stackKey)) {
             "$stackKey does not exist in this NavHost, must be provided when calling rememberNavHost"
@@ -88,15 +97,17 @@ fun NavHost.NavContainer(
     },
     bottomSheetSetup: (StackKey) -> BottomSheetSetup
 ) {
-    AnimatedContent(
-        targetState = activeKey,
-        transitionSpec = transitionSpec
-    ) { targetKey ->
-        saveableStateHolder.SaveableStateProvider(key = targetKey) {
-            remember(targetKey) { requireNotNull(navigatorKeyMap[targetKey]) }.NavContainer(
-                modifier = modifier(targetKey),
-                bottomSheetOptions = bottomSheetSetup(targetKey),
-            )
+    CompositionLocalProvider(LocalNavHost provides this) {
+        AnimatedContent(
+            targetState = activeKey,
+            transitionSpec = transitionSpec
+        ) { targetKey ->
+            saveableStateHolder.SaveableStateProvider(key = targetKey) {
+                remember(targetKey) { requireNotNull(navigatorKeyMap[targetKey]) }.NavContainer(
+                    modifier = modifier(targetKey),
+                    bottomSheetOptions = bottomSheetSetup(targetKey),
+                )
+            }
         }
     }
 }

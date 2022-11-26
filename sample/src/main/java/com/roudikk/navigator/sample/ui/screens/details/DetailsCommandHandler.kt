@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.navigate
-import com.roudikk.navigator.popBackStack
+import com.roudikk.navigator.popBackstack
 import com.roudikk.navigator.popToRoot
 import com.roudikk.navigator.replaceLast
 import com.roudikk.navigator.singleInstance
@@ -21,7 +21,7 @@ fun DetailsCommandHandler(
         viewModel.commandsFlow
             .onEach { command ->
                 when (command) {
-                    DetailsCommand.GoBack -> navigator.popBackStack()
+                    DetailsCommand.GoBack -> navigator.popBackstack()
                     is DetailsCommand.OpenBottomSheet -> navigator.navigate(
                         navigationKey = DetailsBottomSheetKey(command.item)
                     )

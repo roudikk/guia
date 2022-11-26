@@ -25,13 +25,12 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.NavigationKey
-import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.canGoBack
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.StackKey
 import com.roudikk.navigator.navigate
-import com.roudikk.navigator.popBackStack
+import com.roudikk.navigator.popBackstack
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
@@ -54,10 +53,25 @@ fun NavigatorRulesScope.nestedNavigation() {
 
 @Composable
 private fun NestedScreen(
-    navigator: Navigator = requireNavigator(),
     count: Int
 ) {
+    val navigator = requireNavigator()
     val canGoBack by navigator.canGoBack()
+    NestedContent(
+        count = count,
+        canGoBack = canGoBack,
+        onRemoveClicked = navigator::popBackstack,
+        onAddClicked = { navigator.navigate(NestedKey(count + 1)) }
+    )
+}
+
+@Composable
+private fun NestedContent(
+    count: Int,
+    canGoBack: Boolean,
+    onRemoveClicked: () -> Unit = {},
+    onAddClicked: () -> Unit = {}
+) {
 
     Column(
         modifier = Modifier
@@ -69,9 +83,7 @@ private fun NestedScreen(
 
         IconButton(
             enabled = canGoBack,
-            onClick = {
-                navigator.popBackStack()
-            }
+            onClick = onRemoveClicked
         ) {
             Icon(
                 imageVector = Icons.Default.Remove,
@@ -96,9 +108,7 @@ private fun NestedScreen(
         }
 
         IconButton(
-            onClick = {
-                navigator.navigate(NestedKey(count + 1))
-            }
+            onClick = onAddClicked
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
@@ -117,8 +127,8 @@ private fun NestedScreen(
 )
 @Composable
 private fun NestedContentPreview() = AppTheme {
-//    NestedScreen(
-//        navigator = rememberNavigator(SampleNavConfig.Nested),
-//        count = 4
-//    )
+    NestedContent(
+        count = 4,
+        canGoBack = true
+    )
 }

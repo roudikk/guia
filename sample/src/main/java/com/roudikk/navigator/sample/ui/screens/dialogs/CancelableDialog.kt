@@ -17,7 +17,6 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.NavigationKey
-import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.popToRoot
@@ -35,8 +34,19 @@ fun NavigatorRulesScope.cancelableDialogNavigation() {
 
 @Composable
 private fun CancelableDialogScreen(
-    navigator: Navigator = requireNavigator(),
     showNextButton: Boolean
+) {
+    val navigator = requireNavigator()
+    CancelableDialogContent(
+        showNextButton = showNextButton,
+        onBackToRootClicked = navigator::popToRoot
+    )
+}
+
+@Composable
+private fun CancelableDialogContent(
+    showNextButton: Boolean,
+    onBackToRootClicked: () -> Unit = {}
 ) {
     Surface(
         shape = RoundedCornerShape(16.dp)
@@ -67,9 +77,7 @@ private fun CancelableDialogScreen(
 
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        navigator.popToRoot()
-                    }
+                    onClick = onBackToRootClicked
                 ) {
                     Text(text = "Go back to root")
                 }
@@ -87,10 +95,9 @@ private fun CancelableDialogScreen(
 )
 @Composable
 private fun CancelableDialogContentPreview() = AppTheme {
-//    CancelableDialogScreen(
-//        navigator = rememberNavigator(),
-//        showNextButton = true
-//    )
+    CancelableDialogContent(
+        showNextButton = true
+    )
 }
 
 @Preview(
@@ -102,8 +109,7 @@ private fun CancelableDialogContentPreview() = AppTheme {
 )
 @Composable
 private fun CancelableDialogContentPreviewFalse() = AppTheme {
-//    CancelableDialogScreen(
-//        navigator = rememberNavigator(),
-//        showNextButton = false
-//    )
+    CancelableDialogContent(
+        showNextButton = false
+    )
 }

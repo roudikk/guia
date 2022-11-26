@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -30,9 +31,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.imePadding
 import com.roudikk.navigator.NavigationKey
-import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.compose.NavContainer
 import com.roudikk.navigator.popTo
@@ -53,15 +52,28 @@ fun NavigatorRulesScope.parentNestedNavigation() {
 @Composable
 fun ParentNestedScreen() {
     val nestedNavigator = rememberNavigator(NestedKey(1)) {
-        defaultTransition { _, _-> VerticalSlideTransition }
+        defaultTransition { _, _ -> VerticalSlideTransition }
         nestedNavigation()
     }
 
-    ParentNestedContent(nestedNavigator)
+    ParentNestedContent(
+        onPopToRootClicked = nestedNavigator::popToRoot,
+        onPopToClicked = {
+            nestedNavigator.popTo<NestedKey> { key ->
+                key.count == it
+            }
+        }
+    ) {
+        nestedNavigator.NavContainer()
+    }
 }
 
 @Composable
-private fun ParentNestedContent(nestedNavigator: Navigator) {
+private fun ParentNestedContent(
+    onPopToRootClicked: () -> Unit = {},
+    onPopToClicked: (Int) -> Unit = {},
+    container: @Composable () -> Unit
+) {
     Scaffold(
         topBar = {
             AppTopAppBar(title = "Nested Navigation")
@@ -77,7 +89,7 @@ private fun ParentNestedContent(nestedNavigator: Navigator) {
         ) {
 
             Box(modifier = Modifier.weight(1f)) {
-                nestedNavigator.NavContainer()
+                container()
             }
 
             Row(
@@ -93,9 +105,7 @@ private fun ParentNestedContent(nestedNavigator: Navigator) {
                         .padding(end = 8.dp)
                         .fillMaxHeight()
                         .weight(1f),
-                    onClick = {
-                        nestedNavigator.popToRoot()
-                    }
+                    onClick = onPopToRootClicked
                 ) {
                     Text(
                         modifier = Modifier,
@@ -117,9 +127,7 @@ private fun ParentNestedContent(nestedNavigator: Navigator) {
                     trailingIcon = {
                         IconButton(onClick = {
                             textFieldValue.value.toIntOrNull()?.let {
-                                nestedNavigator.popTo(predicate = { key ->
-                                    key is NestedKey && key.count == it
-                                })
+                                onPopToClicked(it)
                             }
                         }) {
                             Icon(
@@ -152,5 +160,5 @@ private fun ParentNestedContent(nestedNavigator: Navigator) {
 )
 @Composable
 private fun NestedContentPreview() = AppTheme {
-//    ParentNestedContent(rememberNavigator(SampleNavConfig.Nested))
+    ParentNestedContent {}
 }

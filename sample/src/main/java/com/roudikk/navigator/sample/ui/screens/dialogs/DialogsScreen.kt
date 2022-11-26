@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.NavigationKey
-import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.StackKey
@@ -32,16 +31,32 @@ import kotlinx.parcelize.Parcelize
 object DialogsStackKey : StackKey
 
 @Parcelize
-class DialogsKey: NavigationKey
+class DialogsKey : NavigationKey
 
 fun NavigatorRulesScope.dialogsNavigation() {
-    screen<DialogsKey> { DialogScreen() }
+    screen<DialogsKey> { DialogsScreen() }
 }
 
 @Composable
-private fun DialogScreen(
-    navigator: Navigator = requireNavigator(),
-    defaultNavigator: Navigator = findRootNavigator()
+private fun DialogsScreen(
+) {
+    val navigator = requireNavigator()
+    val rootNavigator = findRootNavigator()
+
+    DialogsContent(
+        onCancelableDialogClicked = { navigator.navigate(CancelableDialogKey(false)) },
+        onBlockingDialogClicked = { navigator.navigate(BlockingDialogKey(false)) },
+        onDialogToDialogClicked = { navigator.navigate(BlockingDialogKey(true)) },
+        onBlockingBottomSheetClicked = { rootNavigator.navigate(BlockingBottomSheetKey()) },
+    )
+}
+
+@Composable
+private fun DialogsContent(
+    onCancelableDialogClicked: () -> Unit = {},
+    onBlockingDialogClicked: () -> Unit = {},
+    onDialogToDialogClicked: () -> Unit = {},
+    onBlockingBottomSheetClicked: () -> Unit = {},
 ) {
     val lazyListState = rememberLazyListState()
 
@@ -67,9 +82,7 @@ private fun DialogScreen(
                 Button(
                     modifier = Modifier
                         .widthIn(min = 300.dp),
-                    onClick = {
-                        navigator.navigate(CancelableDialogKey(false))
-                    }
+                    onClick = onCancelableDialogClicked
                 ) {
                     Text(text = "Cancelable Dialog")
                 }
@@ -79,9 +92,7 @@ private fun DialogScreen(
                 Button(
                     modifier = Modifier
                         .widthIn(min = 300.dp),
-                    onClick = {
-                        navigator.navigate(BlockingDialogKey(false))
-                    }
+                    onClick = onBlockingDialogClicked
                 ) {
                     Text(text = "Blocking Dialog")
                 }
@@ -90,9 +101,7 @@ private fun DialogScreen(
                 Button(
                     modifier = Modifier
                         .widthIn(min = 300.dp),
-                    onClick = {
-                        navigator.navigate(BlockingDialogKey(true))
-                    }
+                    onClick = onDialogToDialogClicked
                 ) {
                     Text(text = "Dialog To Dialog")
                 }
@@ -101,9 +110,7 @@ private fun DialogScreen(
                 Button(
                     modifier = Modifier
                         .widthIn(min = 300.dp),
-                    onClick = {
-                        defaultNavigator.navigate(BlockingBottomSheetKey())
-                    }
+                    onClick = onBlockingBottomSheetClicked
                 ) {
                     Text(text = "Blocking Bottom Sheet")
                 }
@@ -121,8 +128,5 @@ private fun DialogScreen(
 )
 @Composable
 private fun DialogsContentPreview() = AppTheme {
-//    DialogScreen(
-//        navigator = rememberNavigator(),
-//        defaultNavigator = rememberNavigator()
-//    )
+    DialogsContent()
 }

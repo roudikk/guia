@@ -44,7 +44,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.navigator.NavigationKey
-import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.StackKey
@@ -53,6 +52,7 @@ import com.roudikk.navigator.sample.navigation.findRootNavigator
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.screens.details.DetailsKey
 import com.roudikk.navigator.sample.ui.screens.settings.SettingsKey
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -68,25 +68,19 @@ fun NavigatorRulesScope.homeNavigation() {
 }
 
 @Composable
-private fun HomeScreen(
-    viewModel: HomeViewModel = viewModel(),
-    navigator: Navigator = requireNavigator(),
-    defaultNavigator: Navigator = findRootNavigator()
-) {
+private fun HomeScreen() {
+    val viewModel = viewModel<HomeViewModel>()
+    val navigator = requireNavigator()
+    val rootNavigator = findRootNavigator()
+
     LaunchedEffect(Unit) {
         viewModel.commandsFlow.collect { homeCommand ->
             when (homeCommand) {
                 is HomeCommand.OpenDetails -> navigator.navigate(DetailsKey(homeCommand.item))
-                HomeCommand.OpenSettings -> defaultNavigator.navigate(SettingsKey())
+                HomeCommand.OpenSettings -> rootNavigator.navigate(SettingsKey())
             }
         }
     }
-
-//    LaunchedEffect(Unit) {
-//        navigator.results<HomeScreen>().collect {
-//            Toast.makeText(context, "Result from: $it", Toast.LENGTH_SHORT).show()
-//        }
-//    }
 
     HomeContent(
         stateFlow = viewModel.stateFlow,
@@ -249,9 +243,5 @@ private fun ListItem(
 )
 @Composable
 private fun HomeContentPreview() {
-//    HomeScreen(
-//        viewModel = HomeViewModel(SavedStateHandle()),
-//        navigator = rememberNavigator(),
-//        defaultNavigator = rememberNavigator()
-//    )
+    HomeContent(stateFlow = MutableStateFlow(listOf("1", "2", "3")))
 }

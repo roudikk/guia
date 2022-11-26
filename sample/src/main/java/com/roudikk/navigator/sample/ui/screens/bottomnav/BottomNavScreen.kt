@@ -3,6 +3,8 @@ package com.roudikk.navigator.sample.ui.screens.bottomnav
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.with
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -55,15 +57,16 @@ import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class BottomTabKey : NavigationKey
+class BottomNavKey : NavigationKey
 
 fun NavigatorRulesScope.bottomTabNavigation() {
-    screen<BottomTabKey> { BottomNavScreen() }
+    screen<BottomNavKey> { BottomNavScreen() }
 }
 
 @Composable
-fun BottomNavScreen() {
+fun rememberBottomNavHost(): NavHost {
     val configuration = LocalConfiguration.current
+
     val homeNavigator = rememberNavigator(initialKey = HomeKey()) {
         defaultTransition { _, _ -> MaterialSharedAxisTransitionX }
         homeNavigation()
@@ -86,7 +89,7 @@ fun BottomNavScreen() {
         navigationTreeNavigation()
     }
 
-    val navHost = rememberNavHost(
+    return rememberNavHost(
         initialKey = HomeStackKey,
         navigatorKeyMap = hashMapOf(
             HomeStackKey to homeNavigator,
@@ -95,8 +98,11 @@ fun BottomNavScreen() {
             NavigationTreeStackKey to navigationTreeNavigator
         )
     )
+}
 
-    BottomNavContent(navHost)
+@Composable
+fun BottomNavScreen() {
+    BottomNavContent(rememberBottomNavHost())
 }
 
 @Composable
@@ -110,11 +116,19 @@ private fun BottomNavContent(
     ) { padding ->
         navHost.NavContainer(
             modifier = { Modifier.padding(bottom = 80.dp) },
-            transitionSpec = { fadeIn() with fadeOut() },
+            transitionSpec = {
+                if (targetState is NavigationTreeStackKey) {
+                    slideInHorizontally { it } with slideOutHorizontally { -it }
+                } else {
+                    if (initialState is NavigationTreeStackKey) {
+                        slideInHorizontally { -it } with slideOutHorizontally { it }
+                    } else {
+                        fadeIn() with fadeOut()
+                    }
+                }
+            },
             bottomSheetSetup = {
-                sampleBottomSheetOptions(
-                    Modifier.padding(padding)
-                )
+                sampleBottomSheetOptions(Modifier.padding(padding))
             }
         )
     }
@@ -233,5 +247,5 @@ private fun navigatorToStackOrRoot(
 )
 @Composable
 private fun BottomNavContentPreviewDark() = AppTheme {
-//    BottomNavContent(rememberNavigator())
+    BottomNavScreen()
 }

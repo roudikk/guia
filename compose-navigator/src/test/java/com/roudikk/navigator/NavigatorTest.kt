@@ -255,7 +255,7 @@ class NavigatorTest {
 
         assertThat(navigator.canGoBack()).isTrue()
 
-        val popBackStack = navigator.popBackStack()
+        val popBackStack = navigator.popBackstack()
 
         val navigationState = navigator.currentState
         destinations = navigationState.currentStack.destinations
@@ -295,7 +295,7 @@ class NavigatorTest {
 
         val navigationState = navigator.currentState
 
-        val popBackStack = navigator.popBackStack()
+        val popBackStack = navigator.popBackstack()
 
         val newNavigationState = navigator.currentState
         val destinations = newNavigationState.currentStack.destinations
@@ -732,7 +732,7 @@ class NavigatorTest {
         navigator.navigateToStack(navigationStackEntries[0].key)
         navigator.popToRoot()
         navigator.navigateToStack(navigationStackEntries[1].key)
-        navigator.popBackStack()
+        navigator.popBackstack()
 
         val navigationState = navigator.currentState
 
@@ -920,19 +920,19 @@ class NavigatorTest {
         assertThat(navigator.currentStackKey).isEqualTo(navigationStackEntries[1].key)
 
         assertThat(navigator.canGoBack()).isTrue()
-        assertThat(navigator.popBackStack()).isTrue()
+        assertThat(navigator.popBackstack()).isTrue()
         assertThat(navigator.canGoBack()).isTrue()
-        assertThat(navigator.popBackStack()).isTrue()
+        assertThat(navigator.popBackstack()).isTrue()
         assertThat(navigator.canGoBack()).isTrue()
-        assertThat(navigator.popBackStack()).isTrue()
+        assertThat(navigator.popBackstack()).isTrue()
 
         assertThat(navigator.currentStackKey).isEqualTo(navigationStackEntries[0].key)
         assertThat(navigator.canGoBack()).isTrue()
-        assertThat(navigator.popBackStack()).isTrue()
+        assertThat(navigator.popBackstack()).isTrue()
 
         assertThat(navigator.currentStackKey).isEqualTo(navigationStackEntries[0].key)
         assertThat(navigator.canGoBack()).isFalse()
-        assertThat(navigator.popBackStack()).isFalse()
+        assertThat(navigator.popBackstack()).isFalse()
     }
 
     @DisplayName(
@@ -987,39 +987,39 @@ class NavigatorTest {
         assertThat(navigator.currentStackKey).isEqualTo(navigationStackEntries[1].key)
 
         assertThat(navigator.canGoBack()).isTrue()
-        assertThat(navigator.popBackStack()).isTrue()
+        assertThat(navigator.popBackstack()).isTrue()
         assertThat(navigator.currentStackKey).isEqualTo(navigationStackEntries[2].key)
 
         assertThat(navigator.canGoBack()).isTrue()
-        assertThat(navigator.popBackStack()).isTrue()
+        assertThat(navigator.popBackstack()).isTrue()
         assertThat(navigator.currentStackKey).isEqualTo(navigationStackEntries[3].key)
 
         assertThat(navigator.canGoBack()).isTrue()
-        assertThat(navigator.popBackStack()).isTrue()
+        assertThat(navigator.popBackstack()).isTrue()
         assertThat(navigator.currentStackKey).isEqualTo(navigationStackEntries[2].key)
 
         assertThat(navigator.canGoBack()).isTrue()
-        assertThat(navigator.popBackStack()).isTrue()
+        assertThat(navigator.popBackstack()).isTrue()
         assertThat(navigator.currentStackKey).isEqualTo(navigationStackEntries[2].key)
 
         assertThat(navigator.canGoBack()).isTrue()
-        assertThat(navigator.popBackStack()).isTrue()
+        assertThat(navigator.popBackstack()).isTrue()
         assertThat(navigator.currentStackKey).isEqualTo(navigationStackEntries[2].key)
 
         assertThat(navigator.canGoBack()).isTrue()
-        assertThat(navigator.popBackStack()).isTrue()
+        assertThat(navigator.popBackstack()).isTrue()
         assertThat(navigator.currentStackKey).isEqualTo(navigationStackEntries[1].key)
 
         assertThat(navigator.canGoBack()).isTrue()
-        assertThat(navigator.popBackStack()).isTrue()
+        assertThat(navigator.popBackstack()).isTrue()
         assertThat(navigator.currentStackKey).isEqualTo(navigationStackEntries[0].key)
 
         assertThat(navigator.canGoBack()).isTrue()
-        assertThat(navigator.popBackStack()).isTrue()
+        assertThat(navigator.popBackstack()).isTrue()
         assertThat(navigator.currentStackKey).isEqualTo(navigationStackEntries[0].key)
 
         assertThat(navigator.canGoBack()).isFalse()
-        assertThat(navigator.popBackStack()).isFalse()
+        assertThat(navigator.popBackstack()).isFalse()
     }
 
     @DisplayName(

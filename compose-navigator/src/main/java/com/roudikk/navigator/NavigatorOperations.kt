@@ -89,8 +89,8 @@ fun Navigator.any(
 ) = backStack.any(predicate)
 
 fun Navigator.popTo(
+    inclusive: Boolean = false,
     predicate: (NavigationKey) -> Boolean,
-    inclusive: Boolean = false
 ): Boolean {
     val existingKey = backStack.find(predicate) ?: return false
     var newBackStack = backStack.dropLastWhile { it != existingKey }
@@ -99,11 +99,14 @@ fun Navigator.popTo(
     return true
 }
 
-fun Navigator.removeAll(
-    predicate: (NavigationKey) -> Boolean
-) {
-    setBackstack(backStack.toMutableList().apply { removeAll(predicate) })
-}
+@JvmName("popToWithKey")
+inline fun <reified Key : NavigationKey> Navigator.popTo(
+    inclusive: Boolean = false,
+    crossinline predicate: (Key) -> Boolean,
+) = popTo(
+    predicate = { it is Key && predicate(it) },
+    inclusive = inclusive
+)
 
 inline fun <reified Key : NavigationKey> Navigator.popTo(
     inclusive: Boolean = false
@@ -111,6 +114,12 @@ inline fun <reified Key : NavigationKey> Navigator.popTo(
     predicate = { it::class == Key::class },
     inclusive = inclusive
 )
+
+fun Navigator.removeAll(
+    predicate: (NavigationKey) -> Boolean
+) {
+    setBackstack(backStack.toMutableList().apply { removeAll(predicate) })
+}
 
 fun Navigator.popToRoot() {
     setBackstack(backStack[0])
@@ -122,8 +131,10 @@ fun Navigator.setRoot(
     setBackstack(navigationKey)
 }
 
-fun Navigator.popBackStack() {
+fun Navigator.popBackstack(): Boolean {
+    if (backStack.size == 1) return false
     setBackstack(backStack.dropLast(1))
+    return true
 }
 
 fun Navigator.canGoBack() = derivedStateOf {
