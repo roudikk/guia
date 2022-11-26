@@ -1,58 +1,59 @@
 package com.roudikk.navigator.sample.navigation
 
-import com.roudikk.navigator.animation.NavTransition
-import com.roudikk.navigator.animation.navTween
-import com.roudikk.navigator.animation.transitions.navFadeIn
-import com.roudikk.navigator.animation.transitions.navFadeOut
-import com.roudikk.navigator.animation.transitions.navScaleIn
-import com.roudikk.navigator.animation.transitions.navScaleOut
-import com.roudikk.navigator.animation.transitions.navSlideInHorizontally
-import com.roudikk.navigator.animation.transitions.navSlideInVertically
-import com.roudikk.navigator.animation.transitions.navSlideOutHorizontally
-import com.roudikk.navigator.animation.transitions.navSlideOutVertically
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
+import com.roudikk.navigator.compose.animation.NavigationTransition
+import com.roudikk.navigator.compose.animation.to
 
-val MaterialSharedAxisTransitionX = NavTransition(
-    enter = navSlideInHorizontally { (it * 0.2f).toInt() } +
-            navFadeIn(animationSpec = navTween(300)),
+val MaterialSharedAxisTransitionX = NavigationTransition(
+    enterExit = slideInHorizontally { (it * 0.2f).toInt() } + fadeIn(
+        animationSpec = tween(300)
+    ) to slideOutHorizontally { -(it * 0.1f).toInt() } + fadeOut(
+        animationSpec = tween(150)
+    ),
 
-    exit = navSlideOutHorizontally { -(it * 0.1f).toInt() } +
-            navFadeOut(animationSpec = navTween(150)),
-
-    popEnter = navSlideInHorizontally { -(it * 0.1f).toInt() } +
-            navFadeIn(animationSpec = navTween(300)),
-
-    popExit = navSlideOutHorizontally { (it * 0.2f).toInt() } +
-            navFadeOut(animationSpec = navTween(150))
+    popEnterExit = slideInHorizontally { -(it * 0.1f).toInt() } + fadeIn(
+        animationSpec = tween(300)
+    ) to slideOutHorizontally { (it * 0.2f).toInt() } + fadeOut(
+        animationSpec = tween(150)
+    ),
 )
 
-val MaterialSharedAxisTransitionXY = NavTransition(
-    enter = navFadeIn(animationSpec = navTween(300)) +
-            navScaleIn(initialScale = 0.8f, animationSpec = navTween(300)),
+val MaterialSharedAxisTransitionXY = NavigationTransition(
+    enterExit = fadeIn(animationSpec = tween(300)) + scaleIn(
+        initialScale = 0.8f,
+        animationSpec = tween(300)
+    ) to scaleOut(
+        targetScale = 1.1f,
+        animationSpec = tween(300)
+    ) + fadeOut(animationSpec = tween(durationMillis = 150)),
 
-    exit = navScaleOut(targetScale = 1.1f, animationSpec = navTween(300)) +
-            navFadeOut(animationSpec = navTween(durationMillis = 150)),
-
-    popEnter = navFadeIn(animationSpec = navTween(durationMillis = 300)) +
-            navScaleIn(initialScale = 1.1f, animationSpec = navTween(300)),
-
-    popExit = navScaleOut(targetScale = 0.8f, animationSpec = navTween(300)) +
-            navFadeOut(animationSpec = navTween(durationMillis = 150))
+    popEnterExit = fadeIn(animationSpec = tween(durationMillis = 300)) + scaleIn(
+        initialScale = 1.1f,
+        animationSpec = tween(300)
+    ) to scaleOut(
+        targetScale = 0.8f,
+        animationSpec = tween(300)
+    ) + fadeOut(animationSpec = tween(durationMillis = 150))
 )
 
-val VerticalSlideTransition = NavTransition(
-    enter = navSlideInVertically { it / 2 } +
-            navFadeIn(),
-    exit = navSlideOutVertically { -it / 2 } +
-            navFadeOut(),
-    popEnter = navSlideInVertically { -it / 2 } +
-            navFadeIn(),
-    popExit = navSlideOutVertically { it / 2 } +
-            navFadeOut()
+val VerticalSlideTransition = NavigationTransition(
+    enterExit = slideInVertically { it / 2 } + fadeIn() to slideOutVertically {
+        -it / 2
+    } + fadeOut(),
+    popEnterExit = slideInVertically { -it / 2 } + fadeIn() to slideOutVertically {
+        it / 2
+    } + fadeOut()
 )
 
-val CrossFadeTransition = NavTransition(
-    enter = navFadeIn(),
-    exit = navFadeOut(),
-    popEnter = navFadeIn(),
-    popExit = navFadeOut()
+val CrossFadeTransition = NavigationTransition(
+    enterExit = fadeIn() to fadeOut(),
+    popEnterExit = fadeIn() to fadeOut()
 )

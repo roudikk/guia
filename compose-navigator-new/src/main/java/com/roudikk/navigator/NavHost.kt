@@ -73,7 +73,7 @@ class NavHost(
 @Composable
 fun NavHost.NavContainer(
     modifier: Modifier = Modifier,
-    bottomSheetOptions: com.roudikk.navigator.compose.BottomSheetOptions
+    bottomSheetOptions: com.roudikk.navigator.compose.ContainerBottomSheetOptions
 ) {
     saveableStateHolder.SaveableStateProvider(key = activeKey) {
         activeNavigator.NavContainer(

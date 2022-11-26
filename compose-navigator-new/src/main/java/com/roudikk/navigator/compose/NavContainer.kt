@@ -10,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.animation.NavEnterExitTransition
 import com.roudikk.navigator.canGoBack
 import com.roudikk.navigator.compose.backstack.rememberBackStackManager
 import com.roudikk.navigator.compose.containers.BottomSheetContainer
@@ -32,7 +31,7 @@ import com.roudikk.navigator.popBackStack
 @Composable
 fun Navigator.NavContainer(
     modifier: Modifier = Modifier,
-    bottomSheetOptions: BottomSheetOptions = BottomSheetOptions()
+    bottomSheetOptions: ContainerBottomSheetOptions = ContainerBottomSheetOptions()
 ) {
     val parentNavigator = LocalNavigator.current
 
@@ -52,7 +51,7 @@ fun Navigator.NavContainer(
 private fun Navigator.NavContainerContent(
     modifier: Modifier = Modifier,
     navigator: Navigator,
-    bottomSheetOptions: BottomSheetOptions = BottomSheetOptions()
+    bottomSheetOptions: ContainerBottomSheetOptions = ContainerBottomSheetOptions()
 ) {
     val parentNavigator = findParentNavigator()
 
@@ -87,7 +86,7 @@ private fun Navigator.NavContainerContent(
     BottomSheetContainer(
         bottomSheetEntry = backStackEntryGroup.bottomSheetEntry,
         bottomSheetOptions = bottomSheetOptions,
-        transition = NavEnterExitTransition.None,
+        transition = navigator.transition,
         currentDestination = { navigator.destinations.last() },
         onSheetHidden = { navigator.popBackStack() },
         content = { entry -> NavigationEntry(backStackManager, entry) }
@@ -95,7 +94,7 @@ private fun Navigator.NavContainerContent(
         // Screen content
         ScreenContainer(
             modifier = modifier,
-            transition = NavEnterExitTransition.None,
+            transition = navigator.transition,
             screenEntry = backStackEntryGroup.screenEntry
         ) { entry ->
             NavigationEntry(backStackManager, entry)
@@ -106,7 +105,7 @@ private fun Navigator.NavContainerContent(
     backStackEntryGroup.dialogEntry?.let { dialogEntry ->
         DialogContainer(
             dialogEntry = dialogEntry,
-            transition = NavEnterExitTransition.None,
+            transition = navigator.transition,
             onDismissRequest = { navigator.popBackStack() },
         ) { entry ->
             NavigationEntry(backStackManager, entry)

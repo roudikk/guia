@@ -11,6 +11,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import com.roudikk.navigator.compose.NavContainer
+import com.roudikk.navigator.compose.animation.EnterExitTransition
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Destination
 import com.roudikk.navigator.core.Dialog
@@ -66,11 +67,26 @@ class Navigator internal constructor(
 
     var overrideBackPress by mutableStateOf(true)
 
+    var transition by mutableStateOf(EnterExitTransition.None)
+        private set
+
     fun navigationNode(destination: Destination) = navigationNodesMap.getOrPut(destination.id) {
         navigationNodeForKey(destination.navigationKey)
     }
 
     fun setBackstack(vararg navigationKeys: NavigationKey) {
+        val currentKey = navigationKeys.last()
+        val popping = backStack.contains(currentKey)
+
+        if (backStack.isNotEmpty()) {
+            transition = navigatorRules.transitions[currentKey::class]
+                ?.invoke(backStack.last(), currentKey, popping)
+                ?: navigatorRules.defaultTransition(backStack.last(), currentKey, popping)
+        }
+
+        destinationsMap.keys.filter { it !in navigationKeys }
+            .forEach { destinationsMap.remove(it) }
+
         backStack = navigationKeys.toList()
     }
 

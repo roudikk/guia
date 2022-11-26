@@ -29,6 +29,7 @@ import com.roudikk.navigator.core.StackKey
 import com.roudikk.navigator.popToRoot
 import com.roudikk.navigator.rememberNavHost
 import com.roudikk.navigator.rememberNavigator
+import com.roudikk.navigator.sample.navigation.MaterialSharedAxisTransitionX
 import com.roudikk.navigator.sample.navigation.SampleStackKey
 import com.roudikk.navigator.sample.ui.composables.sampleBottomSheetOptions
 import com.roudikk.navigator.sample.ui.screens.details.detailsNavigation
@@ -58,6 +59,7 @@ fun NavigatorRulesScope.bottomTabNavigation() {
 fun BottomNavScreen() {
     val configuration = LocalConfiguration.current
     val homeNavigator = rememberNavigator(initialKey = HomeKey()) {
+        defaultTransition { _, _ -> MaterialSharedAxisTransitionX }
         homeNavigation()
         detailsNavigation(configuration.screenWidthDp)
     }

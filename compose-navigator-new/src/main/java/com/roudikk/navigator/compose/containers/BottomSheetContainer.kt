@@ -36,8 +36,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.animation.NavEnterExitTransition
-import com.roudikk.navigator.compose.BottomSheetOptions
+import com.roudikk.navigator.compose.ContainerBottomSheetOptions
+import com.roudikk.navigator.compose.animation.EnterExitTransition
 import com.roudikk.navigator.compose.backstack.BackStackEntry
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Destination
@@ -50,8 +50,8 @@ import com.roudikk.navigator.core.Destination
 internal fun Navigator.BottomSheetContainer(
     content: @Composable AnimatedVisibilityScope.(BackStackEntry) -> Unit,
     bottomSheetEntry: BackStackEntry?,
-    bottomSheetOptions: BottomSheetOptions,
-    transition: NavEnterExitTransition,
+    bottomSheetOptions: ContainerBottomSheetOptions,
+    transition: EnterExitTransition,
     currentDestination: () -> Destination,
     onSheetHidden: () -> Unit,
     container: @Composable () -> Unit
@@ -117,11 +117,11 @@ internal fun Navigator.BottomSheetContainer(
                             if (navigationNode(destination) !is BottomSheet && targetState != null) {
                                 EnterTransition.None
                             } else {
-                                transition.enter.toComposeEnterTransition()
+                                transition.enter
                             } with if (initialState != null && navigationNode !is BottomSheet) {
                                 fadeOut(animationSpec = snap(delayMillis = 300))
                             } else {
-                                transition.exit.toComposeExitTransition()
+                                transition.exit
                             }
                         }
                     ) { bottomSheetEntry ->

@@ -12,6 +12,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.movableContentOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
@@ -20,13 +22,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.navigator.NavigationKey
 import com.roudikk.navigator.NavigatorRulesScope
+import com.roudikk.navigator.compose.animation.NavigationTransition
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.DialogOptions
-import com.roudikk.navigator.dialogNode
+import com.roudikk.navigator.sample.navigation.CrossFadeTransition
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.composables.BottomSheetSurface
 import com.roudikk.navigator.sample.ui.theme.AppTheme
-import com.roudikk.navigator.screenNode
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -59,6 +61,10 @@ fun NavigatorRulesScope.detailsNavigation(screenWidth: Int) {
     ) { key -> DetailsScreen(item = key.item, isScreen = false) }
 
     bottomSheet<DetailsBottomSheetKey> { key -> DetailsScreen(item = key.item, isScreen = false) }
+
+    transition<DetailsBottomSheetKey> { _, _ -> NavigationTransition.None }
+    transition<DetailsDialogKey> { _, _ -> CrossFadeTransition }
+    transition<DynamicDetailsKey> { _, _ -> CrossFadeTransition }
 }
 
 @Composable
@@ -104,19 +110,21 @@ private fun DetailsContent(
     onReplaceSelected: () -> Unit,
     onOpenDialogSelected: () -> Unit
 ) {
-    val content = @Composable {
-        DetailsList(
-            item = item,
-            onRandomItemSelected = onRandomItemSelected,
-            onSendResultSelected = onSendResultSelected,
-            onBottomSheetSelected = onBottomSheetSelected,
-            onNewSingleInstanceSelected = onNewSingleInstanceSelected,
-            onExistingSingleInstanceSelected = onExistingSingleInstanceSelected,
-            onSingleTopSelected = onSingleTopSelected,
-            onSingleTopBottomSheetSelected = onSingleTopBottomSheetSelected,
-            onReplaceSelected = onReplaceSelected,
-            onOpenDialogSelected = onOpenDialogSelected
-        )
+    val content = remember {
+        movableContentOf {
+            DetailsList(
+                item = item,
+                onRandomItemSelected = onRandomItemSelected,
+                onSendResultSelected = onSendResultSelected,
+                onBottomSheetSelected = onBottomSheetSelected,
+                onNewSingleInstanceSelected = onNewSingleInstanceSelected,
+                onExistingSingleInstanceSelected = onExistingSingleInstanceSelected,
+                onSingleTopSelected = onSingleTopSelected,
+                onSingleTopBottomSheetSelected = onSingleTopBottomSheetSelected,
+                onReplaceSelected = onReplaceSelected,
+                onOpenDialogSelected = onOpenDialogSelected
+            )
+        }
     }
 
     if (isScreen) {
@@ -140,14 +148,10 @@ private fun DetailsContent(
                     .padding(padding)
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
-            ) {
-                content()
-            }
+            ) { content() }
         }
     } else {
-        BottomSheetSurface {
-            content()
-        }
+        BottomSheetSurface(content = content)
     }
 }
 

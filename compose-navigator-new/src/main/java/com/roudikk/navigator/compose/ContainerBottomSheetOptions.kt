@@ -16,7 +16,7 @@ import com.roudikk.navigator.Navigator
  * of two bottom sheets using [Navigator.navigate] instead of animating the transitions between 2
  * bottom sheets, this container will be the parent of all the bottom sheets defined in the app.
  */
-data class BottomSheetOptions(
+data class ContainerBottomSheetOptions(
     val scrimColor: Color = Color.Black.copy(alpha = 0.4F),
 
     val animationSpec: AnimationSpec<Float> = tween(300),

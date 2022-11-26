@@ -15,6 +15,7 @@ import com.roudikk.navigator.compose.NavContainer
 import com.roudikk.navigator.rememberNavigator
 import com.roudikk.navigator.sample.navigation.LocalDefaultNavigator
 import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
+import com.roudikk.navigator.sample.navigation.MaterialSharedAxisTransitionXY
 import com.roudikk.navigator.sample.ui.composables.sampleBottomSheetOptions
 import com.roudikk.navigator.sample.ui.screens.bottomnav.bottomTabNavigation
 import com.roudikk.navigator.sample.ui.screens.dialogs.blockingBottomSheetNavigation
@@ -54,6 +55,7 @@ class MainActivity : ComponentActivity() {
                     bottomTabNavigation()
                     settingsNavigation()
                     blockingBottomSheetNavigation()
+                    defaultTransition { _, _ -> MaterialSharedAxisTransitionXY }
                 }
 
                 CompositionLocalProvider(

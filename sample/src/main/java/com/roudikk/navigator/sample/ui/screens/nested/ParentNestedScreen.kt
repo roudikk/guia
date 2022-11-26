@@ -30,7 +30,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.insets.imePadding
 import com.roudikk.navigator.NavigationKey
 import com.roudikk.navigator.Navigator
@@ -39,8 +38,7 @@ import com.roudikk.navigator.compose.NavContainer
 import com.roudikk.navigator.popTo
 import com.roudikk.navigator.popToRoot
 import com.roudikk.navigator.rememberNavigator
-import com.roudikk.navigator.sample.DeepLinkViewModel
-import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
+import com.roudikk.navigator.sample.navigation.VerticalSlideTransition
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
@@ -54,11 +52,8 @@ fun NavigatorRulesScope.parentNestedNavigation() {
 
 @Composable
 fun ParentNestedScreen() {
-    val mainViewModel = viewModel<DeepLinkViewModel>(
-        viewModelStoreOwner = LocalNavHostViewModelStoreOwner.current
-    )
-
     val nestedNavigator = rememberNavigator(NestedKey(1)) {
+        defaultTransition { _, _-> VerticalSlideTransition }
         nestedNavigation()
     }
 
