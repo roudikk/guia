@@ -29,13 +29,24 @@ import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.canGoBack
 import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.core.StackKey
 import com.roudikk.navigator.navigate
 import com.roudikk.navigator.popBackStack
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class NestedKey(val count: Int) : NavigationKey
+object NestedStackKey : StackKey
+
+@Parcelize
+data class NestedKey(val count: Int) : NavigationKey {
+
+    override fun tag(): String = tagFor(count)
+
+    companion object {
+        fun tagFor(count: Int) = "NestedKey_$count"
+    }
+}
 
 fun NavigatorRulesScope.nestedNavigation() {
     screen<NestedKey> { NestedScreen(count = it.count) }

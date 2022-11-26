@@ -109,9 +109,9 @@ dependencies {
 
     // Lottie
     implementation("com.airbnb.android:lottie-compose:$lottieVersion")
+    implementation(project(":compose-navigator"))
 
     // Navigator
-    implementation(project(":compose-navigator-new"))
 
     // Test dependencies
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")

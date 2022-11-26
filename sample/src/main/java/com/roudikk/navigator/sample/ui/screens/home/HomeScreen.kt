@@ -49,7 +49,7 @@ import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.StackKey
 import com.roudikk.navigator.navigate
-import com.roudikk.navigator.sample.navigation.findDefaultNavigator
+import com.roudikk.navigator.sample.navigation.findRootNavigator
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.screens.details.DetailsKey
 import com.roudikk.navigator.sample.ui.screens.settings.SettingsKey
@@ -58,7 +58,7 @@ import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class HomeStackKey : StackKey
+object HomeStackKey : StackKey
 
 @Parcelize
 class HomeKey : NavigationKey
@@ -71,7 +71,7 @@ fun NavigatorRulesScope.homeNavigation() {
 private fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
     navigator: Navigator = requireNavigator(),
-    defaultNavigator: Navigator = findDefaultNavigator()
+    defaultNavigator: Navigator = findRootNavigator()
 ) {
     LaunchedEffect(Unit) {
         viewModel.commandsFlow.collect { homeCommand ->

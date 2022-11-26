@@ -22,9 +22,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.navigator.NavigationKey
 import com.roudikk.navigator.NavigatorRulesScope
+import com.roudikk.navigator.SimpleNavigationKey
 import com.roudikk.navigator.compose.animation.NavigationTransition
 import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.DialogOptions
+import com.roudikk.navigator.core.dialogNode
+import com.roudikk.navigator.core.screenNode
 import com.roudikk.navigator.sample.navigation.CrossFadeTransition
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.composables.BottomSheetSurface
@@ -42,6 +46,14 @@ data class DetailsBottomSheetKey(val item: String) : Parcelable, NavigationKey
 
 @Parcelize
 data class DynamicDetailsKey(val item: String) : Parcelable, NavigationKey
+
+@Parcelize
+data class DetailsSimpleKey(val item: String) : SimpleNavigationKey<Dialog> {
+
+    override fun navigationNode() = dialogNode {
+        DetailsScreen(item = item, isScreen = false)
+    }
+}
 
 fun NavigatorRulesScope.detailsNavigation(screenWidth: Int) {
     navigationNode<DynamicDetailsKey> {
@@ -65,6 +77,7 @@ fun NavigatorRulesScope.detailsNavigation(screenWidth: Int) {
     transition<DetailsBottomSheetKey> { _, _ -> NavigationTransition.None }
     transition<DetailsDialogKey> { _, _ -> CrossFadeTransition }
     transition<DynamicDetailsKey> { _, _ -> CrossFadeTransition }
+    transition<DetailsSimpleKey> { _, _ -> NavigationTransition.None}
 }
 
 @Composable

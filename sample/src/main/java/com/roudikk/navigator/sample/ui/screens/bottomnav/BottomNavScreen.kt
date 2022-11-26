@@ -30,18 +30,21 @@ import com.roudikk.navigator.popToRoot
 import com.roudikk.navigator.rememberNavHost
 import com.roudikk.navigator.rememberNavigator
 import com.roudikk.navigator.sample.navigation.MaterialSharedAxisTransitionX
-import com.roudikk.navigator.sample.navigation.SampleStackKey
 import com.roudikk.navigator.sample.ui.composables.sampleBottomSheetOptions
 import com.roudikk.navigator.sample.ui.screens.details.detailsNavigation
 import com.roudikk.navigator.sample.ui.screens.dialogs.DialogsKey
+import com.roudikk.navigator.sample.ui.screens.dialogs.DialogsStackKey
 import com.roudikk.navigator.sample.ui.screens.dialogs.blockingBottomSheetNavigation
 import com.roudikk.navigator.sample.ui.screens.dialogs.blockingDialogNavigation
 import com.roudikk.navigator.sample.ui.screens.dialogs.cancelableDialogNavigation
 import com.roudikk.navigator.sample.ui.screens.dialogs.dialogsNavigation
 import com.roudikk.navigator.sample.ui.screens.home.HomeKey
+import com.roudikk.navigator.sample.ui.screens.home.HomeStackKey
 import com.roudikk.navigator.sample.ui.screens.home.homeNavigation
 import com.roudikk.navigator.sample.ui.screens.navigationtree.NavigationTreeKey
+import com.roudikk.navigator.sample.ui.screens.navigationtree.NavigationTreeStackKey
 import com.roudikk.navigator.sample.ui.screens.navigationtree.navigationTreeNavigation
+import com.roudikk.navigator.sample.ui.screens.nested.NestedStackKey
 import com.roudikk.navigator.sample.ui.screens.nested.ParentNestedKey
 import com.roudikk.navigator.sample.ui.screens.nested.nestedNavigation
 import com.roudikk.navigator.sample.ui.screens.nested.parentNestedNavigation
@@ -81,12 +84,12 @@ fun BottomNavScreen() {
     }
 
     val navHost = rememberNavHost(
-        initialKey = SampleStackKey.Home,
+        initialKey = HomeStackKey,
         navigatorKeyMap = hashMapOf(
-            SampleStackKey.Home to homeNavigator,
-            SampleStackKey.Nested to nestedNavigator,
-            SampleStackKey.Dialogs to dialogsNavigator,
-            SampleStackKey.StackTree to navigationTreeNavigator
+            HomeStackKey to homeNavigator,
+            NestedStackKey to nestedNavigator,
+            DialogsStackKey to dialogsNavigator,
+            NavigationTreeStackKey to navigationTreeNavigator
         )
     )
 
@@ -121,12 +124,12 @@ private fun BottomNavigation(navHost: NavHost) {
                 .navigationBarsPadding()
                 .testTag("tab_home"),
             label = { Text("Home") },
-            selected = currentStackKey == SampleStackKey.Home,
+            selected = currentStackKey == HomeStackKey,
             onClick = {
                 navigatorToStackOrRoot(
                     navHost,
                     currentStackKey,
-                    SampleStackKey.Home
+                    HomeStackKey
                 )
             },
             icon = {
@@ -142,12 +145,12 @@ private fun BottomNavigation(navHost: NavHost) {
                 .navigationBarsPadding()
                 .testTag("tab_nested"),
             label = { Text("Nested") },
-            selected = currentStackKey == SampleStackKey.Nested,
+            selected = currentStackKey == NestedStackKey,
             onClick = {
                 navigatorToStackOrRoot(
                     navHost,
                     currentStackKey,
-                    SampleStackKey.Nested
+                    NestedStackKey
                 )
             },
             icon = {
@@ -163,12 +166,12 @@ private fun BottomNavigation(navHost: NavHost) {
                 .navigationBarsPadding()
                 .testTag("tab_dialogs"),
             label = { Text("Dialogs") },
-            selected = currentStackKey == SampleStackKey.Dialogs,
+            selected = currentStackKey == DialogsStackKey,
             onClick = {
                 navigatorToStackOrRoot(
                     navHost,
                     currentStackKey,
-                    SampleStackKey.Dialogs
+                    DialogsStackKey
                 )
             },
             icon = {
@@ -184,12 +187,12 @@ private fun BottomNavigation(navHost: NavHost) {
                 .navigationBarsPadding()
                 .testTag("tab_nav_tree"),
             label = { Text("Nav Tree") },
-            selected = currentStackKey == SampleStackKey.StackTree,
+            selected = currentStackKey == NavigationTreeStackKey,
             onClick = {
                 navigatorToStackOrRoot(
                     navHost,
                     currentStackKey,
-                    SampleStackKey.StackTree
+                    NavigationTreeStackKey
                 )
             },
             icon = {

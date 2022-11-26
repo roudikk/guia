@@ -5,11 +5,11 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.ViewModelStoreOwner
 import com.roudikk.navigator.Navigator
 
-val LocalDefaultNavigator = staticCompositionLocalOf<Navigator> { error("Must be provided.") }
+val LocalRootNavigator = staticCompositionLocalOf<Navigator> { error("Must be provided.") }
 
 @Composable
-fun findDefaultNavigator(): Navigator {
-    return LocalDefaultNavigator.current
+fun findRootNavigator(): Navigator {
+    return LocalRootNavigator.current
 }
 
 val LocalNavHostViewModelStoreOwner = staticCompositionLocalOf<ViewModelStoreOwner> {

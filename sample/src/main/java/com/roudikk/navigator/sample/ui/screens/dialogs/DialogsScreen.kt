@@ -21,11 +21,15 @@ import com.roudikk.navigator.NavigationKey
 import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.core.StackKey
 import com.roudikk.navigator.navigate
-import com.roudikk.navigator.sample.navigation.findDefaultNavigator
+import com.roudikk.navigator.sample.navigation.findRootNavigator
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
+
+@Parcelize
+object DialogsStackKey : StackKey
 
 @Parcelize
 class DialogsKey: NavigationKey
@@ -37,7 +41,7 @@ fun NavigatorRulesScope.dialogsNavigation() {
 @Composable
 private fun DialogScreen(
     navigator: Navigator = requireNavigator(),
-    defaultNavigator: Navigator = findDefaultNavigator()
+    defaultNavigator: Navigator = findRootNavigator()
 ) {
     val lazyListState = rememberLazyListState()
 

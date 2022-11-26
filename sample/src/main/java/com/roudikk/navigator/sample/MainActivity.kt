@@ -13,7 +13,7 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.roudikk.navigator.compose.NavContainer
 import com.roudikk.navigator.rememberNavigator
-import com.roudikk.navigator.sample.navigation.LocalDefaultNavigator
+import com.roudikk.navigator.sample.navigation.LocalRootNavigator
 import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.navigation.MaterialSharedAxisTransitionXY
 import com.roudikk.navigator.sample.ui.composables.sampleBottomSheetOptions
@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 CompositionLocalProvider(
-                    LocalDefaultNavigator provides defaultNavigator,
+                    LocalRootNavigator provides defaultNavigator,
                     LocalNavHostViewModelStoreOwner provides requireNotNull(LocalViewModelStoreOwner.current)
                 ) {
                     defaultNavigator.NavContainer(

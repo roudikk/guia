@@ -1,9 +1,9 @@
 package com.roudikk.navigator.core
 
 import android.os.Parcelable
-import com.roudikk.navigator.animation.NavTransition
+import com.roudikk.navigator.NavigationKey
 import kotlinx.parcelize.Parcelize
-import java.util.*
+import java.util.UUID
 
 /**
  * Represents an entry in the navigation history.
@@ -13,11 +13,17 @@ import java.util.*
  * @property id, unique identifier of the destination.
  */
 @Parcelize
-data class Destination(
-    val navigationNode: NavigationNode,
-    val transition: NavTransition,
-    val id: String = UUID.randomUUID().toString()
-) : Parcelable {
+data class Destination internal constructor(
+    val navigationKey: NavigationKey,
+    val id: String
+): Parcelable {
+
+    constructor(
+        navigationKey: NavigationKey
+    ) : this(
+        navigationKey = navigationKey,
+        id = UUID.randomUUID().toString()
+    )
 
     override fun equals(other: Any?): Boolean {
         return other is Destination && other.id == id

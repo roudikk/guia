@@ -3,12 +3,12 @@ package com.roudikk.navigator
 import androidx.compose.runtime.Composable
 import com.roudikk.navigator.compose.animation.EnterExitTransition
 import com.roudikk.navigator.compose.animation.NavigationTransition
-import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.BottomSheetOptions
-import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.DialogOptions
 import com.roudikk.navigator.core.NavigationNode
-import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.core.bottomSheetNode
+import com.roudikk.navigator.core.dialogNode
+import com.roudikk.navigator.core.screenNode
 import kotlin.reflect.KClass
 
 class NavigatorRules(
@@ -98,34 +98,4 @@ class NavigatorRulesScope {
         transitions = transitions,
         defaultTransition = defaultTransition
     )
-
-    fun screenNode(content: @Composable () -> Unit) = object : Screen {
-
-        @Composable
-        override fun Content() = content()
-    }
-
-    fun dialogNode(
-        dialogOptions: DialogOptions = DialogOptions(),
-        content: @Composable () -> Unit
-    ) = object : Dialog {
-
-        override val dialogOptions: DialogOptions
-            get() = dialogOptions
-
-        @Composable
-        override fun Content() = content()
-    }
-
-    fun bottomSheetNode(
-        bottomSheetOptions: BottomSheetOptions = BottomSheetOptions(),
-        content: @Composable () -> Unit
-    ) = object : BottomSheet {
-
-        override val bottomSheetOptions: BottomSheetOptions
-            get() = bottomSheetOptions
-
-        @Composable
-        override fun Content() = content()
-    }
 }
