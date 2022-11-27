@@ -33,7 +33,7 @@ fun Navigator.NavContainer(
     modifier: Modifier = Modifier,
     bottomSheetOptions: BottomSheetSetup = BottomSheetSetup()
 ) {
-    val parentNavigator = LocalNavigator.current
+    val parentNavigator = findNavigator()
 
     CompositionLocalProvider(
         LocalParentNavigator provides parentNavigator,
