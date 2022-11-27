@@ -7,33 +7,40 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.compose.NavContainer
+import com.roudikk.navigator.navigate
+import com.roudikk.navigator.popTo
 import com.roudikk.navigator.rememberNavigator
-import com.roudikk.navigator.sample.navigation.LocalRootNavigator
 import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
+import com.roudikk.navigator.sample.navigation.LocalRootNavigator
 import com.roudikk.navigator.sample.navigation.MaterialSharedAxisTransitionXY
 import com.roudikk.navigator.sample.ui.composables.sampleBottomSheetOptions
+import com.roudikk.navigator.sample.ui.screens.bottomnav.BottomNavKey
 import com.roudikk.navigator.sample.ui.screens.bottomnav.bottomTabNavigation
 import com.roudikk.navigator.sample.ui.screens.dialogs.blockingBottomSheetNavigation
+import com.roudikk.navigator.sample.ui.screens.settings.SettingsKey
 import com.roudikk.navigator.sample.ui.screens.settings.settingsNavigation
 import com.roudikk.navigator.sample.ui.screens.welcome.WelcomeKey
 import com.roudikk.navigator.sample.ui.screens.welcome.welcomeNavigation
 import com.roudikk.navigator.sample.ui.theme.AppTheme
+import com.roudikk.navigator.setRoot
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: DeepLinkViewModel by viewModels()
+    private val deepLinkViewModel: DeepLinkViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        viewModel.onCreate(intent.dataString)
+        deepLinkViewModel.onDeeplinkData(intent.dataString)
 
         setContent {
             val systemUiController = rememberSystemUiController()
@@ -50,7 +57,10 @@ class MainActivity : ComponentActivity() {
             )
 
             AppTheme {
-                val defaultNavigator = rememberNavigator(initialKey = WelcomeKey()) {
+                val rootNavigator = rememberNavigator(
+                    initialKey = WelcomeKey(),
+                    initialize = { it.deeplink(deepLinkViewModel) }
+                ) {
                     welcomeNavigation()
                     bottomTabNavigation()
                     settingsNavigation()
@@ -59,19 +69,42 @@ class MainActivity : ComponentActivity() {
                 }
 
                 CompositionLocalProvider(
-                    LocalRootNavigator provides defaultNavigator,
+                    LocalRootNavigator provides rootNavigator,
                     LocalNavHostViewModelStoreOwner provides requireNotNull(LocalViewModelStoreOwner.current)
                 ) {
-                    defaultNavigator.NavContainer(
+                    rootNavigator.NavContainer(
                         bottomSheetOptions = sampleBottomSheetOptions()
                     )
+                }
+
+                LaunchedEffect(deepLinkViewModel.destinations) {
+                    rootNavigator.deeplink(deepLinkViewModel)
                 }
             }
         }
     }
 
+    private fun Navigator.deeplink(deepLinkViewModel: DeepLinkViewModel) {
+        deepLinkViewModel.destinations
+            .filterIsInstance<MainDestination>()
+            .forEach { destination ->
+                when (destination) {
+                    MainDestination.BottomNav -> {
+                        if (!popTo<BottomNavKey>()) {
+                            setRoot(BottomNavKey())
+                        }
+                    }
+
+                    MainDestination.Settings -> {
+                        navigate(SettingsKey())
+                    }
+                }
+            }
+        deepLinkViewModel.onMainDestinationsHandled()
+    }
+
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        viewModel.onNewIntent(intent?.dataString)
+        deepLinkViewModel.onDeeplinkData(intent?.dataString)
     }
 }

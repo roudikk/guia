@@ -20,24 +20,42 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisallowComposableCalls
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.CrossStackBackHandler
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.roudikk.navigator.DefaultStackBackHandler
 import com.roudikk.navigator.NavContainer
 import com.roudikk.navigator.NavHost
 import com.roudikk.navigator.NavigationKey
 import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.core.StackKey
+import com.roudikk.navigator.navigate
 import com.roudikk.navigator.popToRoot
 import com.roudikk.navigator.rememberNavHost
 import com.roudikk.navigator.rememberNavigator
+import com.roudikk.navigator.sample.BottomNavDestination.DialogsTab
+import com.roudikk.navigator.sample.BottomNavDestination.HomeTab
+import com.roudikk.navigator.sample.BottomNavDestination.NavigationTreeTab
+import com.roudikk.navigator.sample.BottomNavDestination.NestedTab
+import com.roudikk.navigator.sample.DeepLinkViewModel
+import com.roudikk.navigator.sample.DialogsDestination.BlockingBottomSheet
+import com.roudikk.navigator.sample.DialogsDestination.BlockingDialog
+import com.roudikk.navigator.sample.DialogsDestination.Cancelable
+import com.roudikk.navigator.sample.HomeDestination.Details
+import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.navigation.MaterialSharedAxisTransitionX
 import com.roudikk.navigator.sample.ui.composables.sampleBottomSheetOptions
+import com.roudikk.navigator.sample.ui.screens.details.DetailsKey
 import com.roudikk.navigator.sample.ui.screens.details.detailsNavigation
+import com.roudikk.navigator.sample.ui.screens.dialogs.BlockingBottomSheetKey
+import com.roudikk.navigator.sample.ui.screens.dialogs.BlockingDialogKey
+import com.roudikk.navigator.sample.ui.screens.dialogs.CancelableDialogKey
 import com.roudikk.navigator.sample.ui.screens.dialogs.DialogsKey
 import com.roudikk.navigator.sample.ui.screens.dialogs.DialogsStackKey
 import com.roudikk.navigator.sample.ui.screens.dialogs.blockingBottomSheetNavigation
@@ -65,7 +83,10 @@ fun NavigatorRulesScope.bottomTabNavigation() {
 }
 
 @Composable
-fun rememberBottomNavHost(): NavHost {
+fun rememberBottomNavHost(
+    initialize: @DisallowComposableCalls (NavHost) -> Unit = {}
+): NavHost {
+
     val configuration = LocalConfiguration.current
 
     val homeNavigator = rememberNavigator(initialKey = HomeKey()) {
@@ -92,6 +113,7 @@ fun rememberBottomNavHost(): NavHost {
 
     return rememberNavHost(
         initialKey = HomeStackKey,
+        initialize = initialize,
         navigatorKeyMap = hashMapOf(
             HomeStackKey to homeNavigator,
             NestedStackKey to nestedNavigator,
@@ -103,9 +125,41 @@ fun rememberBottomNavHost(): NavHost {
 
 @Composable
 fun BottomNavScreen() {
-    val navHost = rememberBottomNavHost()
-    navHost.CrossStackBackHandler()
+    val deepLinkViewModel = viewModel<DeepLinkViewModel>(LocalNavHostViewModelStoreOwner.current)
+
+    val navHost = rememberBottomNavHost { it.deeplink(deepLinkViewModel) }
+    navHost.DefaultStackBackHandler(HomeStackKey)
+
     BottomNavContent(navHost)
+
+    LaunchedEffect(deepLinkViewModel.destinations) {
+        navHost.deeplink(deepLinkViewModel)
+    }
+}
+
+private fun NavHost.deeplink(deepLinkViewModel: DeepLinkViewModel) {
+    deepLinkViewModel.destinations
+        .forEach { destination ->
+            when (destination) {
+                // Tab destinations
+                HomeTab -> setActive(HomeStackKey)
+                NestedTab -> setActive(NestedStackKey)
+                DialogsTab -> setActive(DialogsStackKey)
+                NavigationTreeTab -> setActive(NavigationTreeStackKey)
+
+                // Dialog destinations
+                BlockingBottomSheet -> activeNavigator.navigate(BlockingBottomSheetKey())
+                BlockingDialog -> activeNavigator.navigate(BlockingDialogKey(false))
+                Cancelable -> activeNavigator.navigate(CancelableDialogKey(false))
+
+                // Home destinations
+                is Details -> activeNavigator.navigate(DetailsKey(destination.item))
+
+                // Ignore other destinations
+                else -> Unit
+            }
+        }
+    deepLinkViewModel.onBottomNavDestinationsHandled()
 }
 
 @Composable

@@ -1,119 +1,126 @@
 package com.roudikk.navigator.sample
 
 import android.net.Uri
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 
 class DeepLinkViewModel : ViewModel() {
-    private var handledInitialIntent = false
-
-    private val mainDestinationsChannel = Channel<List<MainDestination>>()
-    val mainDestinationsFlow = mainDestinationsChannel.receiveAsFlow()
-
-    private val tabDestinationsChannel = Channel<List<TabDestination>>()
-    val tabDestinationsFlow = tabDestinationsChannel.receiveAsFlow()
-
-    private val nestedDestinationsChannel = Channel<List<NestedDestination>>()
-    val nestedDestinationsFlow = nestedDestinationsChannel.receiveAsFlow()
-
-    var mainDestinations = emptyList<MainDestination>()
+    var destinations by mutableStateOf(emptyList<DeepLinkDestination>())
         private set
-        get() = field.also { field = emptyList() }
 
-    var tabDestinations = emptyList<TabDestination>()
-        private set
-        get() = field.also { field = emptyList() }
+    fun onDeeplinkData(data: String?) {
+        destinations = emptyList()
 
-    var nestedDestinations = emptyList<NestedDestination>()
-        private set
-        get() = field.also { field = emptyList() }
+        data ?: return
+        val uri = runCatching { Uri.parse(data) }.getOrNull() ?: return
 
-    fun onCreate(intentData: String?) {
-        if (handledInitialIntent) return
-        handledInitialIntent = true
-        intentData ?: return
-        parseIntent(intentData, false)
-    }
+        val newDestinations = mutableListOf<DeepLinkDestination>()
+        uri.pathSegments.forEachIndexed { index, segment ->
+            when (segment) {
+                "bottom-nav" -> {
+                    newDestinations.add(MainDestination.BottomNav)
+                    uri.pathSegments.subList(index, uri.pathSegments.size)
+                        .forEachIndexed { bottomNavIndex, bottomNavSegment ->
+                            when (bottomNavSegment) {
+                                "home" -> {
+                                    newDestinations.add(BottomNavDestination.HomeTab)
+                                    when (uri.pathSegments.getOrNull(bottomNavIndex + 1)) {
+                                        "details" -> {
+                                            uri.getQueryParameter("item")?.let { item ->
+                                                newDestinations.add(HomeDestination.Details(item))
+                                            }
+                                        }
+                                    }
+                                }
 
-    fun onNewIntent(intentData: String?) {
-        intentData ?: return
-        parseIntent(intentData, true)
-    }
+                                "parent-nested" -> {
+                                    newDestinations.add(BottomNavDestination.NestedTab)
+                                    when (uri.pathSegments.getOrNull(bottomNavIndex + 1)) {
+                                        "nested" -> {
+                                            uri.getQueryParameter("item")
+                                                ?.toIntOrNull()
+                                                ?.let { item ->
+                                                    newDestinations.add(
+                                                        NestedDestination.Nested(
+                                                            item
+                                                        )
+                                                    )
+                                                }
+                                        }
+                                    }
+                                }
 
-    private fun parseIntent(intentData: String, newIntent: Boolean) {
-        val uri = runCatching { Uri.parse(intentData) }.getOrNull() ?: return
+                                "dialogs" -> {
+                                    newDestinations.add(BottomNavDestination.DialogsTab)
+                                    when (uri.pathSegments.getOrNull(bottomNavIndex + 1)) {
+                                        "cancelable" -> newDestinations.add(
+                                            DialogsDestination.Cancelable
+                                        )
 
-        if (uri.host?.contains("roudikk") == false || uri.scheme != "https") return
+                                        "blocking-dialog" -> newDestinations.add(
+                                            DialogsDestination.BlockingDialog
+                                        )
 
-        val mainDestinations = mutableListOf<MainDestination>()
-        val tabDestinations = mutableListOf<TabDestination>()
-        val nestedDestinations = mutableListOf<NestedDestination>()
+                                        "blocking-bottom-sheet" -> newDestinations.add(
+                                            DialogsDestination.BlockingBottomSheet
+                                        )
+                                    }
+                                }
 
-        if (uri.pathSegments.contains("bottom-nav")) {
-            mainDestinations.add(MainDestination.BottomNav)
-
-            if (uri.pathSegments.contains("home")) {
-                tabDestinations.add(TabDestination.HomeTab)
-
-                if (uri.pathSegments.contains("details")) {
-                    uri.getQueryParameter("item")?.let {
-                        tabDestinations.add(TabDestination.Details(it))
-                    }
+                                "navigation-tree" -> newDestinations.add(BottomNavDestination.NavigationTreeTab)
+                            }
+                        }
                 }
-            }
 
-            if (uri.pathSegments.contains("nested")) {
-                tabDestinations.add(TabDestination.NestedTab)
-
-                uri.getQueryParameter("count")?.let {
-                    val count = kotlin.runCatching { it.toInt() }.getOrNull() ?: return@let
-                    nestedDestinations.add(NestedDestination.Nested(count))
-                }
-            }
-
-            if (uri.pathSegments.contains("dialogs")) {
-                tabDestinations.add(TabDestination.DialogsTab)
-            }
-
-            if (uri.pathSegments.contains("stack-tree")) {
-                tabDestinations.add(TabDestination.StackTreeTab)
+                "settings" -> newDestinations.add(MainDestination.Settings)
             }
         }
 
-        if (uri.pathSegments.contains("settings")) {
-            mainDestinations.add(MainDestination.Settings)
-        }
+        destinations = newDestinations
+    }
 
-        if (newIntent) {
-            viewModelScope.launch {
-                mainDestinationsChannel.send(mainDestinations)
-                tabDestinationsChannel.send(tabDestinations)
-                nestedDestinationsChannel.send(nestedDestinations)
-            }
-        } else {
-            this.mainDestinations = mainDestinations
-            this.tabDestinations = tabDestinations
-            this.nestedDestinations = nestedDestinations
+    fun onMainDestinationsHandled() {
+        destinations = destinations.filter { it !is MainDestination }
+    }
+
+    fun onNestedDestinationsHandled() {
+        destinations = destinations.filter { it !is NestedDestination }
+    }
+
+    fun onBottomNavDestinationsHandled() {
+        destinations = destinations.filter {
+            it !is BottomNavDestination && it !is DialogsDestination && it !is HomeDestination
         }
     }
+
 }
 
-sealed class MainDestination {
+sealed class DeepLinkDestination
+
+sealed class MainDestination : DeepLinkDestination() {
     object BottomNav : MainDestination()
     object Settings : MainDestination()
 }
 
-sealed class TabDestination {
-    object HomeTab : TabDestination()
-    object NestedTab : TabDestination()
-    object DialogsTab : TabDestination()
-    object StackTreeTab : TabDestination()
-    data class Details(val item: String) : TabDestination()
+sealed class HomeDestination : DeepLinkDestination() {
+    class Details(val item: String) : HomeDestination()
 }
 
-sealed class NestedDestination {
-    data class Nested(val count: Int) : NestedDestination()
+sealed class DialogsDestination : DeepLinkDestination() {
+    object Cancelable : DialogsDestination()
+    object BlockingDialog : DialogsDestination()
+    object BlockingBottomSheet : DialogsDestination()
+}
+
+sealed class BottomNavDestination : DeepLinkDestination() {
+    object HomeTab : BottomNavDestination()
+    object NestedTab : BottomNavDestination()
+    object DialogsTab : BottomNavDestination()
+    object NavigationTreeTab : BottomNavDestination()
+}
+
+sealed class NestedDestination : DeepLinkDestination() {
+    class Nested(val count: Int) : NestedDestination()
 }

@@ -17,11 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.navigator.NavigationKey
 import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.StackKey
 import com.roudikk.navigator.navigate
+import com.roudikk.navigator.sample.DeepLinkViewModel
+import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.navigation.findRootNavigator
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.theme.AppTheme
@@ -40,6 +43,8 @@ fun NavigatorRulesScope.dialogsNavigation() {
 @Composable
 private fun DialogsScreen(
 ) {
+    val deepLinkViewModel = viewModel<DeepLinkViewModel>(LocalNavHostViewModelStoreOwner.current)
+
     val navigator = requireNavigator()
     val rootNavigator = findRootNavigator()
 

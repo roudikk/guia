@@ -48,6 +48,8 @@ import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.StackKey
 import com.roudikk.navigator.navigate
+import com.roudikk.navigator.sample.DeepLinkViewModel
+import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.navigation.findRootNavigator
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.screens.details.DetailsKey
@@ -70,6 +72,8 @@ fun NavigatorRulesScope.homeNavigation() {
 @Composable
 private fun HomeScreen() {
     val viewModel = viewModel<HomeViewModel>()
+    val deepLinkViewModel = viewModel<DeepLinkViewModel>(LocalNavHostViewModelStoreOwner.current)
+
     val navigator = requireNavigator()
     val rootNavigator = findRootNavigator()
 

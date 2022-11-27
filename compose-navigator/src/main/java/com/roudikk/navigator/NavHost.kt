@@ -10,6 +10,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.with
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisallowComposableCalls
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -47,7 +48,8 @@ private fun navHostSaver(
 @Composable
 fun rememberNavHost(
     initialKey: StackKey,
-    navigatorKeyMap: HashMap<StackKey, Navigator>
+    navigatorKeyMap: HashMap<StackKey, Navigator>,
+    initialize: @DisallowComposableCalls (NavHost) -> Unit = {}
 ): NavHost {
     val saveableStateHolder = rememberSaveableStateHolder()
     return rememberSaveable(
@@ -57,7 +59,7 @@ fun rememberNavHost(
             initialKey = initialKey,
             saveableStateHolder = saveableStateHolder,
             navigatorKeyMap = navigatorKeyMap
-        )
+        ).apply(initialize)
     }
 }
 

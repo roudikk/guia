@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -31,12 +32,18 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.navigator.NavigationKey
+import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.NavigatorRulesScope
 import com.roudikk.navigator.compose.NavContainer
+import com.roudikk.navigator.navigate
 import com.roudikk.navigator.popTo
 import com.roudikk.navigator.popToRoot
 import com.roudikk.navigator.rememberNavigator
+import com.roudikk.navigator.sample.DeepLinkViewModel
+import com.roudikk.navigator.sample.NestedDestination
+import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.navigation.VerticalSlideTransition
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.theme.AppTheme
@@ -51,7 +58,12 @@ fun NavigatorRulesScope.parentNestedNavigation() {
 
 @Composable
 fun ParentNestedScreen() {
-    val nestedNavigator = rememberNavigator(NestedKey(1)) {
+    val deepLinkViewModel = viewModel<DeepLinkViewModel>(LocalNavHostViewModelStoreOwner.current)
+
+    val nestedNavigator = rememberNavigator(
+        initialKey = NestedKey(1),
+        initialize = { it.deeplink(deepLinkViewModel)}
+    ) {
         defaultTransition { _, _ -> VerticalSlideTransition }
         nestedNavigation()
     }
@@ -66,7 +78,23 @@ fun ParentNestedScreen() {
     ) {
         nestedNavigator.NavContainer()
     }
+
+    LaunchedEffect(deepLinkViewModel.destinations) {
+        nestedNavigator.deeplink(deepLinkViewModel)
+    }
 }
+
+private fun Navigator.deeplink(deepLinkViewModel: DeepLinkViewModel) {
+    deepLinkViewModel.destinations
+        .filterIsInstance<NestedDestination>()
+        .forEach { destination ->
+            when (destination) {
+                is NestedDestination.Nested -> navigate(NestedKey(destination.count))
+            }
+        }
+    deepLinkViewModel.onNestedDestinationsHandled()
+}
+
 
 @Composable
 private fun ParentNestedContent(

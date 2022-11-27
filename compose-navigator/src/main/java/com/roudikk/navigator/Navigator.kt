@@ -22,6 +22,7 @@ import com.roudikk.navigator.savedstate.navigatorSaver
 @Composable
 fun rememberNavigator(
     initialKey: NavigationKey,
+    initialize: @DisallowComposableCalls (Navigator) -> Unit = {},
     navigatorRulesBuilder: @DisallowComposableCalls NavigatorRulesScope.() -> Unit
 ): Navigator {
     val saveableStateHolder = rememberSaveableStateHolder()
@@ -34,7 +35,7 @@ fun rememberNavigator(
             initialKey = initialKey,
             saveableStateHolder = saveableStateHolder,
             navigatorRules = navigatorRules
-        )
+        ).apply(initialize)
     }
 }
 
@@ -87,13 +88,14 @@ class Navigator internal constructor(
     var transition by mutableStateOf(EnterExitTransition.None)
         private set
 
-    internal fun navigationNode(destination: Destination) = navigationNodesMap.getOrPut(destination) {
-        if (destination.navigationKey is SimpleNavigationKey<*>) {
-            destination.navigationKey.navigationNode()
-        } else {
-            navigationNodeForKey(destination.navigationKey)
+    internal fun navigationNode(destination: Destination) =
+        navigationNodesMap.getOrPut(destination) {
+            if (destination.navigationKey is SimpleNavigationKey<*>) {
+                destination.navigationKey.navigationNode()
+            } else {
+                navigationNodeForKey(destination.navigationKey)
+            }
         }
-    }
 
     fun setBackstack(vararg navigationKeys: NavigationKey) {
         require(navigationKeys.isNotEmpty()) {

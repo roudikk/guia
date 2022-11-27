@@ -38,7 +38,7 @@ import kotlinx.parcelize.Parcelize
 object NestedStackKey : StackKey
 
 @Parcelize
-data class NestedKey(val count: Int) : NavigationKey {
+class NestedKey(val count: Int) : NavigationKey {
 
     override fun tag(): String = tagFor(count)
 

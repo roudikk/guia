@@ -36,19 +36,19 @@ import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class DetailsKey(val item: String) : Parcelable, NavigationKey
+class DetailsKey(val item: String) : Parcelable, NavigationKey
 
 @Parcelize
-data class DetailsDialogKey(val item: String) : Parcelable, NavigationKey
+class DetailsDialogKey(val item: String) : Parcelable, NavigationKey
 
 @Parcelize
-data class DetailsBottomSheetKey(val item: String) : Parcelable, NavigationKey
+class DetailsBottomSheetKey(val item: String) : Parcelable, NavigationKey
 
 @Parcelize
-data class DynamicDetailsKey(val item: String) : Parcelable, NavigationKey
+class DynamicDetailsKey(val item: String) : Parcelable, NavigationKey
 
 @Parcelize
-data class DetailsSimpleKey(val item: String) : SimpleNavigationKey<Dialog> {
+class DetailsSimpleKey(val item: String) : SimpleNavigationKey<Dialog> {
 
     override fun navigationNode() = dialogNode {
         DetailsScreen(item = item, isScreen = false)
