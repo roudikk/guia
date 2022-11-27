@@ -94,7 +94,6 @@ class DeepLinkViewModel : ViewModel() {
             it !is BottomNavDestination && it !is DialogsDestination && it !is HomeDestination
         }
     }
-
 }
 
 sealed class DeepLinkDestination
