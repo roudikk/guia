@@ -114,13 +114,12 @@ fun rememberBottomNavHost(
     return rememberNavHost(
         initialKey = HomeStackKey,
         initialize = initialize,
-        navigatorKeyMap = hashMapOf(
-            HomeStackKey to homeNavigator,
-            NestedStackKey to nestedNavigator,
-            DialogsStackKey to dialogsNavigator,
-            NavigationTreeStackKey to navigationTreeNavigator
-        )
-    )
+    ) {
+        entry(HomeStackKey, homeNavigator)
+        entry(NestedStackKey, nestedNavigator)
+        entry(DialogsStackKey, dialogsNavigator)
+        entry(NavigationTreeStackKey, navigationTreeNavigator)
+    }
 }
 
 @Composable

@@ -62,9 +62,7 @@ fun NavigatorRulesBuilder.navigationTreeNavigation() {
 private fun NavigationTreeScreen(
     navHost: NavHost = requireNavHost()
 ) {
-    val keyedNavigators = navHost.keyedNavigators.filter { it.first != NavigationTreeStackKey }
-
-    Scaffold(
+  Scaffold(
         topBar = { TopAppBar(title = { Text(text = "Navigation Tree") }) }
     ) { padding ->
         val scope = rememberCoroutineScope()
@@ -82,7 +80,7 @@ private fun NavigationTreeScreen(
                 }
             ) {
                 // Add tabs for all of our pages
-                keyedNavigators.forEachIndexed { index, (key, _) ->
+                navHost.entries.forEachIndexed { index, (key, _) ->
                     Tab(
                         text = {
                             Text(text = key::class.java.simpleName)
@@ -100,10 +98,10 @@ private fun NavigationTreeScreen(
             HorizontalPager(
                 modifier = Modifier.weight(1F),
                 state = pagerState,
-                count = keyedNavigators.size,
-                key = { keyedNavigators[it].first.toString() }
+                count = navHost.entries.size,
+                key = { navHost.entries[it].stackKey.toString() }
             ) { page ->
-                val navigator = keyedNavigators[page].second
+                val navigator = navHost.entries[page].navigator
 
                 LazyVerticalGrid(
                     modifier = Modifier

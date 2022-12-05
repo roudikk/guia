@@ -27,6 +27,7 @@ import kotlinx.coroutines.delay
 fun DetailsList(
     item: String,
     onRandomItemSelected: () -> Unit,
+    onDynamicSelected: () -> Unit,
     onSendResultSelected: () -> Unit,
     onBottomSheetSelected: () -> Unit,
     onNewSingleInstanceSelected: () -> Unit,
@@ -63,6 +64,11 @@ fun DetailsList(
         DetailsAction(
             title = "New random item",
             onClick = onRandomItemSelected
+        )
+
+        DetailsAction(
+            title = "New dynamic item",
+            onClick = onDynamicSelected
         )
 
         DetailsAction(

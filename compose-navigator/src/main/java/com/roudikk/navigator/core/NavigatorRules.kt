@@ -11,10 +11,10 @@ private typealias AssociationsMap = HashMap<KClass<NavigationKey>, (NavigationKe
 private typealias TransitionsMap = HashMap<KClass<NavigationKey>, (previous: NavigationKey, new: NavigationKey, isPop: Boolean) -> EnterExitTransition>
 private typealias DefaultTransition = (previous: NavigationKey, new: NavigationKey, isPop: Boolean) -> EnterExitTransition
 
-class NavigatorRules(
-    internal val associations: AssociationsMap = hashMapOf(),
-    internal val transitions: TransitionsMap = hashMapOf(),
-    internal val defaultTransition: DefaultTransition = { _, _, _ -> EnterExitTransition.None }
+internal class NavigatorRules(
+    val associations: AssociationsMap = hashMapOf(),
+    val transitions: TransitionsMap = hashMapOf(),
+    val defaultTransition: DefaultTransition = { _, _, _ -> EnterExitTransition.None }
 )
 
 class NavigatorRulesBuilder {
@@ -27,7 +27,8 @@ class NavigatorRulesBuilder {
 
     private var defaultTransition: DefaultTransition = { _, _, _ -> EnterExitTransition.None }
 
-    inline fun <reified Key : NavigationKey> navigationNode(
+    @PublishedApi
+    internal inline fun <reified Key : NavigationKey> navigationNode(
         noinline navigationNodeBuilder: (Key) -> NavigationNode
     ) {
         associations[Key::class as KClass<NavigationKey>] =
@@ -107,7 +108,7 @@ class NavigatorRulesBuilder {
         }
     }
 
-    fun build() = NavigatorRules(
+    internal fun build() = NavigatorRules(
         associations = associations,
         transitions = transitions,
         defaultTransition = defaultTransition

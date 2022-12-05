@@ -5,27 +5,31 @@ import androidx.compose.runtime.DisallowComposableCalls
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
+import com.roudikk.navigator.compose.savedstate.NavHostSaver
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.StackKey
 
 @Composable
 fun rememberNavHost(
     initialKey: StackKey,
-    navigatorKeyMap: HashMap<StackKey, Navigator>,
-    initialize: @DisallowComposableCalls (NavHost) -> Unit = {}
+    initialize: @DisallowComposableCalls (NavHost) -> Unit = {},
+    builder: StackEntryListBuilder.() -> Unit,
 ): NavHost {
     val saveableStateHolder = rememberSaveableStateHolder()
+    val entries = remember { StackEntryListBuilder().apply(builder).build() }
+
     return rememberSaveable(
-        saver = NavHostSaver(saveableStateHolder, navigatorKeyMap)
+        saver = NavHostSaver(saveableStateHolder, entries)
     ) {
         NavHost(
             initialKey = initialKey,
             saveableStateHolder = saveableStateHolder,
-            navigatorKeyMap = navigatorKeyMap
+            entries = entries
         ).apply(initialize)
     }
 }
@@ -33,25 +37,24 @@ fun rememberNavHost(
 class NavHost(
     initialKey: StackKey,
     internal val saveableStateHolder: SaveableStateHolder,
-    internal val navigatorKeyMap: HashMap<StackKey, Navigator>
+    val entries: List<StackEntry>
 ) {
 
     init {
-        require(navigatorKeyMap.contains(initialKey))
+        require(entries.any { it.stackKey == initialKey }) {
+            "$initialKey must be added to list of entries."
+        }
     }
 
     var activeKey by mutableStateOf(initialKey)
         private set
 
     val activeNavigator by derivedStateOf {
-        requireNotNull(navigatorKeyMap[activeKey])
+        requireNotNull(entries.firstOrNull { it.stackKey == activeKey }).navigator
     }
 
-    val keyedNavigators: List<Pair<StackKey, Navigator>>
-        get() = navigatorKeyMap.map { it.key to it.value }
-
     fun setActive(stackKey: StackKey) {
-        require(navigatorKeyMap.containsKey(stackKey)) {
+        require(entries.any { it.stackKey == stackKey }) {
             "$stackKey does not exist in this NavHost, must be provided when calling rememberNavHost"
         }
 

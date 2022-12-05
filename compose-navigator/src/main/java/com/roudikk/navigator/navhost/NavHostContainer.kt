@@ -30,10 +30,12 @@ fun NavHost.NavContainer(
             transitionSpec = transitionSpec
         ) { targetKey ->
             saveableStateHolder.SaveableStateProvider(key = targetKey) {
-                remember(targetKey) { requireNotNull(navigatorKeyMap[targetKey]) }.NavContainer(
-                    modifier = modifier(targetKey),
-                    bottomSheetOptions = bottomSheetSetup(targetKey),
-                )
+                remember(targetKey) { requireNotNull(entries.firstOrNull { it.stackKey == targetKey }) }
+                    .navigator
+                    .NavContainer(
+                        modifier = modifier(targetKey),
+                        bottomSheetOptions = bottomSheetSetup(targetKey),
+                    )
             }
         }
     }

@@ -11,6 +11,7 @@ sealed class DetailsCommand {
     data class SendResult(val result: String) : DetailsCommand()
     data class OpenBottomSheet(val item: String) : DetailsCommand()
     data class OpenNewSingleInstance(val item: String) : DetailsCommand()
+    data class OpenDynamicItem(val item: String) : DetailsCommand()
     data class OpenExistingSingleInstance(val item: String) : DetailsCommand()
     data class OpenSingleTop(val item: String) : DetailsCommand()
     data class OpenSingleTopBottomSheet(val item: String) : DetailsCommand()
@@ -65,5 +66,9 @@ class DetailsViewModel(
 
     fun onOpenDialogSelected() {
         mutableCommandsFlow.tryEmit(DetailsCommand.OpenDialog(newItem()))
+    }
+
+    fun onDynamicSelected() {
+        mutableCommandsFlow.tryEmit(DetailsCommand.OpenDynamicItem(newItem()))
     }
 }

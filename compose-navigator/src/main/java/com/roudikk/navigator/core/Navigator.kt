@@ -5,16 +5,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.setValue
-import com.roudikk.navigator.compose.NavContainer
 import com.roudikk.navigator.compose.animation.EnterExitTransition
 
-/**
- * Main component of the navigation system.
- *
- * To start use one of the [rememberNavigator] functions to create a navigator instance.
- * To render the state of a [Navigator] use a [NavContainer].
- * To define a screen use one of [Screen], [Dialog] or [BottomSheet].
- */
 class Navigator internal constructor(
     internal val initialKey: NavigationKey,
     internal val saveableStateHolder: SaveableStateHolder,

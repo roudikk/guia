@@ -1,7 +1,6 @@
 package com.roudikk.navigator.sample.ui.screens.details
 
 import android.content.res.Configuration
-import android.os.Parcelable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,15 +19,14 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.core.NavigationKey
-import com.roudikk.navigator.core.NavigatorRulesBuilder
-import com.roudikk.navigator.core.SimpleNavigationKey
 import com.roudikk.navigator.compose.animation.NavigationTransition
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.DialogOptions
+import com.roudikk.navigator.core.NavigationKey
+import com.roudikk.navigator.core.NavigatorRulesBuilder
+import com.roudikk.navigator.core.SimpleNavigationKey
 import com.roudikk.navigator.core.dialogNode
-import com.roudikk.navigator.core.screenNode
 import com.roudikk.navigator.sample.navigation.CrossFadeTransition
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.composables.BottomSheetSurface
@@ -36,16 +34,16 @@ import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class DetailsKey(val item: String) : Parcelable, NavigationKey
+class DetailsKey(val item: String) : NavigationKey
 
 @Parcelize
-class DetailsDialogKey(val item: String) : Parcelable, NavigationKey
+class DetailsDialogKey(val item: String) : NavigationKey
 
 @Parcelize
-class DetailsBottomSheetKey(val item: String) : Parcelable, NavigationKey
+class DetailsBottomSheetKey(val item: String) : NavigationKey
 
 @Parcelize
-class DynamicDetailsKey(val item: String) : Parcelable, NavigationKey
+class DynamicDetailsKey(val item: String) : NavigationKey
 
 @Parcelize
 class DetailsSimpleKey(val item: String) : SimpleNavigationKey<Dialog> {
@@ -56,14 +54,12 @@ class DetailsSimpleKey(val item: String) : SimpleNavigationKey<Dialog> {
 }
 
 fun NavigatorRulesBuilder.detailsNavigation(screenWidth: Int) {
-    navigationNode<DynamicDetailsKey> {
-        if (screenWidth <= 600) {
-            dialogNode(
-                dialogOptions = DialogOptions(modifier = Modifier.widthIn(max = 320.dp))
-            ) { DetailsScreen(item = it.item, isScreen = false) }
-        } else {
-            screenNode { DetailsScreen(item = it.item, isScreen = true) }
-        }
+    if (screenWidth <= 600) {
+        dialog<DynamicDetailsKey>(
+            dialogOptions = DialogOptions(modifier = Modifier.widthIn(max = 320.dp))
+        ) { DetailsScreen(item = it.item, isScreen = false) }
+    } else {
+        screen<DynamicDetailsKey> { DetailsScreen(item = it.item, isScreen = true) }
     }
 
     screen<DetailsKey> { key -> DetailsScreen(item = key.item, isScreen = true) }
@@ -74,10 +70,10 @@ fun NavigatorRulesBuilder.detailsNavigation(screenWidth: Int) {
 
     bottomSheet<DetailsBottomSheetKey> { key -> DetailsScreen(item = key.item, isScreen = false) }
 
-    transition<DetailsBottomSheetKey> { _, _ -> NavigationTransition.None }
-    transition<DetailsDialogKey> { _, _ -> CrossFadeTransition }
-    transition<DynamicDetailsKey> { _, _ -> CrossFadeTransition }
-    transition<DetailsSimpleKey> { _, _ -> NavigationTransition.None}
+    transition<DetailsBottomSheetKey> { -> NavigationTransition.None }
+    transition<DetailsDialogKey> { -> CrossFadeTransition }
+    transition<DynamicDetailsKey> { -> CrossFadeTransition }
+    transition<DetailsSimpleKey> { -> NavigationTransition.None }
 }
 
 @Composable
@@ -92,6 +88,7 @@ private fun DetailsScreen(
         isScreen = isScreen,
         onBackSelected = viewModel::onBackSelected,
         onRandomItemSelected = viewModel::onRandomItemSelected,
+        onDynamicSelected = viewModel::onDynamicSelected,
         onSendResultSelected = viewModel::onSendResultSelected,
         onBottomSheetSelected = viewModel::onBottomSheetSelected,
         onNewSingleInstanceSelected = viewModel::onNewSingleInstanceSelected,
@@ -112,22 +109,24 @@ private fun DetailsScreen(
 private fun DetailsContent(
     item: String,
     isScreen: Boolean,
-    onBackSelected: () -> Unit,
-    onRandomItemSelected: () -> Unit,
-    onSendResultSelected: () -> Unit,
-    onBottomSheetSelected: () -> Unit,
-    onNewSingleInstanceSelected: () -> Unit,
-    onExistingSingleInstanceSelected: () -> Unit,
-    onSingleTopSelected: () -> Unit,
-    onSingleTopBottomSheetSelected: () -> Unit,
-    onReplaceSelected: () -> Unit,
-    onOpenDialogSelected: () -> Unit
+    onBackSelected: () -> Unit = {},
+    onRandomItemSelected: () -> Unit = {},
+    onDynamicSelected: () -> Unit = {},
+    onSendResultSelected: () -> Unit = {},
+    onBottomSheetSelected: () -> Unit = {},
+    onNewSingleInstanceSelected: () -> Unit = {},
+    onExistingSingleInstanceSelected: () -> Unit = {},
+    onSingleTopSelected: () -> Unit = {},
+    onSingleTopBottomSheetSelected: () -> Unit = {},
+    onReplaceSelected: () -> Unit = {},
+    onOpenDialogSelected: () -> Unit = {}
 ) {
     val content = remember {
         movableContentOf {
             DetailsList(
                 item = item,
                 onRandomItemSelected = onRandomItemSelected,
+                onDynamicSelected = onDynamicSelected,
                 onSendResultSelected = onSendResultSelected,
                 onBottomSheetSelected = onBottomSheetSelected,
                 onNewSingleInstanceSelected = onNewSingleInstanceSelected,
@@ -180,16 +179,6 @@ private fun DetailsContentPreview() = AppTheme {
     DetailsContent(
         item = "Test Item!",
         isScreen = true,
-        onBackSelected = { },
-        onRandomItemSelected = { },
-        onSendResultSelected = { },
-        onBottomSheetSelected = { },
-        onNewSingleInstanceSelected = { },
-        onExistingSingleInstanceSelected = { },
-        onSingleTopSelected = { },
-        onSingleTopBottomSheetSelected = { },
-        onReplaceSelected = { },
-        onOpenDialogSelected = { }
     )
 }
 
@@ -205,15 +194,5 @@ private fun DetailsContentPreviewOverlay() = AppTheme {
     DetailsContent(
         item = "Test Item!",
         isScreen = false,
-        onBackSelected = { },
-        onRandomItemSelected = { },
-        onSendResultSelected = { },
-        onBottomSheetSelected = { },
-        onNewSingleInstanceSelected = { },
-        onExistingSingleInstanceSelected = { },
-        onSingleTopSelected = { },
-        onSingleTopBottomSheetSelected = { },
-        onReplaceSelected = { },
-        onOpenDialogSelected = { }
     )
 }

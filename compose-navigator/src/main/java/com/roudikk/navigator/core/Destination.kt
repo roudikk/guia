@@ -7,7 +7,7 @@ import java.util.UUID
 /**
  * Represents an entry in the navigation history.
  *
- * @property navigationNode, navigation node for this entry.
+ * @property navigationKey, navigation node for this entry.
  * @property transition, transition animation.
  * @property id, unique identifier of the destination.
  */
