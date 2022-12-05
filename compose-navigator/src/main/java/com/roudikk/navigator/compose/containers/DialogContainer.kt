@@ -6,7 +6,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.with
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.Dialog
-import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.compose.animation.EnterExitTransition
 import com.roudikk.navigator.compose.backstack.BackStackEntry
 import com.roudikk.navigator.core.Dialog

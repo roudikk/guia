@@ -4,7 +4,7 @@ package com.roudikk.navigator.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
-import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.NavigationNode
 
 internal val LocalNavigator = compositionLocalOf<Navigator?> { null }

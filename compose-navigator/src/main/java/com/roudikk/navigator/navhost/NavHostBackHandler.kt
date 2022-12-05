@@ -43,7 +43,7 @@ fun NavHost.CrossStackBackHandler() {
         }
     }
 
-    LaunchedEffect(key1 = backKey) {
+    LaunchedEffect(backKey) {
         backKey?.let { key ->
             entries = entries.dropLast(1)
             setActive(key)

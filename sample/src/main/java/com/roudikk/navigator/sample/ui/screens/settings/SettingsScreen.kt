@@ -35,10 +35,10 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.core.NavigationKey
-import com.roudikk.navigator.NavigatorRulesBuilder
+import com.roudikk.navigator.core.NavigatorRulesBuilder
 import com.roudikk.navigator.compose.LocalNavigationAnimation
 import com.roudikk.navigator.compose.requireNavigator
-import com.roudikk.navigator.popBackstack
+import com.roudikk.navigator.extensions.popBackstack
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.composables.NavigationAnimationPreview
 import com.roudikk.navigator.sample.ui.theme.AppTheme

@@ -12,7 +12,7 @@ import java.util.UUID
  * @property id, unique identifier of the destination.
  */
 @Parcelize
-data class Destination internal constructor(
+internal data class Destination internal constructor(
     val navigationKey: NavigationKey,
     val id: String
 ): Parcelable {

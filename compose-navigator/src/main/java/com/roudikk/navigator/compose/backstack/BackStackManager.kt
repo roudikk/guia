@@ -20,10 +20,10 @@ import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistry
-import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Destination
 import com.roudikk.navigator.core.Dialog
+import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.Screen
 import kotlinx.parcelize.Parcelize
 import java.util.UUID

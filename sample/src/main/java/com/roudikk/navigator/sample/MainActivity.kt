@@ -12,12 +12,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.NavigatorRulesBuilder
 import com.roudikk.navigator.compose.NavContainer
-import com.roudikk.navigator.navigate
-import com.roudikk.navigator.popTo
-import com.roudikk.navigator.rememberNavigator
+import com.roudikk.navigator.compose.rememberNavigator
+import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.core.NavigatorRulesBuilder
+import com.roudikk.navigator.extensions.navigate
+import com.roudikk.navigator.extensions.popTo
+import com.roudikk.navigator.extensions.setRoot
 import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.navigation.LocalRootNavigator
 import com.roudikk.navigator.sample.navigation.MaterialSharedAxisTransitionXY
@@ -30,7 +31,6 @@ import com.roudikk.navigator.sample.ui.screens.settings.settingsNavigation
 import com.roudikk.navigator.sample.ui.screens.welcome.WelcomeKey
 import com.roudikk.navigator.sample.ui.screens.welcome.welcomeNavigation
 import com.roudikk.navigator.sample.ui.theme.AppTheme
-import com.roudikk.navigator.setRoot
 
 class MainActivity : ComponentActivity() {
 

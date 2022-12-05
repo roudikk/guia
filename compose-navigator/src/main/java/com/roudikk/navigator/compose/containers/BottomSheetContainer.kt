@@ -35,7 +35,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.compose.BottomSheetSetup
 import com.roudikk.navigator.compose.animation.EnterExitTransition
 import com.roudikk.navigator.compose.backstack.BackStackEntry

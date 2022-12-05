@@ -25,15 +25,15 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.roudikk.navigator.core.NavigationKey
-import com.roudikk.navigator.NavigatorRulesBuilder
+import com.roudikk.navigator.core.NavigatorRulesBuilder
 import com.roudikk.navigator.compose.LocalNavigationAnimation
 import com.roudikk.navigator.compose.requireNavigator
-import com.roudikk.navigator.navigate
+import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.sample.R
 import com.roudikk.navigator.sample.ui.composables.NavigationAnimationPreview
 import com.roudikk.navigator.sample.ui.screens.bottomnav.BottomNavKey
 import com.roudikk.navigator.sample.ui.theme.AppTheme
-import com.roudikk.navigator.setRoot
+import com.roudikk.navigator.extensions.setRoot
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

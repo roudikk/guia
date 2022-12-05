@@ -1,7 +1,8 @@
-package com.roudikk.navigator
+package com.roudikk.navigator.extensions
 
 import androidx.compose.runtime.derivedStateOf
 import com.roudikk.navigator.core.NavigationKey
+import com.roudikk.navigator.core.Navigator
 
 fun Navigator.navigate(
     navigationKey: NavigationKey

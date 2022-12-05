@@ -2,13 +2,13 @@ package com.roudikk.navigator.sample.ui.screens.details
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.navigate
-import com.roudikk.navigator.popBackstack
-import com.roudikk.navigator.popToRoot
-import com.roudikk.navigator.replaceLast
-import com.roudikk.navigator.singleInstance
-import com.roudikk.navigator.singleTop
+import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.extensions.navigate
+import com.roudikk.navigator.extensions.popBackstack
+import com.roudikk.navigator.extensions.popToRoot
+import com.roudikk.navigator.extensions.replaceLast
+import com.roudikk.navigator.extensions.singleInstance
+import com.roudikk.navigator.extensions.singleTop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 

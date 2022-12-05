@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 class DeepLinkViewModel : ViewModel() {
+
     var destinations by mutableStateOf(emptyList<DeepLinkDestination>())
         private set
 

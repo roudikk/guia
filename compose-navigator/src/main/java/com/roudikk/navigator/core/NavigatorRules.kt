@@ -1,17 +1,10 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.roudikk.navigator
+package com.roudikk.navigator.core
 
 import androidx.compose.runtime.Composable
 import com.roudikk.navigator.compose.animation.EnterExitTransition
 import com.roudikk.navigator.compose.animation.NavigationTransition
-import com.roudikk.navigator.core.BottomSheetOptions
-import com.roudikk.navigator.core.DialogOptions
-import com.roudikk.navigator.core.NavigationKey
-import com.roudikk.navigator.core.NavigationNode
-import com.roudikk.navigator.core.bottomSheetNode
-import com.roudikk.navigator.core.dialogNode
-import com.roudikk.navigator.core.screenNode
 import kotlin.reflect.KClass
 
 private typealias AssociationsMap = HashMap<KClass<NavigationKey>, (NavigationKey) -> NavigationNode>

@@ -9,15 +9,15 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.canGoBack
+import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.extensions.canGoBack
 import com.roudikk.navigator.compose.backstack.rememberBackStackManager
 import com.roudikk.navigator.compose.containers.BottomSheetContainer
 import com.roudikk.navigator.compose.containers.DialogContainer
 import com.roudikk.navigator.compose.containers.ScreenContainer
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Screen
-import com.roudikk.navigator.popBackstack
+import com.roudikk.navigator.extensions.popBackstack
 
 /**
  * [NavContainer] renders the current state of a [Navigator].
