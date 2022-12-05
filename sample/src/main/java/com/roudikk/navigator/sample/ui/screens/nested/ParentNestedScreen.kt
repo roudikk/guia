@@ -33,9 +33,9 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.NavigationKey
+import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.NavigatorRulesScope
+import com.roudikk.navigator.NavigatorRulesBuilder
 import com.roudikk.navigator.compose.NavContainer
 import com.roudikk.navigator.navigate
 import com.roudikk.navigator.popTo
@@ -52,7 +52,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class ParentNestedKey : NavigationKey
 
-fun NavigatorRulesScope.parentNestedNavigation() {
+fun NavigatorRulesBuilder.parentNestedNavigation() {
     screen<ParentNestedKey> { ParentNestedScreen() }
 }
 

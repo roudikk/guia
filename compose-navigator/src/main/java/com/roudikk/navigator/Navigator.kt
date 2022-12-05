@@ -15,18 +15,24 @@ import com.roudikk.navigator.compose.animation.EnterExitTransition
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Destination
 import com.roudikk.navigator.core.Dialog
+import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigationNode
 import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.core.SimpleNavigationKey
 import com.roudikk.navigator.savedstate.navigatorSaver
 
 @Composable
 fun rememberNavigator(
     initialKey: NavigationKey,
     initialize: @DisallowComposableCalls (Navigator) -> Unit = {},
-    navigatorRulesBuilder: @DisallowComposableCalls NavigatorRulesScope.() -> Unit
+    navigatorRulesBuilder: @DisallowComposableCalls NavigatorRulesBuilder.() -> Unit
 ): Navigator {
     val saveableStateHolder = rememberSaveableStateHolder()
-    val navigatorRules = remember { NavigatorRulesScope().apply(navigatorRulesBuilder).build() }
+    val navigatorRules = remember {
+        NavigatorRulesBuilder()
+            .apply(navigatorRulesBuilder)
+            .build()
+    }
 
     return rememberSaveable(
         saver = navigatorSaver(saveableStateHolder, navigatorRules)

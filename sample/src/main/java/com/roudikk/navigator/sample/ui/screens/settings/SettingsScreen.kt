@@ -34,8 +34,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.NavigationKey
-import com.roudikk.navigator.NavigatorRulesScope
+import com.roudikk.navigator.core.NavigationKey
+import com.roudikk.navigator.NavigatorRulesBuilder
 import com.roudikk.navigator.compose.LocalNavigationAnimation
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.popBackstack
@@ -47,7 +47,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class SettingsKey: NavigationKey
 
-fun NavigatorRulesScope.settingsNavigation() {
+fun NavigatorRulesBuilder.settingsNavigation() {
     screen<SettingsKey> { SettingsScreen()  }
 }
 

@@ -29,15 +29,15 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.DefaultStackBackHandler
-import com.roudikk.navigator.NavContainer
-import com.roudikk.navigator.NavHost
-import com.roudikk.navigator.NavigationKey
-import com.roudikk.navigator.NavigatorRulesScope
+import com.roudikk.navigator.core.NavigationKey
+import com.roudikk.navigator.NavigatorRulesBuilder
 import com.roudikk.navigator.core.StackKey
+import com.roudikk.navigator.navhost.DefaultStackBackHandler
+import com.roudikk.navigator.navhost.NavContainer
+import com.roudikk.navigator.navhost.NavHost
+import com.roudikk.navigator.navhost.rememberNavHost
 import com.roudikk.navigator.navigate
 import com.roudikk.navigator.popToRoot
-import com.roudikk.navigator.rememberNavHost
 import com.roudikk.navigator.rememberNavigator
 import com.roudikk.navigator.sample.BottomNavDestination.DialogsTab
 import com.roudikk.navigator.sample.BottomNavDestination.HomeTab
@@ -78,7 +78,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class BottomNavKey : NavigationKey
 
-fun NavigatorRulesScope.bottomTabNavigation() {
+fun NavigatorRulesBuilder.bottomTabNavigation() {
     screen<BottomNavKey> { BottomNavScreen() }
 }
 

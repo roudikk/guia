@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.roudikk.navigator
 
 import androidx.compose.runtime.Composable
@@ -5,31 +7,32 @@ import com.roudikk.navigator.compose.animation.EnterExitTransition
 import com.roudikk.navigator.compose.animation.NavigationTransition
 import com.roudikk.navigator.core.BottomSheetOptions
 import com.roudikk.navigator.core.DialogOptions
+import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigationNode
 import com.roudikk.navigator.core.bottomSheetNode
 import com.roudikk.navigator.core.dialogNode
 import com.roudikk.navigator.core.screenNode
 import kotlin.reflect.KClass
 
+private typealias AssociationsMap = HashMap<KClass<NavigationKey>, (NavigationKey) -> NavigationNode>
+private typealias TransitionsMap = HashMap<KClass<NavigationKey>, (previous: NavigationKey, new: NavigationKey, isPop: Boolean) -> EnterExitTransition>
+private typealias DefaultTransition = (previous: NavigationKey, new: NavigationKey, isPop: Boolean) -> EnterExitTransition
+
 class NavigatorRules(
-    internal val associations: HashMap<KClass<NavigationKey>, (NavigationKey) -> NavigationNode> = hashMapOf(),
-    internal val transitions: HashMap<KClass<NavigationKey>, (previous: NavigationKey, new: NavigationKey, isPop: Boolean) -> EnterExitTransition> = hashMapOf(),
-    internal val defaultTransition: (previous: NavigationKey, new: NavigationKey, isPop: Boolean) -> EnterExitTransition = { _, _, _ -> EnterExitTransition.None }
+    internal val associations: AssociationsMap = hashMapOf(),
+    internal val transitions: TransitionsMap = hashMapOf(),
+    internal val defaultTransition: DefaultTransition = { _, _, _ -> EnterExitTransition.None }
 )
 
-@Suppress("UNCHECKED_CAST")
-class NavigatorRulesScope {
+class NavigatorRulesBuilder {
 
     @PublishedApi
-    internal val associations: HashMap<KClass<NavigationKey>, (NavigationKey) -> NavigationNode> =
-        hashMapOf()
+    internal val associations: AssociationsMap = hashMapOf()
 
     @PublishedApi
-    internal val transitions: HashMap<KClass<NavigationKey>, (previous: NavigationKey, new: NavigationKey, isPop: Boolean) -> EnterExitTransition> =
-        hashMapOf()
+    internal val transitions: TransitionsMap = hashMapOf()
 
-    private var defaultTransition: (previous: NavigationKey, new: NavigationKey, isPop: Boolean) -> EnterExitTransition =
-        { _, _, _ -> EnterExitTransition.None }
+    private var defaultTransition: DefaultTransition = { _, _, _ -> EnterExitTransition.None }
 
     inline fun <reified Key : NavigationKey> navigationNode(
         noinline navigationNodeBuilder: (Key) -> NavigationNode
@@ -78,6 +81,21 @@ class NavigatorRulesScope {
         }
     }
 
+    inline fun <reified Key : NavigationKey> transition(
+        noinline transition: () -> NavigationTransition
+    ) {
+        transitions[Key::class as KClass<NavigationKey>] = { previous, new, isPop ->
+            val navigationTransition = transition()
+            if (isPop) navigationTransition.popEnterExit else navigationTransition.enterExit
+        }
+    }
+
+    fun defaultTransition(
+        transition: (previous: NavigationKey, new: NavigationKey, isPop: Boolean) -> EnterExitTransition
+    ) {
+        defaultTransition = transition
+    }
+
     fun defaultTransition(
         transition: (previous: NavigationKey, new: NavigationKey) -> NavigationTransition
     ) {
@@ -88,9 +106,12 @@ class NavigatorRulesScope {
     }
 
     fun defaultTransition(
-        transition: (previous: NavigationKey, new: NavigationKey, isPop: Boolean) -> EnterExitTransition
+        transition: () -> NavigationTransition
     ) {
-        defaultTransition = transition
+        defaultTransition = { previous, new, isPop ->
+            val navigationTransition = transition()
+            if (isPop) navigationTransition.popEnterExit else navigationTransition.enterExit
+        }
     }
 
     fun build() = NavigatorRules(

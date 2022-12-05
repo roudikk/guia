@@ -18,8 +18,8 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.NavigationKey
-import com.roudikk.navigator.NavigatorRulesScope
+import com.roudikk.navigator.core.NavigationKey
+import com.roudikk.navigator.NavigatorRulesBuilder
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.StackKey
 import com.roudikk.navigator.navigate
@@ -36,7 +36,7 @@ object DialogsStackKey : StackKey
 @Parcelize
 class DialogsKey : NavigationKey
 
-fun NavigatorRulesScope.dialogsNavigation() {
+fun NavigatorRulesBuilder.dialogsNavigation() {
     screen<DialogsKey> { DialogsScreen() }
 }
 

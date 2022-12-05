@@ -13,7 +13,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.NavigatorRulesScope
+import com.roudikk.navigator.NavigatorRulesBuilder
 import com.roudikk.navigator.compose.NavContainer
 import com.roudikk.navigator.navigate
 import com.roudikk.navigator.popTo
@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun NavigatorRulesScope.rootNavigation() {
+    private fun NavigatorRulesBuilder.rootNavigation() {
         welcomeNavigation()
         bottomTabNavigation()
         settingsNavigation()

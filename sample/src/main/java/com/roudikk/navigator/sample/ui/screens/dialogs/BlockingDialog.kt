@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.NavigationKey
-import com.roudikk.navigator.NavigatorRulesScope
+import com.roudikk.navigator.core.NavigationKey
+import com.roudikk.navigator.NavigatorRulesBuilder
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.DialogOptions
 import com.roudikk.navigator.navigate
@@ -28,7 +28,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class BlockingDialogKey(val showNextButton: Boolean) : NavigationKey
 
-fun NavigatorRulesScope.blockingDialogNavigation() {
+fun NavigatorRulesBuilder.blockingDialogNavigation() {
     dialog<BlockingDialogKey>(
         DialogOptions(dismissOnBackPress = false, dismissOnClickOutside = false)
     ) {

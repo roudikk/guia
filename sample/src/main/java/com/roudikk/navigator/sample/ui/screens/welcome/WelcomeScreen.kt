@@ -24,8 +24,8 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.roudikk.navigator.NavigationKey
-import com.roudikk.navigator.NavigatorRulesScope
+import com.roudikk.navigator.core.NavigationKey
+import com.roudikk.navigator.NavigatorRulesBuilder
 import com.roudikk.navigator.compose.LocalNavigationAnimation
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.navigate
@@ -39,7 +39,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class WelcomeKey : NavigationKey
 
-fun NavigatorRulesScope.welcomeNavigation() {
+fun NavigatorRulesBuilder.welcomeNavigation() {
     screen<WelcomeKey> { WelcomeScreen() }
 }
 

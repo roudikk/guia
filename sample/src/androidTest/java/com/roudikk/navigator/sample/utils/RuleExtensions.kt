@@ -8,7 +8,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import com.roudikk.navigator.NavigationKey.Companion.tag
+import com.roudikk.navigator.core.NavigationKey.Companion.tag
 import com.roudikk.navigator.sample.MainActivity
 import com.roudikk.navigator.sample.ui.screens.details.DetailsKey
 import com.roudikk.navigator.sample.ui.screens.dialogs.DialogsKey

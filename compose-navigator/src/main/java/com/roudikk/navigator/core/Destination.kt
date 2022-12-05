@@ -1,7 +1,6 @@
 package com.roudikk.navigator.core
 
 import android.os.Parcelable
-import com.roudikk.navigator.NavigationKey
 import kotlinx.parcelize.Parcelize
 import java.util.UUID
 

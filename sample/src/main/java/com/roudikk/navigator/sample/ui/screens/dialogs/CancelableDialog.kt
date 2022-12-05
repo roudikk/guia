@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.NavigationKey
-import com.roudikk.navigator.NavigatorRulesScope
+import com.roudikk.navigator.core.NavigationKey
+import com.roudikk.navigator.NavigatorRulesBuilder
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.popToRoot
 import com.roudikk.navigator.sample.ui.theme.AppTheme
@@ -26,7 +26,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class CancelableDialogKey(val showNextButton: Boolean) : NavigationKey
 
-fun NavigatorRulesScope.cancelableDialogNavigation() {
+fun NavigatorRulesBuilder.cancelableDialogNavigation() {
     dialog<CancelableDialogKey> {
         CancelableDialogScreen(showNextButton = it.showNextButton)
     }

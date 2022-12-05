@@ -34,11 +34,11 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
-import com.roudikk.navigator.NavHost
-import com.roudikk.navigator.NavigationKey
-import com.roudikk.navigator.NavigatorRulesScope
+import com.roudikk.navigator.core.NavigationKey
+import com.roudikk.navigator.NavigatorRulesBuilder
 import com.roudikk.navigator.core.StackKey
-import com.roudikk.navigator.requireNavHost
+import com.roudikk.navigator.navhost.NavHost
+import com.roudikk.navigator.navhost.requireNavHost
 import com.roudikk.navigator.sample.ui.screens.bottomnav.rememberBottomNavHost
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.coroutines.launch
@@ -51,7 +51,7 @@ object NavigationTreeStackKey : StackKey
 @Parcelize
 class NavigationTreeKey : NavigationKey
 
-fun NavigatorRulesScope.navigationTreeNavigation() {
+fun NavigatorRulesBuilder.navigationTreeNavigation() {
     screen<NavigationTreeKey> { NavigationTreeScreen() }
 }
 
