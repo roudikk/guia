@@ -9,7 +9,6 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.with
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.roudikk.navigator.compose.BottomSheetSetup
 import com.roudikk.navigator.compose.NavContainer
@@ -19,23 +18,21 @@ import com.roudikk.navigator.core.StackKey
 @Composable
 fun NavHost.NavContainer(
     modifier: (StackKey) -> Modifier = { Modifier },
-    transitionSpec: AnimatedContentScope<StackKey>.() -> ContentTransform = {
+    transitionSpec: AnimatedContentScope<StackEntry?>.() -> ContentTransform = {
         EnterTransition.None with ExitTransition.None
     },
     bottomSheetSetup: (StackKey) -> BottomSheetSetup
 ) {
     CompositionLocalProvider(LocalNavHost provides this) {
         AnimatedContent(
-            targetState = activeKey,
+            targetState = currentEntry,
             transitionSpec = transitionSpec
-        ) { targetKey ->
-            saveableStateHolder.SaveableStateProvider(key = targetKey) {
-                remember(targetKey) { requireNotNull(entries.firstOrNull { it.stackKey == targetKey }) }
-                    .navigator
-                    .NavContainer(
-                        modifier = modifier(targetKey),
-                        bottomSheetOptions = bottomSheetSetup(targetKey),
-                    )
+        ) { targetEntry ->
+            targetEntry?.let {
+                targetEntry.navigator.NavContainer(
+                    modifier = modifier(targetEntry.stackKey),
+                    bottomSheetOptions = bottomSheetSetup(targetEntry.stackKey),
+                )
             }
         }
     }

@@ -17,7 +17,7 @@ internal class NavigatorRules(
     val defaultTransition: DefaultTransition = { _, _, _ -> EnterExitTransition.None }
 )
 
-class NavigatorRulesBuilder {
+class NavigatorRulesBuilder internal constructor() {
 
     @PublishedApi
     internal val associations: AssociationsMap = hashMapOf()

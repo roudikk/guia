@@ -23,6 +23,9 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,7 +65,13 @@ fun NavigatorRulesBuilder.navigationTreeNavigation() {
 private fun NavigationTreeScreen(
     navHost: NavHost = requireNavHost()
 ) {
-  Scaffold(
+    val stackEntries by remember {
+        derivedStateOf {
+            navHost.entries.toList()
+        }
+    }
+
+    Scaffold(
         topBar = { TopAppBar(title = { Text(text = "Navigation Tree") }) }
     ) { padding ->
         val scope = rememberCoroutineScope()
@@ -80,10 +89,10 @@ private fun NavigationTreeScreen(
                 }
             ) {
                 // Add tabs for all of our pages
-                navHost.entries.forEachIndexed { index, (key, _) ->
+                stackEntries.forEachIndexed { index, entry ->
                     Tab(
                         text = {
-                            Text(text = key::class.java.simpleName)
+                            Text(text = entry.stackKey::class.java.simpleName)
                         },
                         selected = pagerState.currentPage == index,
                         onClick = {
@@ -98,10 +107,10 @@ private fun NavigationTreeScreen(
             HorizontalPager(
                 modifier = Modifier.weight(1F),
                 state = pagerState,
-                count = navHost.entries.size,
-                key = { navHost.entries[it].stackKey.toString() }
+                count = stackEntries.size,
+                key = { stackEntries[it].stackKey.toString() }
             ) { page ->
-                val navigator = navHost.entries[page].navigator
+                val navigator = stackEntries[page].navigator
 
                 LazyVerticalGrid(
                     modifier = Modifier

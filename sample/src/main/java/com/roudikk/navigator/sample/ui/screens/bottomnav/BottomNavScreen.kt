@@ -22,6 +22,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisallowComposableCalls
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
@@ -39,6 +43,7 @@ import com.roudikk.navigator.navhost.rememberNavHost
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popToRoot
 import com.roudikk.navigator.compose.rememberNavigator
+import com.roudikk.navigator.navhost.StackEntry
 import com.roudikk.navigator.sample.BottomNavDestination.DialogsTab
 import com.roudikk.navigator.sample.BottomNavDestination.HomeTab
 import com.roudikk.navigator.sample.BottomNavDestination.NavigationTreeTab
@@ -52,6 +57,7 @@ import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.navigation.MaterialSharedAxisTransitionX
 import com.roudikk.navigator.sample.ui.composables.sampleBottomSheetOptions
 import com.roudikk.navigator.sample.ui.screens.details.DetailsKey
+import com.roudikk.navigator.sample.ui.screens.details.DetailsNodeKey
 import com.roudikk.navigator.sample.ui.screens.details.detailsNavigation
 import com.roudikk.navigator.sample.ui.screens.dialogs.BlockingBottomSheetKey
 import com.roudikk.navigator.sample.ui.screens.dialogs.BlockingDialogKey
@@ -73,6 +79,7 @@ import com.roudikk.navigator.sample.ui.screens.nested.ParentNestedKey
 import com.roudikk.navigator.sample.ui.screens.nested.nestedNavigation
 import com.roudikk.navigator.sample.ui.screens.nested.parentNestedNavigation
 import com.roudikk.navigator.sample.ui.theme.AppTheme
+import kotlinx.coroutines.delay
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -90,7 +97,7 @@ fun rememberBottomNavHost(
     val configuration = LocalConfiguration.current
 
     val homeNavigator = rememberNavigator(initialKey = HomeKey()) {
-        defaultTransition { _, _ -> MaterialSharedAxisTransitionX }
+        defaultTransition { -> MaterialSharedAxisTransitionX }
         homeNavigation()
         detailsNavigation(configuration.screenWidthDp)
     }
@@ -113,13 +120,14 @@ fun rememberBottomNavHost(
 
     return rememberNavHost(
         initialKey = HomeStackKey,
+        entries = setOf(
+            StackEntry(HomeStackKey, homeNavigator),
+            StackEntry(NestedStackKey, nestedNavigator),
+            StackEntry(DialogsStackKey, dialogsNavigator),
+            StackEntry(NavigationTreeStackKey, navigationTreeNavigator)
+        ),
         initialize = initialize,
-    ) {
-        entry(HomeStackKey, homeNavigator)
-        entry(NestedStackKey, nestedNavigator)
-        entry(DialogsStackKey, dialogsNavigator)
-        entry(NavigationTreeStackKey, navigationTreeNavigator)
-    }
+    )
 }
 
 @Composable
@@ -127,6 +135,7 @@ fun BottomNavScreen() {
     val deepLinkViewModel = viewModel<DeepLinkViewModel>(LocalNavHostViewModelStoreOwner.current)
 
     val navHost = rememberBottomNavHost { it.deeplink(deepLinkViewModel) }
+
     navHost.DefaultStackBackHandler(HomeStackKey)
 
     BottomNavContent(navHost)
@@ -147,12 +156,12 @@ private fun NavHost.deeplink(deepLinkViewModel: DeepLinkViewModel) {
                 NavigationTreeTab -> setActive(NavigationTreeStackKey)
 
                 // Dialog destinations
-                BlockingBottomSheet -> activeNavigator.navigate(BlockingBottomSheetKey())
-                BlockingDialog -> activeNavigator.navigate(BlockingDialogKey(false))
-                Cancelable -> activeNavigator.navigate(CancelableDialogKey(false))
+                BlockingBottomSheet -> currentEntry?.navigator?.navigate(BlockingBottomSheetKey())
+                BlockingDialog -> currentEntry?.navigator?.navigate(BlockingDialogKey(false))
+                Cancelable -> currentEntry?.navigator?.navigate(CancelableDialogKey(false))
 
                 // Home destinations
-                is Details -> activeNavigator.navigate(DetailsKey(destination.item))
+                is Details -> currentEntry?.navigator?.navigate(DetailsKey(destination.item))
 
                 // Ignore other destinations
                 else -> Unit
@@ -173,10 +182,10 @@ private fun BottomNavContent(
         navHost.NavContainer(
             modifier = { Modifier.padding(bottom = 80.dp) },
             transitionSpec = {
-                if (targetState is NavigationTreeStackKey) {
+                if (targetState?.stackKey is NavigationTreeStackKey) {
                     slideInHorizontally { it } with slideOutHorizontally { -it }
                 } else {
-                    if (initialState is NavigationTreeStackKey) {
+                    if (initialState?.stackKey is NavigationTreeStackKey) {
                         slideInHorizontally { -it } with slideOutHorizontally { it }
                     } else {
                         fadeIn() with fadeOut()
@@ -192,7 +201,7 @@ private fun BottomNavContent(
 
 @Composable
 private fun BottomNavigation(navHost: NavHost) {
-    val currentStackKey = navHost.activeKey
+    val currentStackKey = navHost.currentEntry?.stackKey
 
     NavigationBar {
         NavigationBarItem(
@@ -283,12 +292,11 @@ private fun BottomNavigation(navHost: NavHost) {
 
 private fun navigatorToStackOrRoot(
     navHost: NavHost,
-    currentKey: StackKey,
+    currentKey: StackKey?,
     newKey: StackKey
 ) {
-    val navigator = navHost.activeNavigator
     if (currentKey == newKey) {
-        navigator.popToRoot()
+        navHost.currentEntry?.navigator?.popToRoot()
     } else {
         navHost.setActive(newKey)
     }

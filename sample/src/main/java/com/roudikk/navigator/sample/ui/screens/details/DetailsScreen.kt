@@ -20,21 +20,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.navigator.compose.animation.NavigationTransition
+import com.roudikk.navigator.compose.rememberNavigator
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.DialogOptions
+import com.roudikk.navigator.core.ExpectsResult
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigatorRulesBuilder
-import com.roudikk.navigator.core.SimpleNavigationKey
+import com.roudikk.navigator.core.NavigationNodeKey
 import com.roudikk.navigator.core.dialogNode
+import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.sample.navigation.CrossFadeTransition
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.composables.BottomSheetSurface
+import com.roudikk.navigator.sample.ui.screens.home.HomeKey
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class DetailsKey(val item: String) : NavigationKey
+class DetailsKey(val item: String) : NavigationKey, ExpectsResult<Boolean>
 
 @Parcelize
 class DetailsDialogKey(val item: String) : NavigationKey
@@ -46,7 +50,7 @@ class DetailsBottomSheetKey(val item: String) : NavigationKey
 class DynamicDetailsKey(val item: String) : NavigationKey
 
 @Parcelize
-class DetailsSimpleKey(val item: String) : SimpleNavigationKey<Dialog> {
+class DetailsNodeKey(val item: String) : NavigationNodeKey<Dialog> {
 
     override fun navigationNode() = dialogNode {
         DetailsScreen(item = item, isScreen = false)
@@ -73,7 +77,7 @@ fun NavigatorRulesBuilder.detailsNavigation(screenWidth: Int) {
     transition<DetailsBottomSheetKey> { -> NavigationTransition.None }
     transition<DetailsDialogKey> { -> CrossFadeTransition }
     transition<DynamicDetailsKey> { -> CrossFadeTransition }
-    transition<DetailsSimpleKey> { -> NavigationTransition.None }
+    transition<DetailsNodeKey> { -> NavigationTransition.None }
 }
 
 @Composable

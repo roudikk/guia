@@ -3,25 +3,17 @@ package com.roudikk.navigator.navhost
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.StackKey
 
-data class StackEntry(
+class StackEntry(
     val stackKey: StackKey,
     val navigator: Navigator
-)
+) {
 
-class StackEntryListBuilder {
-    private val entries = mutableListOf<StackEntry>()
-
-    fun entry(stackKey: StackKey, navigator: Navigator) {
-        require(!entries.any { it.stackKey == stackKey }) {
-            "StackKey: $stackKey already added, cannot use more than once."
-        }
-        entries.add(StackEntry(stackKey, navigator))
+    override fun equals(other: Any?): Boolean {
+        if (other !is StackEntry) return false
+        return this.stackKey == other.stackKey
     }
 
-    fun build(): List<StackEntry> {
-        require(entries.isNotEmpty()) {
-            "Must add at least one entry using entry(key, navigator))"
-        }
-        return entries
+    override fun hashCode(): Int {
+        return stackKey.hashCode()
     }
 }

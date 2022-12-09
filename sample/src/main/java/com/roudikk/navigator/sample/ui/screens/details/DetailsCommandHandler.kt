@@ -9,6 +9,7 @@ import com.roudikk.navigator.extensions.popToRoot
 import com.roudikk.navigator.extensions.replaceLast
 import com.roudikk.navigator.extensions.singleInstance
 import com.roudikk.navigator.extensions.singleTop
+import com.roudikk.navigator.sample.ui.screens.home.HomeKey
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -61,7 +62,7 @@ fun DetailsCommandHandler(
                     )
 
                     is DetailsCommand.SendResult -> {
-//                        navigator.sendResult<HomeScreen>(command.result)
+                        navigator.pushResult<DetailsKey, _>(true)
                         navigator.popToRoot()
                     }
                 }

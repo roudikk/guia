@@ -14,7 +14,9 @@ interface NavigationKey : Parcelable {
     }
 }
 
-interface SimpleNavigationKey<Node : NavigationNode> : NavigationKey {
+interface NavigationNodeKey<Node : NavigationNode> : NavigationKey {
 
     fun navigationNode(): Node
 }
+
+interface ExpectsResult<Result> : NavigationKey

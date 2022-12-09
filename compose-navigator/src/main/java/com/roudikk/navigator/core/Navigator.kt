@@ -1,11 +1,20 @@
 package com.roudikk.navigator.core
 
+import androidx.compose.foundation.shape.AbsoluteCutCornerShape
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.setValue
 import com.roudikk.navigator.compose.animation.EnterExitTransition
+import com.roudikk.navigator.extensions.navigate
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class Navigator internal constructor(
     internal val initialKey: NavigationKey,
@@ -51,7 +60,7 @@ class Navigator internal constructor(
 
     internal fun navigationNode(destination: Destination) =
         navigationNodesMap.getOrPut(destination) {
-            if (destination.navigationKey is SimpleNavigationKey<*>) {
+            if (destination.navigationKey is NavigationNodeKey<*>) {
                 destination.navigationKey.navigationNode()
             } else {
                 navigationNodeForKey(destination.navigationKey)
@@ -78,6 +87,39 @@ class Navigator internal constructor(
     fun setBackstack(navigationKeys: List<NavigationKey>) {
         setBackstack(*navigationKeys.toTypedArray())
     }
+
+    private val results = mutableStateMapOf<Any, Any?>()
+
+    fun results(key: Any): Any? {
+        return results[key]
+    }
+
+    fun pushResult(key: Any, result: Any) {
+        results[key] = result
+    }
+
+    fun clearResult(key: Any) {
+        results[key] = null
+    }
+
+    inline fun <reified ER : ExpectsResult<Result>, reified Result : Any> results(
+        identifier: String = "results_id"
+    ): Result? {
+        return results(key = "${ER::class.java.simpleName}_$identifier") as? Result?
+    }
+
+    inline fun <reified ER : ExpectsResult<Result>, reified Result : Any> pushResult(
+        result: Result,
+        identifier: String = "results_id"
+    ) {
+        pushResult(key = "${ER::class.java.simpleName}_$identifier", result = result)
+    }
+
+    inline fun <reified ER : ExpectsResult<Result>, reified Result : Any> clearResult(
+        identifier: String = "results_id"
+    ) {
+        clearResult(key = "${ER::class.java.simpleName}_$identifier")
+    }
 }
 
 private fun NavigationKey.notFoundError(): String {
@@ -90,4 +132,15 @@ internal fun Navigator.navigationNodeForKey(
 ): NavigationNode {
     return navigatorRules.associations[navigationKey::class]?.invoke(navigationKey)
         ?: error(navigationKey.notFoundError())
+}
+
+@Composable
+inline fun <reified ER : ExpectsResult<Result>, reified Result : Any> Navigator.onResult(
+    crossinline onResult: (Result) -> Unit
+) {
+    val result = results<ER, Result>()
+    LaunchedEffect(result) {
+        result?.let(onResult)
+        clearResult<ER, Result>()
+    }
 }
