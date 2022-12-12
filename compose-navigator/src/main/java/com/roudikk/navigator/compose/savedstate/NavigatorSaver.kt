@@ -1,12 +1,13 @@
 package com.roudikk.navigator.compose.savedstate
 
 import android.os.Parcelable
+import android.util.Log
 import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.Saver
+import com.roudikk.navigator.core.Destination
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.NavigatorRules
-import com.roudikk.navigator.core.Destination
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -16,6 +17,7 @@ import kotlinx.parcelize.Parcelize
 internal data class NavigatorState(
     val initialKey: NavigationKey,
     val destinations: List<Destination>,
+    val results: HashMap<String, Parcelable>
 ) : Parcelable
 
 /**
@@ -23,7 +25,7 @@ internal data class NavigatorState(
  *
  * Saves and restores the state of a navigator.
  */
-internal fun NavigatorSaver(
+internal fun navigatorSaver(
     saveableStateHolder: SaveableStateHolder,
     navigatorRules: NavigatorRules
 ) = Saver<Navigator, NavigatorState>(
@@ -33,13 +35,21 @@ internal fun NavigatorSaver(
             initialKey = navigatorState.initialKey,
             saveableStateHolder = saveableStateHolder,
             navigatorRules = navigatorRules
-        ).apply { restore(navigatorState) }
+        ).apply {
+            Log.d("TEST", "Restore: ${navigatorState.results}")
+            restore(navigatorState)
+        }
     }
 )
 
 private fun Navigator.save() = NavigatorState(
     initialKey = initialKey,
-    destinations = destinations
+    destinations = destinations,
+    results = hashMapOf<String, Parcelable>().apply {
+        results
+            .filter { it.value is Parcelable }
+            .forEach { this[it.key] = it.value as Parcelable }
+    }
 )
 
 private fun Navigator.restore(
@@ -49,4 +59,7 @@ private fun Navigator.restore(
         destinationsMap[destination.navigationKey] = destination
     }
     setBackstack(navigatorState.destinations.map { it.navigationKey })
+    navigatorState.results.forEach {
+        results[it.key] = it.value
+    }
 }

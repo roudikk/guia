@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.ClearAll
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Info
@@ -49,12 +50,14 @@ import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigatorRulesBuilder
 import com.roudikk.navigator.core.StackKey
-import com.roudikk.navigator.core.onResult
+import com.roudikk.navigator.extensions.clearResult
 import com.roudikk.navigator.extensions.navigate
+import com.roudikk.navigator.extensions.results
 import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.navigation.findRootNavigator
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.screens.details.DetailsKey
+import com.roudikk.navigator.sample.ui.screens.details.DetailsResult
 import com.roudikk.navigator.sample.ui.screens.settings.SettingsKey
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -77,7 +80,7 @@ private fun HomeScreen() {
     val navigator = requireNavigator()
     val rootNavigator = findRootNavigator()
 
-    navigator.onResult(viewModel::onDetailsResult)
+    val result = navigator.results<DetailsResult>()
 
     val command = viewModel.event
     LaunchedEffect(command) {
@@ -85,6 +88,7 @@ private fun HomeScreen() {
             is HomeEvent.ShowToast -> context.showToast(command.item)
             is HomeEvent.OpenDetails -> navigator.navigate(DetailsKey(command.item))
             HomeEvent.OpenSettings -> rootNavigator.navigate(SettingsKey())
+            HomeEvent.ClearResult -> navigator.clearResult<DetailsResult>()
             else -> return@LaunchedEffect
         }
         viewModel.onEventHandled()
@@ -92,6 +96,8 @@ private fun HomeScreen() {
 
     HomeContent(
         listItems = viewModel.listItems,
+        result = result?.value,
+        onClearResultSelected = viewModel::onClearResultSelected,
         onItemSelected = viewModel::onItemSelected,
         onAddItemSelected = viewModel::onAddItemSelected,
         onRemoveItemSelected = viewModel::onRemoveItemSelected,
@@ -107,6 +113,8 @@ private fun Context.showToast(text: String) {
 @Composable
 private fun HomeContent(
     listItems: List<String>,
+    result: String? = null,
+    onClearResultSelected: () -> Unit = {},
     onItemSelected: (String) -> Unit = {},
     onAddItemSelected: () -> Unit = {},
     onRemoveItemSelected: (String) -> Unit = {},
@@ -189,6 +197,22 @@ private fun HomeContent(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(16.dp)
                 ) {
+                    item {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "Current result: $result",
+                                modifier = Modifier.weight(1F)
+                            )
+
+                            IconButton(onClick = onClearResultSelected) {
+                                Icon(
+                                    imageVector = Icons.Default.Clear,
+                                    contentDescription = "Clear"
+                                )
+                            }
+                        }
+                    }
+
                     items(listItems, key = { it }) { item ->
                         ListItem(
                             modifier = Modifier.animateItemPlacement(),

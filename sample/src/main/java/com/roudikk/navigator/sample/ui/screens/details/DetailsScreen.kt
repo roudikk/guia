@@ -1,6 +1,7 @@
 package com.roudikk.navigator.sample.ui.screens.details
 
 import android.content.res.Configuration
+import android.os.Parcelable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -33,7 +34,8 @@ import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
 @JvmInline
-value class DetailsResult(val value: String)
+@Parcelize
+value class DetailsResult(val value: String) : Parcelable
 
 @Parcelize
 class DetailsKey(val item: String) : NavigationKey
@@ -64,7 +66,7 @@ fun NavigatorRulesBuilder.detailsNavigation(screenWidth: Int) {
         screen<DynamicDetailsKey> { DetailsScreen(item = it.item, isScreen = true) }
     }
 
-    screen<DetailsKey> { key -> DetailsScreen(item = key.item, isScreen = true) }
+    screen<DetailsKey> { DetailsScreen(item = it.item, isScreen = true) }
 
     dialog<DetailsDialogKey>(
         dialogOptions = DialogOptions(modifier = Modifier.widthIn(max = 320.dp))

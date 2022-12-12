@@ -11,8 +11,9 @@ import java.util.UUID
 
 sealed class HomeEvent {
     data class OpenDetails(val item: String) : HomeEvent()
-    object OpenSettings : HomeEvent()
     data class ShowToast(val item: String) : HomeEvent()
+    object OpenSettings : HomeEvent()
+    object ClearResult : HomeEvent()
 }
 
 class HomeViewModel(
@@ -54,6 +55,10 @@ class HomeViewModel(
 
     fun onDetailsResult(result: DetailsResult) {
         event = HomeEvent.ShowToast(result.value)
+    }
+
+    fun onClearResultSelected() {
+        event = HomeEvent.ClearResult
     }
 
     fun onEventHandled() {

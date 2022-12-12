@@ -6,6 +6,7 @@ import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popBackstack
 import com.roudikk.navigator.extensions.popToRoot
+import com.roudikk.navigator.extensions.pushResult
 import com.roudikk.navigator.extensions.replaceLast
 import com.roudikk.navigator.extensions.singleInstance
 import com.roudikk.navigator.extensions.singleTop

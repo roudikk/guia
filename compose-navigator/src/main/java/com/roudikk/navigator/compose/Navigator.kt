@@ -5,10 +5,9 @@ import androidx.compose.runtime.DisallowComposableCalls
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
-import com.roudikk.navigator.compose.savedstate.NavigatorSaver
+import com.roudikk.navigator.compose.savedstate.navigatorSaver
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.Navigator
-import com.roudikk.navigator.core.NavigatorRules
 import com.roudikk.navigator.core.NavigatorRulesBuilder
 
 @Composable
@@ -25,7 +24,7 @@ fun rememberNavigator(
     }
 
     return rememberSaveable(
-        saver = NavigatorSaver(saveableStateHolder, navigatorRules)
+        saver = navigatorSaver(saveableStateHolder, navigatorRules)
     ) {
         Navigator(
             initialKey = initialKey,

@@ -1,8 +1,5 @@
 package com.roudikk.navigator.core
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisallowComposableCalls
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
@@ -21,6 +18,8 @@ class Navigator internal constructor(
 
     var backStack by mutableStateOf(listOf<NavigationKey>())
         private set
+
+    internal var results = mutableStateMapOf<String, Any?>()
 
     internal val destinations by derivedStateOf {
         backStack.forEach {
@@ -58,7 +57,14 @@ class Navigator internal constructor(
             if (destination.navigationKey is NavigationKey.WithNode<*>) {
                 destination.navigationKey.navigationNode()
             } else {
-                navigationNodeForKey(destination.navigationKey)
+                val navigationKey = destination.navigationKey
+                return navigatorRules.associations[navigationKey::class]
+                    ?.invoke(navigationKey)
+                    ?: error(
+                        "NavigationKey: $navigationKey was not declared. " +
+                                "Call `screen/dialog/bottomSheet<MyKey> { MyComposable() }`" +
+                                " inside your Navigator rules."
+                    )
             }
         }
 
@@ -83,64 +89,15 @@ class Navigator internal constructor(
         setBackstack(*navigationKeys.toTypedArray())
     }
 
-    private val results = mutableStateMapOf<Any, Any?>()
-
-    fun results(key: Any): Any? {
+    fun results(key: String): Any? {
         return results[key]
     }
 
-    fun pushResult(key: Any, result: Any) {
+    fun pushResult(key: String, result: Any) {
         results[key] = result
     }
 
-    fun clearResult(key: Any) {
+    fun clearResult(key: String) {
         results[key] = null
-    }
-
-    inline fun <reified Result : Any> results(): Result? {
-        return results(Result::class.java.simpleName) as Result?
-    }
-
-    inline fun <reified Result : Any> pushResult(result: Result) {
-        pushResult(Result::class.java.simpleName, result)
-    }
-
-    inline fun <reified Result : Any> clearResult() {
-        clearResult(Result::class.java.simpleName)
-    }
-}
-
-private fun NavigationKey.notFoundError(): String {
-    return "NavigationKey: $this was not declared. " +
-            "Call associate<MyKey, MyNavigationNode> {} inside your Navigator rules."
-}
-
-internal fun Navigator.navigationNodeForKey(
-    navigationKey: NavigationKey
-): NavigationNode {
-    return navigatorRules.associations[navigationKey::class]?.invoke(navigationKey)
-        ?: error(navigationKey.notFoundError())
-}
-
-@Composable
-inline fun <reified Result : Any> Navigator.onResult(
-    crossinline onResult: @DisallowComposableCalls (Result) -> Unit
-) {
-    val result = results<Result>()
-    LaunchedEffect(result) {
-        result?.let(onResult)
-        clearResult<Result>()
-    }
-}
-
-@Composable
-fun Navigator.onResult(
-    key: Any,
-    onResult: @DisallowComposableCalls (Any) -> Unit
-) {
-    val result = results(key)
-    LaunchedEffect(result) {
-        result?.let(onResult)
-        clearResult(key)
     }
 }
