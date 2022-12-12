@@ -200,7 +200,7 @@ private fun HomeContent(
                     item {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                text = "Current result: $result",
+                                text = "Current result: ${result ?: "None"}",
                                 modifier = Modifier.weight(1F)
                             )
 
