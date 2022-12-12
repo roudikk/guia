@@ -9,64 +9,62 @@ import com.roudikk.navigator.extensions.popToRoot
 import com.roudikk.navigator.extensions.replaceLast
 import com.roudikk.navigator.extensions.singleInstance
 import com.roudikk.navigator.extensions.singleTop
-import com.roudikk.navigator.sample.ui.screens.home.HomeKey
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 @Composable
-fun DetailsCommandHandler(
+fun DetailsCommandEffect(
     navigator: Navigator,
     viewModel: DetailsViewModel
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.commandsFlow
-            .onEach { command ->
-                when (command) {
-                    DetailsCommand.GoBack -> navigator.popBackstack()
-                    is DetailsCommand.OpenBottomSheet -> navigator.navigate(
-                        navigationKey = DetailsBottomSheetKey(command.item)
-                    )
+    val command = viewModel.command
+    LaunchedEffect(command) {
+        when (command) {
+            DetailsCommand.GoBack -> navigator.popBackstack()
 
-                    is DetailsCommand.OpenExistingSingleInstance -> navigator.singleInstance(
-                        navigationKey = DetailsKey(command.item),
-                        useExistingInstance = true
-                    )
+            is DetailsCommand.OpenBottomSheet -> navigator.navigate(
+                navigationKey = DetailsBottomSheetKey(command.item)
+            )
 
-                    is DetailsCommand.OpenNewSingleInstance -> navigator.singleInstance(
-                        navigationKey = DetailsKey(command.item),
-                        useExistingInstance = false
-                    )
+            is DetailsCommand.OpenExistingSingleInstance -> navigator.singleInstance(
+                navigationKey = DetailsKey(command.item),
+                useExistingInstance = true
+            )
 
-                    is DetailsCommand.OpenRandomItem -> navigator.navigate(
-                        navigationKey = DetailsKey(command.item),
-                    )
+            is DetailsCommand.OpenNewSingleInstance -> navigator.singleInstance(
+                navigationKey = DetailsKey(command.item),
+                useExistingInstance = false
+            )
 
-                    is DetailsCommand.OpenDynamicItem -> navigator.navigate(
-                        navigationKey = DynamicDetailsKey(command.item)
-                    )
+            is DetailsCommand.OpenRandomItem -> navigator.navigate(
+                navigationKey = DetailsKey(command.item),
+            )
 
-                    is DetailsCommand.OpenReplaced -> navigator.replaceLast(
-                        navigationKey = DetailsKey(command.item),
-                    )
+            is DetailsCommand.OpenDynamicItem -> navigator.navigate(
+                navigationKey = DynamicDetailsKey(command.item)
+            )
 
-                    is DetailsCommand.OpenSingleTop -> navigator.singleTop(
-                        navigationKey = DetailsKey(command.item),
-                    )
+            is DetailsCommand.OpenReplaced -> navigator.replaceLast(
+                navigationKey = DetailsKey(command.item),
+            )
 
-                    is DetailsCommand.OpenSingleTopBottomSheet -> navigator.singleTop(
-                        navigationKey = DetailsBottomSheetKey(command.item)
-                    )
+            is DetailsCommand.OpenSingleTop -> navigator.singleTop(
+                navigationKey = DetailsKey(command.item),
+            )
 
-                    is DetailsCommand.OpenDialog -> navigator.navigate(
-                        navigationKey = DetailsDialogKey(command.item)
-                    )
+            is DetailsCommand.OpenSingleTopBottomSheet -> navigator.singleTop(
+                navigationKey = DetailsBottomSheetKey(command.item)
+            )
 
-                    is DetailsCommand.SendResult -> {
-                        navigator.pushResult<DetailsKey, _>(true)
-                        navigator.popToRoot()
-                    }
-                }
+            is DetailsCommand.OpenDialog -> navigator.navigate(
+                navigationKey = DetailsDialogKey(command.item)
+            )
+
+            is DetailsCommand.SendResult -> {
+                navigator.pushResult(DetailsResult(command.result))
+                navigator.popToRoot()
             }
-            .launchIn(this)
+
+            else -> return@LaunchedEffect
+        }
+        viewModel.onCommandHandled()
     }
 }

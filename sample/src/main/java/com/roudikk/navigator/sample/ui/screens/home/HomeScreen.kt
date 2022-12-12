@@ -1,6 +1,8 @@
 package com.roudikk.navigator.sample.ui.screens.home
 
+import android.content.Context
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
@@ -30,7 +32,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -45,18 +46,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.navigator.compose.requireNavigator
-import com.roudikk.navigator.core.ExpectsResult
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigatorRulesBuilder
 import com.roudikk.navigator.core.StackKey
 import com.roudikk.navigator.core.onResult
 import com.roudikk.navigator.extensions.navigate
+import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.navigation.findRootNavigator
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.screens.details.DetailsKey
 import com.roudikk.navigator.sample.ui.screens.settings.SettingsKey
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
@@ -64,7 +63,7 @@ import kotlinx.parcelize.Parcelize
 object HomeStackKey : StackKey
 
 @Parcelize
-class HomeKey : NavigationKey, ExpectsResult<String>
+class HomeKey : NavigationKey
 
 fun NavigatorRulesBuilder.homeNavigation() {
     screen<HomeKey> { HomeScreen() }
@@ -72,26 +71,27 @@ fun NavigatorRulesBuilder.homeNavigation() {
 
 @Composable
 private fun HomeScreen() {
-    val viewModel = viewModel<HomeViewModel>()
+    val viewModel = viewModel<HomeViewModel>(LocalNavHostViewModelStoreOwner.current)
+    val context = LocalContext.current
 
     val navigator = requireNavigator()
     val rootNavigator = findRootNavigator()
 
-    navigator.onResult<HomeKey, _> {
+    navigator.onResult(viewModel::onDetailsResult)
 
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.commandsFlow.collect { homeCommand ->
-            when (homeCommand) {
-                is HomeCommand.OpenDetails -> navigator.navigate(DetailsKey(homeCommand.item))
-                HomeCommand.OpenSettings -> rootNavigator.navigate(SettingsKey())
-            }
+    val command = viewModel.command
+    LaunchedEffect(command) {
+        when (command) {
+            is HomeCommand.ShowToast -> context.showToast(command.item)
+            is HomeCommand.OpenDetails -> navigator.navigate(DetailsKey(command.item))
+            HomeCommand.OpenSettings -> rootNavigator.navigate(SettingsKey())
+            else -> return@LaunchedEffect
         }
+        viewModel.onCommandHandled()
     }
 
     HomeContent(
-        stateFlow = viewModel.stateFlow,
+        listItems = viewModel.listItems,
         onItemSelected = viewModel::onItemSelected,
         onAddItemSelected = viewModel::onAddItemSelected,
         onRemoveItemSelected = viewModel::onRemoveItemSelected,
@@ -100,9 +100,13 @@ private fun HomeScreen() {
     )
 }
 
+private fun Context.showToast(text: String) {
+    Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+}
+
 @Composable
 private fun HomeContent(
-    stateFlow: StateFlow<List<String>>,
+    listItems: List<String>,
     onItemSelected: (String) -> Unit = {},
     onAddItemSelected: () -> Unit = {},
     onRemoveItemSelected: (String) -> Unit = {},
@@ -162,11 +166,9 @@ private fun HomeContent(
             }
         }
     ) { padding ->
-        val items by stateFlow.collectAsState()
-
         Crossfade(
             modifier = Modifier.padding(padding),
-            targetState = items.isEmpty()
+            targetState = listItems.isEmpty()
         ) { itemsEmpty ->
             if (itemsEmpty) {
                 Box(
@@ -187,7 +189,7 @@ private fun HomeContent(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(16.dp)
                 ) {
-                    items(items, key = { it }) { item ->
+                    items(listItems, key = { it }) { item ->
                         ListItem(
                             modifier = Modifier.animateItemPlacement(),
                             item = item,
@@ -251,5 +253,5 @@ private fun ListItem(
 )
 @Composable
 private fun HomeContentPreview() {
-    HomeContent(stateFlow = MutableStateFlow(listOf("1", "2", "3")))
+    HomeContent(listItems = listOf("1", "2", "3"))
 }

@@ -1,9 +1,10 @@
 package com.roudikk.navigator.sample.ui.screens.details
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import java.util.*
+import java.util.UUID
 
 sealed class DetailsCommand {
     object GoBack : DetailsCommand()
@@ -23,52 +24,56 @@ class DetailsViewModel(
     val item: String
 ) : ViewModel() {
 
-    private val mutableCommandsFlow = MutableSharedFlow<DetailsCommand>(extraBufferCapacity = 1)
-    val commandsFlow: Flow<DetailsCommand> = mutableCommandsFlow
-
+    var command by mutableStateOf<DetailsCommand?>(null)
+        private set 
+    
     private fun newItem() = UUID.randomUUID().toString().split("-")[0]
 
     fun onBackSelected() {
-        mutableCommandsFlow.tryEmit(DetailsCommand.GoBack)
+        command = DetailsCommand.GoBack
     }
 
     fun onRandomItemSelected() {
-        mutableCommandsFlow.tryEmit(DetailsCommand.OpenRandomItem(newItem()))
+        command = DetailsCommand.OpenRandomItem(newItem())
     }
 
     fun onSendResultSelected() {
-        mutableCommandsFlow.tryEmit(DetailsCommand.SendResult(item))
+        command = DetailsCommand.SendResult(item)
     }
 
     fun onBottomSheetSelected() {
-        mutableCommandsFlow.tryEmit(DetailsCommand.OpenBottomSheet(newItem()))
+        command = DetailsCommand.OpenBottomSheet(newItem())
     }
 
     fun onNewSingleInstanceSelected() {
-        mutableCommandsFlow.tryEmit(DetailsCommand.OpenNewSingleInstance(newItem()))
+        command = DetailsCommand.OpenNewSingleInstance(newItem())
     }
 
     fun onExistingSingleInstanceSelected() {
-        mutableCommandsFlow.tryEmit(DetailsCommand.OpenExistingSingleInstance(newItem()))
+        command = DetailsCommand.OpenExistingSingleInstance(newItem())
     }
 
     fun onSingleTopSelected() {
-        mutableCommandsFlow.tryEmit(DetailsCommand.OpenSingleTop(newItem()))
+        command = DetailsCommand.OpenSingleTop(newItem())
     }
 
     fun onSingleTopBottomSheetSelected() {
-        mutableCommandsFlow.tryEmit(DetailsCommand.OpenSingleTopBottomSheet(newItem()))
+        command = DetailsCommand.OpenSingleTopBottomSheet(newItem())
     }
 
     fun onReplaceSelected() {
-        mutableCommandsFlow.tryEmit(DetailsCommand.OpenReplaced(newItem()))
+        command = DetailsCommand.OpenReplaced(newItem())
     }
 
     fun onOpenDialogSelected() {
-        mutableCommandsFlow.tryEmit(DetailsCommand.OpenDialog(newItem()))
+        command = DetailsCommand.OpenDialog(newItem())
     }
 
     fun onDynamicSelected() {
-        mutableCommandsFlow.tryEmit(DetailsCommand.OpenDynamicItem(newItem()))
+        command = DetailsCommand.OpenDynamicItem(newItem())
+    }
+
+    fun onCommandHandled() {
+        command = null
     }
 }

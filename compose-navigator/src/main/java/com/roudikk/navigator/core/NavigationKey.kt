@@ -6,6 +6,11 @@ import kotlin.reflect.KClass
 @Suppress("UNCHECKED_CAST")
 interface NavigationKey : Parcelable {
 
+    interface WithNode<Node : NavigationNode> : NavigationKey {
+
+        fun navigationNode(): Node
+    }
+
     fun tag() = tag(this::class as KClass<NavigationKey>)
 
     companion object {
@@ -13,10 +18,3 @@ interface NavigationKey : Parcelable {
         fun tag(navigationKey: KClass<NavigationKey>): String = navigationKey.java.simpleName
     }
 }
-
-interface NavigationNodeKey<Node : NavigationNode> : NavigationKey {
-
-    fun navigationNode(): Node
-}
-
-interface ExpectsResult<Result> : NavigationKey

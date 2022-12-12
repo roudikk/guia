@@ -20,25 +20,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.navigator.compose.animation.NavigationTransition
-import com.roudikk.navigator.compose.rememberNavigator
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.DialogOptions
-import com.roudikk.navigator.core.ExpectsResult
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigatorRulesBuilder
-import com.roudikk.navigator.core.NavigationNodeKey
 import com.roudikk.navigator.core.dialogNode
-import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.sample.navigation.CrossFadeTransition
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.composables.BottomSheetSurface
-import com.roudikk.navigator.sample.ui.screens.home.HomeKey
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
+@JvmInline
+value class DetailsResult(val value: String)
+
 @Parcelize
-class DetailsKey(val item: String) : NavigationKey, ExpectsResult<Boolean>
+class DetailsKey(val item: String) : NavigationKey
 
 @Parcelize
 class DetailsDialogKey(val item: String) : NavigationKey
@@ -50,7 +48,7 @@ class DetailsBottomSheetKey(val item: String) : NavigationKey
 class DynamicDetailsKey(val item: String) : NavigationKey
 
 @Parcelize
-class DetailsNodeKey(val item: String) : NavigationNodeKey<Dialog> {
+class DetailsNodeKey(val item: String) : NavigationKey.WithNode<Dialog> {
 
     override fun navigationNode() = dialogNode {
         DetailsScreen(item = item, isScreen = false)
@@ -103,7 +101,7 @@ private fun DetailsScreen(
         onOpenDialogSelected = viewModel::onOpenDialogSelected
     )
 
-    DetailsCommandHandler(
+    DetailsCommandEffect(
         navigator = requireNavigator(),
         viewModel = viewModel
     )

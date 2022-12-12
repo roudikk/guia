@@ -1,59 +1,62 @@
 package com.roudikk.navigator.sample.ui.screens.home
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import java.util.*
+import com.roudikk.navigator.sample.ui.screens.details.DetailsResult
+import java.util.UUID
 
 sealed class HomeCommand {
     data class OpenDetails(val item: String) : HomeCommand()
     object OpenSettings : HomeCommand()
+    data class ShowToast(val item: String) : HomeCommand()
 }
 
 class HomeViewModel(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val mutableStateFlow = MutableStateFlow<List<String>>(
-        savedStateHandle["items"] ?: emptyList()
-    )
-    val stateFlow: StateFlow<List<String>> = mutableStateFlow
+    var listItems = mutableStateListOf<String>()
+        private set
 
-    private val mutableCommandsFlow = MutableSharedFlow<HomeCommand>(extraBufferCapacity = 1)
-    val commandsFlow: Flow<HomeCommand> = mutableCommandsFlow
+    var command by mutableStateOf<HomeCommand?>(null)
+        private set
+
+    init {
+        listItems.addAll(savedStateHandle["items"] ?: emptyList())
+    }
 
     fun onAddItemSelected() {
-        val newList = mutableListOf<String>().apply {
-            addAll(mutableStateFlow.value)
-        }
-        newList.add(UUID.randomUUID().toString().split("-")[0])
-        savedStateHandle["items"] = newList
-        mutableStateFlow.value = newList
+        listItems.add(UUID.randomUUID().toString().split("-")[0])
+        savedStateHandle["items"] = listItems.toList()
     }
 
     fun onRemoveItemSelected(item: String) {
-        val newList = mutableListOf<String>().apply {
-            addAll(mutableStateFlow.value)
-            remove(item)
-        }
-        savedStateHandle["items"] = newList
-        mutableStateFlow.value = newList
+        listItems.remove(item)
+        savedStateHandle["items"] = listItems.toList()
     }
 
     fun onItemSelected(item: String) {
-        mutableCommandsFlow.tryEmit(HomeCommand.OpenDetails(item))
+        command = HomeCommand.OpenDetails(item)
     }
 
     fun onClearAllSelected() {
-        val newList = emptyList<String>()
-        savedStateHandle["items"] = newList
-        mutableStateFlow.value = newList
+        listItems.clear()
+        savedStateHandle["items"] = emptyList<String>()
     }
 
     fun onSettingsSelected() {
-        mutableCommandsFlow.tryEmit(HomeCommand.OpenSettings)
+        command = HomeCommand.OpenSettings
+    }
+
+    fun onDetailsResult(result: DetailsResult) {
+        command = HomeCommand.ShowToast(result.value)
+    }
+
+    fun onCommandHandled() {
+        command = null
     }
 }
