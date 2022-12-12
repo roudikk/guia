@@ -79,15 +79,15 @@ private fun HomeScreen() {
 
     navigator.onResult(viewModel::onDetailsResult)
 
-    val command = viewModel.command
+    val command = viewModel.event
     LaunchedEffect(command) {
         when (command) {
-            is HomeCommand.ShowToast -> context.showToast(command.item)
-            is HomeCommand.OpenDetails -> navigator.navigate(DetailsKey(command.item))
-            HomeCommand.OpenSettings -> rootNavigator.navigate(SettingsKey())
+            is HomeEvent.ShowToast -> context.showToast(command.item)
+            is HomeEvent.OpenDetails -> navigator.navigate(DetailsKey(command.item))
+            HomeEvent.OpenSettings -> rootNavigator.navigate(SettingsKey())
             else -> return@LaunchedEffect
         }
-        viewModel.onCommandHandled()
+        viewModel.onEventHandled()
     }
 
     HomeContent(

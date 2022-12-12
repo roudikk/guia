@@ -101,7 +101,7 @@ private fun DetailsScreen(
         onOpenDialogSelected = viewModel::onOpenDialogSelected
     )
 
-    DetailsCommandEffect(
+    DetailsEventEffect(
         navigator = requireNavigator(),
         viewModel = viewModel
     )

@@ -6,74 +6,74 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import java.util.UUID
 
-sealed class DetailsCommand {
-    object GoBack : DetailsCommand()
-    data class OpenRandomItem(val item: String) : DetailsCommand()
-    data class SendResult(val result: String) : DetailsCommand()
-    data class OpenBottomSheet(val item: String) : DetailsCommand()
-    data class OpenNewSingleInstance(val item: String) : DetailsCommand()
-    data class OpenDynamicItem(val item: String) : DetailsCommand()
-    data class OpenExistingSingleInstance(val item: String) : DetailsCommand()
-    data class OpenSingleTop(val item: String) : DetailsCommand()
-    data class OpenSingleTopBottomSheet(val item: String) : DetailsCommand()
-    data class OpenReplaced(val item: String) : DetailsCommand()
-    data class OpenDialog(val item: String) : DetailsCommand()
+sealed class DetailsEvent {
+    object GoBack : DetailsEvent()
+    data class OpenRandomItem(val item: String) : DetailsEvent()
+    data class SendResult(val result: String) : DetailsEvent()
+    data class OpenBottomSheet(val item: String) : DetailsEvent()
+    data class OpenNewSingleInstance(val item: String) : DetailsEvent()
+    data class OpenDynamicItem(val item: String) : DetailsEvent()
+    data class OpenExistingSingleInstance(val item: String) : DetailsEvent()
+    data class OpenSingleTop(val item: String) : DetailsEvent()
+    data class OpenSingleTopBottomSheet(val item: String) : DetailsEvent()
+    data class OpenReplaced(val item: String) : DetailsEvent()
+    data class OpenDialog(val item: String) : DetailsEvent()
 }
 
 class DetailsViewModel(
     val item: String
 ) : ViewModel() {
 
-    var command by mutableStateOf<DetailsCommand?>(null)
+    var event by mutableStateOf<DetailsEvent?>(null)
         private set 
     
     private fun newItem() = UUID.randomUUID().toString().split("-")[0]
 
     fun onBackSelected() {
-        command = DetailsCommand.GoBack
+        event = DetailsEvent.GoBack
     }
 
     fun onRandomItemSelected() {
-        command = DetailsCommand.OpenRandomItem(newItem())
+        event = DetailsEvent.OpenRandomItem(newItem())
     }
 
     fun onSendResultSelected() {
-        command = DetailsCommand.SendResult(item)
+        event = DetailsEvent.SendResult(item)
     }
 
     fun onBottomSheetSelected() {
-        command = DetailsCommand.OpenBottomSheet(newItem())
+        event = DetailsEvent.OpenBottomSheet(newItem())
     }
 
     fun onNewSingleInstanceSelected() {
-        command = DetailsCommand.OpenNewSingleInstance(newItem())
+        event = DetailsEvent.OpenNewSingleInstance(newItem())
     }
 
     fun onExistingSingleInstanceSelected() {
-        command = DetailsCommand.OpenExistingSingleInstance(newItem())
+        event = DetailsEvent.OpenExistingSingleInstance(newItem())
     }
 
     fun onSingleTopSelected() {
-        command = DetailsCommand.OpenSingleTop(newItem())
+        event = DetailsEvent.OpenSingleTop(newItem())
     }
 
     fun onSingleTopBottomSheetSelected() {
-        command = DetailsCommand.OpenSingleTopBottomSheet(newItem())
+        event = DetailsEvent.OpenSingleTopBottomSheet(newItem())
     }
 
     fun onReplaceSelected() {
-        command = DetailsCommand.OpenReplaced(newItem())
+        event = DetailsEvent.OpenReplaced(newItem())
     }
 
     fun onOpenDialogSelected() {
-        command = DetailsCommand.OpenDialog(newItem())
+        event = DetailsEvent.OpenDialog(newItem())
     }
 
     fun onDynamicSelected() {
-        command = DetailsCommand.OpenDynamicItem(newItem())
+        event = DetailsEvent.OpenDynamicItem(newItem())
     }
 
-    fun onCommandHandled() {
-        command = null
+    fun onEventHandled() {
+        event = null
     }
 }

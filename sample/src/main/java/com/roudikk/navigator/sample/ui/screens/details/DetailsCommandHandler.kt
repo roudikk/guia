@@ -11,60 +11,60 @@ import com.roudikk.navigator.extensions.singleInstance
 import com.roudikk.navigator.extensions.singleTop
 
 @Composable
-fun DetailsCommandEffect(
+fun DetailsEventEffect(
     navigator: Navigator,
     viewModel: DetailsViewModel
 ) {
-    val command = viewModel.command
+    val command = viewModel.event
     LaunchedEffect(command) {
         when (command) {
-            DetailsCommand.GoBack -> navigator.popBackstack()
+            DetailsEvent.GoBack -> navigator.popBackstack()
 
-            is DetailsCommand.OpenBottomSheet -> navigator.navigate(
+            is DetailsEvent.OpenBottomSheet -> navigator.navigate(
                 navigationKey = DetailsBottomSheetKey(command.item)
             )
 
-            is DetailsCommand.OpenExistingSingleInstance -> navigator.singleInstance(
+            is DetailsEvent.OpenExistingSingleInstance -> navigator.singleInstance(
                 navigationKey = DetailsKey(command.item),
                 useExistingInstance = true
             )
 
-            is DetailsCommand.OpenNewSingleInstance -> navigator.singleInstance(
+            is DetailsEvent.OpenNewSingleInstance -> navigator.singleInstance(
                 navigationKey = DetailsKey(command.item),
                 useExistingInstance = false
             )
 
-            is DetailsCommand.OpenRandomItem -> navigator.navigate(
+            is DetailsEvent.OpenRandomItem -> navigator.navigate(
                 navigationKey = DetailsKey(command.item),
             )
 
-            is DetailsCommand.OpenDynamicItem -> navigator.navigate(
+            is DetailsEvent.OpenDynamicItem -> navigator.navigate(
                 navigationKey = DynamicDetailsKey(command.item)
             )
 
-            is DetailsCommand.OpenReplaced -> navigator.replaceLast(
+            is DetailsEvent.OpenReplaced -> navigator.replaceLast(
                 navigationKey = DetailsKey(command.item),
             )
 
-            is DetailsCommand.OpenSingleTop -> navigator.singleTop(
+            is DetailsEvent.OpenSingleTop -> navigator.singleTop(
                 navigationKey = DetailsKey(command.item),
             )
 
-            is DetailsCommand.OpenSingleTopBottomSheet -> navigator.singleTop(
+            is DetailsEvent.OpenSingleTopBottomSheet -> navigator.singleTop(
                 navigationKey = DetailsBottomSheetKey(command.item)
             )
 
-            is DetailsCommand.OpenDialog -> navigator.navigate(
+            is DetailsEvent.OpenDialog -> navigator.navigate(
                 navigationKey = DetailsDialogKey(command.item)
             )
 
-            is DetailsCommand.SendResult -> {
+            is DetailsEvent.SendResult -> {
                 navigator.pushResult(DetailsResult(command.result))
                 navigator.popToRoot()
             }
 
             else -> return@LaunchedEffect
         }
-        viewModel.onCommandHandled()
+        viewModel.onEventHandled()
     }
 }

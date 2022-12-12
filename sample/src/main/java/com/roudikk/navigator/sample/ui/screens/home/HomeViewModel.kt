@@ -9,10 +9,10 @@ import androidx.lifecycle.ViewModel
 import com.roudikk.navigator.sample.ui.screens.details.DetailsResult
 import java.util.UUID
 
-sealed class HomeCommand {
-    data class OpenDetails(val item: String) : HomeCommand()
-    object OpenSettings : HomeCommand()
-    data class ShowToast(val item: String) : HomeCommand()
+sealed class HomeEvent {
+    data class OpenDetails(val item: String) : HomeEvent()
+    object OpenSettings : HomeEvent()
+    data class ShowToast(val item: String) : HomeEvent()
 }
 
 class HomeViewModel(
@@ -22,7 +22,7 @@ class HomeViewModel(
     var listItems = mutableStateListOf<String>()
         private set
 
-    var command by mutableStateOf<HomeCommand?>(null)
+    var event by mutableStateOf<HomeEvent?>(null)
         private set
 
     init {
@@ -40,7 +40,7 @@ class HomeViewModel(
     }
 
     fun onItemSelected(item: String) {
-        command = HomeCommand.OpenDetails(item)
+        event = HomeEvent.OpenDetails(item)
     }
 
     fun onClearAllSelected() {
@@ -49,14 +49,14 @@ class HomeViewModel(
     }
 
     fun onSettingsSelected() {
-        command = HomeCommand.OpenSettings
+        event = HomeEvent.OpenSettings
     }
 
     fun onDetailsResult(result: DetailsResult) {
-        command = HomeCommand.ShowToast(result.value)
+        event = HomeEvent.ShowToast(result.value)
     }
 
-    fun onCommandHandled() {
-        command = null
+    fun onEventHandled() {
+        event = null
     }
 }
