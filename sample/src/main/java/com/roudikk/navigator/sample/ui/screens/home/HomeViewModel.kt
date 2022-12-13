@@ -12,6 +12,7 @@ import java.util.UUID
 sealed class HomeEvent {
     data class OpenDetails(val item: String) : HomeEvent()
     data class ShowToast(val item: String) : HomeEvent()
+    data class RefreshResult(val item: String) : HomeEvent()
     object OpenSettings : HomeEvent()
     object ClearResult : HomeEvent()
 }
@@ -30,8 +31,10 @@ class HomeViewModel(
         listItems.addAll(savedStateHandle["items"] ?: emptyList())
     }
 
+    private fun newItem() = UUID.randomUUID().toString().split("-")[0]
+
     fun onAddItemSelected() {
-        listItems.add(UUID.randomUUID().toString().split("-")[0])
+        listItems.add(newItem())
         savedStateHandle["items"] = listItems.toList()
     }
 
@@ -53,12 +56,12 @@ class HomeViewModel(
         event = HomeEvent.OpenSettings
     }
 
-    fun onDetailsResult(result: DetailsResult) {
-        event = HomeEvent.ShowToast(result.value)
-    }
-
     fun onClearResultSelected() {
         event = HomeEvent.ClearResult
+    }
+
+    fun onRefreshResultSelected() {
+        event = HomeEvent.RefreshResult(newItem())
     }
 
     fun onEventHandled() {

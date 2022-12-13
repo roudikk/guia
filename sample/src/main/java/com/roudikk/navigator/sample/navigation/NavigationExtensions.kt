@@ -8,8 +8,8 @@ import com.roudikk.navigator.core.Navigator
 val LocalRootNavigator = staticCompositionLocalOf<Navigator> { error("Must be provided.") }
 
 @Composable
-fun findRootNavigator(): Navigator {
-    return LocalRootNavigator.current
+fun requireRootNavigator(): Navigator {
+    return requireNotNull(LocalRootNavigator.current)
 }
 
 val LocalNavHostViewModelStoreOwner = staticCompositionLocalOf<ViewModelStoreOwner> {

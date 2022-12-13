@@ -89,7 +89,7 @@ class Navigator internal constructor(
         setBackstack(*navigationKeys.toTypedArray())
     }
 
-    fun results(key: String): Any? {
+    fun result(key: String): Any? {
         return results[key]
     }
 

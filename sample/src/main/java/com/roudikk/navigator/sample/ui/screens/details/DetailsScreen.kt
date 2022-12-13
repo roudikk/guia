@@ -85,7 +85,9 @@ private fun DetailsScreen(
     item: String,
     isScreen: Boolean
 ) {
-    val viewModel: DetailsViewModel = viewModel { DetailsViewModel(item) }
+    val viewModel = viewModel { DetailsViewModel(item) }
+
+    DetailsEventEffect(viewModel = viewModel)
 
     DetailsContent(
         item = viewModel.item,
@@ -101,11 +103,6 @@ private fun DetailsScreen(
         onSingleTopBottomSheetSelected = viewModel::onSingleTopBottomSheetSelected,
         onReplaceSelected = viewModel::onReplaceSelected,
         onOpenDialogSelected = viewModel::onOpenDialogSelected
-    )
-
-    DetailsEventEffect(
-        navigator = requireNavigator(),
-        viewModel = viewModel
     )
 }
 

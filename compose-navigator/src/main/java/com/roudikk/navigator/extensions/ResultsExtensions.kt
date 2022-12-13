@@ -5,8 +5,8 @@ import androidx.compose.runtime.DisallowComposableCalls
 import androidx.compose.runtime.LaunchedEffect
 import com.roudikk.navigator.core.Navigator
 
-inline fun <reified Result : Any> Navigator.results(): Result? {
-    return results(Result::class.java.simpleName) as Result?
+inline fun <reified Result : Any> Navigator.result(): Result? {
+    return result(Result::class.java.simpleName) as Result?
 }
 
 inline fun <reified Result : Any> Navigator.pushResult(result: Result) {
@@ -21,7 +21,7 @@ inline fun <reified Result : Any> Navigator.clearResult() {
 inline fun <reified Result : Any> Navigator.onResult(
     crossinline onResult: @DisallowComposableCalls (Result) -> Unit
 ) {
-    val result = results<Result>()
+    val result = result<Result>()
     LaunchedEffect(result) {
         result?.let(onResult)
         clearResult<Result>()
@@ -33,7 +33,7 @@ fun Navigator.onResult(
     key: String,
     onResult: @DisallowComposableCalls (Any) -> Unit
 ) {
-    val result = results(key)
+    val result = result(key)
     LaunchedEffect(result) {
         result?.let(onResult)
         clearResult(key)
