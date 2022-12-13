@@ -21,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.navigator.compose.animation.NavigationTransition
-import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.DialogOptions
 import com.roudikk.navigator.core.NavigationKey

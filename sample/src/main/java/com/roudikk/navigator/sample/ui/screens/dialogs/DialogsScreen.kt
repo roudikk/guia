@@ -25,7 +25,7 @@ import com.roudikk.navigator.core.StackKey
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.sample.DeepLinkViewModel
 import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
-import com.roudikk.navigator.sample.navigation.findRootNavigator
+import com.roudikk.navigator.sample.navigation.requireRootNavigator
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
@@ -46,7 +46,7 @@ private fun DialogsScreen(
     val deepLinkViewModel = viewModel<DeepLinkViewModel>(LocalNavHostViewModelStoreOwner.current)
 
     val navigator = requireNavigator()
-    val rootNavigator = findRootNavigator()
+    val rootNavigator = requireRootNavigator()
 
     DialogsContent(
         onCancelableDialogClicked = { navigator.navigate(CancelableDialogKey(false)) },

@@ -18,6 +18,7 @@ fun DetailsEventEffect(
 ) {
     val navigator = requireNavigator()
     val event = viewModel.event
+
     LaunchedEffect(event) {
         when (event) {
             DetailsEvent.GoBack -> navigator.popBackstack()

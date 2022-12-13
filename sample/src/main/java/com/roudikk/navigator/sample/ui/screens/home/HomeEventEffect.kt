@@ -23,6 +23,7 @@ fun HomeEventEffect(
     val rootNavigator = requireRootNavigator()
     val context = LocalContext.current
     val event = viewModel.event
+
     LaunchedEffect(event) {
         when (event) {
             is HomeEvent.ShowToast -> context.showToast(event.item)
@@ -32,6 +33,7 @@ fun HomeEventEffect(
             is HomeEvent.ClearResult -> navigator.clearResult<DetailsResult>()
             else -> return@LaunchedEffect
         }
+
         viewModel.onEventHandled()
     }
 }

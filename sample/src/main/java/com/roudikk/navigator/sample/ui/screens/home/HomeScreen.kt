@@ -68,7 +68,7 @@ fun NavigatorRulesBuilder.homeNavigation() {
 
 @Composable
 private fun HomeScreen() {
-    val viewModel = viewModel<HomeViewModel>(LocalNavHostViewModelStoreOwner.current)
+    val viewModel = viewModel<HomeViewModel>()
     val navigator = requireNavigator()
     val result = navigator.result<DetailsResult>()
 

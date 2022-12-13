@@ -9,6 +9,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.with
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import com.roudikk.navigator.compose.BottomSheetSetup
 import com.roudikk.navigator.compose.NavContainer
@@ -29,10 +30,12 @@ fun NavHost.NavContainer(
             transitionSpec = transitionSpec
         ) { targetEntry ->
             targetEntry?.let {
-                targetEntry.navigator.NavContainer(
-                    modifier = modifier(targetEntry.stackKey),
-                    bottomSheetOptions = bottomSheetSetup(targetEntry.stackKey),
-                )
+                saveableStateHolder.SaveableStateProvider(it.stackKey) {
+                    targetEntry.navigator.NavContainer(
+                        modifier = modifier(targetEntry.stackKey),
+                        bottomSheetOptions = bottomSheetSetup(targetEntry.stackKey),
+                    )
+                }
             }
         }
     }
