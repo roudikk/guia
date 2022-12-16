@@ -7,14 +7,13 @@ import androidx.compose.animation.with
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.roudikk.navigator.compose.animation.EnterExitTransition
 import com.roudikk.navigator.compose.backstack.BackStackEntry
+import com.roudikk.navigator.core.Navigator
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-internal fun ScreenContainer(
+internal fun Navigator.ScreenContainer(
     modifier: Modifier,
-    transition: EnterExitTransition,
     screenEntry: BackStackEntry?,
     content: @Composable AnimatedVisibilityScope.(BackStackEntry) -> Unit
 ) {

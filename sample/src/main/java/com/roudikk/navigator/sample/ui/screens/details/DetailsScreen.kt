@@ -62,7 +62,7 @@ fun NavigatorRulesBuilder.detailsNavigation(screenWidth: Int) {
             dialogOptions = DialogOptions(modifier = Modifier.widthIn(max = 320.dp))
         ) { DetailsScreen(item = it.item, isScreen = false) }
     } else {
-        screen<DynamicDetailsKey> { DetailsScreen(item = it.item, isScreen = true) }
+        bottomSheet<DynamicDetailsKey> { DetailsScreen(item = it.item, isScreen = false) }
     }
 
     screen<DetailsKey> { DetailsScreen(item = it.item, isScreen = true) }

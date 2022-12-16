@@ -43,13 +43,13 @@ class HomeViewModel(
         savedStateHandle["items"] = listItems.toList()
     }
 
-    fun onItemSelected(item: String) {
-        event = HomeEvent.OpenDetails(item)
-    }
-
     fun onClearAllSelected() {
         listItems.clear()
         savedStateHandle["items"] = emptyList<String>()
+    }
+
+    fun onItemSelected(item: String) {
+        event = HomeEvent.OpenDetails(item)
     }
 
     fun onSettingsSelected() {

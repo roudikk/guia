@@ -1,6 +1,8 @@
 package com.roudikk.navigator.compose
 
+import android.util.Log
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -53,48 +55,35 @@ private fun Navigator.NavContainerContent(
     navigator: Navigator,
     bottomSheetSetup: BottomSheetSetup = BottomSheetSetup()
 ) {
-    val parentNavigator = findParentNavigator()
-
     val canGoBack by navigator.canGoBack()
 
     val backStackManager = rememberBackStackManager(navigator = navigator)
 
     val backStackEntryGroup by backStackManager.backStackEntryGroup
 
-    val parentShowingBottomSheet by remember {
-        derivedStateOf {
-            parentNavigator?.destinations?.last()
-                ?.let(parentNavigator::navigationNode) is BottomSheet
-        }
+    val enabled by remember(canGoBack, navigator.overrideBackPress) {
+        derivedStateOf { canGoBack && navigator.overrideBackPress }
     }
 
-    val enabled = canGoBack && navigator.overrideBackPress && !parentShowingBottomSheet
-
-    val backDispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
-
-    DisposableEffect(enabled) {
-        val callback = object : OnBackPressedCallback(enabled) {
-            override fun handleOnBackPressed() {
-                navigator.popBackstack()
-            }
-        }
-        backDispatcher.addCallback(callback)
-        onDispose { callback.remove() }
+    BackHandler(enabled) {
+        navigator.popBackstack()
     }
 
     // Bottom sheet content
     BottomSheetContainer(
         bottomSheetEntry = backStackEntryGroup.bottomSheetEntry,
         bottomSheetSetup = bottomSheetSetup,
-        transition = navigator.transition,
-        currentDestination = { navigator.destinations.last() },
-        onSheetHidden = { navigator.popBackstack() },
-        content = { entry -> NavigationEntry(backStackManager, entry) }
+        content = { entry ->
+            BackHandler(enabled) {
+                navigator.popBackstack()
+            }
+
+            NavigationEntry(backStackManager, entry)
+        }
     ) {
         // Screen content
         ScreenContainer(
             modifier = modifier,
-            transition = navigator.transition,
             screenEntry = backStackEntryGroup.screenEntry
         ) { entry ->
             NavigationEntry(backStackManager, entry)
@@ -104,9 +93,7 @@ private fun Navigator.NavContainerContent(
     // Dialog content
     backStackEntryGroup.dialogEntry?.let { dialogEntry ->
         DialogContainer(
-            dialogEntry = dialogEntry,
-            transition = navigator.transition,
-            onDismissRequest = { navigator.popBackstack() },
+            dialogEntry = dialogEntry
         ) { entry ->
             NavigationEntry(backStackManager, entry)
         }

@@ -22,10 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisallowComposableCalls
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
@@ -33,17 +29,17 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.roudikk.navigator.compose.rememberNavigator
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigatorRulesBuilder
 import com.roudikk.navigator.core.StackKey
+import com.roudikk.navigator.extensions.navigate
+import com.roudikk.navigator.extensions.popToRoot
 import com.roudikk.navigator.navhost.DefaultStackBackHandler
 import com.roudikk.navigator.navhost.NavContainer
 import com.roudikk.navigator.navhost.NavHost
-import com.roudikk.navigator.navhost.rememberNavHost
-import com.roudikk.navigator.extensions.navigate
-import com.roudikk.navigator.extensions.popToRoot
-import com.roudikk.navigator.compose.rememberNavigator
 import com.roudikk.navigator.navhost.StackEntry
+import com.roudikk.navigator.navhost.rememberNavHost
 import com.roudikk.navigator.sample.BottomNavDestination.DialogsTab
 import com.roudikk.navigator.sample.BottomNavDestination.HomeTab
 import com.roudikk.navigator.sample.BottomNavDestination.NavigationTreeTab
@@ -57,7 +53,6 @@ import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.navigation.MaterialSharedAxisTransitionX
 import com.roudikk.navigator.sample.ui.composables.sampleBottomSheetOptions
 import com.roudikk.navigator.sample.ui.screens.details.DetailsKey
-import com.roudikk.navigator.sample.ui.screens.details.DetailsNodeKey
 import com.roudikk.navigator.sample.ui.screens.details.detailsNavigation
 import com.roudikk.navigator.sample.ui.screens.dialogs.BlockingBottomSheetKey
 import com.roudikk.navigator.sample.ui.screens.dialogs.BlockingDialogKey
@@ -79,7 +74,6 @@ import com.roudikk.navigator.sample.ui.screens.nested.ParentNestedKey
 import com.roudikk.navigator.sample.ui.screens.nested.nestedNavigation
 import com.roudikk.navigator.sample.ui.screens.nested.parentNestedNavigation
 import com.roudikk.navigator.sample.ui.theme.AppTheme
-import kotlinx.coroutines.delay
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -93,7 +87,6 @@ fun NavigatorRulesBuilder.bottomTabNavigation() {
 fun rememberBottomNavHost(
     initialize: @DisallowComposableCalls (NavHost) -> Unit = {}
 ): NavHost {
-
     val configuration = LocalConfiguration.current
 
     val homeNavigator = rememberNavigator(initialKey = HomeKey()) {
@@ -136,9 +129,9 @@ fun BottomNavScreen() {
 
     val navHost = rememberBottomNavHost { it.deeplink(deepLinkViewModel) }
 
-    navHost.DefaultStackBackHandler(HomeStackKey)
-
     BottomNavContent(navHost)
+
+    navHost.DefaultStackBackHandler(HomeStackKey)
 
     LaunchedEffect(deepLinkViewModel.destinations) {
         navHost.deeplink(deepLinkViewModel)
@@ -156,12 +149,12 @@ private fun NavHost.deeplink(deepLinkViewModel: DeepLinkViewModel) {
                 NavigationTreeTab -> setActive(NavigationTreeStackKey)
 
                 // Dialog destinations
-                BlockingBottomSheet -> currentEntry?.navigator?.navigate(BlockingBottomSheetKey())
-                BlockingDialog -> currentEntry?.navigator?.navigate(BlockingDialogKey(false))
-                Cancelable -> currentEntry?.navigator?.navigate(CancelableDialogKey(false))
+                BlockingBottomSheet -> currentNavigator?.navigate(BlockingBottomSheetKey())
+                BlockingDialog -> currentNavigator?.navigate(BlockingDialogKey(false))
+                Cancelable -> currentNavigator?.navigate(CancelableDialogKey(false))
 
                 // Home destinations
-                is Details -> currentEntry?.navigator?.navigate(DetailsKey(destination.item))
+                is Details -> currentNavigator?.navigate(DetailsKey(destination.item))
 
                 // Ignore other destinations
                 else -> Unit
@@ -296,7 +289,7 @@ private fun navigatorToStackOrRoot(
     newKey: StackKey
 ) {
     if (currentKey == newKey) {
-        navHost.currentEntry?.navigator?.popToRoot()
+        navHost.currentNavigator?.popToRoot()
     } else {
         navHost.setActive(newKey)
     }

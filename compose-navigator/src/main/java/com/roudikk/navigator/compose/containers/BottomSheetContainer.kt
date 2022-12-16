@@ -23,6 +23,7 @@ import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,10 +38,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.compose.BottomSheetSetup
-import com.roudikk.navigator.compose.animation.EnterExitTransition
 import com.roudikk.navigator.compose.backstack.BackStackEntry
 import com.roudikk.navigator.core.BottomSheet
-import com.roudikk.navigator.core.Destination
+import com.roudikk.navigator.extensions.popBackstack
 
 @OptIn(
     ExperimentalMaterialApi::class,
@@ -51,43 +51,51 @@ internal fun Navigator.BottomSheetContainer(
     content: @Composable AnimatedVisibilityScope.(BackStackEntry) -> Unit,
     bottomSheetEntry: BackStackEntry?,
     bottomSheetSetup: BottomSheetSetup,
-    transition: EnterExitTransition,
-    currentDestination: () -> Destination,
-    onSheetHidden: () -> Unit,
     container: @Composable () -> Unit
 ) {
+    val localDensity = LocalDensity.current
+
+    val destination by remember { derivedStateOf { destinations.last() } }
     val navigationNode = bottomSheetEntry?.destination?.let(::navigationNode)
-    val confirmStateChange = { sheetValue: BottomSheetValue ->
-        val destination = currentDestination()
-        val node = navigationNode(destination)
-         node !is BottomSheet || node.bottomSheetOptions.confirmStateChange(sheetValue)
+    val confirmStateChange by remember(destination) {
+        derivedStateOf {
+            { sheetValue: BottomSheetValue ->
+                val node = navigationNode(destination)
+                node !is BottomSheet || node.bottomSheetOptions.confirmStateChange(sheetValue)
+            }
+        }
     }
 
-    val scaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberBottomSheetState(
-            initialValue = BottomSheetValue.Collapsed,
-            animationSpec = bottomSheetSetup.animationSpec,
-            confirmStateChange = confirmStateChange
-        )
+    val bottomSheetState = rememberBottomSheetState(
+        initialValue = if (bottomSheetEntry == null) {
+            BottomSheetValue.Collapsed
+        } else {
+            BottomSheetValue.Expanded
+        },
+        animationSpec = bottomSheetSetup.animationSpec,
+        confirmStateChange = confirmStateChange
     )
-    val localDensity = LocalDensity.current
+
+    val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = bottomSheetState)
 
     var contentHeightPixels by remember(bottomSheetEntry) {
         mutableStateOf(with(localDensity) { 0.dp.toPx() })
     }
-    val contentHeightDp = with(localDensity) { contentHeightPixels.toDp() }
+
+    val contentHeightDp by remember(contentHeightPixels) {
+        derivedStateOf { with(localDensity) { contentHeightPixels.toDp() } }
+    }
 
     LaunchedEffect(bottomSheetEntry) {
         if (bottomSheetEntry != null) {
-            scaffoldState.bottomSheetState.expand()
+            bottomSheetState.expand()
         } else {
-            scaffoldState.bottomSheetState.collapse()
+            bottomSheetState.collapse()
         }
     }
 
     BottomSheetScaffold(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         scaffoldState = scaffoldState,
         sheetShape = RoundedCornerShape(0.dp),
         sheetBackgroundColor = Color.Transparent,
@@ -112,8 +120,6 @@ internal fun Navigator.BottomSheetContainer(
                         transitionSpec = {
                             // Only animate bottom sheet content when navigating between
                             // bottom sheet destinations.
-                            val destination = currentDestination()
-
                             if (navigationNode(destination) !is BottomSheet && targetState != null) {
                                 EnterTransition.None
                             } else {
@@ -157,21 +163,16 @@ internal fun Navigator.BottomSheetContainer(
                             detectTapGestures(
                                 onPress = {
                                     if (confirmStateChange(BottomSheetValue.Collapsed)) {
-                                        scaffoldState.bottomSheetState.collapse()
+                                        bottomSheetState.collapse()
+                                        popBackstack()
                                     }
                                 }
-                            ) {}
+                            )
                         }
                         .fillMaxSize()
                         .background(bottomSheetSetup.scrimColor)
                 )
             }
-        }
-    }
-
-    LaunchedEffect(scaffoldState.bottomSheetState.currentValue) {
-        if (scaffoldState.bottomSheetState.isCollapsed && bottomSheetEntry != null) {
-            onSheetHidden()
         }
     }
 }

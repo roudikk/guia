@@ -40,7 +40,7 @@ import kotlinx.parcelize.Parcelize
 class WelcomeKey : NavigationKey
 
 fun NavigatorRulesBuilder.welcomeNavigation() {
-    screen<WelcomeKey> { WelcomeScreen() }
+    bottomSheet<WelcomeKey> { WelcomeScreen() }
 }
 
 @Composable

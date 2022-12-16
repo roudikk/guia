@@ -1,17 +1,23 @@
 package com.roudikk.navigator.extensions
 
 import androidx.compose.runtime.derivedStateOf
+import com.roudikk.navigator.compose.animation.EnterExitTransition
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.Navigator
 
 fun Navigator.navigate(
-    navigationKey: NavigationKey
+    navigationKey: NavigationKey,
+    overrideTransition: EnterExitTransition? = null
 ) {
-    setBackstack(backStack + navigationKey)
+    setBackstack(
+        backStack + navigationKey,
+        overrideTransition = overrideTransition
+    )
 }
 
 fun Navigator.replaceLast(
-    navigationKey: NavigationKey
+    navigationKey: NavigationKey,
+    overrideTransition: EnterExitTransition? = null
 ) {
     setBackstack(backStack.dropLast(1) + navigationKey)
 }

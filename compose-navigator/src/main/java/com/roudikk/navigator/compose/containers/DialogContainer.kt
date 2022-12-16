@@ -6,24 +6,22 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.with
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.Dialog
-import com.roudikk.navigator.core.Navigator
-import com.roudikk.navigator.compose.animation.EnterExitTransition
 import com.roudikk.navigator.compose.backstack.BackStackEntry
 import com.roudikk.navigator.core.Dialog
+import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.toDialogProperties
+import com.roudikk.navigator.extensions.popBackstack
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun Navigator.DialogContainer(
     dialogEntry: BackStackEntry,
-    transition: EnterExitTransition,
-    onDismissRequest: () -> Unit,
     content: @Composable AnimatedVisibilityScope.(BackStackEntry) -> Unit
 ) {
     val dialog = navigationNode(dialogEntry.destination) as Dialog
 
     Dialog(
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = { popBackstack() },
         properties = dialog.dialogOptions.toDialogProperties()
     ) {
         AnimatedContent(

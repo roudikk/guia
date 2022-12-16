@@ -49,8 +49,6 @@ import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigatorRulesBuilder
 import com.roudikk.navigator.core.StackKey
 import com.roudikk.navigator.extensions.result
-import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
-import com.roudikk.navigator.sample.navigation.requireRootNavigator
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.screens.details.DetailsResult
 import kotlinx.coroutines.launch
@@ -70,6 +68,7 @@ fun NavigatorRulesBuilder.homeNavigation() {
 private fun HomeScreen() {
     val viewModel = viewModel<HomeViewModel>()
     val navigator = requireNavigator()
+
     val result = navigator.result<DetailsResult>()
 
     HomeEventEffect(viewModel = viewModel)
