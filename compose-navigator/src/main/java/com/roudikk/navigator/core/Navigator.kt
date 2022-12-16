@@ -45,7 +45,8 @@ class Navigator internal constructor(
 
     var overrideBackPress by mutableStateOf(true)
 
-    var transition by mutableStateOf(EnterExitTransition.None)
+    internal var currentTransition by mutableStateOf(EnterExitTransition.None)
+    var overrideNextTransition: EnterExitTransition? = null
 
     init {
         setBackstack(initialKey)
@@ -69,7 +70,6 @@ class Navigator internal constructor(
 
     fun setBackstack(
         vararg navigationKeys: NavigationKey,
-        overrideTransition: EnterExitTransition? = null
     ) {
         require(navigationKeys.isNotEmpty()) {
             "Backstack cannot be empty. Please pass at least one NavigationKey"
@@ -78,10 +78,11 @@ class Navigator internal constructor(
         val currentKey = navigationKeys.last()
         val popping = backStack.contains(currentKey)
 
-        if (overrideTransition != null) {
-            transition = overrideTransition
+        if (overrideNextTransition != null) {
+            currentTransition = overrideNextTransition!!
+            overrideNextTransition = null
         } else if (backStack.isNotEmpty()) {
-            transition = navigatorRules.transitions[currentKey::class]
+            currentTransition = navigatorRules.transitions[currentKey::class]
                 ?.invoke(backStack.last(), currentKey, popping)
                 ?: navigatorRules.defaultTransition(backStack.last(), currentKey, popping)
         }
@@ -91,12 +92,8 @@ class Navigator internal constructor(
 
     fun setBackstack(
         navigationKeys: List<NavigationKey>,
-        overrideTransition: EnterExitTransition? = null
     ) {
-        setBackstack(
-            *navigationKeys.toTypedArray(),
-            overrideTransition = overrideTransition
-        )
+        setBackstack(*navigationKeys.toTypedArray())
     }
 
     fun result(key: String): Any? {

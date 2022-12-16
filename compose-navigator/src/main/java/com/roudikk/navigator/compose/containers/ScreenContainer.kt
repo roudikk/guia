@@ -1,7 +1,6 @@
 package com.roudikk.navigator.compose.containers
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.with
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,7 +23,7 @@ internal fun Navigator.ScreenContainer(
             .fillMaxSize()
             .then(modifier),
         transitionSpec = {
-            transition.enter with transition.exit
+            currentTransition.enter with currentTransition.exit
         }
     ) { backStackEntry ->
         backStackEntry?.let {

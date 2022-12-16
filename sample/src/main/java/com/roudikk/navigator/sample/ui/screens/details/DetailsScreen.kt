@@ -126,6 +126,7 @@ private fun DetailsContent(
         onSingleTopBottomSheetSelected = viewModel::onSingleTopBottomSheetSelected,
         onReplaceSelected = viewModel::onReplaceSelected,
         onOpenDialogSelected = viewModel::onOpenDialogSelected,
-        onOpenBlockingBottomSheet = viewModel::onOpenBlockingBottomSheet
+        onOpenBlockingBottomSheet = viewModel::onOpenBlockingBottomSheet,
+        onOverrideScreenTransitionSelected = viewModel::onOverrideScreenTransitionSelected
     )
 }

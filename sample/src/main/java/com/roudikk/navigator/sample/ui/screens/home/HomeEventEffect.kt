@@ -5,9 +5,7 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import com.roudikk.navigator.compose.animation.EnterExitTransition
 import com.roudikk.navigator.compose.requireNavigator
-import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.extensions.clearResult
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.pushResult
@@ -28,10 +26,7 @@ fun HomeEventEffect(
     LaunchedEffect(event) {
         when (event) {
             is HomeEvent.ShowToast -> context.showToast(event.item)
-            is HomeEvent.OpenDetails -> {
-                navigator.transition = EnterExitTransition.None
-                navigator.navigate(DetailsKey(event.item))
-            }
+            is HomeEvent.OpenDetails -> navigator.navigate(DetailsKey(event.item))
             is HomeEvent.RefreshResult -> navigator.pushResult(DetailsResult(event.item))
             is HomeEvent.OpenSettings -> rootNavigator.navigate(SettingsKey())
             is HomeEvent.ClearResult -> navigator.clearResult<DetailsResult>()

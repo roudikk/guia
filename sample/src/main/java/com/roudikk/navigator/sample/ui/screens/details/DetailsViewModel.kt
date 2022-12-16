@@ -19,6 +19,7 @@ sealed class DetailsEvent {
     data class OpenSingleTopBottomSheet(val item: String) : DetailsEvent()
     data class OpenReplaced(val item: String) : DetailsEvent()
     data class OpenDialog(val item: String) : DetailsEvent()
+    data class OverrideScreenTransition(val item: String) : DetailsEvent()
 }
 
 class DetailsViewModel(
@@ -76,6 +77,10 @@ class DetailsViewModel(
 
     fun onOpenBlockingBottomSheet() {
         event = DetailsEvent.OpenBlockingBottomSheet
+    }
+
+    fun onOverrideScreenTransitionSelected() {
+        event = DetailsEvent.OverrideScreenTransition(newItem())
     }
 
     fun onEventHandled() {

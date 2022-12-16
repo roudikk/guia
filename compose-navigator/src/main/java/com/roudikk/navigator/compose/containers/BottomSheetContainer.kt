@@ -139,11 +139,11 @@ internal fun Navigator.BottomSheetContainer(
                         if (navigationNode(destination) !is BottomSheet && targetState != null) {
                             EnterTransition.None
                         } else {
-                            transition.enter
+                            currentTransition.enter
                         } with if (initialState != null && navigationNode !is BottomSheet) {
                             fadeOut(animationSpec = snap(delayMillis = 300))
                         } else {
-                            transition.exit
+                            currentTransition.exit
                         }
                     }
                 ) { bottomSheetEntry ->

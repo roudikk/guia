@@ -2,7 +2,6 @@ package com.roudikk.navigator.sample.ui.screens.details
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import com.roudikk.navigator.compose.findParentNavigator
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.compose.requireParentNavigator
 import com.roudikk.navigator.extensions.navigate
@@ -12,6 +11,7 @@ import com.roudikk.navigator.extensions.pushResult
 import com.roudikk.navigator.extensions.replaceLast
 import com.roudikk.navigator.extensions.singleInstance
 import com.roudikk.navigator.extensions.singleTop
+import com.roudikk.navigator.sample.navigation.CrossFadeTransition
 import com.roudikk.navigator.sample.ui.screens.dialogs.BlockingBottomSheetKey
 
 @Composable
@@ -67,6 +67,11 @@ fun DetailsEventEffect(
             is DetailsEvent.OpenBlockingBottomSheet -> parentNavigator.navigate(
                 navigationKey = BlockingBottomSheetKey()
             )
+
+            is DetailsEvent.OverrideScreenTransition -> {
+                navigator.overrideNextTransition = CrossFadeTransition.enterExit
+                navigator.navigate(DetailsKey(event.item))
+            }
 
             is DetailsEvent.SendResult -> {
                 navigator.pushResult(DetailsResult(event.result))

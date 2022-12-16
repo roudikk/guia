@@ -28,7 +28,7 @@ internal fun Navigator.DialogContainer(
             targetState = dialogEntry,
             modifier = dialog.dialogOptions.modifier,
             transitionSpec = {
-                transition.enter with transition.exit
+                currentTransition.enter with currentTransition.exit
             }
         ) { dialogEntry ->
             ProvideNavigationVisibilityScope {

@@ -44,6 +44,7 @@ fun DetailsList(
     onReplaceSelected: () -> Unit = {},
     onOpenDialogSelected: () -> Unit = {},
     onOpenBlockingBottomSheet: () -> Unit = {},
+    onOverrideScreenTransitionSelected: () -> Unit = {}
 ) {
 
     Column(
@@ -124,6 +125,11 @@ fun DetailsList(
         DetailsAction(
             title = "Open Blocking BottomSheet",
             onClick = onOpenBlockingBottomSheet
+        )
+
+        DetailsAction(
+            title = "Override screen transition",
+            onClick = onOverrideScreenTransitionSelected
         )
     }
 }
