@@ -2,8 +2,9 @@ package com.roudikk.navigator.sample.ui.screens.details
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import com.roudikk.navigator.compose.findParentNavigator
 import com.roudikk.navigator.compose.requireNavigator
-import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.compose.requireParentNavigator
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popBackstack
 import com.roudikk.navigator.extensions.popToRoot
@@ -11,12 +12,14 @@ import com.roudikk.navigator.extensions.pushResult
 import com.roudikk.navigator.extensions.replaceLast
 import com.roudikk.navigator.extensions.singleInstance
 import com.roudikk.navigator.extensions.singleTop
+import com.roudikk.navigator.sample.ui.screens.dialogs.BlockingBottomSheetKey
 
 @Composable
 fun DetailsEventEffect(
     viewModel: DetailsViewModel
 ) {
     val navigator = requireNavigator()
+    val parentNavigator = requireParentNavigator()
     val event = viewModel.event
 
     LaunchedEffect(event) {
@@ -59,6 +62,10 @@ fun DetailsEventEffect(
 
             is DetailsEvent.OpenDialog -> navigator.navigate(
                 navigationKey = DetailsDialogKey(event.item)
+            )
+
+            is DetailsEvent.OpenBlockingBottomSheet -> parentNavigator.navigate(
+                navigationKey = BlockingBottomSheetKey()
             )
 
             is DetailsEvent.SendResult -> {

@@ -40,3 +40,8 @@ fun findNavigator(): Navigator? {
 fun findParentNavigator(): Navigator? {
     return LocalParentNavigator.current
 }
+
+@Composable
+fun requireParentNavigator(): Navigator {
+    return requireNotNull(LocalParentNavigator.current)
+}

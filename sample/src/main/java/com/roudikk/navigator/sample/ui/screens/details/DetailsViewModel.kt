@@ -8,6 +8,7 @@ import java.util.UUID
 
 sealed class DetailsEvent {
     object GoBack : DetailsEvent()
+    object OpenBlockingBottomSheet : DetailsEvent()
     data class OpenRandomItem(val item: String) : DetailsEvent()
     data class SendResult(val result: String) : DetailsEvent()
     data class OpenBottomSheet(val item: String) : DetailsEvent()
@@ -25,8 +26,8 @@ class DetailsViewModel(
 ) : ViewModel() {
 
     var event by mutableStateOf<DetailsEvent?>(null)
-        private set 
-    
+        private set
+
     private fun newItem() = UUID.randomUUID().toString().split("-")[0]
 
     fun onBackSelected() {
@@ -71,6 +72,10 @@ class DetailsViewModel(
 
     fun onDynamicSelected() {
         event = DetailsEvent.OpenDynamicItem(newItem())
+    }
+
+    fun onOpenBlockingBottomSheet() {
+        event = DetailsEvent.OpenBlockingBottomSheet
     }
 
     fun onEventHandled() {

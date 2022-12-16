@@ -35,7 +35,8 @@ fun DetailsList(
     onSingleTopSelected: () -> Unit,
     onSingleTopBottomSheetSelected: () -> Unit,
     onReplaceSelected: () -> Unit,
-    onOpenDialogSelected: () -> Unit
+    onOpenDialogSelected: () -> Unit,
+    onOpenBlockingBottomSheet: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -110,6 +111,11 @@ fun DetailsList(
         DetailsAction(
             title = "Open Dialog",
             onClick = onOpenDialogSelected
+        )
+
+        DetailsAction(
+            title = "Open Blocking BottomSheet",
+            onClick = onOpenBlockingBottomSheet
         )
     }
 }

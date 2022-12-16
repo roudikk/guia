@@ -101,7 +101,8 @@ private fun DetailsScreen(
         onSingleTopSelected = viewModel::onSingleTopSelected,
         onSingleTopBottomSheetSelected = viewModel::onSingleTopBottomSheetSelected,
         onReplaceSelected = viewModel::onReplaceSelected,
-        onOpenDialogSelected = viewModel::onOpenDialogSelected
+        onOpenDialogSelected = viewModel::onOpenDialogSelected,
+        onOpenBlockingBottomSheet = viewModel::onOpenBlockingBottomSheet
     )
 }
 
@@ -119,7 +120,8 @@ private fun DetailsContent(
     onSingleTopSelected: () -> Unit = {},
     onSingleTopBottomSheetSelected: () -> Unit = {},
     onReplaceSelected: () -> Unit = {},
-    onOpenDialogSelected: () -> Unit = {}
+    onOpenDialogSelected: () -> Unit = {},
+    onOpenBlockingBottomSheet: () -> Unit = {}
 ) {
     val content = remember {
         movableContentOf {
@@ -134,7 +136,8 @@ private fun DetailsContent(
                 onSingleTopSelected = onSingleTopSelected,
                 onSingleTopBottomSheetSelected = onSingleTopBottomSheetSelected,
                 onReplaceSelected = onReplaceSelected,
-                onOpenDialogSelected = onOpenDialogSelected
+                onOpenDialogSelected = onOpenDialogSelected,
+                onOpenBlockingBottomSheet = onOpenBlockingBottomSheet
             )
         }
     }
