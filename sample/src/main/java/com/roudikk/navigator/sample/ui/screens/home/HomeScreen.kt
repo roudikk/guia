@@ -49,8 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.NavigationKey
-import com.roudikk.navigator.core.NavigatorRulesBuilder
-import com.roudikk.navigator.core.StackKey
+import com.roudikk.navigator.NavigatorRulesBuilder
+import com.roudikk.navigator.navhost.StackKey
 import com.roudikk.navigator.extensions.result
 import com.roudikk.navigator.sample.ui.screens.details.DetailsResult
 import kotlinx.coroutines.launch

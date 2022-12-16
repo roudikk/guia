@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.Navigator
 
 /**
  * Provide extra bottom sheet options.

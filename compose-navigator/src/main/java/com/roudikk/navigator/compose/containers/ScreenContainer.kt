@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.roudikk.navigator.compose.ProvideNavigationVisibilityScope
 import com.roudikk.navigator.compose.backstack.BackStackEntry
-import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.Navigator
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable

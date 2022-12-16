@@ -13,9 +13,9 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.roudikk.navigator.compose.NavContainer
-import com.roudikk.navigator.compose.rememberNavigator
-import com.roudikk.navigator.core.Navigator
-import com.roudikk.navigator.core.NavigatorRulesBuilder
+import com.roudikk.navigator.rememberNavigator
+import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.NavigatorRulesBuilder
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popTo
 import com.roudikk.navigator.extensions.setRoot

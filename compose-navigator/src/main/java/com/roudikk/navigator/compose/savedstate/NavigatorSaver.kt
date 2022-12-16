@@ -3,10 +3,10 @@ package com.roudikk.navigator.compose.savedstate
 import android.os.Parcelable
 import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.Saver
-import com.roudikk.navigator.core.Destination
+import com.roudikk.navigator.core.NavigationEntry
 import com.roudikk.navigator.core.NavigationKey
-import com.roudikk.navigator.core.Navigator
-import com.roudikk.navigator.core.NavigatorRules
+import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.NavigatorRules
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -15,7 +15,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 internal data class NavigatorState(
     val initialKey: NavigationKey,
-    val destinations: List<Destination>,
+    val navigationEntries: List<NavigationEntry>,
     val overrideBackPress: Boolean,
     val results: HashMap<String, Parcelable>,
 ) : Parcelable
@@ -43,7 +43,7 @@ internal fun navigatorSaver(
 
 private fun Navigator.save() = NavigatorState(
     initialKey = initialKey,
-    destinations = destinations,
+    navigationEntries = navigationEntries,
     overrideBackPress = overrideBackPress,
     results = hashMapOf<String, Parcelable>().apply {
         results
@@ -55,10 +55,10 @@ private fun Navigator.save() = NavigatorState(
 private fun Navigator.restore(
     navigatorState: NavigatorState
 ) {
-    navigatorState.destinations.forEach { destination ->
+    navigatorState.navigationEntries.forEach { destination ->
         destinationsMap[destination.navigationKey] = destination
     }
-    setBackstack(navigatorState.destinations.map { it.navigationKey })
+    setBackstack(navigatorState.navigationEntries.map { it.navigationKey })
     navigatorState.results.forEach { results[it.key] = it.value }
     overrideBackPress = navigatorState.overrideBackPress
 }

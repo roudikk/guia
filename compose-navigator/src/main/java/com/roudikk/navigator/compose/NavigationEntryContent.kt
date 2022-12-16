@@ -10,12 +10,12 @@ import com.roudikk.navigator.compose.backstack.BackStackManager
 import com.roudikk.navigator.compose.backstack.LocalProvider
 
 @Composable
-internal fun NavigationEntry(
+internal fun NavigationEntryContent(
     backStackManager: BackStackManager,
     backStackEntry: BackStackEntry
 ) {
     backStackEntry.LocalProvider {
-        val destination = backStackEntry.destination
+        val destination = backStackEntry.navigationEntry
 
         Box(modifier = Modifier.testTag(destination.navigationKey.tag())) {
             backStackManager.navigationNode(destination).Content()

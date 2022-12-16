@@ -1,7 +1,6 @@
 package com.roudikk.navigator.navhost
 
-import com.roudikk.navigator.core.Navigator
-import com.roudikk.navigator.core.StackKey
+import com.roudikk.navigator.Navigator
 
 class StackEntry(
     val stackKey: StackKey,

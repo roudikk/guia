@@ -1,9 +1,10 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.roudikk.navigator.core
 
 import android.os.Parcelable
 import kotlin.reflect.KClass
 
-@Suppress("UNCHECKED_CAST")
 interface NavigationKey : Parcelable {
 
     interface WithNode<Node : NavigationNode> : NavigationKey {

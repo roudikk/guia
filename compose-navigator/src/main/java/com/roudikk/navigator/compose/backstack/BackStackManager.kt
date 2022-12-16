@@ -21,9 +21,9 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistry
 import com.roudikk.navigator.core.BottomSheet
-import com.roudikk.navigator.core.Destination
+import com.roudikk.navigator.core.NavigationEntry
 import com.roudikk.navigator.core.Dialog
-import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.core.Screen
 import kotlinx.parcelize.Parcelize
 import java.util.UUID
@@ -102,11 +102,11 @@ internal class BackStackManager(
     )["back-stack-manager-$id", NavHostViewModel::class.java]
 
     private val backstackIds by derivedStateOf {
-        navigator.destinations.map { it.id }
+        navigator.navigationEntries.map { it.id }
     }
 
     val backStackEntryGroup = derivedStateOf {
-        val destinations = navigator.destinations
+        val destinations = navigator.navigationEntries
         val currentDestination = destinations.last()
 
         val screenEntry = destinations.lastOrNull {
@@ -171,19 +171,19 @@ internal class BackStackManager(
             .filter { it !in backstackIds }
             .forEach(::removeComponents)
 
-        navigator.destinations
+        navigator.navigationEntries
             .filter { it.id in restoredEntryIds }
             .forEach(::createBackStackEntry)
 
         updateLifecycles()
     }
 
-    private fun createBackStackEntry(destination: Destination): BackStackEntry {
-        return backStackEntries.getOrPut(destination.id) {
+    private fun createBackStackEntry(navigationEntry: NavigationEntry): BackStackEntry {
+        return backStackEntries.getOrPut(navigationEntry.id) {
             BackStackEntry(
-                destination = destination,
+                navigationEntry = navigationEntry,
                 saveableStateHolder = saveableStateHolder,
-                viewModelStore = viewModelStoreProvider.getViewModelStore(destination.id),
+                viewModelStore = viewModelStoreProvider.getViewModelStore(navigationEntry.id),
                 application = application
             ).also(::initialBackStackState)
         }
@@ -222,7 +222,7 @@ internal class BackStackManager(
             .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
 
         backStackEntryGroup.value.entries.forEach {
-            if (it.id == navigator.destinations.last().id) {
+            if (it.id == navigator.navigationEntries.last().id) {
                 it.maxLifecycleState = Lifecycle.State.RESUMED
             } else {
                 it.maxLifecycleState = Lifecycle.State.STARTED
@@ -247,7 +247,7 @@ internal class BackStackManager(
 
     private fun savedStateKey(id: String) = "back-stack-manager-$id"
 
-    fun navigationNode(destination: Destination) = navigator.navigationNode(destination)
+    fun navigationNode(navigationEntry: NavigationEntry) = navigator.navigationNode(navigationEntry)
 }
 
 internal interface ViewModelStoreProvider {

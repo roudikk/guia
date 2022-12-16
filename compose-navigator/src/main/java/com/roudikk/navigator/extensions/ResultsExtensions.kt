@@ -3,7 +3,7 @@ package com.roudikk.navigator.extensions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisallowComposableCalls
 import androidx.compose.runtime.LaunchedEffect
-import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.Navigator
 
 inline fun <reified Result : Any> Navigator.result(): Result? {
     return result(Result::class.java.simpleName) as Result?

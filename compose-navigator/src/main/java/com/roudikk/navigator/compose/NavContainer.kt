@@ -1,9 +1,6 @@
 package com.roudikk.navigator.compose
 
-import android.util.Log
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -11,13 +8,12 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.extensions.canGoBack
 import com.roudikk.navigator.compose.backstack.rememberBackStackManager
 import com.roudikk.navigator.compose.containers.BottomSheetContainer
 import com.roudikk.navigator.compose.containers.DialogContainer
 import com.roudikk.navigator.compose.containers.ScreenContainer
-import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Screen
 import com.roudikk.navigator.extensions.popBackstack
 
@@ -78,7 +74,7 @@ private fun Navigator.NavContainerContent(
                 navigator.popBackstack()
             }
 
-            NavigationEntry(backStackManager, entry)
+            NavigationEntryContent(backStackManager, entry)
         }
     ) {
         // Screen content
@@ -86,7 +82,7 @@ private fun Navigator.NavContainerContent(
             modifier = modifier,
             screenEntry = backStackEntryGroup.screenEntry
         ) { entry ->
-            NavigationEntry(backStackManager, entry)
+            NavigationEntryContent(backStackManager, entry)
         }
     }
 
@@ -95,7 +91,7 @@ private fun Navigator.NavContainerContent(
         DialogContainer(
             dialogEntry = dialogEntry
         ) { entry ->
-            NavigationEntry(backStackManager, entry)
+            NavigationEntryContent(backStackManager, entry)
         }
     }
 

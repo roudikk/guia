@@ -1,4 +1,4 @@
-package com.roudikk.navigator.core
+package com.roudikk.navigator.navhost
 
 import android.os.Parcelable
 

@@ -1,6 +1,6 @@
 import com.google.common.truth.Truth.assertThat
-import com.roudikk.navigator.core.Navigator
-import com.roudikk.navigator.core.NavigatorRules
+import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.NavigatorRules
 import com.roudikk.navigator.TestNavigationKey
 import com.roudikk.navigator.TestSaveableStateHolder
 import org.junit.Test
@@ -17,8 +17,8 @@ class NavigatorTest {
         )
 
         assertThat(navigator.backStack).isEqualTo(listOf(navigationKey))
-        assertThat(navigator.destinations.size).isEqualTo(1)
-        assertThat(navigator.destinations.any { it.navigationKey == navigationKey }).isTrue()
+        assertThat(navigator.navigationEntries.size).isEqualTo(1)
+        assertThat(navigator.navigationEntries.any { it.navigationKey == navigationKey }).isTrue()
         assertThat(navigator.destinationsMap.size).isEqualTo(1)
         assertThat(navigator.destinationsMap[navigationKey]).isNotNull()
     }
@@ -37,8 +37,8 @@ class NavigatorTest {
         navigator.setBackstack(newKeys)
 
         assertThat(navigator.backStack).isEqualTo(newKeys)
-        assertThat(navigator.destinations.size).isEqualTo(3)
-        assertThat(navigator.destinations.all { newKeys.contains(it.navigationKey) }).isTrue()
+        assertThat(navigator.navigationEntries.size).isEqualTo(3)
+        assertThat(navigator.navigationEntries.all { newKeys.contains(it.navigationKey) }).isTrue()
         assertThat(navigator.destinationsMap.size).isEqualTo(3)
         newKeys.forEach { assertThat(navigator.destinationsMap[it]).isNotNull() }
         assertThat(navigator.destinationsMap[navigationKey]).isNull()

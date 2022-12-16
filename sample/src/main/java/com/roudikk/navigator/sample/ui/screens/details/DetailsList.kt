@@ -55,7 +55,7 @@ fun DetailsList(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var counter by rememberSaveable { mutableStateOf(0) }
+        var counter by rememberSaveable(key = "counter") { mutableStateOf(0) }
 
         LaunchedEffect(key1 = Unit) {
             while (true) {

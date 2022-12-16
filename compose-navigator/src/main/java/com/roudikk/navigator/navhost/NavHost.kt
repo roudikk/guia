@@ -10,8 +10,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import com.roudikk.navigator.compose.savedstate.navHostSaver
-import com.roudikk.navigator.core.Navigator
-import com.roudikk.navigator.core.StackKey
+import com.roudikk.navigator.Navigator
 
 @Composable
 fun rememberNavHost(

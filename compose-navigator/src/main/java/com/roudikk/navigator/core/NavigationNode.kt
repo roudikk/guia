@@ -1,7 +1,6 @@
 package com.roudikk.navigator.core
 
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState

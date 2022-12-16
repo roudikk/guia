@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.compose.NavigationVisibilityScope
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.NavigationKey
-import com.roudikk.navigator.core.NavigatorRulesBuilder
+import com.roudikk.navigator.NavigatorRulesBuilder
 import com.roudikk.navigator.extensions.popBackstack
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize

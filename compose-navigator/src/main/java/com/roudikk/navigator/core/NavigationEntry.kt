@@ -5,14 +5,14 @@ import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
 /**
- * Represents an entry in the navigation history.
+ * Represents a unique entry in the navigation history.
  *
  * @property navigationKey, navigation node for this entry.
  * @property transition, transition animation.
  * @property id, unique identifier of the destination.
  */
 @Parcelize
-internal data class Destination internal constructor(
+internal data class NavigationEntry internal constructor(
     val navigationKey: NavigationKey,
     val id: String
 ): Parcelable {
@@ -25,7 +25,7 @@ internal data class Destination internal constructor(
     )
 
     override fun equals(other: Any?): Boolean {
-        return other is Destination && other.id == id
+        return other is NavigationEntry && other.id == id
     }
 
     override fun hashCode(): Int {

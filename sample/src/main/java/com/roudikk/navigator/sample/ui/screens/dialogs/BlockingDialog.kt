@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.core.NavigationKey
-import com.roudikk.navigator.core.NavigatorRulesBuilder
+import com.roudikk.navigator.NavigatorRulesBuilder
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.DialogOptions
 import com.roudikk.navigator.extensions.navigate

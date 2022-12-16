@@ -19,9 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.roudikk.navigator.NavigatorRulesBuilder
 import com.roudikk.navigator.core.DialogOptions
 import com.roudikk.navigator.core.NavigationKey
-import com.roudikk.navigator.core.NavigatorRulesBuilder
 import com.roudikk.navigator.sample.navigation.CrossFadeTransition
 import com.roudikk.navigator.sample.ui.composables.SampleSurfaceContainer
 import kotlinx.parcelize.Parcelize

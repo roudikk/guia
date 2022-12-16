@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.compose.BottomSheetSetup
 import com.roudikk.navigator.compose.backstack.BackStackEntry
 import com.roudikk.navigator.core.BottomSheet
-import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.extensions.popBackstack
 
 @Composable
@@ -64,8 +64,8 @@ internal fun Navigator.BottomSheetContainer(
 ) {
     val localDensity = LocalDensity.current
 
-    val destination by remember { derivedStateOf { destinations.last() } }
-    val navigationNode = bottomSheetEntry?.destination?.let(::navigationNode) as? BottomSheet
+    val destination by remember { derivedStateOf { navigationEntries.last() } }
+    val navigationNode = bottomSheetEntry?.navigationEntry?.let(::navigationNode) as? BottomSheet
     val confirmStateChange by remember(destination) {
         derivedStateOf {
             { sheetValue: ModalBottomSheetValue ->
@@ -125,7 +125,7 @@ internal fun Navigator.BottomSheetContainer(
                             Modifier.height(contentHeightDp)
                         } else Modifier
                     )
-                    .then(bottomSheetEntry?.destination
+                    .then(bottomSheetEntry?.navigationEntry
                         ?.let {
                             (navigationNode as BottomSheet).bottomSheetOptions.modifier
                         } ?: Modifier)

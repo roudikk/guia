@@ -8,7 +8,7 @@ import androidx.compose.ui.window.Dialog
 import com.roudikk.navigator.compose.ProvideNavigationVisibilityScope
 import com.roudikk.navigator.compose.backstack.BackStackEntry
 import com.roudikk.navigator.core.Dialog
-import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.core.toDialogProperties
 import com.roudikk.navigator.extensions.popBackstack
 
@@ -18,7 +18,7 @@ internal fun Navigator.DialogContainer(
     dialogEntry: BackStackEntry,
     content: @Composable (BackStackEntry) -> Unit
 ) {
-    val dialog = navigationNode(dialogEntry.destination) as Dialog
+    val dialog = navigationNode(dialogEntry.navigationEntry) as Dialog
 
     Dialog(
         onDismissRequest = { popBackstack() },
