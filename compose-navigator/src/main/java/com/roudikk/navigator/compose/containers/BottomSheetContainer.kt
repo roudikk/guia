@@ -32,7 +32,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.compose.BottomSheetSetup
-import com.roudikk.navigator.compose.ProvideNavigationVisibilityScope
 import com.roudikk.navigator.compose.backstack.BackStackEntry
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Navigator
@@ -40,31 +39,22 @@ import com.roudikk.navigator.extensions.popBackstack
 
 @Composable
 @ExperimentalMaterialApi
-internal fun rememberBottomSheetState(
+private fun rememberBottomSheetState(
     initialValue: ModalBottomSheetValue,
     animationSpec: AnimationSpec<Float> = SwipeableDefaults.AnimationSpec,
-    skipHalfExpanded: Boolean,
     confirmStateChange: (ModalBottomSheetValue) -> Boolean = { true }
 ): ModalBottomSheetState {
-    return remember(
-        initialValue,
-        animationSpec,
-        skipHalfExpanded,
-        confirmStateChange,
-    ) {
+    return remember {
         ModalBottomSheetState(
             initialValue = initialValue,
             animationSpec = animationSpec,
-            isSkipHalfExpanded = skipHalfExpanded,
+            isSkipHalfExpanded = true,
             confirmStateChange = confirmStateChange
         )
     }
 }
 
-@OptIn(
-    ExperimentalMaterialApi::class,
-    ExperimentalAnimationApi::class,
-)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
 @Composable
 internal fun Navigator.BottomSheetContainer(
     content: @Composable (BackStackEntry) -> Unit,
@@ -91,7 +81,6 @@ internal fun Navigator.BottomSheetContainer(
         } else {
             ModalBottomSheetValue.Expanded
         },
-        skipHalfExpanded = bottomSheetSetup.skipHalfExpanded,
         animationSpec = bottomSheetSetup.animationSpec,
         confirmStateChange = confirmStateChange
     )
@@ -119,6 +108,7 @@ internal fun Navigator.BottomSheetContainer(
     }
 
     ModalBottomSheetLayout(
+        content = container,
         sheetState = bottomSheetState,
         modifier = Modifier.fillMaxSize(),
         sheetBackgroundColor = Color.Transparent,
@@ -127,56 +117,52 @@ internal fun Navigator.BottomSheetContainer(
         scrimColor = bottomSheetSetup.scrimColor,
         sheetShape = RoundedCornerShape(0.dp),
         sheetContent = {
-            Box(
+            bottomSheetSetup.bottomSheetContainer(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                bottomSheetSetup.bottomSheetContainer(
-                    modifier = bottomSheetEntry?.destination
+                    .align(Alignment.CenterHorizontally)
+                    .then(
+                        if (contentHeightDp > 1.dp) {
+                            Modifier.height(contentHeightDp)
+                        } else Modifier
+                    )
+                    .then(bottomSheetEntry?.destination
                         ?.let {
                             (navigationNode as BottomSheet).bottomSheetOptions.modifier
-                        } ?: Modifier
-                ) {
-                    AnimatedContent(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        targetState = bottomSheetEntry,
-                        transitionSpec = {
-                            // Only animate bottom sheet content when navigating between
-                            // bottom sheet destinations.
-                            if (navigationNode(destination) !is BottomSheet && targetState != null) {
-                                EnterTransition.None
-                            } else {
-                                transition.enter
-                            } with if (initialState != null && navigationNode !is BottomSheet) {
-                                fadeOut(animationSpec = snap(delayMillis = 300))
-                            } else {
-                                transition.exit
-                            }
-                        }
-                    ) { bottomSheetEntry ->
-                        if (bottomSheetEntry != null) {
-                            Box(
-                                modifier = Modifier
-                                    .testTag("BottomSheetContainer")
-                                    .onGloballyPositioned {
-                                        contentHeightPixels = it.size.height.toFloat()
-                                    },
-                                contentAlignment = Alignment.BottomCenter
-                            ) {
-                                ProvideNavigationVisibilityScope {
-                                    content(bottomSheetEntry)
-                                }
-                            }
+                        } ?: Modifier)
+            ) {
+                AnimatedContent(
+                    modifier = Modifier.fillMaxWidth(),
+                    targetState = bottomSheetEntry,
+                    transitionSpec = {
+                        // Only animate bottom sheet content when navigating between
+                        // bottom sheet destinations.
+                        if (navigationNode(destination) !is BottomSheet && targetState != null) {
+                            EnterTransition.None
                         } else {
-                            Box(modifier = Modifier.height(contentHeightDp))
+                            transition.enter
+                        } with if (initialState != null && navigationNode !is BottomSheet) {
+                            fadeOut(animationSpec = snap(delayMillis = 300))
+                        } else {
+                            transition.exit
                         }
+                    }
+                ) { bottomSheetEntry ->
+                    if (bottomSheetEntry != null) {
+                        Box(
+                            modifier = Modifier
+                                .testTag("BottomSheetContainer")
+                                .onGloballyPositioned {
+                                    contentHeightPixels = it.size.height.toFloat()
+                                },
+                            contentAlignment = Alignment.BottomCenter
+                        ) {
+                            content(bottomSheetEntry)
+                        }
+                    } else {
+                        Box(modifier = Modifier.height(contentHeightDp))
                     }
                 }
             }
-        }
-    ) {
-        container()
-    }
+        },
+    )
 }

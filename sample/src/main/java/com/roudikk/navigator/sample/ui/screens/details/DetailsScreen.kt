@@ -28,7 +28,6 @@ import com.roudikk.navigator.core.NavigatorRulesBuilder
 import com.roudikk.navigator.core.dialogNode
 import com.roudikk.navigator.sample.navigation.CrossFadeTransition
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
-import com.roudikk.navigator.sample.ui.composables.BottomSheetSurface
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
@@ -73,7 +72,7 @@ fun NavigatorRulesBuilder.detailsNavigation(screenWidth: Int) {
 
     bottomSheet<DetailsBottomSheetKey> { key -> DetailsScreen(item = key.item, isScreen = false) }
 
-    transition<DetailsBottomSheetKey> { -> NavigationTransition.None }
+    transition<DetailsBottomSheetKey> { -> CrossFadeTransition }
     transition<DetailsDialogKey> { -> CrossFadeTransition }
     transition<DynamicDetailsKey> { -> CrossFadeTransition }
     transition<DetailsNodeKey> { -> NavigationTransition.None }
@@ -166,7 +165,7 @@ private fun DetailsContent(
             ) { content() }
         }
     } else {
-        BottomSheetSurface(content = content)
+        content()
     }
 }
 

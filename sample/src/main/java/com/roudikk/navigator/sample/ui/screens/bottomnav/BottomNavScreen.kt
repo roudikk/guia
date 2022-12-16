@@ -59,7 +59,6 @@ import com.roudikk.navigator.sample.ui.screens.dialogs.BlockingDialogKey
 import com.roudikk.navigator.sample.ui.screens.dialogs.CancelableDialogKey
 import com.roudikk.navigator.sample.ui.screens.dialogs.DialogsKey
 import com.roudikk.navigator.sample.ui.screens.dialogs.DialogsStackKey
-import com.roudikk.navigator.sample.ui.screens.dialogs.blockingBottomSheetNavigation
 import com.roudikk.navigator.sample.ui.screens.dialogs.blockingDialogNavigation
 import com.roudikk.navigator.sample.ui.screens.dialogs.cancelableDialogNavigation
 import com.roudikk.navigator.sample.ui.screens.dialogs.dialogsNavigation
@@ -102,7 +101,6 @@ fun rememberBottomNavHost(
 
     val dialogsNavigator = rememberNavigator(initialKey = DialogsKey()) {
         dialogsNavigation()
-        blockingBottomSheetNavigation()
         blockingDialogNavigation()
         cancelableDialogNavigation()
     }
