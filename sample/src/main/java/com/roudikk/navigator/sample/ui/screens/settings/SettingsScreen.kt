@@ -36,11 +36,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigatorRulesBuilder
-import com.roudikk.navigator.compose.LocalNavigationAnimation
+import com.roudikk.navigator.compose.NavigationVisibilityScope
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.extensions.popBackstack
 import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
-import com.roudikk.navigator.sample.ui.composables.NavigationAnimationPreview
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
@@ -179,7 +178,7 @@ private fun SettingsContent(
                 }
             }
 
-            with(LocalNavigationAnimation.current) {
+            NavigationVisibilityScope {
                 ClickableText(
                     style = MaterialTheme.typography.bodyLarge.copy(
                         color = MaterialTheme.colorScheme.onSurface
@@ -215,7 +214,5 @@ private fun SettingsContent(
 )
 @Composable
 private fun SettingsContentPreview() = AppTheme {
-    NavigationAnimationPreview {
-        SettingsContent()
-    }
+    SettingsContent()
 }

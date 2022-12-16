@@ -228,7 +228,7 @@ private fun ListItem(
             .clickable { onClick(item) }
             .fillMaxWidth()
             .then(modifier),
-        tonalElevation = 1.dp
+        tonalElevation = 8.dp
     ) {
         Row(
             modifier = Modifier,

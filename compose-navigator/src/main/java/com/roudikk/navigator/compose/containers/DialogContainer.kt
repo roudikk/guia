@@ -1,11 +1,11 @@
 package com.roudikk.navigator.compose.containers
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.with
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.Dialog
+import com.roudikk.navigator.compose.ProvideNavigationVisibilityScope
 import com.roudikk.navigator.compose.backstack.BackStackEntry
 import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.Navigator
@@ -16,7 +16,7 @@ import com.roudikk.navigator.extensions.popBackstack
 @Composable
 internal fun Navigator.DialogContainer(
     dialogEntry: BackStackEntry,
-    content: @Composable AnimatedVisibilityScope.(BackStackEntry) -> Unit
+    content: @Composable (BackStackEntry) -> Unit
 ) {
     val dialog = navigationNode(dialogEntry.destination) as Dialog
 
@@ -31,7 +31,9 @@ internal fun Navigator.DialogContainer(
                 transition.enter with transition.exit
             }
         ) { dialogEntry ->
-            content(dialogEntry)
+            ProvideNavigationVisibilityScope {
+                content(dialogEntry)
+            }
         }
     }
 }

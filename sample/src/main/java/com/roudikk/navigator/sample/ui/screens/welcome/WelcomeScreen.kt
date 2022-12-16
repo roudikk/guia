@@ -24,9 +24,9 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.roudikk.navigator.compose.NavigationVisibilityScope
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigatorRulesBuilder
-import com.roudikk.navigator.compose.LocalNavigationAnimation
 import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.sample.R
@@ -40,7 +40,7 @@ import kotlinx.parcelize.Parcelize
 class WelcomeKey : NavigationKey
 
 fun NavigatorRulesBuilder.welcomeNavigation() {
-    bottomSheet<WelcomeKey> { WelcomeScreen() }
+    screen<WelcomeKey> { WelcomeScreen() }
 }
 
 @Composable
@@ -61,6 +61,7 @@ private fun WelcomeContent(
     val composition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(R.raw.welcome_animation)
     )
+
     val progress by animateLottieCompositionAsState(
         composition,
         iterations = LottieConstants.IterateForever
@@ -78,11 +79,11 @@ private fun WelcomeContent(
         ) {
             LottieAnimation(
                 composition = composition,
-                progress = progress
+                progress = { progress }
             )
         }
 
-        with(LocalNavigationAnimation.current) {
+        NavigationVisibilityScope {
             Button(
                 modifier = Modifier
                     .widthIn(min = 300.dp)

@@ -3,6 +3,7 @@ package com.roudikk.navigator.core
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -80,7 +81,8 @@ fun DialogOptions.toDialogProperties() = DialogProperties(
 @OptIn(ExperimentalMaterialApi::class)
 data class BottomSheetOptions(
     val modifier: Modifier = Modifier,
-    val confirmStateChange: (state: BottomSheetValue) -> Boolean = { true }
+    val skipHalfExpanded: Boolean = false,
+    val confirmStateChange: (state: ModalBottomSheetValue) -> Boolean = { true }
 )
 
 fun screenNode(content: @Composable () -> Unit) = object : Screen {

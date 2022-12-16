@@ -1,6 +1,7 @@
 package com.roudikk.navigator.sample.ui.composables
 
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,6 +31,7 @@ fun sampleBottomSheetOptions(modifier: Modifier = Modifier) = BottomSheetSetup(
         BottomSheetSurface(
             modifier = modifier
                 .padding(16.dp)
+                .fillMaxWidth()
                 .then(nodeModifier),
             content = content
         )

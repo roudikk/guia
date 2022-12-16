@@ -7,6 +7,7 @@ import androidx.compose.animation.with
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.roudikk.navigator.compose.ProvideNavigationVisibilityScope
 import com.roudikk.navigator.compose.backstack.BackStackEntry
 import com.roudikk.navigator.core.Navigator
 
@@ -15,7 +16,7 @@ import com.roudikk.navigator.core.Navigator
 internal fun Navigator.ScreenContainer(
     modifier: Modifier,
     screenEntry: BackStackEntry?,
-    content: @Composable AnimatedVisibilityScope.(BackStackEntry) -> Unit
+    content: @Composable (BackStackEntry) -> Unit
 ) {
     AnimatedContent(
         targetState = screenEntry,
@@ -27,7 +28,9 @@ internal fun Navigator.ScreenContainer(
         }
     ) { backStackEntry ->
         backStackEntry?.let {
-            content(backStackEntry)
+            ProvideNavigationVisibilityScope {
+                content(backStackEntry)
+            }
         }
     }
 }

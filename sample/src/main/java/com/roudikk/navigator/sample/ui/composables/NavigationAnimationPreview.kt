@@ -3,7 +3,7 @@ package com.roudikk.navigator.sample.ui.composables
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import com.roudikk.navigator.compose.LocalNavigationAnimation
+import com.roudikk.navigator.compose.LocalNavigationVisibilityScope
 
 @Composable
 fun NavigationAnimationPreview(
@@ -11,7 +11,7 @@ fun NavigationAnimationPreview(
 ) {
     AnimatedVisibility(visible = true) {
         CompositionLocalProvider(
-            LocalNavigationAnimation provides this,
+            LocalNavigationVisibilityScope provides this,
             content = content
         )
     }

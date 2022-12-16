@@ -35,16 +35,16 @@ class NavigatorRulesBuilder internal constructor() {
             navigationNodeBuilder as (NavigationKey) -> NavigationNode
     }
 
-    inline fun <reified Key : NavigationKey> screen(noinline content: @Composable (Key) -> Unit) {
-        navigationNode<Key> {
-            screenNode { content(it) }
-        }
-    }
-
     fun appendRules(navigatorRules: NavigatorRules) {
         navigatorRules.associations.forEach { associations[it.key] = it.value }
         navigatorRules.transitions.forEach { transitions[it.key] = it.value }
         defaultTransition = navigatorRules.defaultTransition
+    }
+
+    inline fun <reified Key : NavigationKey> screen(noinline content: @Composable (Key) -> Unit) {
+        navigationNode<Key> {
+            screenNode { content(it) }
+        }
     }
 
     inline fun <reified Key : NavigationKey> dialog(

@@ -1,26 +1,22 @@
 package com.roudikk.navigator.compose.containers
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.snap
-import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.with
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomSheetScaffold
-import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.rememberBottomSheetScaffoldState
-import androidx.compose.material.rememberBottomSheetState
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.SwipeableDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -31,16 +27,39 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.compose.BottomSheetSetup
+import com.roudikk.navigator.compose.ProvideNavigationVisibilityScope
 import com.roudikk.navigator.compose.backstack.BackStackEntry
 import com.roudikk.navigator.core.BottomSheet
+import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.extensions.popBackstack
+
+@Composable
+@ExperimentalMaterialApi
+internal fun rememberBottomSheetState(
+    initialValue: ModalBottomSheetValue,
+    animationSpec: AnimationSpec<Float> = SwipeableDefaults.AnimationSpec,
+    skipHalfExpanded: Boolean,
+    confirmStateChange: (ModalBottomSheetValue) -> Boolean = { true }
+): ModalBottomSheetState {
+    return remember(
+        initialValue,
+        animationSpec,
+        skipHalfExpanded,
+        confirmStateChange,
+    ) {
+        ModalBottomSheetState(
+            initialValue = initialValue,
+            animationSpec = animationSpec,
+            isSkipHalfExpanded = skipHalfExpanded,
+            confirmStateChange = confirmStateChange
+        )
+    }
+}
 
 @OptIn(
     ExperimentalMaterialApi::class,
@@ -48,7 +67,7 @@ import com.roudikk.navigator.extensions.popBackstack
 )
 @Composable
 internal fun Navigator.BottomSheetContainer(
-    content: @Composable AnimatedVisibilityScope.(BackStackEntry) -> Unit,
+    content: @Composable (BackStackEntry) -> Unit,
     bottomSheetEntry: BackStackEntry?,
     bottomSheetSetup: BottomSheetSetup,
     container: @Composable () -> Unit
@@ -56,10 +75,10 @@ internal fun Navigator.BottomSheetContainer(
     val localDensity = LocalDensity.current
 
     val destination by remember { derivedStateOf { destinations.last() } }
-    val navigationNode = bottomSheetEntry?.destination?.let(::navigationNode)
+    val navigationNode = bottomSheetEntry?.destination?.let(::navigationNode) as? BottomSheet
     val confirmStateChange by remember(destination) {
         derivedStateOf {
-            { sheetValue: BottomSheetValue ->
+            { sheetValue: ModalBottomSheetValue ->
                 val node = navigationNode(destination)
                 node !is BottomSheet || node.bottomSheetOptions.confirmStateChange(sheetValue)
             }
@@ -68,18 +87,17 @@ internal fun Navigator.BottomSheetContainer(
 
     val bottomSheetState = rememberBottomSheetState(
         initialValue = if (bottomSheetEntry == null) {
-            BottomSheetValue.Collapsed
+            ModalBottomSheetValue.Hidden
         } else {
-            BottomSheetValue.Expanded
+            ModalBottomSheetValue.Expanded
         },
+        skipHalfExpanded = bottomSheetSetup.skipHalfExpanded,
         animationSpec = bottomSheetSetup.animationSpec,
         confirmStateChange = confirmStateChange
     )
 
-    val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = bottomSheetState)
-
     var contentHeightPixels by remember(bottomSheetEntry) {
-        mutableStateOf(with(localDensity) { 0.dp.toPx() })
+        mutableStateOf(with(localDensity) { 1.dp.toPx() })
     }
 
     val contentHeightDp by remember(contentHeightPixels) {
@@ -88,20 +106,26 @@ internal fun Navigator.BottomSheetContainer(
 
     LaunchedEffect(bottomSheetEntry) {
         if (bottomSheetEntry != null) {
-            bottomSheetState.expand()
+            bottomSheetState.show()
         } else {
-            bottomSheetState.collapse()
+            bottomSheetState.hide()
         }
     }
 
-    BottomSheetScaffold(
+    LaunchedEffect(bottomSheetState.currentValue) {
+        if (bottomSheetEntry != null && bottomSheetState.currentValue == ModalBottomSheetValue.Hidden) {
+            popBackstack()
+        }
+    }
+
+    ModalBottomSheetLayout(
+        sheetState = bottomSheetState,
         modifier = Modifier.fillMaxSize(),
-        scaffoldState = scaffoldState,
-        sheetShape = RoundedCornerShape(0.dp),
         sheetBackgroundColor = Color.Transparent,
+        sheetContentColor = Color.Transparent,
         sheetElevation = 0.dp,
-        backgroundColor = Color.Transparent,
-        sheetPeekHeight = 0.dp,
+        scrimColor = bottomSheetSetup.scrimColor,
+        sheetShape = RoundedCornerShape(0.dp),
         sheetContent = {
             Box(
                 modifier = Modifier
@@ -115,7 +139,8 @@ internal fun Navigator.BottomSheetContainer(
                         } ?: Modifier
                 ) {
                     AnimatedContent(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth(),
                         targetState = bottomSheetEntry,
                         transitionSpec = {
                             // Only animate bottom sheet content when navigating between
@@ -134,11 +159,15 @@ internal fun Navigator.BottomSheetContainer(
                         if (bottomSheetEntry != null) {
                             Box(
                                 modifier = Modifier
+                                    .testTag("BottomSheetContainer")
                                     .onGloballyPositioned {
                                         contentHeightPixels = it.size.height.toFloat()
-                                    }
+                                    },
+                                contentAlignment = Alignment.BottomCenter
                             ) {
-                                content(bottomSheetEntry)
+                                ProvideNavigationVisibilityScope {
+                                    content(bottomSheetEntry)
+                                }
                             }
                         } else {
                             Box(modifier = Modifier.height(contentHeightDp))
@@ -148,31 +177,6 @@ internal fun Navigator.BottomSheetContainer(
             }
         }
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            container()
-
-            AnimatedVisibility(
-                visible = bottomSheetEntry != null,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                Box(
-                    modifier = Modifier
-                        .testTag("BottomSheetContainer")
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onPress = {
-                                    if (confirmStateChange(BottomSheetValue.Collapsed)) {
-                                        bottomSheetState.collapse()
-                                        popBackstack()
-                                    }
-                                }
-                            )
-                        }
-                        .fillMaxSize()
-                        .background(bottomSheetSetup.scrimColor)
-                )
-            }
-        }
+        container()
     }
 }

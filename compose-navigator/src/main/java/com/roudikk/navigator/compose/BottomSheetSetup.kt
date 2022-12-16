@@ -18,9 +18,8 @@ import com.roudikk.navigator.core.Navigator
  */
 data class BottomSheetSetup(
     val scrimColor: Color = Color.Black.copy(alpha = 0.4F),
-
     val animationSpec: AnimationSpec<Float> = tween(300),
-
+    val skipHalfExpanded: Boolean = false,
     val bottomSheetContainer: @Composable (
         modifier: Modifier,
         content: @Composable () -> Unit
