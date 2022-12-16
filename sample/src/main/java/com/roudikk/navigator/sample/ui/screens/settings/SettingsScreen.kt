@@ -23,9 +23,12 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -34,12 +37,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.core.NavigationKey
-import com.roudikk.navigator.core.NavigatorRulesBuilder
 import com.roudikk.navigator.compose.NavigationVisibilityScope
 import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.core.NavigationKey
+import com.roudikk.navigator.core.NavigatorRulesBuilder
 import com.roudikk.navigator.extensions.popBackstack
-import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
@@ -64,12 +66,16 @@ private fun SettingsContent(
 ) {
     val lazyListState = rememberLazyListState()
 
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
     Scaffold(
-        modifier = Modifier.navigationBarsPadding(),
+        modifier = Modifier
+            .navigationBarsPadding()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            AppTopAppBar(
-                title = "Compose Navigator",
-                lazyListState = lazyListState,
+            TopAppBar(
+                title = { Text(text = "Compose Navigator")},
+                scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(
                         onClick = onCloseClicked

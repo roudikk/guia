@@ -11,22 +11,24 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigatorRulesBuilder
-import com.roudikk.navigator.compose.requireNavigator
 import com.roudikk.navigator.core.StackKey
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.sample.DeepLinkViewModel
 import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.navigation.requireRootNavigator
-import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
@@ -64,12 +66,14 @@ private fun DialogsContent(
     onBlockingBottomSheetClicked: () -> Unit = {},
 ) {
     val lazyListState = rememberLazyListState()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            AppTopAppBar(
-                title = "Dialogs",
-                lazyListState = lazyListState
+            TopAppBar(
+                title = { Text(text = "Dialogs") },
+                scrollBehavior = scrollBehavior
             )
         }
     ) { padding ->

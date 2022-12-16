@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.core.BottomSheetOptions
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigatorRulesBuilder
-import com.roudikk.navigator.sample.ui.composables.SampleBottomSheetContainer
+import com.roudikk.navigator.sample.ui.composables.SampleSurfaceContainer
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
 
@@ -79,7 +79,7 @@ private fun BlockingBottomSheetScreen() {
 )
 @Composable
 private fun BlockingBottomSheetContentPreview() = AppTheme {
-    SampleBottomSheetContainer {
+    SampleSurfaceContainer {
         BlockingBottomSheetScreen()
     }
 }

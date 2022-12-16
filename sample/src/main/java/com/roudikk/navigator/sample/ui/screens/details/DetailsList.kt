@@ -1,11 +1,11 @@
 package com.roudikk.navigator.sample.ui.screens.details
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -24,31 +24,30 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.coroutines.delay
 
 @Composable
 fun DetailsList(
     item: String,
-    onRandomItemSelected: () -> Unit,
-    onDynamicSelected: () -> Unit,
-    onSendResultSelected: () -> Unit,
-    onBottomSheetSelected: () -> Unit,
-    onNewSingleInstanceSelected: () -> Unit,
-    onExistingSingleInstanceSelected: () -> Unit,
-    onSingleTopSelected: () -> Unit,
-    onSingleTopBottomSheetSelected: () -> Unit,
-    onReplaceSelected: () -> Unit,
-    onOpenDialogSelected: () -> Unit,
-    onOpenBlockingBottomSheet: () -> Unit
+    onRandomItemSelected: () -> Unit = {},
+    onDynamicSelected: () -> Unit = {},
+    onSendResultSelected: () -> Unit = {},
+    onBottomSheetSelected: () -> Unit = {},
+    onNewSingleInstanceSelected: () -> Unit = {},
+    onExistingSingleInstanceSelected: () -> Unit = {},
+    onSingleTopSelected: () -> Unit = {},
+    onSingleTopBottomSheetSelected: () -> Unit = {},
+    onReplaceSelected: () -> Unit = {},
+    onOpenDialogSelected: () -> Unit = {},
+    onOpenBlockingBottomSheet: () -> Unit = {},
 ) {
-    val height = rememberSaveable {
-        (200 until 500).random()
-    }
 
     Column(
         modifier = Modifier
-            .height(height.dp)
             .verticalScroll(rememberScrollState())
             .fillMaxWidth()
             .padding(vertical = 16.dp),
@@ -151,4 +150,17 @@ private fun DetailsAction(title: String, onClick: () -> Unit) {
             )
         }
     }
+}
+
+
+@Preview(
+    device = Devices.PIXEL_3
+)
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_3
+)
+@Composable
+private fun DetailsContentPreview() = AppTheme {
+    DetailsList(item = "Test Item!")
 }

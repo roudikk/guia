@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.compose.BottomSheetSetup
 
 @Composable
-fun SampleBottomSheetContainer(
+fun SampleSurfaceContainer(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
@@ -25,7 +25,7 @@ fun SampleBottomSheetContainer(
 
 fun sampleBottomSheetOptions(modifier: Modifier = Modifier) = BottomSheetSetup(
     bottomSheetContainer = { nodeModifier, content ->
-        SampleBottomSheetContainer(
+        SampleSurfaceContainer(
             modifier = modifier
                 .padding(16.dp)
                 .then(nodeModifier),

@@ -1,6 +1,5 @@
 package com.roudikk.navigator.sample.ui.screens.details
 
-import android.content.res.Configuration
 import android.os.Parcelable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,24 +10,20 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.movableContentOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.compose.animation.NavigationTransition
-import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.DialogOptions
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigatorRulesBuilder
-import com.roudikk.navigator.core.dialogNode
 import com.roudikk.navigator.sample.navigation.CrossFadeTransition
-import com.roudikk.navigator.sample.ui.composables.AppTopAppBar
-import com.roudikk.navigator.sample.ui.theme.AppTheme
+import com.roudikk.navigator.sample.ui.composables.SampleSurfaceContainer
 import kotlinx.parcelize.Parcelize
 
 @JvmInline
@@ -47,50 +42,80 @@ class DetailsBottomSheetKey(val item: String) : NavigationKey
 @Parcelize
 class DynamicDetailsKey(val item: String) : NavigationKey
 
-@Parcelize
-class DetailsNodeKey(val item: String) : NavigationKey.WithNode<Dialog> {
-
-    override fun navigationNode() = dialogNode {
-        DetailsScreen(item = item, isScreen = false)
-    }
-}
 
 fun NavigatorRulesBuilder.detailsNavigation(screenWidth: Int) {
     if (screenWidth <= 600) {
         dialog<DynamicDetailsKey>(
             dialogOptions = DialogOptions(modifier = Modifier.widthIn(max = 320.dp))
-        ) { DetailsScreen(item = it.item, isScreen = false) }
+        ) {
+            SampleSurfaceContainer { DetailsContent(item = it.item) }
+        }
     } else {
-        bottomSheet<DynamicDetailsKey> { DetailsScreen(item = it.item, isScreen = false) }
+        bottomSheet<DynamicDetailsKey> { DetailsContent(item = it.item) }
     }
 
-    screen<DetailsKey> { DetailsScreen(item = it.item, isScreen = true) }
+    screen<DetailsKey> { DetailsScaffold(item = it.item) }
 
     dialog<DetailsDialogKey>(
         dialogOptions = DialogOptions(modifier = Modifier.widthIn(max = 320.dp))
-    ) { key -> DetailsScreen(item = key.item, isScreen = false) }
+    ) { key ->
+        SampleSurfaceContainer { DetailsContent(item = key.item) }
+    }
 
-    bottomSheet<DetailsBottomSheetKey> { key -> DetailsScreen(item = key.item, isScreen = false) }
+    bottomSheet<DetailsBottomSheetKey> { key -> DetailsContent(item = key.item) }
 
     transition<DetailsBottomSheetKey> { -> CrossFadeTransition }
     transition<DetailsDialogKey> { -> CrossFadeTransition }
     transition<DynamicDetailsKey> { -> CrossFadeTransition }
-    transition<DetailsNodeKey> { -> NavigationTransition.None }
 }
 
 @Composable
-private fun DetailsScreen(
-    item: String,
-    isScreen: Boolean
+private fun DetailsScaffold(
+    item: String
 ) {
     val viewModel = viewModel { DetailsViewModel(item) }
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
+    Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Details") },
+                scrollBehavior = scrollBehavior,
+                navigationIcon = {
+                    IconButton(onClick = viewModel::onBackSelected) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+            )
+        },
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            DetailsContent(
+                item = item,
+                viewModel = viewModel
+            )
+        }
+    }
+}
+
+@Composable
+private fun DetailsContent(
+    item: String,
+    viewModel: DetailsViewModel = viewModel { DetailsViewModel(item) },
+) {
     DetailsEventEffect(viewModel = viewModel)
 
-    DetailsContent(
-        item = viewModel.item,
-        isScreen = isScreen,
-        onBackSelected = viewModel::onBackSelected,
+    DetailsList(
+        item = item,
         onRandomItemSelected = viewModel::onRandomItemSelected,
         onDynamicSelected = viewModel::onDynamicSelected,
         onSendResultSelected = viewModel::onSendResultSelected,
@@ -102,99 +127,5 @@ private fun DetailsScreen(
         onReplaceSelected = viewModel::onReplaceSelected,
         onOpenDialogSelected = viewModel::onOpenDialogSelected,
         onOpenBlockingBottomSheet = viewModel::onOpenBlockingBottomSheet
-    )
-}
-
-@Composable
-private fun DetailsContent(
-    item: String,
-    isScreen: Boolean,
-    onBackSelected: () -> Unit = {},
-    onRandomItemSelected: () -> Unit = {},
-    onDynamicSelected: () -> Unit = {},
-    onSendResultSelected: () -> Unit = {},
-    onBottomSheetSelected: () -> Unit = {},
-    onNewSingleInstanceSelected: () -> Unit = {},
-    onExistingSingleInstanceSelected: () -> Unit = {},
-    onSingleTopSelected: () -> Unit = {},
-    onSingleTopBottomSheetSelected: () -> Unit = {},
-    onReplaceSelected: () -> Unit = {},
-    onOpenDialogSelected: () -> Unit = {},
-    onOpenBlockingBottomSheet: () -> Unit = {}
-) {
-    val content = remember {
-        movableContentOf {
-            DetailsList(
-                item = item,
-                onRandomItemSelected = onRandomItemSelected,
-                onDynamicSelected = onDynamicSelected,
-                onSendResultSelected = onSendResultSelected,
-                onBottomSheetSelected = onBottomSheetSelected,
-                onNewSingleInstanceSelected = onNewSingleInstanceSelected,
-                onExistingSingleInstanceSelected = onExistingSingleInstanceSelected,
-                onSingleTopSelected = onSingleTopSelected,
-                onSingleTopBottomSheetSelected = onSingleTopBottomSheetSelected,
-                onReplaceSelected = onReplaceSelected,
-                onOpenDialogSelected = onOpenDialogSelected,
-                onOpenBlockingBottomSheet = onOpenBlockingBottomSheet
-            )
-        }
-    }
-
-    if (isScreen) {
-        Scaffold(
-            topBar = {
-                AppTopAppBar(
-                    title = "Details",
-                    navigationIcon = {
-                        IconButton(onClick = onBackSelected) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "Back"
-                            )
-                        }
-                    }
-                )
-            },
-        ) { padding ->
-            Box(
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) { content() }
-        }
-    } else {
-        content()
-    }
-}
-
-@Preview(
-    device = Devices.PIXEL_3
-)
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
-)
-@Composable
-private fun DetailsContentPreview() = AppTheme {
-    DetailsContent(
-        item = "Test Item!",
-        isScreen = true,
-    )
-}
-
-@Preview(
-    device = Devices.PIXEL_3
-)
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
-)
-@Composable
-private fun DetailsContentPreviewOverlay() = AppTheme {
-    DetailsContent(
-        item = "Test Item!",
-        isScreen = false,
     )
 }
