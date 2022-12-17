@@ -105,6 +105,8 @@ private fun Navigator.deeplink(deepLinkViewModel: DeepLinkViewModel) {
                         }
                     }
                 }
+
+                else -> {}
             }
         }
     deepLinkViewModel.onNestedDestinationsHandled()

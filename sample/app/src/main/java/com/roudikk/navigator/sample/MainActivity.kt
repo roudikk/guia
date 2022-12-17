@@ -124,6 +124,8 @@ class MainActivity : ComponentActivity() {
                     MainDestination.Settings -> {
                         navigate(SettingsKey())
                     }
+
+                    else -> {}
                 }
             }
         deepLinkViewModel.onMainDestinationsHandled()
