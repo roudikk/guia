@@ -46,6 +46,7 @@ import com.roudikk.navigator.sample.feature.common.deeplink.BottomNavDestination
 import com.roudikk.navigator.sample.feature.common.deeplink.BottomNavDestination.NestedTab
 import com.roudikk.navigator.sample.feature.common.deeplink.DeepLinkViewModel
 import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination.BlockingBottomSheet
+import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination.BlockingDialog
 import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination.Cancelable
 import com.roudikk.navigator.sample.feature.common.deeplink.HomeDestination.Details
 import com.roudikk.navigator.sample.feature.common.composables.sampleBottomSheetOptions
