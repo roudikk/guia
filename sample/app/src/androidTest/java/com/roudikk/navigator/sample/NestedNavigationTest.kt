@@ -9,7 +9,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
-import com.roudikk.navigator.sample.ui.screens.nested.NestedKey
+import com.roudikk.navigator.sample.feature.nested.api.NestedKey
 import com.roudikk.navigator.sample.utils.navigateNestedTab
 import org.junit.Rule
 import org.junit.Test
@@ -72,12 +72,12 @@ class NestedNavigationTest {
             rule.onNodeWithTag(NestedKey.tagFor(it + 2)).assertIsDisplayed()
         }
 
-        rule.onNodeWithText("Pop to index").performTextInput("4")
+        rule.onNodeWithText("Navigate to index").performTextInput("4")
         rule.onNodeWithContentDescription("Pop").performClick()
         rule.onNodeWithTag(NestedKey.tagFor(4)).assertIsDisplayed()
         rule.onAllNodesWithText("4")[1].performTextClearance()
 
-        rule.onNodeWithText("Pop to index").performTextInput("2")
+        rule.onNodeWithText("Navigate to index").performTextInput("2")
         rule.onNodeWithContentDescription("Pop").performClick()
         rule.onNodeWithTag(NestedKey.tagFor(2)).assertIsDisplayed()
     }

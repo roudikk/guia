@@ -24,7 +24,7 @@ internal class DetailsDialogKey(val item: String) : NavigationKey.WithNode<Dialo
 }
 
 @Parcelize
-internal class DetailsBottomSheetKey(val item: String) : NavigationKey.WithNode<BottomSheet> {
+class DetailsBottomSheetKey(val item: String) : NavigationKey.WithNode<BottomSheet> {
     override fun navigationNode() = bottomSheetNode {
         DetailsContent(item = item)
     }

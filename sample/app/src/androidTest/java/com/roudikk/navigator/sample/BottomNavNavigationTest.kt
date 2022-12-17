@@ -5,10 +5,10 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import com.roudikk.navigator.core.NavigationKey.Companion.tag
-import com.roudikk.navigator.sample.ui.screens.dialogs.DialogsKey
-import com.roudikk.navigator.sample.ui.screens.home.HomeKey
-import com.roudikk.navigator.sample.ui.screens.navigationtree.NavigationTreeKey
-import com.roudikk.navigator.sample.ui.screens.nested.ParentNestedKey
+import com.roudikk.navigator.sample.feature.dialogs.api.DialogsKey
+import com.roudikk.navigator.sample.feature.home.api.HomeKey
+import com.roudikk.navigator.sample.feature.navtree.api.NavigationTreeKey
+import com.roudikk.navigator.sample.feature.nested.api.ParentNestedKey
 import com.roudikk.navigator.sample.utils.navigateHome
 import org.junit.Rule
 import org.junit.Test

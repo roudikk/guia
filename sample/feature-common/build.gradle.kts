@@ -13,9 +13,6 @@ val lottieVersion = "5.2.0"
 val kotlinCoroutinesVersion = "1.6.4"
 val activityComposeVersion = "1.6.1"
 val viewModelVersion = "2.5.1"
-val junitVersion = "4.13.2"
-val jupiterVersion = "5.9.1"
-val truthVersion = "1.1.3"
 val materialVersion = "1.7.0"
 val detektVersion = "1.21.0"
 
@@ -69,15 +66,6 @@ dependencies {
 
     // Navigator
     api(project(":compose-navigator"))
-
-    // Test dependencies
-    androidTestApi("androidx.compose.ui:ui-test-junit4:$composeVersion")
-    debugApi("androidx.compose.ui:ui-test-manifest:$composeVersion")
-    testApi("junit:junit:$junitVersion")
-    testApi("org.junit.jupiter:junit-jupiter:$jupiterVersion")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
-    testApi("com.google.truth:truth:$truthVersion")
-    androidTestApi("androidx.test.espresso:espresso-core:3.5.0")
 }
 
 detekt {

@@ -7,9 +7,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.roudikk.navigator.core.NavigationKey.Companion.tag
-import com.roudikk.navigator.sample.ui.screens.details.DetailsBottomSheetKey
-import com.roudikk.navigator.sample.ui.screens.details.DetailsKey
-import com.roudikk.navigator.sample.ui.screens.home.HomeKey
+import com.roudikk.navigator.sample.feature.details.DetailsBottomSheetKey
+import com.roudikk.navigator.sample.feature.details.api.DetailsKey
+import com.roudikk.navigator.sample.feature.home.api.HomeKey
 import com.roudikk.navigator.sample.utils.navigateDetails
 import org.junit.Rule
 import org.junit.Test
