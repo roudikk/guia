@@ -2,7 +2,7 @@ package com.roudikk.navigator.navhost
 
 import com.roudikk.navigator.Navigator
 
-class StackEntry(
+data class StackEntry(
     val stackKey: StackKey,
     val navigator: Navigator
 ) {

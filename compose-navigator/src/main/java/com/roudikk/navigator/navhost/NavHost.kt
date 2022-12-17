@@ -9,8 +9,8 @@ import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
-import com.roudikk.navigator.compose.savedstate.navHostSaver
 import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.compose.savedstate.navHostSaver
 
 @Composable
 fun rememberNavHost(
@@ -38,7 +38,7 @@ fun rememberNavHost(
 class NavHost(
     val saveableStateHolder: SaveableStateHolder
 ) {
-    var entries by mutableStateOf(setOf<StackEntry>())
+    var stackEntries by mutableStateOf(setOf<StackEntry>())
         private set
 
     var currentEntry by mutableStateOf<StackEntry?>(null)
@@ -47,19 +47,19 @@ class NavHost(
     val currentNavigator by derivedStateOf { currentEntry?.navigator }
 
     fun navigator(stackKey: StackKey): Navigator {
-        return requireNotNull(entries.firstOrNull { it.stackKey == stackKey }?.navigator)
+        return requireNotNull(stackEntries.firstOrNull { it.stackKey == stackKey }?.navigator)
     }
 
     fun updateEntries(entries: Set<StackEntry>) {
-        this.entries = entries
+        this.stackEntries = entries
         currentEntry = entries.firstOrNull { it.stackKey == currentEntry?.stackKey }
     }
 
     fun setActive(stackKey: StackKey) {
-        require(entries.any { it.stackKey == stackKey }) {
+        require(stackEntries.any { it.stackKey == stackKey }) {
             "$stackKey does not exist in this NavHost, must be provided when calling rememberNavHost"
         }
 
-        currentEntry = entries.first { it.stackKey == stackKey }
+        currentEntry = stackEntries.first { it.stackKey == stackKey }
     }
 }

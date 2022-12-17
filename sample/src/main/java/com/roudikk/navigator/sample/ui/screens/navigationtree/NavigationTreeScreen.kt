@@ -67,7 +67,7 @@ private fun NavigationTreeScreen(
 ) {
     val stackEntries by remember {
         derivedStateOf {
-            navHost.entries.toList()
+            navHost.stackEntries.toList()
         }
     }
 
