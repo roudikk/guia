@@ -118,7 +118,6 @@ private fun Navigator.deeplink(deepLinkViewModel: DeepLinkViewModel) {
     deepLinkViewModel.onNestedDestinationsHandled()
 }
 
-
 @Composable
 private fun ParentNestedContent(
     onPopToRootClicked: () -> Unit = {},
