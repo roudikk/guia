@@ -23,6 +23,8 @@ import com.roudikk.navigator.rememberNavigator
 import com.roudikk.navigator.sample.feature.bottomnav.api.BottomNavKey
 import com.roudikk.navigator.sample.feature.bottomnav.bottomNavNavigation
 import com.roudikk.navigator.sample.feature.common.composables.sampleBottomSheetOptions
+import com.roudikk.navigator.sample.feature.common.deeplink.DeepLinkViewModel
+import com.roudikk.navigator.sample.feature.common.deeplink.MainDestination
 import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.feature.common.navigation.LocalRootNavigator
 import com.roudikk.navigator.sample.feature.common.navigation.MaterialSharedAxisTransitionXY
@@ -124,8 +126,6 @@ class MainActivity : ComponentActivity() {
                     MainDestination.Settings -> {
                         navigate(SettingsKey())
                     }
-
-                    else -> {}
                 }
             }
         deepLinkViewModel.onMainDestinationsHandled()

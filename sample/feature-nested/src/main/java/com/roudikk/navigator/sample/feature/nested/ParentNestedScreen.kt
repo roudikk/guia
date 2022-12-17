@@ -43,8 +43,8 @@ import com.roudikk.navigator.extensions.currentKey
 import com.roudikk.navigator.extensions.popTo
 import com.roudikk.navigator.extensions.popToRoot
 import com.roudikk.navigator.rememberNavigator
-import com.roudikk.navigator.sample.DeepLinkViewModel
-import com.roudikk.navigator.sample.NestedDestination
+import com.roudikk.navigator.sample.feature.common.deeplink.DeepLinkViewModel
+import com.roudikk.navigator.sample.feature.common.deeplink.NestedDestination
 import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.feature.common.navigation.VerticalSlideTransition
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
@@ -105,8 +105,6 @@ private fun Navigator.deeplink(deepLinkViewModel: DeepLinkViewModel) {
                         }
                     }
                 }
-
-                else -> {}
             }
         }
     deepLinkViewModel.onNestedDestinationsHandled()
