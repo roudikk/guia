@@ -1,6 +1,6 @@
 import com.google.common.truth.Truth.assertThat
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.NavigatorRules
+import com.roudikk.navigator.NavigatorBuilder
 import com.roudikk.navigator.TestNavigationKey
 import com.roudikk.navigator.TestSaveableStateHolder
 import org.junit.Test
@@ -13,7 +13,7 @@ class NavigatorTest {
         val navigator = Navigator(
             initialKey = navigationKey,
             saveableStateHolder = TestSaveableStateHolder(),
-            navigatorRules = NavigatorRules()
+            navigatorBuilder = NavigatorBuilder()
         )
 
         assertThat(navigator.backStack).isEqualTo(listOf(navigationKey))
@@ -29,7 +29,7 @@ class NavigatorTest {
         val navigator = Navigator(
             initialKey = navigationKey,
             saveableStateHolder = TestSaveableStateHolder(),
-            navigatorRules = NavigatorRules()
+            navigatorBuilder = NavigatorBuilder()
         )
 
         val newKeys = (0 until 3).map { TestNavigationKey() }

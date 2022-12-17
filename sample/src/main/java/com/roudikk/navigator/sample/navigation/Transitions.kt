@@ -9,8 +9,8 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
-import com.roudikk.navigator.compose.animation.NavigationTransition
-import com.roudikk.navigator.compose.animation.to
+import com.roudikk.navigator.animation.NavigationTransition
+import com.roudikk.navigator.animation.to
 
 val MaterialSharedAxisTransitionX = NavigationTransition(
     enterExit = slideInHorizontally { (it * 0.2f).toInt() } + fadeIn(

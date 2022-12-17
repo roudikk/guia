@@ -1,4 +1,4 @@
-package com.roudikk.navigator.compose.backstack
+package com.roudikk.navigator.backstack
 
 import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.core.BottomSheet

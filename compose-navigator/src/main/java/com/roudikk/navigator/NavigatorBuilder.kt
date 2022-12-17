@@ -3,8 +3,8 @@
 package com.roudikk.navigator
 
 import androidx.compose.runtime.Composable
-import com.roudikk.navigator.compose.animation.EnterExitTransition
-import com.roudikk.navigator.compose.animation.NavigationTransition
+import com.roudikk.navigator.animation.EnterExitTransition
+import com.roudikk.navigator.animation.NavigationTransition
 import com.roudikk.navigator.core.BottomSheetOptions
 import com.roudikk.navigator.core.DialogOptions
 import com.roudikk.navigator.core.NavigationKey
@@ -12,43 +12,42 @@ import com.roudikk.navigator.core.NavigationNode
 import com.roudikk.navigator.core.bottomSheetNode
 import com.roudikk.navigator.core.dialogNode
 import com.roudikk.navigator.core.screenNode
+import com.roudikk.navigator.extensions.AssociationsMap
+import com.roudikk.navigator.extensions.NavigationNodeTransition
+import com.roudikk.navigator.extensions.TransitionsMap
 import kotlin.reflect.KClass
 
-private typealias AssociationsMap = HashMap<KClass<NavigationKey>, (NavigationKey) -> NavigationNode>
-private typealias TransitionsMap = HashMap<KClass<NavigationKey>, (previous: NavigationKey, new: NavigationKey, isPop: Boolean) -> EnterExitTransition>
-private typealias DefaultTransition = (previous: NavigationKey, new: NavigationKey, isPop: Boolean) -> EnterExitTransition
-
-class NavigatorRules internal constructor(
+class NavigatorBuilder internal constructor(
     internal val associations: AssociationsMap = hashMapOf(),
     internal val transitions: TransitionsMap = hashMapOf(),
-    internal val defaultTransition: DefaultTransition = { _, _, _ -> EnterExitTransition.None }
+    internal val defaultTransition: NavigationNodeTransition = { _, _, _ -> EnterExitTransition.None }
 )
 
-class NavigatorRulesBuilder internal constructor() {
+class NavigatorBuilderScope internal constructor() {
+    private val associations: AssociationsMap = hashMapOf()
+    private val transitions: TransitionsMap = hashMapOf()
+    private var defaultTransition: NavigationNodeTransition =
+        { _, _, _ -> EnterExitTransition.None }
 
-    @PublishedApi
-    internal val associations: AssociationsMap = hashMapOf()
+    fun navigationNode(
+        keyClass: KClass<NavigationKey>,
+        navigationNodeBuilder: (NavigationKey) -> NavigationNode
+    ) {
+        associations[keyClass] = navigationNodeBuilder
+    }
 
-    @PublishedApi
-    internal val transitions: TransitionsMap = hashMapOf()
-
-    private var defaultTransition: DefaultTransition = { _, _, _ -> EnterExitTransition.None }
-
-    @PublishedApi
-    internal inline fun <reified Key : NavigationKey> navigationNode(
+    inline fun <reified Key : NavigationKey> navigationNode(
         noinline navigationNodeBuilder: (Key) -> NavigationNode
     ) {
-        associations[Key::class as KClass<NavigationKey>] =
+        navigationNode(
+            Key::class as KClass<NavigationKey>,
             navigationNodeBuilder as (NavigationKey) -> NavigationNode
+        )
     }
 
-    fun appendRules(navigatorRules: NavigatorRules) {
-        navigatorRules.associations.forEach { associations[it.key] = it.value }
-        navigatorRules.transitions.forEach { transitions[it.key] = it.value }
-        defaultTransition = navigatorRules.defaultTransition
-    }
-
-    inline fun <reified Key : NavigationKey> screen(noinline content: @Composable (Key) -> Unit) {
+    inline fun <reified Key : NavigationKey> screen(
+        noinline content: @Composable (Key) -> Unit
+    ) {
         navigationNode<Key> {
             screenNode { content(it) }
         }
@@ -72,17 +71,26 @@ class NavigatorRulesBuilder internal constructor() {
         }
     }
 
-    inline fun <reified Key : NavigationKey> transition(
-        noinline transition: (previous: NavigationKey, new: Key, isPop: Boolean) -> EnterExitTransition
+    fun transition(
+        keyClass: KClass<NavigationKey>,
+        transition: NavigationNodeTransition
     ) {
-        transitions[Key::class as KClass<NavigationKey>] =
-            transition as (NavigationKey, NavigationKey, Boolean) -> EnterExitTransition
+        transitions[keyClass] = transition
+    }
+
+    inline fun <reified Key : NavigationKey> transition(
+        noinline transition: NavigationNodeTransition
+    ) {
+        transition(
+            keyClass = Key::class as KClass<NavigationKey>,
+            transition = transition
+        )
     }
 
     inline fun <reified Key : NavigationKey> transition(
         noinline transition: (previous: NavigationKey, new: Key) -> NavigationTransition
     ) {
-        transitions[Key::class as KClass<NavigationKey>] = { previous, new, isPop ->
+        transition<Key> { previous, new, isPop ->
             val navigationTransition = transition(previous, new as Key)
             if (isPop) navigationTransition.popEnterExit else navigationTransition.enterExit
         }
@@ -91,14 +99,14 @@ class NavigatorRulesBuilder internal constructor() {
     inline fun <reified Key : NavigationKey> transition(
         noinline transition: () -> NavigationTransition
     ) {
-        transitions[Key::class as KClass<NavigationKey>] = { previous, new, isPop ->
+        transition<Key> { _, _, isPop ->
             val navigationTransition = transition()
             if (isPop) navigationTransition.popEnterExit else navigationTransition.enterExit
         }
     }
 
     fun defaultTransition(
-        transition: (previous: NavigationKey, new: NavigationKey, isPop: Boolean) -> EnterExitTransition
+        transition: NavigationNodeTransition
     ) {
         defaultTransition = transition
     }
@@ -115,13 +123,13 @@ class NavigatorRulesBuilder internal constructor() {
     fun defaultTransition(
         transition: () -> NavigationTransition
     ) {
-        defaultTransition = { previous, new, isPop ->
+        defaultTransition = { _, _, isPop ->
             val navigationTransition = transition()
             if (isPop) navigationTransition.popEnterExit else navigationTransition.enterExit
         }
     }
 
-    internal fun build() = NavigatorRules(
+    internal fun build() = NavigatorBuilder(
         associations = associations,
         transitions = transitions,
         defaultTransition = defaultTransition

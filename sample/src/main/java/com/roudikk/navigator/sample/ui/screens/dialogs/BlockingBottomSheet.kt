@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.core.BottomSheetOptions
 import com.roudikk.navigator.core.NavigationKey
-import com.roudikk.navigator.NavigatorRulesBuilder
+import com.roudikk.navigator.NavigatorBuilderScope
 import com.roudikk.navigator.sample.ui.composables.SampleSurfaceContainer
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
@@ -29,7 +29,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class BlockingBottomSheetKey: NavigationKey
 
-fun NavigatorRulesBuilder.blockingBottomSheetNavigation() {
+fun NavigatorBuilderScope.blockingBottomSheetNavigation() {
     bottomSheet<BlockingBottomSheetKey>(
         bottomSheetOptions = BottomSheetOptions(
             modifier = Modifier.navigationBarsPadding(),

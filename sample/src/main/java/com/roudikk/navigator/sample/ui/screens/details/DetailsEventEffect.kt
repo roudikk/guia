@@ -2,8 +2,8 @@ package com.roudikk.navigator.sample.ui.screens.details
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import com.roudikk.navigator.compose.requireNavigator
-import com.roudikk.navigator.compose.requireParentNavigator
+import com.roudikk.navigator.extensions.requireNavigator
+import com.roudikk.navigator.extensions.requireParentNavigator
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popBackstack
 import com.roudikk.navigator.extensions.popToRoot

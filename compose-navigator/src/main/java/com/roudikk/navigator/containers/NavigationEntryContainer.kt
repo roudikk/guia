@@ -5,12 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import com.roudikk.navigator.compose.backstack.BackStackEntry
-import com.roudikk.navigator.compose.backstack.BackStackManager
-import com.roudikk.navigator.compose.backstack.LocalProvider
+import com.roudikk.navigator.backstack.BackStackEntry
+import com.roudikk.navigator.backstack.BackStackManager
+import com.roudikk.navigator.backstack.LocalProvider
 
 @Composable
-internal fun NavigationEntryContent(
+internal fun NavigationEntryContainer(
     backStackManager: BackStackManager,
     backStackEntry: BackStackEntry
 ) {

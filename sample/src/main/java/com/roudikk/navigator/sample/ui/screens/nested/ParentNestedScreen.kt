@@ -40,7 +40,7 @@ import com.roudikk.navigator.compose.NavContainer
 import com.roudikk.navigator.rememberNavigator
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.NavigatorRulesBuilder
+import com.roudikk.navigator.NavigatorBuilderScope
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popTo
 import com.roudikk.navigator.extensions.popToRoot
@@ -54,7 +54,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class ParentNestedKey : NavigationKey
 
-fun NavigatorRulesBuilder.parentNestedNavigation() {
+fun NavigatorBuilderScope.parentNestedNavigation() {
     screen<ParentNestedKey> { ParentNestedScreen() }
 }
 

@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.NavigatorRulesBuilder
+import com.roudikk.navigator.NavigatorBuilderScope
 import com.roudikk.navigator.core.DialogOptions
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.sample.navigation.CrossFadeTransition
@@ -43,7 +43,7 @@ class DetailsBottomSheetKey(val item: String) : NavigationKey
 class DynamicDetailsKey(val item: String) : NavigationKey
 
 
-fun NavigatorRulesBuilder.detailsNavigation(screenWidth: Int) {
+fun NavigatorBuilderScope.detailsNavigation(screenWidth: Int) {
     if (screenWidth <= 600) {
         dialog<DynamicDetailsKey>(
             dialogOptions = DialogOptions(modifier = Modifier.widthIn(max = 320.dp))

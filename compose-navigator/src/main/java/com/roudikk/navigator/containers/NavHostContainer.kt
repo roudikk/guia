@@ -10,8 +10,9 @@ import androidx.compose.animation.with
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
-import com.roudikk.navigator.compose.BottomSheetSetup
+import com.roudikk.navigator.core.BottomSheetSetup
 import com.roudikk.navigator.compose.NavContainer
+import com.roudikk.navigator.extensions.LocalNavHost
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable

@@ -1,4 +1,4 @@
-package com.roudikk.navigator.compose
+package com.roudikk.navigator.core
 
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween

@@ -1,4 +1,4 @@
-package com.roudikk.navigator.compose
+package com.roudikk.navigator.animation
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.runtime.Composable

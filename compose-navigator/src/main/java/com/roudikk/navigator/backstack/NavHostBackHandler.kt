@@ -1,4 +1,4 @@
-package com.roudikk.navigator.navhost
+package com.roudikk.navigator.backstack
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.extensions.currentKey
+import com.roudikk.navigator.navhost.NavHost
+import com.roudikk.navigator.navhost.StackKey
 
 @Composable
 fun NavHost.DefaultStackBackHandler(stackKey: StackKey) {

@@ -1,4 +1,4 @@
-package com.roudikk.navigator.compose.backstack
+package com.roudikk.navigator.backstack
 
 import android.app.Application
 import android.os.Bundle

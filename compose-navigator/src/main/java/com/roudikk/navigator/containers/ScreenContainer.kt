@@ -1,4 +1,4 @@
-package com.roudikk.navigator.compose.containers
+package com.roudikk.navigator.containers
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -6,8 +6,8 @@ import androidx.compose.animation.with
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.roudikk.navigator.compose.ProvideNavigationVisibilityScope
-import com.roudikk.navigator.compose.backstack.BackStackEntry
+import com.roudikk.navigator.animation.ProvideNavigationVisibilityScope
+import com.roudikk.navigator.backstack.BackStackEntry
 import com.roudikk.navigator.Navigator
 
 @OptIn(ExperimentalAnimationApi::class)

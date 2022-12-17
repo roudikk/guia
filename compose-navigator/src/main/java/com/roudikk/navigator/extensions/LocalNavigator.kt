@@ -1,6 +1,4 @@
-@file:Suppress("unused")
-
-package com.roudikk.navigator.compose
+package com.roudikk.navigator.extensions
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf

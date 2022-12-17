@@ -1,7 +1,8 @@
-package com.roudikk.navigator.navhost
+package com.roudikk.navigator.extensions
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
+import com.roudikk.navigator.navhost.NavHost
 
 internal val LocalNavHost = staticCompositionLocalOf<NavHost?> { error("Must be provided") }
 

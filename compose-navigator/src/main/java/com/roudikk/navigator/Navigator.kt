@@ -11,22 +11,22 @@ import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
-import com.roudikk.navigator.compose.animation.EnterExitTransition
-import com.roudikk.navigator.compose.savedstate.navigatorSaver
+import com.roudikk.navigator.animation.EnterExitTransition
 import com.roudikk.navigator.core.NavigationEntry
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigationNode
+import com.roudikk.navigator.savedstate.navigatorSaver
 
 @Composable
 fun rememberNavigator(
     initialKey: NavigationKey,
     initialize: @DisallowComposableCalls (Navigator) -> Unit = {},
-    navigatorRulesBuilder: @DisallowComposableCalls NavigatorRulesBuilder.() -> Unit = {}
+    scope: @DisallowComposableCalls NavigatorBuilderScope.() -> Unit = {}
 ): Navigator {
     val saveableStateHolder = rememberSaveableStateHolder()
     val navigatorRules = remember {
-        NavigatorRulesBuilder()
-            .apply(navigatorRulesBuilder)
+        NavigatorBuilderScope()
+            .apply(scope)
             .build()
     }
 
@@ -36,7 +36,7 @@ fun rememberNavigator(
         Navigator(
             initialKey = initialKey,
             saveableStateHolder = saveableStateHolder,
-            navigatorRules = navigatorRules
+            navigatorBuilder = navigatorRules
         ).apply(initialize)
     }
 }
@@ -44,7 +44,7 @@ fun rememberNavigator(
 class Navigator internal constructor(
     internal val initialKey: NavigationKey,
     internal val saveableStateHolder: SaveableStateHolder,
-    internal val navigatorRules: NavigatorRules
+    internal val navigatorBuilder: NavigatorBuilder
 ) {
     internal var destinationsMap = hashMapOf<NavigationKey, NavigationEntry>()
     private var navigationNodesMap = hashMapOf<NavigationEntry, NavigationNode>()
@@ -91,7 +91,7 @@ class Navigator internal constructor(
                 navigationEntry.navigationKey.navigationNode()
             } else {
                 val navigationKey = navigationEntry.navigationKey
-                return navigatorRules.associations[navigationKey::class]
+                return navigatorBuilder.associations[navigationKey::class]
                     ?.invoke(navigationKey)
                     ?: error(
                         "NavigationKey: $navigationKey was not declared. " +
@@ -115,9 +115,9 @@ class Navigator internal constructor(
             currentTransition = overrideNextTransition!!
             overrideNextTransition = null
         } else if (backStack.isNotEmpty()) {
-            currentTransition = navigatorRules.transitions[currentKey::class]
+            currentTransition = navigatorBuilder.transitions[currentKey::class]
                 ?.invoke(backStack.last(), currentKey, popping)
-                ?: navigatorRules.defaultTransition(backStack.last(), currentKey, popping)
+                ?: navigatorBuilder.defaultTransition(backStack.last(), currentKey, popping)
         }
 
         backStack = navigationKeys.toList()

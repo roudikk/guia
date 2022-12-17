@@ -24,8 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.NavigatorRulesBuilder
-import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.NavigatorBuilderScope
+import com.roudikk.navigator.extensions.requireNavigator
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.extensions.canGoBack
 import com.roudikk.navigator.extensions.navigate
@@ -47,7 +47,7 @@ class NestedKey(val count: Int) : NavigationKey {
     }
 }
 
-fun NavigatorRulesBuilder.nestedNavigation() {
+fun NavigatorBuilderScope.nestedNavigation() {
     screen<NestedKey> { NestedScreen(count = it.count) }
 }
 

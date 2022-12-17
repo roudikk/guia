@@ -9,12 +9,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.roudikk.navigator.Navigator
-import com.roudikk.navigator.extensions.canGoBack
-import com.roudikk.navigator.compose.backstack.rememberBackStackManager
-import com.roudikk.navigator.compose.containers.BottomSheetContainer
-import com.roudikk.navigator.compose.containers.DialogContainer
-import com.roudikk.navigator.compose.containers.ScreenContainer
+import com.roudikk.navigator.backstack.rememberBackStackManager
+import com.roudikk.navigator.containers.BottomSheetContainer
+import com.roudikk.navigator.containers.DialogContainer
+import com.roudikk.navigator.containers.ScreenContainer
+import com.roudikk.navigator.core.BottomSheetSetup
 import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.extensions.LocalNavigator
+import com.roudikk.navigator.extensions.LocalParentNavigator
+import com.roudikk.navigator.extensions.canGoBack
+import com.roudikk.navigator.extensions.findNavigator
 import com.roudikk.navigator.extensions.popBackstack
 
 /**
@@ -74,7 +78,7 @@ private fun Navigator.NavContainerContent(
                 navigator.popBackstack()
             }
 
-            NavigationEntryContent(backStackManager, entry)
+            NavigationEntryContainer(backStackManager, entry)
         }
     ) {
         // Screen content
@@ -82,7 +86,7 @@ private fun Navigator.NavContainerContent(
             modifier = modifier,
             screenEntry = backStackEntryGroup.screenEntry
         ) { entry ->
-            NavigationEntryContent(backStackManager, entry)
+            NavigationEntryContainer(backStackManager, entry)
         }
     }
 
@@ -91,7 +95,7 @@ private fun Navigator.NavContainerContent(
         DialogContainer(
             dialogEntry = dialogEntry
         ) { entry ->
-            NavigationEntryContent(backStackManager, entry)
+            NavigationEntryContainer(backStackManager, entry)
         }
     }
 

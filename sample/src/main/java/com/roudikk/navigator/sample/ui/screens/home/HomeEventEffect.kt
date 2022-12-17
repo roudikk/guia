@@ -5,7 +5,7 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import com.roudikk.navigator.compose.requireNavigator
+import com.roudikk.navigator.extensions.requireNavigator
 import com.roudikk.navigator.extensions.clearResult
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.pushResult

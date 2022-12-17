@@ -1,4 +1,4 @@
-package com.roudikk.navigator.compose.containers
+package com.roudikk.navigator.containers
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.EnterTransition
@@ -31,8 +31,8 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.compose.BottomSheetSetup
-import com.roudikk.navigator.compose.backstack.BackStackEntry
+import com.roudikk.navigator.core.BottomSheetSetup
+import com.roudikk.navigator.backstack.BackStackEntry
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.extensions.popBackstack
