@@ -12,16 +12,16 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -36,14 +36,14 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.compose.NavContainer
-import com.roudikk.navigator.rememberNavigator
-import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.NavigatorBuilderScope
-import com.roudikk.navigator.extensions.navigate
+import com.roudikk.navigator.compose.NavContainer
+import com.roudikk.navigator.core.NavigationKey
+import com.roudikk.navigator.extensions.currentKey
 import com.roudikk.navigator.extensions.popTo
 import com.roudikk.navigator.extensions.popToRoot
+import com.roudikk.navigator.rememberNavigator
 import com.roudikk.navigator.sample.DeepLinkViewModel
 import com.roudikk.navigator.sample.NestedDestination
 import com.roudikk.navigator.sample.navigation.LocalNavHostViewModelStoreOwner
@@ -72,9 +72,17 @@ fun ParentNestedScreen() {
 
     ParentNestedContent(
         onPopToRootClicked = nestedNavigator::popToRoot,
-        onPopToClicked = {
-            nestedNavigator.popTo<NestedKey> { key ->
-                key.count == it
+        onNavigateToClicked = { index ->
+            val currentKey = nestedNavigator.currentKey as NestedKey
+            if (index > currentKey.index) {
+                nestedNavigator.setBackstack(
+                    nestedNavigator.backStack + (currentKey.index + 1 until index + 1)
+                        .map(::NestedKey)
+                )
+            } else {
+                nestedNavigator.popTo<NestedKey> { key ->
+                    key.index == index
+                }
             }
         }
     ) {
@@ -91,7 +99,20 @@ private fun Navigator.deeplink(deepLinkViewModel: DeepLinkViewModel) {
         .filterIsInstance<NestedDestination>()
         .forEach { destination ->
             when (destination) {
-                is NestedDestination.Nested -> navigate(NestedKey(destination.count))
+                is NestedDestination.Nested -> {
+                    val index = destination.index
+                    val currentKey = currentKey as NestedKey
+                    if (index > currentKey.index) {
+                       setBackstack(
+                           backStack + (currentKey.index + 1 until index + 1)
+                                .map(::NestedKey)
+                        )
+                    } else {
+                       popTo<NestedKey> { key ->
+                            key.index == index
+                        }
+                    }
+                }
             }
         }
     deepLinkViewModel.onNestedDestinationsHandled()
@@ -101,7 +122,7 @@ private fun Navigator.deeplink(deepLinkViewModel: DeepLinkViewModel) {
 @Composable
 private fun ParentNestedContent(
     onPopToRootClicked: () -> Unit = {},
-    onPopToClicked: (Int) -> Unit = {},
+    onNavigateToClicked: (Int) -> Unit = {},
     container: @Composable () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -163,7 +184,7 @@ private fun ParentNestedContent(
                     trailingIcon = {
                         IconButton(onClick = {
                             textFieldValue.value.toIntOrNull()?.let {
-                                onPopToClicked(it)
+                                onNavigateToClicked(it)
                             }
                         }) {
                             Icon(
@@ -173,7 +194,7 @@ private fun ParentNestedContent(
                         }
                     },
                     placeholder = {
-                        Text(text = "Pop to index")
+                        Text(text = "Navigate to index")
                     },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         textColor = MaterialTheme.colorScheme.onSurface

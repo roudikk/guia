@@ -122,5 +122,5 @@ sealed class BottomNavDestination : DeepLinkDestination() {
 }
 
 sealed class NestedDestination : DeepLinkDestination() {
-    class Nested(val count: Int) : NestedDestination()
+    class Nested(val index: Int) : NestedDestination()
 }

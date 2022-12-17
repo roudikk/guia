@@ -20,7 +20,8 @@ import kotlin.reflect.KClass
 class NavigatorBuilder internal constructor(
     internal val associations: AssociationsMap = hashMapOf(),
     internal val transitions: TransitionsMap = hashMapOf(),
-    internal val defaultTransition: NavigationNodeTransition = { _, _, _ -> EnterExitTransition.None }
+    internal val defaultTransition: NavigationNodeTransition =
+        { _, _, _ -> EnterExitTransition.None }
 )
 
 class NavigatorBuilderScope internal constructor() {

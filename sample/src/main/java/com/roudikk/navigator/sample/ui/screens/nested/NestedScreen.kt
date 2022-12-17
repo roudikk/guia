@@ -4,7 +4,9 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,11 +27,11 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.NavigatorBuilderScope
-import com.roudikk.navigator.extensions.requireNavigator
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.extensions.canGoBack
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popBackstack
+import com.roudikk.navigator.extensions.requireNavigator
 import com.roudikk.navigator.navhost.StackKey
 import com.roudikk.navigator.sample.ui.theme.AppTheme
 import kotlinx.parcelize.Parcelize
@@ -38,9 +40,9 @@ import kotlinx.parcelize.Parcelize
 object NestedStackKey : StackKey
 
 @Parcelize
-class NestedKey(val count: Int) : NavigationKey {
+class NestedKey(val index: Int) : NavigationKey {
 
-    override fun tag(): String = tagFor(count)
+    override fun tag(): String = tagFor(index)
 
     companion object {
         fun tagFor(count: Int) = "NestedKey_$count"
@@ -48,7 +50,7 @@ class NestedKey(val count: Int) : NavigationKey {
 }
 
 fun NavigatorBuilderScope.nestedNavigation() {
-    screen<NestedKey> { NestedScreen(count = it.count) }
+    screen<NestedKey> { NestedScreen(count = it.index) }
 }
 
 @Composable
@@ -91,6 +93,8 @@ private fun NestedContent(
             )
         }
 
+        Spacer(modifier = Modifier.height(4.dp))
+
         Surface(
             tonalElevation = 10.dp,
             shape = RoundedCornerShape(20.dp),
@@ -106,6 +110,8 @@ private fun NestedContent(
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(4.dp))
 
         IconButton(
             onClick = onAddClicked
