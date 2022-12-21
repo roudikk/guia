@@ -11,7 +11,7 @@ import kotlin.reflect.KClass
  * A [NavigationKey] on its own does not have a UI representation. It simply defines a key that will
  * be in the backstack. (Unless it's a [NavigationKey.WithNode], see below)
  *
- * The UI a [NavigationKey] renders is decided using [NavigatorBuilder.presentations].
+ * The UI a [NavigationKey] renders is decided using [NavigatorConfig.presentations].
  *
  * A Navigation Key is [Parcelable] and will be saved and restored during state restoration and
  * process death, so all properties must be primitives or [Parcelable]s.

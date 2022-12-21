@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.navigator.backstack.navhost.StackHistoryBackHandler
 import com.roudikk.navigator.containers.NavContainer
-import com.roudikk.navigator.core.NavigatorBuilderScope
+import com.roudikk.navigator.core.NavigatorConfigScope
 import com.roudikk.navigator.core.rememberNavigator
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popToRoot
@@ -67,10 +67,10 @@ import com.roudikk.navigator.sample.feature.nested.api.ParentNestedKey
 
 @Composable
 fun rememberBottomNavHost(
-    homeNavigation: NavigatorBuilderScope.() -> Unit,
-    nestedNavigation: NavigatorBuilderScope.() -> Unit,
-    dialogsNavigation: NavigatorBuilderScope.() -> Unit,
-    navigationTreeNavigation: NavigatorBuilderScope.() -> Unit,
+    homeNavigation: NavigatorConfigScope.() -> Unit,
+    nestedNavigation: NavigatorConfigScope.() -> Unit,
+    dialogsNavigation: NavigatorConfigScope.() -> Unit,
+    navigationTreeNavigation: NavigatorConfigScope.() -> Unit,
     initialize: @DisallowComposableCalls (NavHost) -> Unit,
 ): NavHost {
     val homeNavigator = rememberNavigator(
@@ -107,10 +107,10 @@ fun rememberBottomNavHost(
 
 @Composable
 fun BottomNavScreen(
-    homeNavigation: NavigatorBuilderScope.() -> Unit,
-    nestedNavigation: NavigatorBuilderScope.() -> Unit,
-    dialogsNavigation: NavigatorBuilderScope.() -> Unit,
-    navigationTreeNavigation: NavigatorBuilderScope.() -> Unit
+    homeNavigation: NavigatorConfigScope.() -> Unit,
+    nestedNavigation: NavigatorConfigScope.() -> Unit,
+    dialogsNavigation: NavigatorConfigScope.() -> Unit,
+    navigationTreeNavigation: NavigatorConfigScope.() -> Unit
 ) {
     val deepLinkViewModel = viewModel<DeepLinkViewModel>(LocalNavHostViewModelStoreOwner.current)
 
