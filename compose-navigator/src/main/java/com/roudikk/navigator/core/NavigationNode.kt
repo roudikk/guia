@@ -12,7 +12,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 
 /**
- * Represents a navigation node in the navigation tree.
+ * Represents a how a navigation key will be displayed in the navigation tree.
  */
 sealed interface NavigationNode {
 
@@ -21,12 +21,12 @@ sealed interface NavigationNode {
 }
 
 /**
- * A screen representation of a [NavigationNode].
+ * A screen representation of a [NavigationKey].
  */
 interface Screen : NavigationNode
 
 /**
- * A Dialog representation of a [NavigationNode].
+ * A Dialog representation of a [NavigationKey].
  *
  * @property dialogOptions, extra dialog options.
  */
@@ -37,7 +37,7 @@ interface Dialog : NavigationNode {
 }
 
 /**
- * A Bottom sheet representation of a [NavigationNode].
+ * A Bottom sheet representation of a [NavigationKey].
  *
  * @property bottomSheetOptions, extra bottom sheet options.
  */
@@ -62,6 +62,9 @@ data class DialogOptions(
     val securePolicy: SecureFlagPolicy = SecureFlagPolicy.Inherit,
 )
 
+/**
+ * Converts a [DialogOptions] to [DialogProperties]
+ */
 @OptIn(ExperimentalComposeUiApi::class)
 fun DialogOptions.toDialogProperties() = DialogProperties(
     dismissOnBackPress = dismissOnBackPress,
@@ -84,13 +87,22 @@ data class BottomSheetOptions(
     val confirmStateChange: (state: ModalBottomSheetValue) -> Boolean = { true }
 )
 
-fun screenNode(content: @Composable () -> Unit) = object : Screen {
+/**
+ * Helper for creating a [Screen] instance.
+ */
+@Suppress("FunctionNaming")
+fun Screen(content: @Composable () -> Unit) = object : Screen {
 
     @Composable
     override fun Content() = content()
 }
 
-fun dialogNode(
+
+/**
+ * Helper for creating a [Dialog] instance.
+ */
+@Suppress("FunctionNaming")
+fun Dialog(
     dialogOptions: DialogOptions = DialogOptions(),
     content: @Composable () -> Unit
 ) = object : Dialog {
@@ -102,7 +114,12 @@ fun dialogNode(
     override fun Content() = content()
 }
 
-fun bottomSheetNode(
+
+/**
+ * Helper for creating a [BottomSheet] instance.
+ */
+@Suppress("FunctionNaming")
+fun BottomSheet(
     bottomSheetOptions: BottomSheetOptions = BottomSheetOptions(),
     content: @Composable () -> Unit
 ) = object : BottomSheet {

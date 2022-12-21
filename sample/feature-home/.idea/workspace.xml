@@ -4,67 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="056000dd-d0e0-49ff-af06-4b4a6823cc53" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../feature-welcome/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../feature-welcome/build.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../feature-welcome/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../app/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/../app/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/google-services.json" beforeDir="false" afterPath="$PROJECT_DIR$/../app/google-services.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/proguard-rules.pro" beforeDir="false" afterPath="$PROJECT_DIR$/../app/proguard-rules.pro" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/androidTest/java/com/roudikk/navigator/sample/BottomNavNavigationTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/androidTest/java/com/roudikk/navigator/sample/BottomNavNavigationTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/androidTest/java/com/roudikk/navigator/sample/DetailsNavigationTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/androidTest/java/com/roudikk/navigator/sample/DetailsNavigationTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/androidTest/java/com/roudikk/navigator/sample/DialogsNavigationTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/androidTest/java/com/roudikk/navigator/sample/DialogsNavigationTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/androidTest/java/com/roudikk/navigator/sample/NestedNavigationTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/androidTest/java/com/roudikk/navigator/sample/NestedNavigationTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/androidTest/java/com/roudikk/navigator/sample/WelcomeNavigationTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/androidTest/java/com/roudikk/navigator/sample/WelcomeNavigationTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/androidTest/java/com/roudikk/navigator/sample/utils/RuleExtensions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/androidTest/java/com/roudikk/navigator/sample/utils/RuleExtensions.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/DeepLinkViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/DeepLinkViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/navigation/NavigationExtensions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/navigation/NavigationExtensions.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/navigation/Transitions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/navigation/Transitions.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/composables/NavigationAnimationPreview.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/composables/NavigationAnimationPreview.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/composables/SampleSurfaceContainer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/composables/SampleSurfaceContainer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/screens/bottomnav/BottomNavScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/screens/bottomnav/BottomNavScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/screens/details/DetailsEventEffect.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/screens/details/DetailsEventEffect.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/screens/details/DetailsList.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/screens/details/DetailsList.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/screens/details/DetailsScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/screens/details/DetailsScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/screens/details/DetailsViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/screens/details/DetailsViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/screens/dialogs/BlockingBottomSheet.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/screens/dialogs/BlockingBottomSheet.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/screens/dialogs/BlockingDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/screens/dialogs/BlockingDialog.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/screens/dialogs/CancelableDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/screens/dialogs/CancelableDialog.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/screens/dialogs/DialogsScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/screens/dialogs/DialogsScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/screens/home/HomeEventEffect.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/screens/home/HomeEventEffect.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/screens/home/HomeScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/screens/home/HomeScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/screens/home/HomeViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/screens/home/HomeViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/screens/navigationtree/NavigationTreeScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/screens/navigationtree/NavigationTreeScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/screens/nested/NestedScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/screens/nested/NestedScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/screens/nested/ParentNestedScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/screens/nested/ParentNestedScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/screens/settings/SettingsScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/screens/settings/SettingsScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/screens/welcome/WelcomeScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/screens/welcome/WelcomeScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/theme/Color.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/theme/Color.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/theme/Theme.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/theme/Theme.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/java/com/roudikk/navigator/sample/ui/theme/Type.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/roudikk/navigator/sample/ui/theme/Type.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/drawable-v24/splash_icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/drawable-v24/splash_icon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/drawable/splash_screen.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/drawable/splash_screen.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/drawable/splash_screen_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/drawable/splash_screen_background.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-hdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/mipmap-hdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-ldpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/mipmap-ldpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-mdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/mipmap-mdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-tvdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/mipmap-tvdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-xhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/mipmap-xhdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-xxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/mipmap-xxhdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/raw/welcome_animation.json" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/raw/welcome_animation.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/values-night/themes.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/values-night/themes.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/values/attrs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/values/attrs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/values/colors.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/values/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/values/themes.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/values/themes.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/xml/backup_rules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/xml/backup_rules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app/src/main/res/xml/data_extraction_rules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/xml/data_extraction_rules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../settings.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/../../settings.gradle.kts" afterDir="false" />
-    </list>
+    <list default="true" id="056000dd-d0e0-49ff-af06-4b4a6823cc53" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -75,6 +15,9 @@
       <ProjectState />
     </projectState>
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectId" id="2J1HKwEua6uAWBvyzsMtn4zn136" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -82,13 +25,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "settings.editor.selected.configurable": "MTConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;MTConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -99,5 +42,16 @@
       <updated>1671238611392</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

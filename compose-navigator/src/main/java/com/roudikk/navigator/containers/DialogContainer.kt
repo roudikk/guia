@@ -8,10 +8,13 @@ import androidx.compose.ui.window.Dialog
 import com.roudikk.navigator.animation.ProvideNavigationVisibilityScope
 import com.roudikk.navigator.backstack.BackStackEntry
 import com.roudikk.navigator.core.Dialog
-import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.toDialogProperties
 import com.roudikk.navigator.extensions.popBackstack
 
+/**
+ * Renders a Compose Dialog if a [Navigator]'s current entry is a [Dialog].
+ */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun Navigator.DialogContainer(

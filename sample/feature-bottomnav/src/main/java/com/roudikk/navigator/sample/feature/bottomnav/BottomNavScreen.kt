@@ -30,16 +30,17 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.NavigatorBuilderScope
-import com.roudikk.navigator.backstack.DefaultStackBackHandler
+import com.roudikk.navigator.backstack.navhost.StackHistoryBackHandler
+import com.roudikk.navigator.containers.NavContainer
+import com.roudikk.navigator.core.NavigatorBuilderScope
+import com.roudikk.navigator.core.rememberNavigator
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popToRoot
-import com.roudikk.navigator.navhost.NavContainer
 import com.roudikk.navigator.navhost.NavHost
 import com.roudikk.navigator.navhost.StackEntry
 import com.roudikk.navigator.navhost.StackKey
 import com.roudikk.navigator.navhost.rememberNavHost
-import com.roudikk.navigator.rememberNavigator
+import com.roudikk.navigator.sample.feature.common.composables.sampleBottomSheetOptions
 import com.roudikk.navigator.sample.feature.common.deeplink.BottomNavDestination.DialogsTab
 import com.roudikk.navigator.sample.feature.common.deeplink.BottomNavDestination.HomeTab
 import com.roudikk.navigator.sample.feature.common.deeplink.BottomNavDestination.NavigationTreeTab
@@ -49,7 +50,6 @@ import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination.B
 import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination.BlockingDialog
 import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination.Cancelable
 import com.roudikk.navigator.sample.feature.common.deeplink.HomeDestination.Details
-import com.roudikk.navigator.sample.feature.common.composables.sampleBottomSheetOptions
 import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
 import com.roudikk.navigator.sample.feature.details.api.DetailsKey
@@ -123,7 +123,7 @@ fun BottomNavScreen(
 
     BottomNavContent(navHost)
 
-    navHost.DefaultStackBackHandler(HomeStackKey)
+    navHost.StackHistoryBackHandler()
 
     LaunchedEffect(deepLinkViewModel.destinations) {
         navHost.deeplink(deepLinkViewModel)

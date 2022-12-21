@@ -8,6 +8,7 @@ import androidx.compose.animation.core.snap
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.with
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,12 +32,19 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.core.BottomSheetSetup
+import com.roudikk.navigator.animation.EnterExitTransition
 import com.roudikk.navigator.backstack.BackStackEntry
 import com.roudikk.navigator.core.BottomSheet
-import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.core.BottomSheetSetup
+import com.roudikk.navigator.core.NavigationNode
+import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.extensions.popBackstack
 
+/**
+ * Creates a [ModalBottomSheetState], however this one is not saveable,
+ * since the initial state of the bottom sheet is controlled by the current
+ * state of the navigator.
+ */
 @Composable
 @ExperimentalMaterialApi
 private fun rememberBottomSheetState(
@@ -54,7 +62,10 @@ private fun rememberBottomSheetState(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
+/**
+ * Renders a Compose BottomSheet if a [Navigator]'s current entry is a [BottomSheet].
+ */
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun Navigator.BottomSheetContainer(
     content: @Composable (BackStackEntry) -> Unit,
@@ -62,15 +73,13 @@ internal fun Navigator.BottomSheetContainer(
     bottomSheetSetup: BottomSheetSetup,
     container: @Composable () -> Unit
 ) {
-    val localDensity = LocalDensity.current
-
-    val destination by remember { derivedStateOf { navigationEntries.last() } }
+    val currentEntry by remember { derivedStateOf { navigationEntries.last() } }
     val navigationNode = bottomSheetEntry?.navigationEntry?.let(::navigationNode) as? BottomSheet
-    val confirmStateChange by remember(destination) {
+    val confirmStateChange by remember(navigationNode) {
         derivedStateOf {
             { sheetValue: ModalBottomSheetValue ->
-                val node = navigationNode(destination)
-                node !is BottomSheet || node.bottomSheetOptions.confirmStateChange(sheetValue)
+                navigationNode !is BottomSheet ||
+                    navigationNode.bottomSheetOptions.confirmStateChange(sheetValue)
             }
         }
     }
@@ -85,14 +94,7 @@ internal fun Navigator.BottomSheetContainer(
         confirmStateChange = confirmStateChange
     )
 
-    var contentHeightPixels by remember(bottomSheetEntry) {
-        mutableStateOf(with(localDensity) { 1.dp.toPx() })
-    }
-
-    val contentHeightDp by remember(contentHeightPixels) {
-        derivedStateOf { with(localDensity) { contentHeightPixels.toDp() } }
-    }
-
+    // Make sure the bottom sheet is shown when the bottom sheet entry is available.
     LaunchedEffect(bottomSheetEntry) {
         if (bottomSheetEntry != null) {
             bottomSheetState.show()
@@ -101,6 +103,9 @@ internal fun Navigator.BottomSheetContainer(
         }
     }
 
+    // If the user swipes the bottom sheet down, the state would be updated to 'Hidden'
+    // So we make sure to pop the back stack so the state of this container updates and the sheet is
+    // hidden.
     LaunchedEffect(bottomSheetState.currentValue) {
         if (bottomSheetEntry != null && bottomSheetState.currentValue == ModalBottomSheetValue.Hidden) {
             popBackstack()
@@ -117,52 +122,87 @@ internal fun Navigator.BottomSheetContainer(
         scrimColor = bottomSheetSetup.scrimColor,
         sheetShape = RoundedCornerShape(0.dp),
         sheetContent = {
-            bottomSheetSetup.bottomSheetContainer(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .then(
-                        if (contentHeightDp > 1.dp) {
-                            Modifier.height(contentHeightDp)
-                        } else Modifier
-                    )
-                    .then(bottomSheetEntry?.navigationEntry
-                        ?.let {
-                            (navigationNode as BottomSheet).bottomSheetOptions.modifier
-                        } ?: Modifier)
-            ) {
-                AnimatedContent(
-                    modifier = Modifier.fillMaxWidth(),
-                    targetState = bottomSheetEntry,
-                    transitionSpec = {
-                        // Only animate bottom sheet content when navigating between
-                        // bottom sheet destinations.
-                        if (navigationNode(destination) !is BottomSheet && targetState != null) {
-                            EnterTransition.None
-                        } else {
-                            currentTransition.enter
-                        } with if (initialState != null && navigationNode !is BottomSheet) {
-                            fadeOut(animationSpec = snap(delayMillis = 300))
-                        } else {
-                            currentTransition.exit
-                        }
-                    }
-                ) { bottomSheetEntry ->
-                    if (bottomSheetEntry != null) {
-                        Box(
-                            modifier = Modifier
-                                .testTag("BottomSheetContainer")
-                                .onGloballyPositioned {
-                                    contentHeightPixels = it.size.height.toFloat()
-                                },
-                            contentAlignment = Alignment.BottomCenter
-                        ) {
-                            content(bottomSheetEntry)
-                        }
-                    } else {
-                        Box(modifier = Modifier.height(contentHeightDp))
-                    }
-                }
-            }
+            BottomSheetContent(
+                bottomSheetSetup = bottomSheetSetup,
+                bottomSheetEntry = bottomSheetEntry,
+                navigationNode = navigationNode,
+                currentNavigationNode = navigationNode(currentEntry),
+                currentTransition = currentTransition,
+                content = content,
+            )
         },
     )
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+private fun ColumnScope.BottomSheetContent(
+    bottomSheetSetup: BottomSheetSetup,
+    bottomSheetEntry: BackStackEntry?,
+    navigationNode: NavigationNode?,
+    currentNavigationNode: NavigationNode,
+    currentTransition: EnterExitTransition,
+    content: @Composable (BackStackEntry) -> Unit
+) {
+    val localDensity = LocalDensity.current
+
+    // The content animation and dismissing of bottom sheet looks weird when the content is suddenly
+    // removed, this make sure the content's height is preserved even when its removed so the
+    // animations and the dismissal the bottom sheet are smoother/
+    var contentHeightDp by remember { mutableStateOf(with(localDensity) { 1.toDp() }) }
+
+    bottomSheetSetup.bottomSheetContainer(
+        modifier = Modifier
+            .align(Alignment.CenterHorizontally)
+            .then(
+                if (contentHeightDp > 1.dp) {
+                    Modifier.height(contentHeightDp)
+                } else {
+                    Modifier
+                }
+            )
+            .then(
+                bottomSheetEntry?.navigationEntry
+                    ?.let {
+                        (navigationNode as BottomSheet).bottomSheetOptions.modifier
+                    } ?: Modifier
+            )
+    ) {
+        AnimatedContent(
+            modifier = Modifier.fillMaxWidth(),
+            targetState = bottomSheetEntry,
+            transitionSpec = {
+                // Only animate bottom sheet content when navigating between
+                // bottom sheet destinations.
+                if (currentNavigationNode !is BottomSheet && targetState != null) {
+                    EnterTransition.None
+                } else {
+                    currentTransition.enter
+                } with if (initialState != null && navigationNode !is BottomSheet) {
+                    fadeOut(animationSpec = snap(delayMillis = 300))
+                } else {
+                    currentTransition.exit
+                }
+            }
+        ) { bottomSheetEntry ->
+            if (bottomSheetEntry != null) {
+                Box(
+                    modifier = Modifier
+                        .testTag("BottomSheetContainer")
+                        .onGloballyPositioned {
+                            contentHeightDp = with(localDensity) {
+                                it.size.height
+                                    .toFloat()
+                                    .toDp()
+                            }
+                        },
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    content(bottomSheetEntry)
+                }
+            } else {
+                Box(modifier = Modifier.height(contentHeightDp))
+            }
+        }
+    }
 }

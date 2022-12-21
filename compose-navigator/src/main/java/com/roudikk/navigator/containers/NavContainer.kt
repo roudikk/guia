@@ -1,4 +1,4 @@
-package com.roudikk.navigator.compose
+package com.roudikk.navigator.containers
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
@@ -8,12 +8,9 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.roudikk.navigator.Navigator
 import com.roudikk.navigator.backstack.rememberBackStackManager
-import com.roudikk.navigator.containers.BottomSheetContainer
-import com.roudikk.navigator.containers.DialogContainer
-import com.roudikk.navigator.containers.ScreenContainer
 import com.roudikk.navigator.core.BottomSheetSetup
+import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.Screen
 import com.roudikk.navigator.extensions.LocalNavigator
 import com.roudikk.navigator.extensions.LocalParentNavigator

@@ -8,8 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.roudikk.navigator.animation.ProvideNavigationVisibilityScope
 import com.roudikk.navigator.backstack.BackStackEntry
-import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.core.Screen
 
+/**
+ * Renders the content of a screen if a [Navigator]'s current entry is a [Screen].
+ */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun Navigator.ScreenContainer(

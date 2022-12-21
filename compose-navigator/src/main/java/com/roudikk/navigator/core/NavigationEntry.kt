@@ -15,7 +15,7 @@ import java.util.UUID
 internal data class NavigationEntry internal constructor(
     val navigationKey: NavigationKey,
     val id: String
-): Parcelable {
+) : Parcelable {
 
     constructor(
         navigationKey: NavigationKey

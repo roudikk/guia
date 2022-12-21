@@ -1,6 +1,6 @@
 package com.roudikk.navigator.sample.feature.nested
 
-import com.roudikk.navigator.NavigatorBuilderScope
+import com.roudikk.navigator.core.NavigatorBuilderScope
 import com.roudikk.navigator.sample.feature.nested.api.NestedKey
 import com.roudikk.navigator.sample.feature.nested.api.ParentNestedKey
 

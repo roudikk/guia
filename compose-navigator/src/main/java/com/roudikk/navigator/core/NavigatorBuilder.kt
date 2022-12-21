@@ -1,31 +1,24 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.roudikk.navigator
+package com.roudikk.navigator.core
 
 import androidx.compose.runtime.Composable
 import com.roudikk.navigator.animation.EnterExitTransition
 import com.roudikk.navigator.animation.NavigationTransition
-import com.roudikk.navigator.core.BottomSheetOptions
-import com.roudikk.navigator.core.DialogOptions
-import com.roudikk.navigator.core.NavigationKey
-import com.roudikk.navigator.core.NavigationNode
-import com.roudikk.navigator.core.bottomSheetNode
-import com.roudikk.navigator.core.dialogNode
-import com.roudikk.navigator.core.screenNode
-import com.roudikk.navigator.extensions.AssociationsMap
 import com.roudikk.navigator.extensions.NavigationNodeTransition
+import com.roudikk.navigator.extensions.PresentationsMap
 import com.roudikk.navigator.extensions.TransitionsMap
 import kotlin.reflect.KClass
 
 class NavigatorBuilder internal constructor(
-    internal val associations: AssociationsMap = hashMapOf(),
+    internal val presentations: PresentationsMap = hashMapOf(),
     internal val transitions: TransitionsMap = hashMapOf(),
     internal val defaultTransition: NavigationNodeTransition =
         { _, _, _ -> EnterExitTransition.None }
 )
 
 class NavigatorBuilderScope internal constructor() {
-    private val associations: AssociationsMap = hashMapOf()
+    private val presentations: PresentationsMap = hashMapOf()
     private val transitions: TransitionsMap = hashMapOf()
     private var defaultTransition: NavigationNodeTransition =
         { _, _, _ -> EnterExitTransition.None }
@@ -34,7 +27,7 @@ class NavigatorBuilderScope internal constructor() {
         keyClass: KClass<NavigationKey>,
         navigationNodeBuilder: (NavigationKey) -> NavigationNode
     ) {
-        associations[keyClass] = navigationNodeBuilder
+        presentations[keyClass] = navigationNodeBuilder
     }
 
     inline fun <reified Key : NavigationKey> navigationNode(
@@ -50,7 +43,7 @@ class NavigatorBuilderScope internal constructor() {
         noinline content: @Composable (Key) -> Unit
     ) {
         navigationNode<Key> {
-            screenNode { content(it) }
+            Screen { content(it) }
         }
     }
 
@@ -59,7 +52,7 @@ class NavigatorBuilderScope internal constructor() {
         noinline content: @Composable (Key) -> Unit
     ) {
         navigationNode<Key> {
-            dialogNode(dialogOptions) { content(it) }
+            Dialog(dialogOptions) { content(it) }
         }
     }
 
@@ -68,7 +61,7 @@ class NavigatorBuilderScope internal constructor() {
         noinline content: @Composable (Key) -> Unit
     ) {
         navigationNode<Key> {
-            bottomSheetNode(bottomSheetOptions) { content(it) }
+            BottomSheet(bottomSheetOptions) { content(it) }
         }
     }
 
@@ -131,7 +124,7 @@ class NavigatorBuilderScope internal constructor() {
     }
 
     internal fun build() = NavigatorBuilder(
-        associations = associations,
+        presentations = presentations,
         transitions = transitions,
         defaultTransition = defaultTransition
     )

@@ -14,20 +14,22 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSavedStateRegistryOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistry
 import com.roudikk.navigator.core.BottomSheet
-import com.roudikk.navigator.core.NavigationEntry
 import com.roudikk.navigator.core.Dialog
-import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.core.NavigationEntry
+import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.Screen
 import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
+/**
+ * Creates an instance a saveable instance of a [BackStackManager].
+ */
 @Composable
 internal fun rememberBackStackManager(navigator: Navigator): BackStackManager {
     val application = LocalContext.current.applicationContext as? Application
@@ -97,9 +99,9 @@ internal class BackStackManager(
         }
     }
 
-    private val viewModelStoreProvider: ViewModelStoreProvider = ViewModelProvider(
+    private val viewModelStoreProvider: BackStackViewModel = ViewModelProvider(
         viewModelStoreOwner
-    )["back-stack-manager-$id", NavHostViewModel::class.java]
+    )["back-stack-manager-$id", BackStackViewModel::class.java]
 
     private val backstackIds by derivedStateOf {
         navigator.navigationEntries.map { it.id }
@@ -141,13 +143,13 @@ internal class BackStackManager(
             .filter { it !in backStackEntryGroup.entries }
             .forEach { it.maxLifecycleState = minOf(it.maxLifecycleState, Lifecycle.State.STARTED) }
 
-        val goingToDialog = navigator.navigationNode(currentDestination) is Dialog
-                && destinations.getOrNull(destinations.lastIndex - 1)
-            ?.let(navigator::navigationNode) !is Dialog
+        val goingToDialog = navigator.navigationNode(currentDestination) is Dialog &&
+            destinations.getOrNull(destinations.lastIndex - 1)
+                ?.let(navigator::navigationNode) !is Dialog
 
-        val goingToBottomSheet = navigator.navigationNode(currentDestination) is BottomSheet
-                && destinations.getOrNull(destinations.lastIndex - 1)
-            ?.let(navigator::navigationNode) !is BottomSheet
+        val goingToBottomSheet = navigator.navigationNode(currentDestination) is BottomSheet &&
+            destinations.getOrNull(destinations.lastIndex - 1)
+                ?.let(navigator::navigationNode) !is BottomSheet
 
         backStackEntryGroup.entries.forEach {
             if (goingToDialog || goingToBottomSheet) {
@@ -167,17 +169,26 @@ internal class BackStackManager(
     init {
         hostLifecycle.addObserver(lifecycleEventObserver)
 
+        // Clear components of restored entries
         restoredEntryIds
             .filter { it !in backstackIds }
             .forEach(::removeComponents)
 
+        // Create back stack entries for restored navigation entries
         navigator.navigationEntries
             .filter { it.id in restoredEntryIds }
             .forEach(::createBackStackEntry)
 
+        // Make sure the back stack entries are initialized with the proper lifecycles
         updateLifecycles()
     }
 
+    /**
+     * Creates a [BackStackEntry] from the given [NavigationEntry].
+     *
+     * The [SaveableStateHolder] would be the state holder associated with a [Navigator].
+     * The [ViewModelStore] is received from [viewModelStoreProvider] created in the back stack manager.l
+     */
     private fun createBackStackEntry(navigationEntry: NavigationEntry): BackStackEntry {
         return backStackEntries.getOrPut(navigationEntry.id) {
             BackStackEntry(
@@ -189,7 +200,13 @@ internal class BackStackManager(
         }
     }
 
-    private fun initialBackStackState(backStackLifecycleOwner: BackStackLifecycleOwner) {
+    /**
+     * Initializes a [BackStackEntry] with the proper state.
+     *
+     * First, we make sure the [hostLifecycleState] is not restored before restoring the saved state.
+     * Then, we update the lifecycle given the host lifecycle and [Lifecycle.State.STARTED].
+     */
+    private fun initialBackStackState(backStackLifecycleOwner: BackStackEntry) {
         if (hostLifecycleState != Lifecycle.State.DESTROYED) {
             val key = savedStateKey(backStackLifecycleOwner.id)
             savedStateRegistry.consumeRestoredStateForKey(key).let { savedState ->
@@ -205,6 +222,10 @@ internal class BackStackManager(
         backStackLifecycleOwner.maxLifecycleState = Lifecycle.State.STARTED
     }
 
+    /**
+     * When the back stack manager's container is disposed, we update all entries to the proper lifecycle
+     * and remove the lifecycle observer.
+     */
     fun onDispose() {
         backStackEntries.values.forEach {
             it.navHostLifecycleState = Lifecycle.State.DESTROYED
@@ -212,11 +233,24 @@ internal class BackStackManager(
         hostLifecycle.removeObserver(lifecycleEventObserver)
     }
 
+    /**
+     * When an entry has been disposed from the container, we update its lifecycle and the lifecycle
+     * of other entries.
+     */
     fun onEntryDisposed() {
         updateLifecycles()
         cleanupEntries()
     }
 
+    /**
+     * Make sure all entries' lifecycle is up to date.
+     *
+     * All entries that are not in the current [backStackEntryGroup] will be in the destroyed state.
+     *
+     * We then check the entries that are in the [backStackEntryGroup]:
+     * - If the entry is the current last entry in the [Navigator] backstack, it's resumed.
+     * - If the entry is not the current last entry, then it's paused.
+     */
     private fun updateLifecycles() {
         backStackEntries.values.filter { it !in backStackEntryGroup.value.entries }
             .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
@@ -230,12 +264,18 @@ internal class BackStackManager(
         }
     }
 
+    /**
+     * Removes the saved state and view model store given an [entryId]
+     */
     private fun removeComponents(entryId: String) {
         savedStateRegistry.unregisterSavedStateProvider(savedStateKey(entryId))
         viewModelStoreProvider.removeViewModelStore(entryId)
         saveableStateHolder.removeState(entryId)
     }
 
+    /**
+     * Destroy and remove all components of all the entries.
+     */
     private fun cleanupEntries() {
         backStackEntries.keys.filter { it !in backstackIds }.forEach { entryId ->
             backStackEntries.remove(entryId)?.let { entry ->
@@ -245,34 +285,15 @@ internal class BackStackManager(
         }
     }
 
+    /**
+     * Unique key for the saved stack for the current back stack manager.
+     */
     private fun savedStateKey(id: String) = "back-stack-manager-$id"
-
-    fun navigationNode(navigationEntry: NavigationEntry) = navigator.navigationNode(navigationEntry)
 }
 
-internal interface ViewModelStoreProvider {
-    fun getViewModelStore(id: String): ViewModelStore
-    fun removeViewModelStore(id: String)
-}
-
-internal class NavHostViewModel : ViewModel(), ViewModelStoreProvider {
-
-    private val viewModelStores = mutableMapOf<String, ViewModelStore>()
-
-    override fun getViewModelStore(id: String) = viewModelStores.getOrPut(id) {
-        ViewModelStore()
-    }
-
-    override fun removeViewModelStore(id: String) {
-        viewModelStores.remove(id)?.also { it.clear() }
-    }
-
-    override fun onCleared() {
-        viewModelStores.values.forEach { it.clear() }
-        viewModelStores.clear()
-    }
-}
-
+/**
+ * Used to save and restore the state of a [BackStackManager].
+ */
 @Parcelize
 private data class BackStackManagerState(
     val id: String,

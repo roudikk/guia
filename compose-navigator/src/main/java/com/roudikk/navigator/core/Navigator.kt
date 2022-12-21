@@ -1,4 +1,4 @@
-package com.roudikk.navigator
+package com.roudikk.navigator.core
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisallowComposableCalls
@@ -12,11 +12,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import com.roudikk.navigator.animation.EnterExitTransition
-import com.roudikk.navigator.core.NavigationEntry
-import com.roudikk.navigator.core.NavigationKey
-import com.roudikk.navigator.core.NavigationNode
 import com.roudikk.navigator.savedstate.navigatorSaver
 
+/**
+ * Creates a saveable instance of a [Navigator].
+ *
+ * @param initialKey, the initialKey to be added to the backstack.
+ * @param initialize, initialize the navigator before it is rendered.
+ * @param scope, scope for providing navigator rules, check [NavigatorBuilder].
+ */
 @Composable
 fun rememberNavigator(
     initialKey: NavigationKey,
@@ -41,6 +45,11 @@ fun rememberNavigator(
     }
 }
 
+/**
+ * The main component used for navigation.
+ *
+ * 
+ */
 class Navigator internal constructor(
     internal val initialKey: NavigationKey,
     internal val saveableStateHolder: SaveableStateHolder,
@@ -91,12 +100,12 @@ class Navigator internal constructor(
                 navigationEntry.navigationKey.navigationNode()
             } else {
                 val navigationKey = navigationEntry.navigationKey
-                return navigatorBuilder.associations[navigationKey::class]
+                return navigatorBuilder.presentations[navigationKey::class]
                     ?.invoke(navigationKey)
                     ?: error(
                         "NavigationKey: $navigationKey was not declared. " +
-                                "Call `screen/dialog/bottomSheet<MyKey> { MyComposable() }`" +
-                                " inside your Navigator rules."
+                            "Call `screen/dialog/bottomSheet<MyKey> { MyComposable() }`" +
+                            " inside your Navigator rules."
                     )
             }
         }

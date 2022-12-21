@@ -1,7 +1,7 @@
 package com.roudikk.navigator.extensions
 
 import androidx.compose.runtime.derivedStateOf
-import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.NavigationKey
 
 val Navigator.currentKey: NavigationKey

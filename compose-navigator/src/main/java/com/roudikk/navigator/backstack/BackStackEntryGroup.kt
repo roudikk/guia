@@ -1,6 +1,6 @@
 package com.roudikk.navigator.backstack
 
-import com.roudikk.navigator.Navigator
+import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.Screen
@@ -8,7 +8,8 @@ import com.roudikk.navigator.core.Screen
 /**
  * Collection of the currently visible [BackStackEntry]s.
  *
- * [BackStackEntryGroup] will be determined based on the current state of the [Navigator].
+ * A [BackStackEntryGroup] will be determined based on the current state of the [Navigator].
+ *
  * - [screenEntry] will be the last destination with navigation node being a [Screen], if it exists.
  * - [dialogEntry] will be the last destination if it is a [Dialog], if it exists.
  * - [bottomSheetEntry] could be either the last destination if it's a [BottomSheet] or the destination

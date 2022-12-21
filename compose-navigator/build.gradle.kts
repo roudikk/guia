@@ -11,7 +11,7 @@ val kotlinVersion = "1.7.20"
 val junit4Version = "4.13.2"
 val junit5Version = "5.8.2"
 val truthVersion = "1.1.3"
-val detektVersion = "1.21.0"
+val detektVersion = "1.22.0"
 val viewModelVersion = "2.5.1"
 
 plugins {
