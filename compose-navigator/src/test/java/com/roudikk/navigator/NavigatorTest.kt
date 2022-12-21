@@ -6,7 +6,7 @@ import org.junit.Test
 class NavigatorTest {
 
     @Test
-    fun navigator_initialize_containsInitialKey() {
+    fun initialize_containsInitialKey() {
         val navigationKey = TestNavigationKey()
         val navigator = navigatorWithKey(navigationKey)
 
@@ -18,7 +18,7 @@ class NavigatorTest {
     }
 
     @Test
-    fun navigator_setBackstack_updatesState() {
+    fun setBackstack_updatesState() {
         val navigationKey = TestNavigationKey()
         val navigator = navigatorWithKey(navigationKey)
 

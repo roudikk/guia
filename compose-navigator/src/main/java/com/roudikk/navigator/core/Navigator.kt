@@ -13,7 +13,6 @@ import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import com.roudikk.navigator.animation.EnterExitTransition
 import com.roudikk.navigator.containers.NavContainer
-import com.roudikk.navigator.extensions.currentKey
 import com.roudikk.navigator.savedstate.navigatorSaver
 
 /**
@@ -121,6 +120,7 @@ class Navigator internal constructor(
             "Backstack cannot be empty. Please pass at least one NavigationKey"
         }
 
+        val currentKey = navigationKeys.last()
         val isPop = backStack.contains(currentKey)
 
         // If the current transition is being overridden, then we use that transition and set it back
