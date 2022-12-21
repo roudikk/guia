@@ -1,8 +1,8 @@
 package com.roudikk.navigator.backstack
 
-import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Dialog
+import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.Screen
 
 /**

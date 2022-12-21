@@ -1,8 +1,6 @@
 import com.google.common.truth.Truth.assertThat
-import com.roudikk.navigator.core.Navigator
-import com.roudikk.navigator.core.NavigatorConfig
 import com.roudikk.navigator.TestNavigationKey
-import com.roudikk.navigator.TestSaveableStateHolder
+import com.roudikk.navigator.navigatorWithKey
 import org.junit.Test
 
 class NavigatorTest {
@@ -10,11 +8,7 @@ class NavigatorTest {
     @Test
     fun navigator_initialize_containsInitialKey() {
         val navigationKey = TestNavigationKey()
-        val navigator = Navigator(
-            initialKey = navigationKey,
-            saveableStateHolder = TestSaveableStateHolder(),
-            navigatorConfig = NavigatorConfig()
-        )
+        val navigator = navigatorWithKey(navigationKey)
 
         assertThat(navigator.backStack).isEqualTo(listOf(navigationKey))
         assertThat(navigator.navigationEntries.size).isEqualTo(1)
@@ -26,11 +20,7 @@ class NavigatorTest {
     @Test
     fun navigator_setBackstack_updatesState() {
         val navigationKey = TestNavigationKey()
-        val navigator = Navigator(
-            initialKey = navigationKey,
-            saveableStateHolder = TestSaveableStateHolder(),
-            navigatorConfig = NavigatorConfig()
-        )
+        val navigator = navigatorWithKey(navigationKey)
 
         val newKeys = (0 until 3).map { TestNavigationKey() }
 
@@ -43,5 +33,4 @@ class NavigatorTest {
         newKeys.forEach { assertThat(navigator.navigationEntriesMap[it]).isNotNull() }
         assertThat(navigator.navigationEntriesMap[navigationKey]).isNull()
     }
-
 }
