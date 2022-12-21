@@ -1,5 +1,6 @@
 package com.roudikk.navigator.core
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisallowComposableCalls
 import androidx.compose.runtime.derivedStateOf
@@ -11,6 +12,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import com.roudikk.navigator.animation.EnterExitTransition
+import com.roudikk.navigator.containers.NavContainer
+import com.roudikk.navigator.extensions.currentKey
 import com.roudikk.navigator.savedstate.navigatorSaver
 
 /**
@@ -18,18 +21,18 @@ import com.roudikk.navigator.savedstate.navigatorSaver
  *
  * @param initialKey, the initialKey to be added to the backstack.
  * @param initialize, initialize the navigator before it is rendered.
- * @param scope, scope for providing navigator rules, check [NavigatorBuilder].
+ * @param scope, scope for providing navigator rules, check [NavigatorConfig].
  */
 @Composable
 fun rememberNavigator(
     initialKey: NavigationKey,
     initialize: @DisallowComposableCalls (Navigator) -> Unit = {},
-    scope: @DisallowComposableCalls NavigatorBuilderScope.() -> Unit = {}
+    scope: @DisallowComposableCalls NavigatorConfigScope.() -> Unit = {}
 ): Navigator {
     val saveableStateHolder = rememberSaveableStateHolder()
     val resultManager = rememberResultManager()
     val navigatorRules = remember {
-        NavigatorBuilderScope()
+        NavigatorConfigScope()
             .apply(scope)
             .build()
     }
@@ -37,14 +40,14 @@ fun rememberNavigator(
     return rememberSaveable(
         saver = navigatorSaver(
             saveableStateHolder = saveableStateHolder,
-            navigatorBuilder = navigatorRules,
+            navigatorConfig = navigatorRules,
             resultManager = resultManager
         )
     ) {
         Navigator(
             initialKey = initialKey,
             saveableStateHolder = saveableStateHolder,
-            navigatorBuilder = navigatorRules,
+            navigatorConfig = navigatorRules,
             resultManager = resultManager
         ).apply(initialize)
     }
@@ -53,12 +56,18 @@ fun rememberNavigator(
 /**
  * The main component used for navigation.
  *
+ * The back stack can be updated using [setBackstack], for more conventional or complex
+ * navigation operations check the extensions in NavigationExtensions, or create your own.
  *
+ * @property overrideBackPress, enable or disable the current [BackHandler] used in the navigator's [NavContainer]
+ * @property overrideNextTransition, use this to override the next transition used in the next [setBackstack] call.
+ * After the back stack is set, this is reset back to null.
+ * @property backStack, the current back stack. To update, use [setBackstack].
  */
 class Navigator internal constructor(
     internal val initialKey: NavigationKey,
     internal val saveableStateHolder: SaveableStateHolder,
-    internal val navigatorBuilder: NavigatorBuilder,
+    internal val navigatorConfig: NavigatorConfig,
     resultManager: ResultManager
 ) : ResultManager by resultManager {
 
@@ -68,32 +77,36 @@ class Navigator internal constructor(
         private set
 
     internal var currentTransition by mutableStateOf(EnterExitTransition.None)
-    internal var destinationsMap = hashMapOf<NavigationKey, NavigationEntry>()
+    internal var navigationEntriesMap = hashMapOf<NavigationKey, NavigationEntry>()
     internal var navigationNodesMap = hashMapOf<NavigationEntry, NavigationNode>()
 
     internal val navigationEntries by derivedStateOf {
+        // Create a navigation entry for each back stack key.
         backStack.forEach {
-            destinationsMap.getOrPut(it) {
+            navigationEntriesMap.getOrPut(it) {
                 NavigationEntry(navigationKey = it)
             }
         }
 
-        destinationsMap.keys
+        // Remove all navigation entries that don't have a corresponding key anymore.
+        navigationEntriesMap.keys
             .filter { it !in backStack }
-            .forEach { destinationsMap.remove(it) }
+            .forEach { navigationEntriesMap.remove(it) }
 
-        val destinations = destinationsMap.values
+        val navigationEntries = navigationEntriesMap.values
             .toList()
             .sortedBy { backStack.indexOf(it.navigationKey) }
 
+        // Clear navigation nodes presentations that are no longer used.
         navigationNodesMap.keys
-            .filter { it !in destinations }
+            .filter { it !in navigationEntries }
             .forEach { navigationNodesMap.remove(it) }
 
-        destinations
+        navigationEntries
     }
 
     init {
+        // Initialize the back stack with the initial key.
         setBackstack(initialKey)
     }
 
@@ -108,16 +121,18 @@ class Navigator internal constructor(
             "Backstack cannot be empty. Please pass at least one NavigationKey"
         }
 
-        val currentKey = navigationKeys.last()
         val isPop = backStack.contains(currentKey)
 
+        // If the current transition is being overridden, then we use that transition and set it back
+        // to null, otherwise we check if the current backstack is not empty and get the appropriate
+        // transition from previous back to new backstack.
         if (overrideNextTransition != null) {
             currentTransition = overrideNextTransition!!
             overrideNextTransition = null
         } else if (backStack.isNotEmpty()) {
-            currentTransition = navigatorBuilder.transitions[currentKey::class]
+            currentTransition = navigatorConfig.transitions[currentKey::class]
                 ?.invoke(backStack.last(), currentKey, isPop)
-                ?: navigatorBuilder.defaultTransition(backStack.last(), currentKey, isPop)
+                ?: navigatorConfig.defaultTransition(backStack.last(), currentKey, isPop)
         }
 
         backStack = navigationKeys
@@ -130,7 +145,7 @@ internal fun Navigator.navigationNode(navigationEntry: NavigationEntry) =
             navigationEntry.navigationKey.navigationNode()
         } else {
             val navigationKey = navigationEntry.navigationKey
-            return navigatorBuilder.presentations[navigationKey::class]
+            return navigatorConfig.presentations[navigationKey::class]
                 ?.invoke(navigationKey)
                 ?: error(
                     "NavigationKey: $navigationKey was not declared. " +

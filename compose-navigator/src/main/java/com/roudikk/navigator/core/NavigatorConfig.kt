@@ -10,14 +10,17 @@ import com.roudikk.navigator.extensions.PresentationsMap
 import com.roudikk.navigator.extensions.TransitionsMap
 import kotlin.reflect.KClass
 
-class NavigatorBuilder internal constructor(
+/**
+ * A Navigator's
+ */
+class NavigatorConfig internal constructor(
     internal val presentations: PresentationsMap = hashMapOf(),
     internal val transitions: TransitionsMap = hashMapOf(),
     internal val defaultTransition: NavigationNodeTransition =
         { _, _, _ -> EnterExitTransition.None }
 )
 
-class NavigatorBuilderScope internal constructor() {
+class NavigatorConfigScope internal constructor() {
     private val presentations: PresentationsMap = hashMapOf()
     private val transitions: TransitionsMap = hashMapOf()
     private var defaultTransition: NavigationNodeTransition =
@@ -123,7 +126,7 @@ class NavigatorBuilderScope internal constructor() {
         }
     }
 
-    internal fun build() = NavigatorBuilder(
+    internal fun build() = NavigatorConfig(
         presentations = presentations,
         transitions = transitions,
         defaultTransition = defaultTransition

@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package com.roudikk.navigator.extensions
 
 import androidx.compose.runtime.derivedStateOf

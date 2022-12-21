@@ -1,6 +1,6 @@
 import com.google.common.truth.Truth.assertThat
 import com.roudikk.navigator.core.Navigator
-import com.roudikk.navigator.core.NavigatorBuilder
+import com.roudikk.navigator.core.NavigatorConfig
 import com.roudikk.navigator.TestNavigationKey
 import com.roudikk.navigator.TestSaveableStateHolder
 import org.junit.Test
@@ -13,14 +13,14 @@ class NavigatorTest {
         val navigator = Navigator(
             initialKey = navigationKey,
             saveableStateHolder = TestSaveableStateHolder(),
-            navigatorBuilder = NavigatorBuilder()
+            navigatorConfig = NavigatorConfig()
         )
 
         assertThat(navigator.backStack).isEqualTo(listOf(navigationKey))
         assertThat(navigator.navigationEntries.size).isEqualTo(1)
         assertThat(navigator.navigationEntries.any { it.navigationKey == navigationKey }).isTrue()
-        assertThat(navigator.destinationsMap.size).isEqualTo(1)
-        assertThat(navigator.destinationsMap[navigationKey]).isNotNull()
+        assertThat(navigator.navigationEntriesMap.size).isEqualTo(1)
+        assertThat(navigator.navigationEntriesMap[navigationKey]).isNotNull()
     }
 
     @Test
@@ -29,7 +29,7 @@ class NavigatorTest {
         val navigator = Navigator(
             initialKey = navigationKey,
             saveableStateHolder = TestSaveableStateHolder(),
-            navigatorBuilder = NavigatorBuilder()
+            navigatorConfig = NavigatorConfig()
         )
 
         val newKeys = (0 until 3).map { TestNavigationKey() }
@@ -39,9 +39,9 @@ class NavigatorTest {
         assertThat(navigator.backStack).isEqualTo(newKeys)
         assertThat(navigator.navigationEntries.size).isEqualTo(3)
         assertThat(navigator.navigationEntries.all { newKeys.contains(it.navigationKey) }).isTrue()
-        assertThat(navigator.destinationsMap.size).isEqualTo(3)
-        newKeys.forEach { assertThat(navigator.destinationsMap[it]).isNotNull() }
-        assertThat(navigator.destinationsMap[navigationKey]).isNull()
+        assertThat(navigator.navigationEntriesMap.size).isEqualTo(3)
+        newKeys.forEach { assertThat(navigator.navigationEntriesMap[it]).isNotNull() }
+        assertThat(navigator.navigationEntriesMap[navigationKey]).isNull()
     }
 
 }
