@@ -22,8 +22,8 @@ import kotlin.properties.Delegates
  *
  * A [BackStackLifecycleOwner] allows:
  * - Saving state bundle through [SavedStateRegistry]
- * - Proving [ViewModel]s through [ViewModelStore]
- * - Lifecycle handling since its a [LifecycleOwner]
+ * - Providing [ViewModel]s through [ViewModelStore]
+ * - Lifecycle handling as a [LifecycleOwner]
  */
 internal abstract class BackStackLifecycleOwner(
     private val viewModelStore: ViewModelStore,
