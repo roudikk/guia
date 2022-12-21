@@ -1,13 +1,13 @@
 package com.roudikk.navigator.sample.feature.bottomnav
 
-import com.roudikk.navigator.core.NavigatorConfigScope
+import com.roudikk.navigator.core.NavigatorConfigBuilder
 import com.roudikk.navigator.sample.feature.bottomnav.api.BottomNavKey
 
-fun NavigatorConfigScope.bottomNavNavigation(
-    homeNavigation: NavigatorConfigScope.() -> Unit,
-    nestedNavigation: NavigatorConfigScope.() -> Unit,
-    dialogsNavigation: NavigatorConfigScope.() -> Unit,
-    navigationTreeNavigation: NavigatorConfigScope.() -> Unit,
+fun NavigatorConfigBuilder.bottomNavNavigation(
+    homeNavigation: NavigatorConfigBuilder.() -> Unit,
+    nestedNavigation: NavigatorConfigBuilder.() -> Unit,
+    dialogsNavigation: NavigatorConfigBuilder.() -> Unit,
+    navigationTreeNavigation: NavigatorConfigBuilder.() -> Unit,
 ) {
     screen<BottomNavKey> {
         BottomNavScreen(

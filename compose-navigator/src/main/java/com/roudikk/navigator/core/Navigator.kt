@@ -21,19 +21,19 @@ import com.roudikk.navigator.savedstate.navigatorSaver
  *
  * @param initialKey, the initialKey to be added to the backstack.
  * @param initialize, initialize the navigator before it is rendered.
- * @param scope, scope for providing navigator rules, check [NavigatorConfig].
+ * @param builder, builder for providing navigator configuration, check [NavigatorConfig].
  */
 @Composable
 fun rememberNavigator(
     initialKey: NavigationKey,
     initialize: @DisallowComposableCalls (Navigator) -> Unit = {},
-    scope: @DisallowComposableCalls NavigatorConfigScope.() -> Unit = {}
+    builder: @DisallowComposableCalls NavigatorConfigBuilder.() -> Unit = {}
 ): Navigator {
     val saveableStateHolder = rememberSaveableStateHolder()
     val resultManager = rememberResultManager()
     val navigatorRules = remember {
-        NavigatorConfigScope()
-            .apply(scope)
+        NavigatorConfigBuilder()
+            .apply(builder)
             .build()
     }
 

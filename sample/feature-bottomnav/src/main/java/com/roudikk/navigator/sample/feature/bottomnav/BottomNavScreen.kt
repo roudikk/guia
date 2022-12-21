@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.navigator.backstack.navhost.StackHistoryBackHandler
 import com.roudikk.navigator.containers.NavContainer
-import com.roudikk.navigator.core.NavigatorConfigScope
+import com.roudikk.navigator.core.NavigatorConfigBuilder
 import com.roudikk.navigator.core.rememberNavigator
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popToRoot
@@ -67,30 +67,30 @@ import com.roudikk.navigator.sample.feature.nested.api.ParentNestedKey
 
 @Composable
 fun rememberBottomNavHost(
-    homeNavigation: NavigatorConfigScope.() -> Unit,
-    nestedNavigation: NavigatorConfigScope.() -> Unit,
-    dialogsNavigation: NavigatorConfigScope.() -> Unit,
-    navigationTreeNavigation: NavigatorConfigScope.() -> Unit,
+    homeNavigation: NavigatorConfigBuilder.() -> Unit,
+    nestedNavigation: NavigatorConfigBuilder.() -> Unit,
+    dialogsNavigation: NavigatorConfigBuilder.() -> Unit,
+    navigationTreeNavigation: NavigatorConfigBuilder.() -> Unit,
     initialize: @DisallowComposableCalls (NavHost) -> Unit,
 ): NavHost {
     val homeNavigator = rememberNavigator(
         initialKey = HomeKey(),
-        scope = homeNavigation
+        builder = homeNavigation
     )
 
     val nestedNavigator = rememberNavigator(
         initialKey = ParentNestedKey(),
-        scope = nestedNavigation
+        builder = nestedNavigation
     )
 
     val dialogsNavigator = rememberNavigator(
         initialKey = DialogsKey(),
-        scope = dialogsNavigation
+        builder = dialogsNavigation
     )
 
     val navigationTreeNavigator = rememberNavigator(
         initialKey = NavigationTreeKey(),
-        scope = navigationTreeNavigation
+        builder = navigationTreeNavigation
     )
 
     return rememberNavHost(
@@ -107,10 +107,10 @@ fun rememberBottomNavHost(
 
 @Composable
 fun BottomNavScreen(
-    homeNavigation: NavigatorConfigScope.() -> Unit,
-    nestedNavigation: NavigatorConfigScope.() -> Unit,
-    dialogsNavigation: NavigatorConfigScope.() -> Unit,
-    navigationTreeNavigation: NavigatorConfigScope.() -> Unit
+    homeNavigation: NavigatorConfigBuilder.() -> Unit,
+    nestedNavigation: NavigatorConfigBuilder.() -> Unit,
+    dialogsNavigation: NavigatorConfigBuilder.() -> Unit,
+    navigationTreeNavigation: NavigatorConfigBuilder.() -> Unit
 ) {
     val deepLinkViewModel = viewModel<DeepLinkViewModel>(LocalNavHostViewModelStoreOwner.current)
 

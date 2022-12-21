@@ -14,7 +14,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.roudikk.navigator.core.Navigator
-import com.roudikk.navigator.core.NavigatorConfigScope
+import com.roudikk.navigator.core.NavigatorConfigBuilder
 import com.roudikk.navigator.containers.NavContainer
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popTo
@@ -87,7 +87,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun NavigatorConfigScope.rootNavigation(
+    private fun NavigatorConfigBuilder.rootNavigation(
         screenWidth: Int
     ) {
         welcomeNavigation()

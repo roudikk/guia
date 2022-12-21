@@ -1,8 +1,8 @@
 package com.roudikk.navigator.sample.feature.welcome
 
-import com.roudikk.navigator.core.NavigatorConfigScope
+import com.roudikk.navigator.core.NavigatorConfigBuilder
 import com.roudikk.navigator.sample.feature.welcome.api.WelcomeKey
 
-fun NavigatorConfigScope.welcomeNavigation() {
+fun NavigatorConfigBuilder.welcomeNavigation() {
     screen<WelcomeKey> { WelcomeScreen() }
 }

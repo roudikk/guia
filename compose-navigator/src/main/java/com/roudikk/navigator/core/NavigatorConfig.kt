@@ -11,7 +11,11 @@ import com.roudikk.navigator.extensions.TransitionsMap
 import kotlin.reflect.KClass
 
 /**
- * A Navigator's
+ * A Navigator's configuration.
+ *
+ * @property presentations, defines how a [NavigationKey] is rendered using a [NavigationNode].
+ * @property transitions, defines how transitions happen between [NavigationKey].
+ * @property defaultTransition, the default transition between [NavigationKey]s.
  */
 class NavigatorConfig internal constructor(
     internal val presentations: PresentationsMap = hashMapOf(),
@@ -20,7 +24,10 @@ class NavigatorConfig internal constructor(
         { _, _, _ -> EnterExitTransition.None }
 )
 
-class NavigatorConfigScope internal constructor() {
+/**
+ * Builder for a [NavigatorConfig].
+ */
+class NavigatorConfigBuilder internal constructor() {
     private val presentations: PresentationsMap = hashMapOf()
     private val transitions: TransitionsMap = hashMapOf()
     private var defaultTransition: NavigationNodeTransition =

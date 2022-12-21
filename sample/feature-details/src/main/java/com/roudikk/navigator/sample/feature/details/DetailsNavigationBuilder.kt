@@ -3,7 +3,7 @@ package com.roudikk.navigator.sample.feature.details
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.core.NavigatorConfigScope
+import com.roudikk.navigator.core.NavigatorConfigBuilder
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.DialogOptions
@@ -31,7 +31,7 @@ class DetailsBottomSheetKey(val item: String) : NavigationKey.WithNode<BottomShe
 @Parcelize
 internal class DynamicDetailsKey(val item: String) : NavigationKey
 
-fun NavigatorConfigScope.detailsNavigation(screenWidth: Int) {
+fun NavigatorConfigBuilder.detailsNavigation(screenWidth: Int) {
     if (screenWidth <= 600) {
         dialog<DynamicDetailsKey>(
             dialogOptions = DialogOptions(modifier = Modifier.widthIn(max = 320.dp))
