@@ -5,6 +5,7 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.with
 import androidx.compose.foundation.layout.Box
@@ -35,9 +36,9 @@ import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.animation.EnterExitTransition
 import com.roudikk.navigator.backstack.BackStackEntry
 import com.roudikk.navigator.core.BottomSheet
-import com.roudikk.navigator.core.BottomSheetSetup
 import com.roudikk.navigator.core.NavigationNode
 import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.core.navigationNode
 import com.roudikk.navigator.extensions.popBackstack
 
 /**
@@ -206,3 +207,25 @@ private fun ColumnScope.BottomSheetContent(
         }
     }
 }
+
+/**
+ * Provide extra bottom sheet options.
+ *
+ * @property scrimColor the scrim color behind the bottom sheet and on top of the content behind it.
+ * @property bottomSheetContainer use this when the navigation requires animating between content
+ * of two bottom sheets using [Navigator.navigate] instead of animating the transitions between 2
+ * bottom sheets, this container will be the parent of all the bottom sheets defined in the app.
+ */
+data class BottomSheetSetup(
+    val scrimColor: Color = Color.Black.copy(alpha = 0.4F),
+    val animationSpec: AnimationSpec<Float> = tween(300),
+    val skipHalfExpanded: Boolean = false,
+    val bottomSheetContainer: @Composable (
+        modifier: Modifier,
+        content: @Composable () -> Unit
+    ) -> Unit = { modifier, content ->
+        Box(modifier = modifier) {
+            content()
+        }
+    }
+)

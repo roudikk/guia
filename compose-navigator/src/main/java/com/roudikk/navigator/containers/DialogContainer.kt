@@ -9,6 +9,7 @@ import com.roudikk.navigator.animation.ProvideNavigationVisibilityScope
 import com.roudikk.navigator.backstack.BackStackEntry
 import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.core.navigationNode
 import com.roudikk.navigator.core.toDialogProperties
 import com.roudikk.navigator.extensions.popBackstack
 

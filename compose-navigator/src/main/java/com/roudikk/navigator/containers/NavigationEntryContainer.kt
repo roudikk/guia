@@ -10,6 +10,7 @@ import com.roudikk.navigator.backstack.BackStackManager
 import com.roudikk.navigator.backstack.LocalProvider
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.core.navigationNode
 
 /**
  * Renders the [BackStackEntry].

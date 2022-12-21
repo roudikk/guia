@@ -7,7 +7,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import com.roudikk.navigator.extensions.clearResult
 import com.roudikk.navigator.extensions.navigate
-import com.roudikk.navigator.extensions.pushResult
+import com.roudikk.navigator.extensions.setResult
 import com.roudikk.navigator.extensions.requireNavigator
 import com.roudikk.navigator.sample.feature.common.navigation.requireRootNavigator
 import com.roudikk.navigator.sample.feature.details.api.DetailsKey
@@ -27,7 +27,7 @@ fun HomeEventEffect(
         when (event) {
             is HomeEvent.ShowToast -> context.showToast(event.item)
             is HomeEvent.OpenDetails -> navigator.navigate(DetailsKey(event.item))
-            is HomeEvent.RefreshResult -> navigator.pushResult(DetailsResult(event.item))
+            is HomeEvent.RefreshResult -> navigator.setResult(DetailsResult(event.item))
             is HomeEvent.OpenSettings -> rootNavigator.navigate(SettingsKey())
             is HomeEvent.ClearResult -> navigator.clearResult<DetailsResult>()
             else -> return@LaunchedEffect

@@ -24,6 +24,7 @@ import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.NavigationEntry
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.core.navigationNode
 import kotlinx.parcelize.Parcelize
 import java.util.UUID
 

@@ -1,8 +1,8 @@
 package com.roudikk.navigator.extensions
 
 import androidx.compose.runtime.derivedStateOf
-import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.NavigationKey
+import com.roudikk.navigator.core.Navigator
 
 val Navigator.currentKey: NavigationKey
     get() = backStack.last()
@@ -52,10 +52,12 @@ fun Navigator.moveToTop(
     }
 
     return navigationKey?.let {
-        setBackstack(backStack.toMutableList().apply {
-            remove(navigationKey)
-            add(navigationKey)
-        })
+        setBackstack(
+            backStack.toMutableList().apply {
+                remove(navigationKey)
+                add(navigationKey)
+            }
+        )
         true
     } ?: false
 }

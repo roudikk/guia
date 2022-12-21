@@ -9,7 +9,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.roudikk.navigator.backstack.rememberBackStackManager
-import com.roudikk.navigator.core.BottomSheetSetup
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.Screen
 import com.roudikk.navigator.extensions.LocalNavigator

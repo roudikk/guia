@@ -5,7 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popBackstack
 import com.roudikk.navigator.extensions.popToRoot
-import com.roudikk.navigator.extensions.pushResult
+import com.roudikk.navigator.extensions.setResult
 import com.roudikk.navigator.extensions.replaceLast
 import com.roudikk.navigator.extensions.requireNavigator
 import com.roudikk.navigator.extensions.requireParentNavigator
@@ -76,7 +76,7 @@ fun DetailsEventEffect(
             }
 
             is DetailsEvent.SendResult -> {
-                navigator.pushResult(DetailsResult(event.result))
+                navigator.setResult(DetailsResult(event.result))
                 navigator.popToRoot()
             }
 

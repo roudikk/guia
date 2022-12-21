@@ -9,8 +9,8 @@ inline fun <reified Result : Any> Navigator.result(): Result? {
     return result(Result::class.java.simpleName) as Result?
 }
 
-inline fun <reified Result : Any> Navigator.pushResult(result: Result) {
-    pushResult(Result::class.java.simpleName, result)
+inline fun <reified Result : Any> Navigator.setResult(result: Result) {
+    setResult(Result::class.java.simpleName, result)
 }
 
 inline fun <reified Result : Any> Navigator.clearResult() {

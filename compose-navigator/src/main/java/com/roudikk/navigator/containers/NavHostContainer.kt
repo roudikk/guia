@@ -10,7 +10,6 @@ import androidx.compose.animation.with
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
-import com.roudikk.navigator.core.BottomSheetSetup
 import com.roudikk.navigator.extensions.LocalNavHost
 import com.roudikk.navigator.navhost.NavHost
 import com.roudikk.navigator.navhost.StackEntry
