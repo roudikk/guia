@@ -12,7 +12,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 
 /**
- * Represents a how a navigation key will be displayed in the navigation tree.
+ * Represents how a navigation key will be displayed in the navigation tree.
  */
 sealed interface NavigationNode {
 

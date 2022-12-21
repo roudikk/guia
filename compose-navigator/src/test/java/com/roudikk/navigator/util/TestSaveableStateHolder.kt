@@ -1,4 +1,4 @@
-package com.roudikk.navigator
+package com.roudikk.navigator.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.SaveableStateHolder
@@ -12,6 +12,3 @@ class TestSaveableStateHolder : SaveableStateHolder {
     override fun SaveableStateProvider(key: Any, content: @Composable () -> Unit) = Unit
     override fun removeState(key: Any) = Unit
 }
-
-@Parcelize
-class TestNavigationKey : NavigationKey

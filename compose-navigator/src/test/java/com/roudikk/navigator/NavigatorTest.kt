@@ -1,6 +1,6 @@
 import com.google.common.truth.Truth.assertThat
-import com.roudikk.navigator.TestNavigationKey
-import com.roudikk.navigator.navigatorWithKey
+import com.roudikk.navigator.util.TestNavigationKey
+import com.roudikk.navigator.util.navigatorWithKey
 import org.junit.Test
 
 class NavigatorTest {

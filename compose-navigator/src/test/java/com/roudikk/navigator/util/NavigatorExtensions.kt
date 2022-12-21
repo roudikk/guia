@@ -1,4 +1,4 @@
-package com.roudikk.navigator
+package com.roudikk.navigator.util
 
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.Navigator
