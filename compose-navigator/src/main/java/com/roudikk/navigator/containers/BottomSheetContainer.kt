@@ -212,9 +212,8 @@ private fun ColumnScope.BottomSheetContent(
  * Provide extra bottom sheet options.
  *
  * @property scrimColor the scrim color behind the bottom sheet and on top of the content behind it.
- * @property bottomSheetContainer use this when the navigation requires animating between content
- * of two bottom sheets using [Navigator.navigate] instead of animating the transitions between 2
- * bottom sheets, this container will be the parent of all the bottom sheets defined in the app.
+ * @property bottomSheetContainer use this when you have a single bottom sheet design for all your
+ * bottom sheets.
  */
 data class BottomSheetSetup(
     val scrimColor: Color = Color.Black.copy(alpha = 0.4F),
