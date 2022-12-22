@@ -6,34 +6,59 @@ import androidx.compose.runtime.derivedStateOf
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.Navigator
 
+/**
+ * Returns the current [NavigationKey]
+ */
 val Navigator.currentKey: NavigationKey
     get() = backStack.last()
 
+/**
+ * Adds a new key to the backstack.
+ *
+ * @param navigationKey, the new key to be added.
+ */
 fun Navigator.navigate(
     navigationKey: NavigationKey
 ) {
     setBackstack(backStack + navigationKey)
 }
 
+/**
+ * Replaces the last key in the backstack with a new key.
+ *
+ * @param navigationKey, the key to replace the last key in the backstack.
+ */
 fun Navigator.replaceLast(
     navigationKey: NavigationKey
 ) {
     setBackstack(backStack.dropLast(1) + navigationKey)
 }
 
+/**
+ * Loops through navigation keys from the top of the backstack until the predicate is satisfied
+ * and replaces all those keys with a new key.
+ *
+ * @param navigationKey, the key to replace with in the backstack.
+ * @param inclusive, if true will also replace the navigation key that satisfied the [predicate].
+ * @param predicate, condition to be met by the last navigation key to be replaced in the backstack.
+ */
 fun Navigator.replaceUpTo(
     navigationKey: NavigationKey,
     inclusive: Boolean = true,
     predicate: (NavigationKey) -> Boolean
 ) {
     val newBackstack = backStack.dropLastWhile { !predicate(it) }.toMutableList()
-
     if (inclusive) newBackstack.removeLast()
-
     newBackstack.add(navigationKey)
     setBackstack(newBackstack)
 }
 
+/**
+ * Replaces all navigation keys in the backstack until a key of type [Key]
+ * is reached.
+ *
+ * @see replaceUpTo
+ */
 inline fun <reified Key : NavigationKey> Navigator.replaceUpTo(
     navigationKey: NavigationKey,
     inclusive: Boolean = false
@@ -43,6 +68,13 @@ inline fun <reified Key : NavigationKey> Navigator.replaceUpTo(
     predicate = { it::class == Key::class }
 )
 
+/**
+ * Moves a navigation key that matches the given condition to the top
+ *
+ * @param matchLast, whether should start matching from top or the bottom of the backstack.
+ * @param predicate, condition to be met by the navigation key.
+ * @return true if there was a navigation key that matched the predicate.
+ */
 fun Navigator.moveToTop(
     matchLast: Boolean = true,
     predicate: (NavigationKey) -> Boolean
@@ -64,6 +96,11 @@ fun Navigator.moveToTop(
     } ?: false
 }
 
+/**
+ * Moves a navigation key of type [Key] to the top of backstack.
+ *
+ * @see moveToTop
+ */
 inline fun <reified Key : NavigationKey> Navigator.moveToTop(
     matchLast: Boolean = true,
 ) = moveToTop(
@@ -71,12 +108,21 @@ inline fun <reified Key : NavigationKey> Navigator.moveToTop(
     matchLast = matchLast
 )
 
+/**
+ * Navigates to a navigation key and removes all navigation keys that match the given condition.
+ *
+ * @param navigationKey, the new navigation key.
+ * @param predicate, the condition to be met by a navigation key in the backstack.
+ * @param useExistingInstance, if true then we check the backstack first for a matching navigation key
+ * and use that instance instead of [navigationKey]
+ */
 fun Navigator.singleInstance(
     navigationKey: NavigationKey,
     predicate: (NavigationKey) -> Boolean = { it::class == navigationKey::class },
     useExistingInstance: Boolean = true,
 ) {
-    val existingKey = backStack.lastOrNull { predicate(it) }
+    val existingKey = backStack
+        .lastOrNull { predicate(it) }
         .takeIf { useExistingInstance }
     val newBackStack = backStack.toMutableList()
     newBackStack.removeAll { predicate(it) }
@@ -84,6 +130,21 @@ fun Navigator.singleInstance(
     newBackStack.add(newKey)
     setBackstack(newBackStack)
 }
+
+/**
+ * Navigates to a navigation key and removes all navigation keys that are of type [Key] from
+ * the backstack.
+ *
+ * @see singleInstance
+ */
+inline fun <reified Key : NavigationKey> Navigator.singleInstance(
+    navigationKey: NavigationKey,
+    useExistingInstance: Boolean = true
+) = singleInstance(
+    navigationKey = navigationKey,
+    predicate = { navigationKey::class == Key::class },
+    useExistingInstance = useExistingInstance
+)
 
 fun Navigator.singleTop(
     navigationKey: NavigationKey,

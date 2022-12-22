@@ -154,7 +154,10 @@ internal class BackStackManager(
 
         backStackEntryGroup.entries.forEach {
             if (goingToDialog || goingToBottomSheet) {
-                // If the current
+                // If the current destination is a bottom sheet or a dialog
+                // we need to pause whatever is behind it. In the case of a dialog
+                // we might have a bottom sheet and/or a screen behind it, whereas a bottom sheet
+                // would just have a screen behind it.
                 if (it.id == currentEntry.id) {
                     it.maxLifecycleState = Lifecycle.State.RESUMED
                 } else {
