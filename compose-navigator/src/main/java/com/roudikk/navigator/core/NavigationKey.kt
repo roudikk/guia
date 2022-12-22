@@ -27,7 +27,7 @@ interface NavigationKey : Parcelable {
     }
 
     /**
-     * Tag used for use in UI Testing.
+     * Tag used in UI Testing.
      */
     fun tag() = tag(this::class as KClass<NavigationKey>)
 
