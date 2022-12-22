@@ -146,17 +146,16 @@ inline fun <reified Key : NavigationKey> Navigator.singleInstance(
     useExistingInstance = useExistingInstance
 )
 
+/**
+ *
+ */
 fun Navigator.singleTop(
     navigationKey: NavigationKey,
     predicate: (NavigationKey) -> Boolean = { it::class == navigationKey::class },
 ) {
-    if (backStack.last().let(predicate)) return
+    if (currentKey.let(predicate)) return
     navigate(navigationKey)
 }
-
-fun Navigator.any(
-    predicate: (NavigationKey) -> Boolean
-) = backStack.any(predicate)
 
 fun Navigator.popTo(
     inclusive: Boolean = false,
@@ -210,3 +209,11 @@ fun Navigator.popBackstack(): Boolean {
 fun Navigator.canGoBack() = derivedStateOf {
     backStack.size > 1
 }
+
+fun Navigator.none(
+    predicate: (NavigationKey) -> Boolean
+) = backStack.none(predicate)
+
+fun Navigator.any(
+    predicate: (NavigationKey) -> Boolean
+) = backStack.any(predicate)
