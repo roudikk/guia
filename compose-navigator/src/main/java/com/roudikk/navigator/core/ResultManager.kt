@@ -5,12 +5,18 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.roudikk.navigator.savedstate.resultManagerSaver
 
+/**
+ * Manages results passed between navigation keys.
+ */
 interface ResultManager {
     fun result(key: String): Any?
     fun setResult(key: String, result: Any)
     fun clearResult(key: String)
 }
 
+/**
+ * Returns a saveable instance of a [ResultManager]
+ */
 @Composable
 fun rememberResultManager(): ResultManager {
     return rememberSaveable(saver = resultManagerSaver()) {
@@ -18,6 +24,10 @@ fun rememberResultManager(): ResultManager {
     }
 }
 
+/**
+ * [ResultManager] implementation that uses a [mutableStateMapOf] to manage the results
+ * in a stateful manner.
+ */
 class NavigatorResultManager : ResultManager {
 
     internal var results = mutableStateMapOf<String, Any?>()
