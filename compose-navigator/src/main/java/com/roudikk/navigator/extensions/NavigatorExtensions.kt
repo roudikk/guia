@@ -109,20 +109,20 @@ inline fun <reified Key : NavigationKey> Navigator.moveToTop(
 )
 
 /**
- * Navigates to a navigation key and removes all navigation keys that match the given condition.
+ * Navigates to a navigation key and removes all navigation keys that are of the same type from the
+ * backstack.
  *
  * @param navigationKey, the new navigation key.
- * @param predicate, the condition to be met by a navigation key in the backstack.
- * @param useExistingInstance, if true then we check the backstack first for a matching navigation key
+ * @param useExisting, if true then we check the backstack first for a matching navigation key
  * and use that instance instead of [navigationKey]
  */
 inline fun <reified Key : NavigationKey> Navigator.singleInstance(
     navigationKey: Key,
-    useExistingInstance: Boolean = true,
+    useExisting: Boolean = true,
 ) {
     val existingKey = backStack
         .lastOrNull { it is Key }
-        .takeIf { useExistingInstance }
+        .takeIf { useExisting }
     val newBackStack = backStack.toMutableList()
     newBackStack.removeAll { it is Key }
     newBackStack.add(existingKey ?: navigationKey)

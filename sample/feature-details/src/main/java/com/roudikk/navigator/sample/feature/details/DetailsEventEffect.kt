@@ -5,10 +5,10 @@ import androidx.compose.runtime.LaunchedEffect
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popBackstack
 import com.roudikk.navigator.extensions.popToRoot
-import com.roudikk.navigator.extensions.setResult
 import com.roudikk.navigator.extensions.replaceLast
 import com.roudikk.navigator.extensions.requireNavigator
 import com.roudikk.navigator.extensions.requireParentNavigator
+import com.roudikk.navigator.extensions.setResult
 import com.roudikk.navigator.extensions.singleInstance
 import com.roudikk.navigator.extensions.singleTop
 import com.roudikk.navigator.sample.feature.common.navigation.CrossFadeTransition
@@ -34,12 +34,12 @@ fun DetailsEventEffect(
 
             is DetailsEvent.OpenExistingSingleInstance -> navigator.singleInstance(
                 navigationKey = DetailsKey(event.item),
-                useExistingInstance = true
+                useExisting = true
             )
 
             is DetailsEvent.OpenNewSingleInstance -> navigator.singleInstance(
                 navigationKey = DetailsKey(event.item),
-                useExistingInstance = false
+                useExisting = false
             )
 
             is DetailsEvent.OpenRandomItem -> navigator.navigate(
