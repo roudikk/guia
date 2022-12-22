@@ -23,12 +23,10 @@ import com.roudikk.navigator.core.navigationNode
 internal fun Navigator.NavigationEntryContainer(
     backStackManager: BackStackManager,
     backStackEntry: BackStackEntry
-) {
+) = with(backStackEntry.navigationEntry) {
     backStackEntry.LocalProvider {
-        val destination = backStackEntry.navigationEntry
-
-        Box(modifier = Modifier.testTag(destination.navigationKey.tag())) {
-            navigationNode(destination).Content()
+        Box(modifier = Modifier.testTag(navigationKey.tag())) {
+            navigationNode(this@with).Content()
         }
 
         DisposableEffect(backStackManager, backStackEntry) {

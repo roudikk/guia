@@ -174,7 +174,7 @@ private fun ColumnScope.BottomSheetContent(
             targetState = bottomSheetEntry,
             transitionSpec = {
                 // Only animate bottom sheet content when navigating between
-                // bottom sheet destinations.
+                // bottom sheet entries.
                 if (currentNavigationNode !is BottomSheet && targetState != null) {
                     EnterTransition.None
                 } else {

@@ -10,10 +10,10 @@ import com.roudikk.navigator.core.Screen
  *
  * A [BackStackEntryGroup] will be determined based on the current state of the [Navigator].
  *
- * - [screenEntry] will be the last destination with navigation node being a [Screen], if it exists.
- * - [dialogEntry] will be the last destination if it is a [Dialog], if it exists.
- * - [bottomSheetEntry] could be either the last destination if it's a [BottomSheet] or the destination
- *   right before that if the last destination is a [Dialog]
+ * - [screenEntry] will be the last entry with navigation node being a [Screen], if it exists.
+ * - [dialogEntry] will be the last entry if it is a [Dialog], if it exists.
+ * - [bottomSheetEntry] could be either the last entry if it's a [BottomSheet] or the entry
+ *   right before that if the last entry is a [Dialog]
  *
  * For ex:
  * If the current back stack is:

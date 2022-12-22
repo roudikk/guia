@@ -9,7 +9,7 @@ import java.util.UUID
  *
  * @property navigationKey, navigation node for this entry.
  * @property transition, transition animation.
- * @property id, unique identifier of the destination.
+ * @property id, unique identifier of the entry.
  */
 @Parcelize
 internal data class NavigationEntry internal constructor(

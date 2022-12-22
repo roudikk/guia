@@ -42,8 +42,8 @@ private fun Navigator.save() = NavigatorState(
 private fun Navigator.restore(
     navigatorState: NavigatorState
 ) {
-    navigatorState.navigationEntries.forEach { destination ->
-        navigationEntriesMap[destination.navigationKey] = destination
+    navigatorState.navigationEntries.forEach { entry ->
+        navigationEntriesMap[entry.navigationKey] = entry
     }
     setBackstack(navigatorState.navigationEntries.map { it.navigationKey })
     overrideBackPress = navigatorState.overrideBackPress

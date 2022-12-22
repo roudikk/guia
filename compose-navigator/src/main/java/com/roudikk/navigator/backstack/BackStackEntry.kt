@@ -20,7 +20,7 @@ import com.roudikk.navigator.core.NavigationNode
 /**
  * [BackStackEntry] for a [NavigationEntry].
  *
- * Each destination will have a single [BackStackEntry] representing it.
+ * Each entry will have a single [BackStackEntry] representing it.
  *
  * Unlike [NavigationEntry] which only contains the [NavigationNode], [BackStackEntry] provides
  * access to [Lifecycle], [ViewModelStore] and [SavedStateRegistry] critical to handling screen

@@ -77,7 +77,7 @@ internal fun rememberBackStackManager(navigator: Navigator): BackStackManager {
  * Manages the BackStack state of a [Navigator].
  *
  * That includes managing the Lifecycle of each [BackStackEntry].
- * All destinations in the current [Navigator]'s back stack will have a corresponding [BackStackEntry].
+ * All entries in the current [Navigator]'s back stack will have a corresponding [BackStackEntry].
  */
 internal class BackStackManager(
     viewModelStoreOwner: ViewModelStoreOwner,
@@ -109,27 +109,27 @@ internal class BackStackManager(
     }
 
     val backStackEntryGroup = derivedStateOf {
-        val destinations = navigator.navigationEntries
-        val currentDestination = destinations.last()
+        val entries = navigator.navigationEntries
+        val currentEntry = entries.last()
 
-        val screenEntry = destinations.lastOrNull {
+        val screenEntry = entries.lastOrNull {
             navigator.navigationNode(it) is Screen
         }?.let(::createBackStackEntry)
 
-        val dialogEntry = currentDestination.takeIf {
+        val dialogEntry = currentEntry.takeIf {
             navigator.navigationNode(it) is Dialog
         }?.let(::createBackStackEntry)
 
-        val bottomSheetEntry = destinations
+        val bottomSheetEntry = entries
             .lastOrNull { navigator.navigationNode(it) is BottomSheet }
             .takeIf {
-                if (currentDestination == it) return@takeIf true
+                if (currentEntry == it) return@takeIf true
 
-                val bottomSheetIndex = destinations.indexOf(it)
-                val destinationsAfter =
-                    destinations.subList(bottomSheetIndex + 1, destinations.size)
-                val onlyDialogsAfter =
-                    destinationsAfter.all { destination -> navigator.navigationNode(destination) is Dialog }
+                val bottomSheetIndex = entries.indexOf(it)
+                val entriesAfter = entries.subList(bottomSheetIndex + 1, entries.size)
+                val onlyDialogsAfter = entriesAfter.all { entry ->
+                    navigator.navigationNode(entry) is Dialog
+                }
 
                 onlyDialogsAfter
             }?.let(::createBackStackEntry)
@@ -144,17 +144,18 @@ internal class BackStackManager(
             .filter { it !in backStackEntryGroup.entries }
             .forEach { it.maxLifecycleState = minOf(it.maxLifecycleState, Lifecycle.State.STARTED) }
 
-        val goingToDialog = navigator.navigationNode(currentDestination) is Dialog &&
-            destinations.getOrNull(destinations.lastIndex - 1)
+        val goingToDialog = navigator.navigationNode(currentEntry) is Dialog &&
+            entries.getOrNull(entries.lastIndex - 1)
                 ?.let(navigator::navigationNode) !is Dialog
 
-        val goingToBottomSheet = navigator.navigationNode(currentDestination) is BottomSheet &&
-            destinations.getOrNull(destinations.lastIndex - 1)
+        val goingToBottomSheet = navigator.navigationNode(currentEntry) is BottomSheet &&
+            entries.getOrNull(entries.lastIndex - 1)
                 ?.let(navigator::navigationNode) !is BottomSheet
 
         backStackEntryGroup.entries.forEach {
             if (goingToDialog || goingToBottomSheet) {
-                if (it.id == currentDestination.id) {
+                // If the current
+                if (it.id == currentEntry.id) {
                     it.maxLifecycleState = Lifecycle.State.RESUMED
                 } else {
                     it.maxLifecycleState = Lifecycle.State.STARTED
