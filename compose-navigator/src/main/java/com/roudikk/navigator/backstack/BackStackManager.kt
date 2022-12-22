@@ -296,7 +296,7 @@ internal class BackStackManager(
  * Used to save and restore the state of a [BackStackManager].
  */
 @Parcelize
-private data class BackStackManagerState(
+private class BackStackManagerState(
     val id: String,
     val entryIds: List<String>
 ) : Parcelable
