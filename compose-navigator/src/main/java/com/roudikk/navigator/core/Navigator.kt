@@ -30,7 +30,7 @@ fun rememberNavigator(
 ): Navigator {
     val saveableStateHolder = rememberSaveableStateHolder()
     val resultManager = rememberResultManager()
-    val navigatorRules = remember {
+    val navigatorConfig = remember {
         NavigatorConfigBuilder()
             .apply(builder)
             .build()
@@ -39,14 +39,14 @@ fun rememberNavigator(
     return rememberSaveable(
         saver = navigatorSaver(
             saveableStateHolder = saveableStateHolder,
-            navigatorConfig = navigatorRules,
+            navigatorConfig = navigatorConfig,
             resultManager = resultManager
         )
     ) {
         Navigator(
             initialKey = initialKey,
             saveableStateHolder = saveableStateHolder,
-            navigatorConfig = navigatorRules,
+            navigatorConfig = navigatorConfig,
             resultManager = resultManager
         ).apply(initialize)
     }

@@ -109,7 +109,7 @@ class MainActivity : ComponentActivity() {
         )
         settingsNavigation()
         dialogsNavigation()
-        defaultTransition { _, _ -> MaterialSharedAxisTransitionXY }
+        defaultTransition { MaterialSharedAxisTransitionXY }
     }
 
     private fun Navigator.deeplink(deepLinkViewModel: DeepLinkViewModel) {
