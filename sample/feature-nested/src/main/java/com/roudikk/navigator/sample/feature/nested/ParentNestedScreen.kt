@@ -37,12 +37,12 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.containers.NavContainer
+import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.core.rememberNavigator
 import com.roudikk.navigator.extensions.currentKey
 import com.roudikk.navigator.extensions.popTo
 import com.roudikk.navigator.extensions.popToRoot
-import com.roudikk.navigator.core.rememberNavigator
 import com.roudikk.navigator.sample.feature.common.deeplink.DeepLinkViewModel
 import com.roudikk.navigator.sample.feature.common.deeplink.NestedDestination
 import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
@@ -58,7 +58,7 @@ fun ParentNestedScreen() {
         initialKey = NestedKey(1),
         initialize = { it.deeplink(deepLinkViewModel) }
     ) {
-        defaultTransition { _, _ -> VerticalSlideTransition }
+        defaultTransition { -> VerticalSlideTransition }
         nestedNavigation()
     }
 

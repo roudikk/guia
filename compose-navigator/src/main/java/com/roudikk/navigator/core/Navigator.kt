@@ -19,7 +19,7 @@ import com.roudikk.navigator.savedstate.navigatorSaver
  * Creates a saveable instance of a [Navigator].
  *
  * @param initialKey, the initialKey to be added to the backstack.
- * @param initialize, initialize the navigator before it is rendered.
+ * @param initialize, initialize the navigator before it's returned.
  * @param builder, builder for providing navigator configuration, check [NavigatorConfig].
  */
 @Composable

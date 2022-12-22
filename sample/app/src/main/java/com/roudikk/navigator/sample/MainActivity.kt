@@ -13,13 +13,13 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.roudikk.navigator.containers.NavContainer
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.NavigatorConfigBuilder
-import com.roudikk.navigator.containers.NavContainer
+import com.roudikk.navigator.core.rememberNavigator
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popTo
 import com.roudikk.navigator.extensions.setRoot
-import com.roudikk.navigator.core.rememberNavigator
 import com.roudikk.navigator.sample.feature.bottomnav.api.BottomNavKey
 import com.roudikk.navigator.sample.feature.bottomnav.bottomNavNavigation
 import com.roudikk.navigator.sample.feature.common.composables.sampleBottomSheetOptions
@@ -109,7 +109,7 @@ class MainActivity : ComponentActivity() {
         )
         settingsNavigation()
         dialogsNavigation()
-        defaultTransition { MaterialSharedAxisTransitionXY }
+        defaultTransition { -> MaterialSharedAxisTransitionXY }
     }
 
     private fun Navigator.deeplink(deepLinkViewModel: DeepLinkViewModel) {

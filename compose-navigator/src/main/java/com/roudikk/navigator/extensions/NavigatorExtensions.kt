@@ -116,35 +116,18 @@ inline fun <reified Key : NavigationKey> Navigator.moveToTop(
  * @param useExistingInstance, if true then we check the backstack first for a matching navigation key
  * and use that instance instead of [navigationKey]
  */
-fun Navigator.singleInstance(
-    navigationKey: NavigationKey,
-    predicate: (NavigationKey) -> Boolean = { it::class == navigationKey::class },
+inline fun <reified Key : NavigationKey> Navigator.singleInstance(
+    navigationKey: Key,
     useExistingInstance: Boolean = true,
 ) {
     val existingKey = backStack
-        .lastOrNull { predicate(it) }
+        .lastOrNull { it is Key }
         .takeIf { useExistingInstance }
     val newBackStack = backStack.toMutableList()
-    newBackStack.removeAll { predicate(it) }
-    val newKey = existingKey ?: navigationKey
-    newBackStack.add(newKey)
+    newBackStack.removeAll { it is Key }
+    newBackStack.add(existingKey ?: navigationKey)
     setBackstack(newBackStack)
 }
-
-/**
- * Navigates to a navigation key and removes all navigation keys that are of type [Key] from
- * the backstack.
- *
- * @see singleInstance
- */
-inline fun <reified Key : NavigationKey> Navigator.singleInstance(
-    navigationKey: NavigationKey,
-    useExistingInstance: Boolean = true
-) = singleInstance(
-    navigationKey = navigationKey,
-    predicate = { navigationKey::class == Key::class },
-    useExistingInstance = useExistingInstance
-)
 
 /**
  *

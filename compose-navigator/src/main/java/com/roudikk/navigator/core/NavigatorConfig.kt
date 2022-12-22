@@ -24,6 +24,9 @@ class NavigatorConfig internal constructor(
         { _, _, _ -> EnterExitTransition.None }
 )
 
+/**
+ * Builder for [NavigatorConfig]
+ */
 class NavigatorConfigBuilder internal constructor() {
     private val presentations: PresentationsMap = hashMapOf()
     private val transitions: TransitionsMap = hashMapOf()
