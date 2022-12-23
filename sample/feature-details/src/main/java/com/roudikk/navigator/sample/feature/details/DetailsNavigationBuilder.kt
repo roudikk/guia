@@ -3,11 +3,11 @@ package com.roudikk.navigator.sample.feature.details
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.core.NavigatorConfigBuilder
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.DialogOptions
 import com.roudikk.navigator.core.NavigationKey
+import com.roudikk.navigator.core.NavigatorConfigBuilder
 import com.roudikk.navigator.sample.feature.common.composables.SampleSurfaceContainer
 import com.roudikk.navigator.sample.feature.common.navigation.CrossFadeTransition
 import com.roudikk.navigator.sample.feature.common.navigation.MaterialSharedAxisTransitionX

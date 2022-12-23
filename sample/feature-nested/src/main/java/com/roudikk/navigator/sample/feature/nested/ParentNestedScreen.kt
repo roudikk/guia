@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.navigator.containers.NavContainer
 import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.core.entry
 import com.roudikk.navigator.core.rememberNavigator
 import com.roudikk.navigator.extensions.currentKey
 import com.roudikk.navigator.extensions.popTo
@@ -65,17 +66,7 @@ fun ParentNestedScreen() {
     ParentNestedContent(
         onPopToRootClicked = nestedNavigator::popToRoot,
         onNavigateToClicked = { index ->
-            val currentKey = nestedNavigator.currentKey as NestedKey
-            if (index > currentKey.index) {
-                nestedNavigator.setBackstack(
-                    nestedNavigator.backStack + (currentKey.index + 1 until index + 1)
-                        .map(::NestedKey)
-                )
-            } else {
-                nestedNavigator.popTo<NestedKey> { key ->
-                    key.index == index
-                }
-            }
+            nestedNavigator.navigateToIndex(index)
         }
     ) {
         nestedNavigator.NavContainer()
@@ -86,25 +77,27 @@ fun ParentNestedScreen() {
     }
 }
 
+private fun Navigator.navigateToIndex(index: Int) {
+    val currentKey = currentKey as NestedKey
+    if (index > currentKey.index) {
+        setBackstack(
+            backStack + (currentKey.index + 1 until index + 1)
+                .map { NestedKey(it).entry() }
+        )
+    } else {
+        popTo<NestedKey> { key ->
+            key.index == index
+        }
+    }
+}
+
+
 private fun Navigator.deeplink(deepLinkViewModel: DeepLinkViewModel) {
     deepLinkViewModel.destinations
         .filterIsInstance<NestedDestination>()
         .forEach { destination ->
             when (destination) {
-                is NestedDestination.Nested -> {
-                    val index = destination.index
-                    val currentKey = currentKey as NestedKey
-                    if (index > currentKey.index) {
-                        setBackstack(
-                            backStack + (currentKey.index + 1 until index + 1)
-                                .map(::NestedKey)
-                        )
-                    } else {
-                        popTo<NestedKey> { key ->
-                            key.index == index
-                        }
-                    }
-                }
+                is NestedDestination.Nested -> navigateToIndex(destination.index)
             }
         }
     deepLinkViewModel.onNestedDestinationsHandled()

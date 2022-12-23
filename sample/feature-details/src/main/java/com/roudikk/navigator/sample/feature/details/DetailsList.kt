@@ -47,7 +47,6 @@ fun DetailsList(
     onOpenBlockingBottomSheet: () -> Unit = {},
     onOverrideScreenTransitionSelected: () -> Unit = {}
 ) {
-
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -159,7 +158,6 @@ private fun DetailsAction(title: String, onClick: () -> Unit) {
         }
     }
 }
-
 
 @Preview(
     device = Devices.PIXEL_3

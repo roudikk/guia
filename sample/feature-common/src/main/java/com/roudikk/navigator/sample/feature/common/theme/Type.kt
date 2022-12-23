@@ -6,7 +6,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-//Replace with your font locations
 val Roboto = FontFamily.Default
 
 val AppTypography = Typography(
@@ -15,7 +14,7 @@ val AppTypography = Typography(
         fontWeight = FontWeight.W400,
         fontSize = 57.sp,
         lineHeight = 64.sp,
-        letterSpacing = -0.25.sp,
+        letterSpacing = (-0.25).sp,
     ),
     displayMedium = TextStyle(
         fontFamily = Roboto,

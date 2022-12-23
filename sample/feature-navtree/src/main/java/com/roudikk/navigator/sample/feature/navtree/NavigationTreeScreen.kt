@@ -100,7 +100,7 @@ internal fun NavigationTreeScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    items(navigator.backStack) { navigationKey ->
+                    items(navigator.backStackKeys) { navigationKey ->
                         Box(
                             Modifier
                                 .sizeIn(minWidth = 100.dp)

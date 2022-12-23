@@ -105,11 +105,11 @@ internal class BackStackManager(
     )["back-stack-manager-$id", BackStackViewModel::class.java]
 
     private val backstackIds by derivedStateOf {
-        navigator.navigationEntries.map { it.id }
+        navigator.backStack.map { it.id }
     }
 
     val backStackEntryGroup = derivedStateOf {
-        val entries = navigator.navigationEntries
+        val entries = navigator.backStack
         val currentEntry = entries.last()
 
         val screenEntry = entries.lastOrNull {
@@ -180,7 +180,7 @@ internal class BackStackManager(
             .forEach(::removeComponents)
 
         // Create back stack entries for restored navigation entries
-        navigator.navigationEntries
+        navigator.backStack
             .filter { it.id in restoredEntryIds }
             .forEach(::createBackStackEntry)
 
@@ -261,7 +261,7 @@ internal class BackStackManager(
             .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
 
         backStackEntryGroup.value.entries.forEach {
-            if (it.id == navigator.navigationEntries.last().id) {
+            if (it.id == navigator.backStack.last().id) {
                 it.maxLifecycleState = Lifecycle.State.RESUMED
             } else {
                 it.maxLifecycleState = Lifecycle.State.STARTED

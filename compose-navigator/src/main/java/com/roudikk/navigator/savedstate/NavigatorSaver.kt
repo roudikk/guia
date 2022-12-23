@@ -35,17 +35,14 @@ internal fun navigatorSaver(
 
 private fun Navigator.save() = NavigatorState(
     initialKey = initialKey,
-    navigationEntries = navigationEntries,
+    backstack = backStack,
     overrideBackPress = overrideBackPress
 )
 
 private fun Navigator.restore(
     navigatorState: NavigatorState
 ) {
-    navigatorState.navigationEntries.forEach { entry ->
-        navigationEntriesMap[entry.navigationKey] = entry
-    }
-    setBackstack(navigatorState.navigationEntries.map { it.navigationKey })
+    setBackstack(navigatorState.backstack)
     overrideBackPress = navigatorState.overrideBackPress
 }
 
@@ -55,6 +52,6 @@ private fun Navigator.restore(
 @Parcelize
 internal data class NavigatorState(
     val initialKey: NavigationKey,
-    val navigationEntries: List<NavigationEntry>,
+    val backstack: List<NavigationEntry>,
     val overrideBackPress: Boolean
 ) : Parcelable

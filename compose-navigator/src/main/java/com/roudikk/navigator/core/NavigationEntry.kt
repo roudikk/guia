@@ -12,7 +12,7 @@ import java.util.UUID
  * @property id, unique identifier of the entry.
  */
 @Parcelize
-internal data class NavigationEntry internal constructor(
+class NavigationEntry internal constructor(
     val navigationKey: NavigationKey,
     val id: String
 ) : Parcelable {
@@ -32,3 +32,5 @@ internal data class NavigationEntry internal constructor(
         return id.hashCode()
     }
 }
+
+fun NavigationKey.entry() = NavigationEntry(this)

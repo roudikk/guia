@@ -3,14 +3,19 @@
 package com.roudikk.navigator.extensions
 
 import androidx.compose.runtime.derivedStateOf
+import com.roudikk.navigator.core.NavigationEntry
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.core.entry
+
+val Navigator.currentEntry: NavigationEntry
+    get() = backStack.last()
 
 /**
  * Returns the current [NavigationKey]
  */
 val Navigator.currentKey: NavigationKey
-    get() = backStack.last()
+    get() = currentEntry.navigationKey
 
 /**
  * Adds a new key to the backstack.
@@ -20,7 +25,7 @@ val Navigator.currentKey: NavigationKey
 fun Navigator.navigate(
     navigationKey: NavigationKey
 ) {
-    setBackstack(backStack + navigationKey)
+    setBackstack(backStack + navigationKey.entry())
 }
 
 /**
@@ -31,7 +36,7 @@ fun Navigator.navigate(
 fun Navigator.replaceLast(
     navigationKey: NavigationKey
 ) {
-    setBackstack(backStack.dropLast(1) + navigationKey)
+    setBackstack(backStack.dropLast(1) + navigationKey.entry())
 }
 
 /**
@@ -47,9 +52,9 @@ fun Navigator.replaceUpTo(
     inclusive: Boolean = true,
     predicate: (NavigationKey) -> Boolean
 ) {
-    val newBackstack = backStack.dropLastWhile { !predicate(it) }.toMutableList()
+    val newBackstack = backStack.dropLastWhile { !predicate(it.navigationKey) }.toMutableList()
     if (inclusive) newBackstack.removeLast()
-    newBackstack.add(navigationKey)
+    newBackstack.add(navigationKey.entry())
     setBackstack(newBackstack)
 }
 
@@ -79,17 +84,17 @@ fun Navigator.moveToTop(
     matchLast: Boolean = true,
     predicate: (NavigationKey) -> Boolean
 ): Boolean {
-    val navigationKey = if (matchLast) {
-        backStack.findLast { predicate(it) }
+    val existingEntry = if (matchLast) {
+        backStack.findLast { predicate(it.navigationKey) }
     } else {
-        backStack.find { predicate(it) }
+        backStack.find { predicate(it.navigationKey) }
     }
 
-    return navigationKey?.let {
+    return existingEntry?.let {
         setBackstack(
             backStack.toMutableList().apply {
-                remove(navigationKey)
-                add(navigationKey)
+                remove(existingEntry)
+                add(existingEntry)
             }
         )
         true
@@ -120,12 +125,12 @@ inline fun <reified Key : NavigationKey> Navigator.singleInstance(
     navigationKey: Key,
     useExisting: Boolean = true,
 ) {
-    val existingKey = backStack
-        .lastOrNull { it is Key }
+    val existingEntry = backStack
+        .lastOrNull { it.navigationKey is Key }
         .takeIf { useExisting }
     val newBackStack = backStack.toMutableList()
-    newBackStack.removeAll { it is Key }
-    newBackStack.add(existingKey ?: navigationKey)
+    newBackStack.removeAll { it.navigationKey is Key }
+    newBackStack.add(existingEntry ?: navigationKey.entry())
     setBackstack(newBackStack)
 }
 
@@ -144,8 +149,8 @@ fun Navigator.popTo(
     inclusive: Boolean = false,
     predicate: (NavigationKey) -> Boolean,
 ): Boolean {
-    val existingKey = backStack.find(predicate) ?: return false
-    var newBackStack = backStack.dropLastWhile { it != existingKey }
+    val existingEntry = backStack.find { predicate(it.navigationKey) } ?: return false
+    var newBackStack = backStack.dropLastWhile { it != existingEntry }
     if (inclusive) newBackStack = newBackStack.drop(1)
     setBackstack(newBackStack)
     return true
@@ -180,7 +185,7 @@ fun Navigator.popToRoot() {
 fun Navigator.setRoot(
     navigationKey: NavigationKey
 ) {
-    setBackstack(navigationKey)
+    setBackstack(navigationKey.entry())
 }
 
 fun Navigator.popBackstack(): Boolean {
@@ -195,8 +200,8 @@ fun Navigator.canGoBack() = derivedStateOf {
 
 fun Navigator.none(
     predicate: (NavigationKey) -> Boolean
-) = backStack.none(predicate)
+) = backStack.none { predicate(it.navigationKey) }
 
 fun Navigator.any(
     predicate: (NavigationKey) -> Boolean
-) = backStack.any(predicate)
+) = backStack.any { predicate(it.navigationKey) }

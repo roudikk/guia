@@ -74,7 +74,7 @@ internal fun Navigator.BottomSheetContainer(
     bottomSheetSetup: BottomSheetSetup,
     container: @Composable () -> Unit
 ) {
-    val currentEntry by remember { derivedStateOf { navigationEntries.last() } }
+    val currentEntry by remember { derivedStateOf { backStack.last() } }
     val navigationNode = bottomSheetEntry?.navigationEntry?.let(::navigationNode) as? BottomSheet
     val confirmStateChange by remember(navigationNode) {
         derivedStateOf {

@@ -8,8 +8,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import com.roudikk.navigator.containers.NavContainer
-import com.roudikk.navigator.core.NavigationKey
-import com.roudikk.navigator.extensions.currentKey
+import com.roudikk.navigator.core.NavigationEntry
+import com.roudikk.navigator.extensions.currentEntry
 import com.roudikk.navigator.navhost.NavHost
 import com.roudikk.navigator.navhost.StackKey
 
@@ -17,11 +17,11 @@ import com.roudikk.navigator.navhost.StackKey
  * An entry in the stack history.
  *
  * @property stackKey, the stack key at that point in history.
- * @property navigationKey, the navigation key at that point in history.
+ * @property navigationEntry, the navigation key at that point in history.
  */
 private class StackHistoryEntry(
     val stackKey: StackKey,
-    val navigationKey: NavigationKey
+    val navigationEntry: NavigationEntry
 )
 
 /**
@@ -42,7 +42,7 @@ fun NavHost.StackHistoryBackHandler() {
                 entries.add(
                     StackHistoryEntry(
                         stackKey = it.stackKey,
-                        navigationKey = it.navigator.currentKey
+                        navigationEntry = it.navigator.currentEntry
                     )
                 )
             }
@@ -56,14 +56,14 @@ fun NavHost.StackHistoryBackHandler() {
 
     // Cleanup history entries if their associated navigation key is no longer in any backstack.
     LaunchedEffect(fullBackStack) {
-        entries.removeAll { !fullBackStack.contains(it.navigationKey) }
+        entries.removeAll { !fullBackStack.contains(it.navigationEntry) }
     }
 
     val overrideBackPress by remember(entries, currentEntry) {
         derivedStateOf {
             entries.size > 1 &&
                 entries.last().stackKey == currentEntry?.stackKey &&
-                entries.last().navigationKey == currentEntry?.navigator?.currentKey
+                entries.last().navigationEntry == currentEntry?.navigator?.currentEntry
         }
     }
 

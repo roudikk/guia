@@ -72,56 +72,32 @@ class Navigator internal constructor(
 
     var overrideBackPress by mutableStateOf(true)
     var overrideNextTransition: EnterExitTransition? = null
-    var backStack by mutableStateOf(listOf<NavigationKey>())
+    var backStack by mutableStateOf(listOf<NavigationEntry>())
         private set
+    val backStackKeys by derivedStateOf {
+        backStack.map { it.navigationKey }
+    }
 
     internal var currentTransition by mutableStateOf(EnterExitTransition.None)
-    internal var navigationEntriesMap = hashMapOf<NavigationKey, NavigationEntry>()
-    internal var navigationNodesMap = hashMapOf<NavigationEntry, NavigationNode>()
-
-    internal val navigationEntries by derivedStateOf {
-        // Create a navigation entry for each back stack key.
-        backStack.forEach {
-            navigationEntriesMap.getOrPut(it) {
-                NavigationEntry(navigationKey = it)
-            }
-        }
-
-        // Remove all navigation entries that don't have a corresponding key anymore.
-        navigationEntriesMap.keys
-            .filter { it !in backStack }
-            .forEach { navigationEntriesMap.remove(it) }
-
-        val navigationEntries = navigationEntriesMap.values
-            .toList()
-            .sortedBy { backStack.indexOf(it.navigationKey) }
-
-        // Clear navigation nodes presentations that are no longer used.
-        navigationNodesMap.keys
-            .filter { it !in navigationEntries }
-            .forEach { navigationNodesMap.remove(it) }
-
-        navigationEntries
-    }
 
     init {
         // Initialize the back stack with the initial key.
-        setBackstack(initialKey)
+        setBackstack(initialKey.entry())
     }
 
-    fun setBackstack(vararg navigationKeys: NavigationKey) {
-        setBackstack(navigationKeys.toList())
+    fun setBackstack(vararg entries: NavigationEntry) {
+        setBackstack(entries.toList())
     }
 
     fun setBackstack(
-        navigationKeys: List<NavigationKey>,
+        entries: List<NavigationEntry>,
     ) {
-        require(navigationKeys.isNotEmpty()) {
+        require(entries.isNotEmpty()) {
             "Backstack cannot be empty. Please pass at least one NavigationKey"
         }
 
-        val currentKey = navigationKeys.last()
-        val isPop = backStack.contains(currentKey)
+        val newEntry = entries.last()
+        val isPop = backStack.contains(newEntry)
 
         // If the current transition is being overridden, then we use that transition and set it back
         // to null, otherwise we check if the current backstack is not empty and get the appropriate
@@ -130,22 +106,25 @@ class Navigator internal constructor(
             currentTransition = overrideNextTransition!!
             overrideNextTransition = null
         } else if (backStack.isNotEmpty()) {
-            currentTransition = navigatorConfig.transitions[currentKey::class]
-                ?.invoke(backStack.last(), currentKey, isPop)
-                ?: navigatorConfig.defaultTransition(backStack.last(), currentKey, isPop)
+            currentTransition = navigatorConfig.transitions[newEntry.navigationKey::class]
+                ?.invoke(backStack.last().navigationKey, newEntry.navigationKey, isPop)
+                ?: navigatorConfig.defaultTransition(
+                    backStack.last().navigationKey,
+                    newEntry.navigationKey,
+                    isPop
+                )
         }
 
-        backStack = navigationKeys
+        backStack = entries
     }
 }
 
 internal fun Navigator.navigationNode(navigationEntry: NavigationEntry) =
-    navigationNodesMap.getOrPut(navigationEntry) {
-        if (navigationEntry.navigationKey is NavigationKey.WithNode<*>) {
-            navigationEntry.navigationKey.navigationNode()
-        } else {
-            val navigationKey = navigationEntry.navigationKey
-            return navigatorConfig.presentations[navigationKey::class]
+    if (navigationEntry.navigationKey is NavigationKey.WithNode<*>) {
+        navigationEntry.navigationKey.navigationNode()
+    } else {
+        navigationEntry.navigationKey.let { navigationKey ->
+            navigatorConfig.presentations[navigationKey::class]
                 ?.invoke(navigationKey)
                 ?: error(
                     "NavigationKey: $navigationKey was not declared. " +
