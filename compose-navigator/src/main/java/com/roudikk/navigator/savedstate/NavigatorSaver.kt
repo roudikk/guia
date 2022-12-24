@@ -1,7 +1,6 @@
 package com.roudikk.navigator.savedstate
 
 import android.os.Parcelable
-import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.Saver
 import com.roudikk.navigator.core.BackStackEntry
 import com.roudikk.navigator.core.NavigationKey
@@ -16,7 +15,6 @@ import kotlinx.parcelize.Parcelize
  * Saves and restores the state of a navigator.
  */
 internal fun navigatorSaver(
-    saveableStateHolder: SaveableStateHolder,
     navigatorConfig: NavigatorConfig,
     resultManager: ResultManager
 ) = Saver<Navigator, NavigatorState>(
@@ -24,7 +22,6 @@ internal fun navigatorSaver(
     restore = { navigatorState ->
         Navigator(
             initialKey = navigatorState.initialKey,
-            saveableStateHolder = saveableStateHolder,
             navigatorConfig = navigatorConfig,
             resultManager = resultManager
         ).apply {

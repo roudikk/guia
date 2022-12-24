@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSavedStateRegistryOwner
@@ -19,9 +20,9 @@ import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistry
+import com.roudikk.navigator.core.BackStackEntry
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Dialog
-import com.roudikk.navigator.core.BackStackEntry
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.Screen
 import com.roudikk.navigator.core.navigationNode
@@ -37,6 +38,7 @@ internal fun rememberBackStackManager(navigator: Navigator): BackStackManager {
     val viewModelStoreOwner = requireNotNull(LocalViewModelStoreOwner.current)
     val savedStateRegistry = LocalSavedStateRegistryOwner.current.savedStateRegistry
     val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val saveableStateHolder = rememberSaveableStateHolder()
 
     return rememberSaveable(
         saver = Saver(
@@ -53,7 +55,7 @@ internal fun rememberBackStackManager(navigator: Navigator): BackStackManager {
                     navigator = navigator,
                     application = application,
                     viewModelStoreOwner = viewModelStoreOwner,
-                    saveableStateHolder = navigator.saveableStateHolder,
+                    saveableStateHolder = saveableStateHolder,
                     hostLifecycle = lifecycle,
                     savedStateRegistry = savedStateRegistry
                 )
@@ -66,7 +68,7 @@ internal fun rememberBackStackManager(navigator: Navigator): BackStackManager {
             navigator = navigator,
             application = application,
             viewModelStoreOwner = viewModelStoreOwner,
-            saveableStateHolder = navigator.saveableStateHolder,
+            saveableStateHolder = saveableStateHolder,
             hostLifecycle = lifecycle,
             savedStateRegistry = savedStateRegistry
         )
