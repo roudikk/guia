@@ -7,9 +7,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import com.roudikk.navigator.animation.EnterExitTransition
 import com.roudikk.navigator.containers.NavContainer
@@ -29,7 +27,6 @@ fun rememberNavigator(
     initialize: @DisallowComposableCalls (Navigator) -> Unit = {},
     builder: @DisallowComposableCalls NavigatorConfigBuilder.() -> Unit = {}
 ): Navigator {
-    val saveableStateHolder = rememberSaveableStateHolder()
     val resultManager = rememberResultManager()
     val navigatorConfig = remember {
         NavigatorConfigBuilder()
@@ -39,14 +36,12 @@ fun rememberNavigator(
 
     return rememberSaveable(
         saver = navigatorSaver(
-            saveableStateHolder = saveableStateHolder,
             navigatorConfig = navigatorConfig,
             resultManager = resultManager
         )
     ) {
         Navigator(
             initialKey = initialKey,
-            saveableStateHolder = saveableStateHolder,
             navigatorConfig = navigatorConfig,
             resultManager = resultManager
         ).apply(initialize)
@@ -66,7 +61,6 @@ fun rememberNavigator(
  */
 class Navigator internal constructor(
     internal val initialKey: NavigationKey,
-    internal val saveableStateHolder: SaveableStateHolder,
     internal val navigatorConfig: NavigatorConfig,
     resultManager: ResultManager
 ) : ResultManager by resultManager {
