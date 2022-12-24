@@ -1,5 +1,6 @@
 package com.roudikk.navigator.containers
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -21,10 +22,12 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.SwipeableDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +35,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.animation.EnterExitTransition
 import com.roudikk.navigator.backstack.LifecycleEntry
@@ -63,6 +68,10 @@ private fun rememberBottomSheetState(
     }
 }
 
+private fun Navigator.currentBottomSheet(bottomSheetEntry: LifecycleEntry?): BottomSheet? {
+    return bottomSheetEntry?.backStackEntry?.let(::navigationNode) as? BottomSheet
+}
+
 /**
  * Renders a Compose BottomSheet if a [Navigator]'s current entry is a [BottomSheet].
  */
@@ -75,13 +84,13 @@ internal fun Navigator.BottomSheetContainer(
     container: @Composable () -> Unit
 ) {
     val currentEntry by remember { derivedStateOf { backStack.last() } }
-    val navigationNode = bottomSheetEntry?.backStackEntry?.let(::navigationNode) as? BottomSheet
-    val confirmStateChange by remember(navigationNode) {
-        derivedStateOf {
-            { sheetValue: ModalBottomSheetValue ->
-                navigationNode !is BottomSheet ||
-                    navigationNode.bottomSheetOptions.confirmStateChange(sheetValue)
-            }
+    val navigationNode = currentBottomSheet(bottomSheetEntry)
+    val confirmStateChange = remember {
+        { sheetValue: ModalBottomSheetValue ->
+            Log.d("TEST", "$sheetValue")
+            currentBottomSheet(bottomSheetEntry)?.let {
+                it.bottomSheetOptions.confirmStateChange(sheetValue)
+            } ?: true
         }
     }
 
@@ -144,24 +153,23 @@ private fun ColumnScope.BottomSheetContent(
     currentNavigationNode: NavigationNode,
     currentTransition: EnterExitTransition,
     content: @Composable (LifecycleEntry) -> Unit
+) = Box(
+    modifier = Modifier.fillMaxWidth(),
+    contentAlignment = Alignment.BottomCenter
 ) {
     val localDensity = LocalDensity.current
 
     // The content animation and dismissing of bottom sheet looks weird when the content is suddenly
     // removed, this make sure the content's height is preserved even when its removed so the
     // animations and the dismissal the bottom sheet are smoother/
-    var contentHeightDp by remember { mutableStateOf(with(localDensity) { 1.toDp() }) }
+    var contentHeightDp by remember {
+        mutableStateOf(with(localDensity) { 1.toDp() })
+    }
+
+    Log.d("TEST", "height: $contentHeightDp")
 
     bottomSheetSetup.bottomSheetContainer(
         modifier = Modifier
-            .align(Alignment.CenterHorizontally)
-            .then(
-                if (contentHeightDp > 1.dp) {
-                    Modifier.height(contentHeightDp)
-                } else {
-                    Modifier
-                }
-            )
             .then(
                 bottomSheetEntry?.backStackEntry
                     ?.let {
@@ -170,7 +178,6 @@ private fun ColumnScope.BottomSheetContent(
             )
     ) {
         AnimatedContent(
-            modifier = Modifier.fillMaxWidth(),
             targetState = bottomSheetEntry,
             transitionSpec = {
                 // Only animate bottom sheet content when navigating between
@@ -184,7 +191,8 @@ private fun ColumnScope.BottomSheetContent(
                 } else {
                     currentTransition.exit
                 }
-            }
+            },
+            contentAlignment = Alignment.BottomCenter
         ) { bottomSheetEntry ->
             if (bottomSheetEntry != null) {
                 Box(
@@ -195,6 +203,8 @@ private fun ColumnScope.BottomSheetContent(
                                 it.size.height
                                     .toFloat()
                                     .toDp()
+                            }.also {
+                                Log.d("TEST", "$contentHeightDp")
                             }
                         },
                     contentAlignment = Alignment.BottomCenter
@@ -207,6 +217,15 @@ private fun ColumnScope.BottomSheetContent(
         }
     }
 }
+
+private fun dpSaver(density: Density) = Saver<MutableState<Dp>, Int>(
+    save = {
+        with(density) { it.value.toPx().toInt() }
+    },
+    restore = {
+        mutableStateOf(with(density) { it.toDp() })
+    }
+)
 
 /**
  * Provide extra bottom sheet options.

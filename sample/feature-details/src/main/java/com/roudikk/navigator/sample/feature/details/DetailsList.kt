@@ -1,11 +1,13 @@
 package com.roudikk.navigator.sample.feature.details
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -47,8 +49,16 @@ fun DetailsList(
     onOpenBlockingBottomSheet: () -> Unit = {},
     onOverrideScreenTransitionSelected: () -> Unit = {}
 ) {
+    val height = rememberSaveable(key = "height") {
+        (200..500).random().also {
+            Log.d("TEST", "New height: $it")
+        }
+    }
+
+
     Column(
         modifier = Modifier
+            .height(height.dp)
             .verticalScroll(rememberScrollState())
             .fillMaxWidth()
             .padding(vertical = 16.dp),
