@@ -55,7 +55,7 @@ private fun Navigator.NavContainerContent(
 
     val backStackManager = rememberBackStackManager(navigator = navigator)
 
-    val backStackEntryGroup by backStackManager.backStackEntryGroup
+    val visibleBackStack by backStackManager.visibleBackStack
 
     val enabled by remember(canGoBack, navigator.overrideBackPress) {
         derivedStateOf { canGoBack && navigator.overrideBackPress }
@@ -67,7 +67,7 @@ private fun Navigator.NavContainerContent(
 
     // Bottom sheet content
     BottomSheetContainer(
-        bottomSheetEntry = backStackEntryGroup.bottomSheetEntry,
+        bottomSheetEntry = visibleBackStack.bottomSheetEntry,
         bottomSheetSetup = bottomSheetSetup,
         content = { entry ->
             BackHandler(enabled) {
@@ -80,14 +80,14 @@ private fun Navigator.NavContainerContent(
         // Screen content
         ScreenContainer(
             modifier = modifier,
-            screenEntry = backStackEntryGroup.screenEntry
+            screenEntry = visibleBackStack.screenEntry
         ) { entry ->
             NavigationEntryContainer(backStackManager, entry)
         }
     }
 
     // Dialog content
-    backStackEntryGroup.dialogEntry?.let { dialogEntry ->
+    visibleBackStack.dialogEntry?.let { dialogEntry ->
         DialogContainer(
             dialogEntry = dialogEntry
         ) { entry ->

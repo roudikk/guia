@@ -8,7 +8,7 @@ import com.roudikk.navigator.core.Screen
 /**
  * Collection of the currently visible [LifecycleEntry]s.
  *
- * A [BackStackEntryGroup] will be determined based on the current state of the [Navigator].
+ * A [VisibleBackStack] will be determined based on the current state of the [Navigator].
  *
  * - [screenEntry] will be the last entry with navigation node being a [Screen], if it exists.
  * - [dialogEntry] will be the last entry if it is a [Dialog], if it exists.
@@ -36,7 +36,7 @@ import com.roudikk.navigator.core.Screen
  * - [Screen], [BottomSheet]
  * Then [screenEntry] and [bottomSheetEntry] will be available
  */
-internal data class BackStackEntryGroup(
+internal class VisibleBackStack(
     val screenEntry: LifecycleEntry?,
     val dialogEntry: LifecycleEntry?,
     val bottomSheetEntry: LifecycleEntry?
