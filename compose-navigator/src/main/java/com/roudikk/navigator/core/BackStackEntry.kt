@@ -5,11 +5,10 @@ import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
 /**
- * Represents a unique entry in the navigation history.
+ * Represents a unique entry in the backstack.
  *
- * @property navigationKey, navigation node for this entry.
- * @property transition, transition animation.
  * @property id, unique identifier of the entry.
+ * @property navigationKey, navigation key for this entry.
  */
 @Parcelize
 class BackStackEntry internal constructor(

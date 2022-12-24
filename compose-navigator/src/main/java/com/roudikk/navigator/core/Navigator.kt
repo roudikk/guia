@@ -13,6 +13,7 @@ import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import com.roudikk.navigator.animation.EnterExitTransition
 import com.roudikk.navigator.containers.NavContainer
+import com.roudikk.navigator.extensions.currentKey
 import com.roudikk.navigator.savedstate.navigatorSaver
 
 /**
@@ -93,28 +94,27 @@ class Navigator internal constructor(
         entries: List<BackStackEntry>,
     ) {
         require(entries.isNotEmpty()) {
-            "Backstack cannot be empty. Please pass at least one NavigationKey"
+            "Backstack cannot be empty. Please pass at least one BackStackEntry"
         }
 
         val newEntry = entries.last()
         val isPop = backStack.contains(newEntry)
 
-        // If the current transition is being overridden, then we use that transition and set it back
-        // to null, otherwise we check if the current backstack is not empty and get the appropriate
-        // transition from previous back to new backstack.
-        if (overrideNextTransition != null) {
-            currentTransition = overrideNextTransition!!
-            overrideNextTransition = null
-        } else if (backStack.isNotEmpty()) {
-            currentTransition = navigatorConfig.transitions[newEntry.navigationKey::class]
-                ?.invoke(backStack.last().navigationKey, newEntry.navigationKey, isPop)
-                ?: navigatorConfig.defaultTransition(
-                    backStack.last().navigationKey,
-                    newEntry.navigationKey,
-                    isPop
-                )
+        currentTransition = when {
+            // If the current transition is being overridden, then we use that transition
+            overrideNextTransition != null -> overrideNextTransition!!
+
+            // We check if the current backstack is not empty and get the appropriate
+            // transition from previous backstack to the new backstack.
+            backStack.isNotEmpty() -> navigatorConfig.transitions[newEntry.navigationKey::class]
+                ?.invoke(currentKey, newEntry.navigationKey, isPop)
+                ?: navigatorConfig.defaultTransition(currentKey, newEntry.navigationKey, isPop)
+
+            // Otherwise we don't show any transitions
+            else -> EnterExitTransition.None
         }
 
+        overrideNextTransition = null
         backStack = entries
     }
 }
