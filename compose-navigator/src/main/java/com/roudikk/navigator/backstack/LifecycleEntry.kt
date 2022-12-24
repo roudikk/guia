@@ -21,7 +21,6 @@ import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import com.roudikk.navigator.core.BackStackEntry
 import com.roudikk.navigator.core.NavigationNode
-import kotlin.properties.Delegates
 
 /**
  * [LifecycleEntry] for a [BackStackEntry].
@@ -33,10 +32,10 @@ import kotlin.properties.Delegates
  * state restoration and [ViewModel] creation and restoration.
  */
 internal class LifecycleEntry(
-    val backStackEntry: BackStackEntry,
     application: Application?,
+    val backStackEntry: BackStackEntry,
+    val saveableStateHolder: SaveableStateHolder,
     private val viewModelStore: ViewModelStore,
-    internal val saveableStateHolder: SaveableStateHolder,
 ) : ViewModelStoreOwner,
     LifecycleOwner,
     SavedStateRegistryOwner,
@@ -53,22 +52,32 @@ internal class LifecycleEntry(
         return id.hashCode()
     }
 
-    internal var navHostLifecycleState by Delegates.observable(Lifecycle.State.INITIALIZED) { _, _, _ ->
-        updateLifecycleRegistry()
-    }
-
-    internal var maxLifecycleState by Delegates.observable(Lifecycle.State.INITIALIZED) { _, _, _ ->
-        updateLifecycleRegistry()
-    }
-
-    internal val savedStateProvider = SavedStateRegistry.SavedStateProvider {
-        Bundle().also { bundle ->
-            savedStateRegistryController.performSave(bundle)
+    var navHostLifecycleState = Lifecycle.State.INITIALIZED
+        set(value) {
+            field = value
+            updateLifecycleRegistry()
         }
+
+    var maxLifecycleState = Lifecycle.State.INITIALIZED
+        set(value) {
+            field = value
+            updateLifecycleRegistry()
+        }
+
+    val savedStateProvider = SavedStateRegistry.SavedStateProvider {
+        Bundle().also(savedStateRegistryController::performSave)
     }
 
     private val defaultFactory by lazy {
         SavedStateViewModelFactory(application, this)
+    }
+
+    private fun updateLifecycleRegistry() {
+        lifecycleRegistry.currentState = minOf(maxLifecycleState, navHostLifecycleState)
+    }
+
+    fun restoreState(savedState: Bundle) {
+        savedStateRegistryController.performRestore(savedState)
     }
 
     override val savedStateRegistry: SavedStateRegistry
@@ -79,14 +88,6 @@ internal class LifecycleEntry(
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
 
     override fun getDefaultViewModelProviderFactory() = defaultFactory
-
-    private fun updateLifecycleRegistry() {
-        lifecycleRegistry.currentState = minOf(maxLifecycleState, navHostLifecycleState)
-    }
-
-    internal fun restoreState(savedState: Bundle) {
-        savedStateRegistryController.performRestore(savedState)
-    }
 }
 
 /**
@@ -107,8 +108,9 @@ internal val LifecycleEntry.id: String
     get() = backStackEntry.id
 
 @Composable
-internal fun LifecycleEntry.SaveableStateProvider(content: @Composable () -> Unit) =
-    saveableStateHolder.SaveableStateProvider(
-        key = id,
-        content = content
-    )
+internal fun LifecycleEntry.SaveableStateProvider(
+    content: @Composable () -> Unit
+) = saveableStateHolder.SaveableStateProvider(
+    key = id,
+    content = content
+)
