@@ -44,14 +44,6 @@ internal class LifecycleEntry(
     private val lifecycleRegistry = LifecycleRegistry(this)
     private val savedStateRegistryController = SavedStateRegistryController.create(this)
 
-    override fun equals(other: Any?): Boolean {
-        return this.id == (other as? LifecycleEntry)?.id
-    }
-
-    override fun hashCode(): Int {
-        return id.hashCode()
-    }
-
     var navHostLifecycleState = Lifecycle.State.INITIALIZED
         set(value) {
             field = value
@@ -88,6 +80,10 @@ internal class LifecycleEntry(
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
 
     override fun getDefaultViewModelProviderFactory() = defaultFactory
+
+    override fun equals(other: Any?) = (this.id == (other as? LifecycleEntry)?.id)
+
+    override fun hashCode() = id.hashCode()
 }
 
 /**
