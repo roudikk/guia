@@ -33,13 +33,13 @@ private class StackHistoryEntry(
  */
 @Composable
 fun NavHost.StackHistoryBackHandler() {
-    val entries = remember { mutableStateListOf<StackHistoryEntry>() }
+    val stackHistory = remember { mutableStateListOf<StackHistoryEntry>() }
 
     // Add an history entry whenever the current stack entry has been changed.
     LaunchedEffect(currentEntry) {
         currentEntry?.let {
-            if (entries.lastOrNull()?.stackKey != it.stackKey) {
-                entries.add(
+            if (stackHistory.lastOrNull()?.stackKey != it.stackKey) {
+                stackHistory.add(
                     StackHistoryEntry(
                         stackKey = it.stackKey,
                         backStackEntry = it.navigator.currentEntry
@@ -49,21 +49,21 @@ fun NavHost.StackHistoryBackHandler() {
         }
     }
 
-    val fullBackStack = stackEntries
+    val allBackStacks = stackEntries
         .map { it.navigator }
         .map { it.backStack }
         .flatten()
 
     // Cleanup history entries if their associated navigation key is no longer in any backstack.
-    LaunchedEffect(fullBackStack) {
-        entries.removeAll { !fullBackStack.contains(it.backStackEntry) }
+    LaunchedEffect(allBackStacks) {
+        stackHistory.removeAll { !allBackStacks.contains(it.backStackEntry) }
     }
 
-    val overrideBackPress by remember(entries, currentEntry) {
+    val overrideBackPress by remember {
         derivedStateOf {
-            entries.size > 1 &&
-                entries.last().stackKey == currentEntry?.stackKey &&
-                entries.last().backStackEntry == currentEntry?.navigator?.currentEntry
+            stackHistory.size > 1 &&
+                stackHistory.last().stackKey == currentEntry?.stackKey &&
+                stackHistory.last().backStackEntry == currentEntry?.navigator?.currentEntry
         }
     }
 
@@ -75,10 +75,9 @@ fun NavHost.StackHistoryBackHandler() {
 
     // Get the previous entry and navigate to its Stack Key.
     BackHandler(overrideBackPress) {
-        val previousEntry = entries.getOrNull(entries.lastIndex - 1)
-        previousEntry?.let {
-            entries.removeLast()
+        stackHistory.getOrNull(stackHistory.lastIndex - 1)?.let {
             setActive(it.stackKey)
+            stackHistory.removeLast()
         }
     }
 }
