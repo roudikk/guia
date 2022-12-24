@@ -14,31 +14,31 @@ import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
-import com.roudikk.navigator.core.NavigationEntry
+import com.roudikk.navigator.core.BackStackEntry
 import com.roudikk.navigator.core.NavigationNode
 
 /**
- * [BackStackEntry] for a [NavigationEntry].
+ * [LifecycleEntry] for a [BackStackEntry].
  *
- * Each entry will have a single [BackStackEntry] representing it.
+ * Each entry will have a single [LifecycleEntry] representing it.
  *
- * Unlike [NavigationEntry] which only contains the [NavigationNode], [BackStackEntry] provides
+ * Unlike [BackStackEntry] which only contains the [NavigationNode], [LifecycleEntry] provides
  * access to [Lifecycle], [ViewModelStore] and [SavedStateRegistry] critical to handling screen
  * state restoration and [ViewModel] creation and restoration.
  */
-internal class BackStackEntry(
-    val navigationEntry: NavigationEntry,
+internal class LifecycleEntry(
+    val backStackEntry: BackStackEntry,
     application: Application?,
     viewModelStore: ViewModelStore,
     saveableStateHolder: SaveableStateHolder,
 ) : BackStackLifecycleOwner(viewModelStore, application, saveableStateHolder) {
 
-    override val id get() = navigationEntry.id
+    override val id get() = backStackEntry.id
     override val lifecycleRegistry = LifecycleRegistry(this)
     override val savedStateRegistryController = SavedStateRegistryController.create(this)
 
     override fun equals(other: Any?): Boolean {
-        return this.id == (other as? BackStackEntry)?.id
+        return this.id == (other as? LifecycleEntry)?.id
     }
 
     override fun hashCode(): Int {
@@ -50,7 +50,7 @@ internal class BackStackEntry(
  * Provides [ViewModelStore], [LifecycleOwner] and [SavedStateRegistry] to [content].
  */
 @Composable
-internal fun BackStackEntry.LocalProvider(
+internal fun LifecycleEntry.LocalProvider(
     content: @Composable () -> Unit
 ) = CompositionLocalProvider(
     LocalViewModelStoreOwner provides this,

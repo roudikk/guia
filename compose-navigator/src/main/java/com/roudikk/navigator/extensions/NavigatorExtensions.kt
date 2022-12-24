@@ -3,12 +3,12 @@
 package com.roudikk.navigator.extensions
 
 import androidx.compose.runtime.derivedStateOf
-import com.roudikk.navigator.core.NavigationEntry
+import com.roudikk.navigator.core.BackStackEntry
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.entry
 
-val Navigator.currentEntry: NavigationEntry
+val Navigator.currentEntry: BackStackEntry
     get() = backStack.last()
 
 /**

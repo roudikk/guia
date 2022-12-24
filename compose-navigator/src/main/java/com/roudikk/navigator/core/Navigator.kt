@@ -72,7 +72,7 @@ class Navigator internal constructor(
 
     var overrideBackPress by mutableStateOf(true)
     var overrideNextTransition: EnterExitTransition? = null
-    var backStack by mutableStateOf(listOf<NavigationEntry>())
+    var backStack by mutableStateOf(listOf<BackStackEntry>())
         private set
     val backStackKeys by derivedStateOf {
         backStack.map { it.navigationKey }
@@ -85,12 +85,12 @@ class Navigator internal constructor(
         setBackstack(initialKey.entry())
     }
 
-    fun setBackstack(vararg entries: NavigationEntry) {
+    fun setBackstack(vararg entries: BackStackEntry) {
         setBackstack(entries.toList())
     }
 
     fun setBackstack(
-        entries: List<NavigationEntry>,
+        entries: List<BackStackEntry>,
     ) {
         require(entries.isNotEmpty()) {
             "Backstack cannot be empty. Please pass at least one NavigationKey"
@@ -119,17 +119,12 @@ class Navigator internal constructor(
     }
 }
 
-internal fun Navigator.navigationNode(navigationEntry: NavigationEntry) =
-    if (navigationEntry.navigationKey is NavigationKey.WithNode<*>) {
-        navigationEntry.navigationKey.navigationNode()
-    } else {
-        navigationEntry.navigationKey.let { navigationKey ->
-            navigatorConfig.presentations[navigationKey::class]
-                ?.invoke(navigationKey)
-                ?: error(
-                    "NavigationKey: $navigationKey was not declared. " +
-                        "Call `screen/dialog/bottomSheet<MyKey> { MyComposable() }`" +
-                        " inside your Navigator rules."
-                )
+internal fun Navigator.navigationNode(backStackEntry: BackStackEntry) =
+    backStackEntry.navigationKey.let { navigationKey ->
+        if (navigationKey is NavigationKey.WithNode<*>) {
+            navigationKey.navigationNode()
+        } else {
+            navigatorConfig.presentations[navigationKey::class]?.invoke(navigationKey)
+                ?: error("No presentation found for $navigationKey, add one in NavigationConfig")
         }
     }

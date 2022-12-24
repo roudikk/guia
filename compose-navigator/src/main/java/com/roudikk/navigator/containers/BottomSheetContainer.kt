@@ -34,7 +34,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.animation.EnterExitTransition
-import com.roudikk.navigator.backstack.BackStackEntry
+import com.roudikk.navigator.backstack.LifecycleEntry
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.NavigationNode
 import com.roudikk.navigator.core.Navigator
@@ -69,13 +69,13 @@ private fun rememberBottomSheetState(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun Navigator.BottomSheetContainer(
-    content: @Composable (BackStackEntry) -> Unit,
-    bottomSheetEntry: BackStackEntry?,
+    content: @Composable (LifecycleEntry) -> Unit,
+    bottomSheetEntry: LifecycleEntry?,
     bottomSheetSetup: BottomSheetSetup,
     container: @Composable () -> Unit
 ) {
     val currentEntry by remember { derivedStateOf { backStack.last() } }
-    val navigationNode = bottomSheetEntry?.navigationEntry?.let(::navigationNode) as? BottomSheet
+    val navigationNode = bottomSheetEntry?.backStackEntry?.let(::navigationNode) as? BottomSheet
     val confirmStateChange by remember(navigationNode) {
         derivedStateOf {
             { sheetValue: ModalBottomSheetValue ->
@@ -139,11 +139,11 @@ internal fun Navigator.BottomSheetContainer(
 @Composable
 private fun ColumnScope.BottomSheetContent(
     bottomSheetSetup: BottomSheetSetup,
-    bottomSheetEntry: BackStackEntry?,
+    bottomSheetEntry: LifecycleEntry?,
     navigationNode: NavigationNode?,
     currentNavigationNode: NavigationNode,
     currentTransition: EnterExitTransition,
-    content: @Composable (BackStackEntry) -> Unit
+    content: @Composable (LifecycleEntry) -> Unit
 ) {
     val localDensity = LocalDensity.current
 
@@ -163,7 +163,7 @@ private fun ColumnScope.BottomSheetContent(
                 }
             )
             .then(
-                bottomSheetEntry?.navigationEntry
+                bottomSheetEntry?.backStackEntry
                     ?.let {
                         (navigationNode as BottomSheet).bottomSheetOptions.modifier
                     } ?: Modifier

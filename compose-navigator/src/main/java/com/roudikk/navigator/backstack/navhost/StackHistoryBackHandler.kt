@@ -8,7 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import com.roudikk.navigator.containers.NavContainer
-import com.roudikk.navigator.core.NavigationEntry
+import com.roudikk.navigator.core.BackStackEntry
 import com.roudikk.navigator.extensions.currentEntry
 import com.roudikk.navigator.navhost.NavHost
 import com.roudikk.navigator.navhost.StackKey
@@ -17,11 +17,11 @@ import com.roudikk.navigator.navhost.StackKey
  * An entry in the stack history.
  *
  * @property stackKey, the stack key at that point in history.
- * @property navigationEntry, the navigation key at that point in history.
+ * @property backStackEntry, the navigation key at that point in history.
  */
 private class StackHistoryEntry(
     val stackKey: StackKey,
-    val navigationEntry: NavigationEntry
+    val backStackEntry: BackStackEntry
 )
 
 /**
@@ -42,7 +42,7 @@ fun NavHost.StackHistoryBackHandler() {
                 entries.add(
                     StackHistoryEntry(
                         stackKey = it.stackKey,
-                        navigationEntry = it.navigator.currentEntry
+                        backStackEntry = it.navigator.currentEntry
                     )
                 )
             }
@@ -56,14 +56,14 @@ fun NavHost.StackHistoryBackHandler() {
 
     // Cleanup history entries if their associated navigation key is no longer in any backstack.
     LaunchedEffect(fullBackStack) {
-        entries.removeAll { !fullBackStack.contains(it.navigationEntry) }
+        entries.removeAll { !fullBackStack.contains(it.backStackEntry) }
     }
 
     val overrideBackPress by remember(entries, currentEntry) {
         derivedStateOf {
             entries.size > 1 &&
                 entries.last().stackKey == currentEntry?.stackKey &&
-                entries.last().navigationEntry == currentEntry?.navigator?.currentEntry
+                entries.last().backStackEntry == currentEntry?.navigator?.currentEntry
         }
     }
 

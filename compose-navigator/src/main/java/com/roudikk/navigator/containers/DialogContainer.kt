@@ -6,7 +6,7 @@ import androidx.compose.animation.with
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.Dialog
 import com.roudikk.navigator.animation.ProvideNavigationVisibilityScope
-import com.roudikk.navigator.backstack.BackStackEntry
+import com.roudikk.navigator.backstack.LifecycleEntry
 import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.navigationNode
@@ -19,10 +19,10 @@ import com.roudikk.navigator.extensions.popBackstack
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun Navigator.DialogContainer(
-    dialogEntry: BackStackEntry,
-    content: @Composable (BackStackEntry) -> Unit
+    dialogEntry: LifecycleEntry,
+    content: @Composable (LifecycleEntry) -> Unit
 ) {
-    val dialog = navigationNode(dialogEntry.navigationEntry) as Dialog
+    val dialog = navigationNode(dialogEntry.backStackEntry) as Dialog
 
     Dialog(
         onDismissRequest = { popBackstack() },

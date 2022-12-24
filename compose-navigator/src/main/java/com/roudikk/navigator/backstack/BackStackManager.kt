@@ -21,7 +21,7 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistry
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Dialog
-import com.roudikk.navigator.core.NavigationEntry
+import com.roudikk.navigator.core.BackStackEntry
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.Screen
 import com.roudikk.navigator.core.navigationNode
@@ -76,8 +76,8 @@ internal fun rememberBackStackManager(navigator: Navigator): BackStackManager {
 /**
  * Manages the BackStack state of a [Navigator].
  *
- * That includes managing the Lifecycle of each [BackStackEntry].
- * All entries in the current [Navigator]'s back stack will have a corresponding [BackStackEntry].
+ * That includes managing the Lifecycle of each [LifecycleEntry].
+ * All entries in the current [Navigator]'s back stack will have a corresponding [LifecycleEntry].
  */
 internal class BackStackManager(
     viewModelStoreOwner: ViewModelStoreOwner,
@@ -90,7 +90,7 @@ internal class BackStackManager(
     private val hostLifecycle: Lifecycle
 ) {
     private var hostLifecycleState: Lifecycle.State = Lifecycle.State.INITIALIZED
-    private val backStackEntries = mutableMapOf<String, BackStackEntry>()
+    private val backStackEntries = mutableMapOf<String, LifecycleEntry>()
     internal val entryIds get() = backStackEntries.keys
 
     private val lifecycleEventObserver = LifecycleEventObserver { _, event ->
@@ -189,29 +189,29 @@ internal class BackStackManager(
     }
 
     /**
-     * Creates a [BackStackEntry] from the given [NavigationEntry].
+     * Creates a [LifecycleEntry] from the given [BackStackEntry].
      *
      * The [SaveableStateHolder] would be the state holder associated with a [Navigator].
      * The [ViewModelStore] is received from [viewModelStoreProvider] created in the back stack manager.l
      */
-    private fun createBackStackEntry(navigationEntry: NavigationEntry): BackStackEntry {
-        return backStackEntries.getOrPut(navigationEntry.id) {
-            BackStackEntry(
-                navigationEntry = navigationEntry,
+    private fun createBackStackEntry(backStackEntry: BackStackEntry): LifecycleEntry {
+        return backStackEntries.getOrPut(backStackEntry.id) {
+            LifecycleEntry(
+                backStackEntry = backStackEntry,
                 saveableStateHolder = saveableStateHolder,
-                viewModelStore = viewModelStoreProvider.getViewModelStore(navigationEntry.id),
+                viewModelStore = viewModelStoreProvider.getViewModelStore(backStackEntry.id),
                 application = application
             ).also(::initialBackStackState)
         }
     }
 
     /**
-     * Initializes a [BackStackEntry] with the proper state.
+     * Initializes a [LifecycleEntry] with the proper state.
      *
      * First, we make sure the [hostLifecycleState] is not restored before restoring the saved state.
      * Then, we update the lifecycle given the host lifecycle and [Lifecycle.State.STARTED].
      */
-    private fun initialBackStackState(backStackLifecycleOwner: BackStackEntry) {
+    private fun initialBackStackState(backStackLifecycleOwner: LifecycleEntry) {
         if (hostLifecycleState != Lifecycle.State.DESTROYED) {
             val key = savedStateKey(backStackLifecycleOwner.id)
             savedStateRegistry.consumeRestoredStateForKey(key).let { savedState ->

@@ -6,7 +6,7 @@ import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.Screen
 
 /**
- * Collection of the currently visible [BackStackEntry]s.
+ * Collection of the currently visible [LifecycleEntry]s.
  *
  * A [BackStackEntryGroup] will be determined based on the current state of the [Navigator].
  *
@@ -37,11 +37,11 @@ import com.roudikk.navigator.core.Screen
  * Then [screenEntry] and [bottomSheetEntry] will be available
  */
 internal data class BackStackEntryGroup(
-    val screenEntry: BackStackEntry?,
-    val dialogEntry: BackStackEntry?,
-    val bottomSheetEntry: BackStackEntry?
+    val screenEntry: LifecycleEntry?,
+    val dialogEntry: LifecycleEntry?,
+    val bottomSheetEntry: LifecycleEntry?
 ) {
 
-    val entries: List<BackStackEntry>
+    val entries: List<LifecycleEntry>
         get() = listOfNotNull(screenEntry, dialogEntry, bottomSheetEntry)
 }
