@@ -6,7 +6,7 @@ import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.Screen
 
 /**
- * Collection of the currently visible [LifecycleEntry]s.
+ * Collection of the currently visible [LifeCycleEntry]s.
  *
  * A [VisibleBackStack] will be determined based on the current state of the [Navigator].
  *
@@ -37,11 +37,11 @@ import com.roudikk.navigator.core.Screen
  * Then [screenEntry] and [bottomSheetEntry] will be available
  */
 internal class VisibleBackStack(
-    val screenEntry: LifecycleEntry?,
-    val dialogEntry: LifecycleEntry?,
-    val bottomSheetEntry: LifecycleEntry?
+    val screenEntry: LifeCycleEntry?,
+    val dialogEntry: LifeCycleEntry?,
+    val bottomSheetEntry: LifeCycleEntry?
 ) {
 
-    val entries: List<LifecycleEntry>
+    val entries: List<LifeCycleEntry>
         get() = listOfNotNull(screenEntry, dialogEntry, bottomSheetEntry)
 }

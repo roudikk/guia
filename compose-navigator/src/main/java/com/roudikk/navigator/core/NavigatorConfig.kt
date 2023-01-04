@@ -5,9 +5,9 @@ package com.roudikk.navigator.core
 import androidx.compose.runtime.Composable
 import com.roudikk.navigator.animation.EnterExitTransition
 import com.roudikk.navigator.animation.NavigationTransition
-import com.roudikk.navigator.extensions.NavigationNodeTransition
-import com.roudikk.navigator.extensions.PresentationsMap
-import com.roudikk.navigator.extensions.TransitionsMap
+import com.roudikk.navigator.extensions.Presentations
+import com.roudikk.navigator.extensions.Transition
+import com.roudikk.navigator.extensions.Transitions
 import kotlin.reflect.KClass
 
 /**
@@ -18,20 +18,18 @@ import kotlin.reflect.KClass
  * @property defaultTransition, the default transition
  */
 class NavigatorConfig internal constructor(
-    internal val presentations: PresentationsMap = hashMapOf(),
-    internal val transitions: TransitionsMap = hashMapOf(),
-    internal val defaultTransition: NavigationNodeTransition =
-        { _, _, _ -> EnterExitTransition.None }
+    internal val presentations: Presentations = hashMapOf(),
+    internal val transitions: Transitions = hashMapOf(),
+    internal val defaultTransition: Transition = { _, _, _ -> EnterExitTransition.None }
 )
 
 /**
  * Builder for [NavigatorConfig]
  */
 class NavigatorConfigBuilder internal constructor() {
-    private val presentations: PresentationsMap = hashMapOf()
-    private val transitions: TransitionsMap = hashMapOf()
-    private var defaultTransition: NavigationNodeTransition =
-        { _, _, _ -> EnterExitTransition.None }
+    private val presentations: Presentations = hashMapOf()
+    private val transitions: Transitions = hashMapOf()
+    private var defaultTransition: Transition = { _, _, _ -> EnterExitTransition.None }
 
     fun navigationNode(
         keyClass: KClass<NavigationKey>,
@@ -77,7 +75,7 @@ class NavigatorConfigBuilder internal constructor() {
 
     fun transition(
         keyClass: KClass<NavigationKey>,
-        transition: NavigationNodeTransition
+        transition: Transition
     ) {
         transitions[keyClass] = transition
     }
@@ -87,7 +85,7 @@ class NavigatorConfigBuilder internal constructor() {
     ) {
         transition(
             keyClass = Key::class as KClass<NavigationKey>,
-            transition = transition as NavigationNodeTransition
+            transition = transition as Transition
         )
     }
 
@@ -110,7 +108,7 @@ class NavigatorConfigBuilder internal constructor() {
     }
 
     fun defaultTransition(
-        transition: NavigationNodeTransition
+        transition: Transition
     ) {
         defaultTransition = transition
     }

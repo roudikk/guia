@@ -23,15 +23,15 @@ import com.roudikk.navigator.core.BackStackEntry
 import com.roudikk.navigator.core.NavigationNode
 
 /**
- * [LifecycleEntry] for a [BackStackEntry].
+ * [LifeCycleEntry] for a [BackStackEntry].
  *
- * Each entry will have a single [LifecycleEntry] representing it.
+ * Each entry will have a single [LifeCycleEntry] representing it.
  *
- * Unlike [BackStackEntry] which only contains the [NavigationNode], [LifecycleEntry] provides
+ * Unlike [BackStackEntry] which only contains the [NavigationNode], [LifeCycleEntry] provides
  * access to [Lifecycle], [ViewModelStore] and [SavedStateRegistry] critical to handling screen
  * state restoration and [ViewModel] creation and restoration.
  */
-internal class LifecycleEntry(
+internal class LifeCycleEntry(
     application: Application?,
     val backStackEntry: BackStackEntry,
     val saveableStateHolder: SaveableStateHolder,
@@ -81,7 +81,7 @@ internal class LifecycleEntry(
 
     override fun getDefaultViewModelProviderFactory() = defaultFactory
 
-    override fun equals(other: Any?) = (this.id == (other as? LifecycleEntry)?.id)
+    override fun equals(other: Any?) = (this.id == (other as? LifeCycleEntry)?.id)
 
     override fun hashCode() = id.hashCode()
 }
@@ -90,7 +90,7 @@ internal class LifecycleEntry(
  * Provides [ViewModelStore], [LifecycleOwner] and [SavedStateRegistry] to [content].
  */
 @Composable
-internal fun LifecycleEntry.LocalProvider(
+internal fun LifeCycleEntry.LocalProvider(
     content: @Composable () -> Unit
 ) = CompositionLocalProvider(
     LocalViewModelStoreOwner provides this,
@@ -100,11 +100,11 @@ internal fun LifecycleEntry.LocalProvider(
     SaveableStateProvider(content)
 }
 
-internal val LifecycleEntry.id: String
+internal val LifeCycleEntry.id: String
     get() = backStackEntry.id
 
 @Composable
-internal fun LifecycleEntry.SaveableStateProvider(
+internal fun LifeCycleEntry.SaveableStateProvider(
     content: @Composable () -> Unit
 ) = saveableStateHolder.SaveableStateProvider(
     key = id,

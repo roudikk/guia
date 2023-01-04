@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.animation.EnterExitTransition
-import com.roudikk.navigator.backstack.LifecycleEntry
+import com.roudikk.navigator.backstack.LifeCycleEntry
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.NavigationNode
 import com.roudikk.navigator.core.Navigator
@@ -68,7 +68,7 @@ private fun rememberBottomSheetState(
     }
 }
 
-private fun Navigator.currentBottomSheet(bottomSheetEntry: LifecycleEntry?): BottomSheet? {
+private fun Navigator.currentBottomSheet(bottomSheetEntry: LifeCycleEntry?): BottomSheet? {
     return bottomSheetEntry?.backStackEntry?.let(::navigationNode) as? BottomSheet
 }
 
@@ -78,20 +78,17 @@ private fun Navigator.currentBottomSheet(bottomSheetEntry: LifecycleEntry?): Bot
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun Navigator.BottomSheetContainer(
-    content: @Composable (LifecycleEntry) -> Unit,
-    bottomSheetEntry: LifecycleEntry?,
+    content: @Composable (LifeCycleEntry) -> Unit,
+    bottomSheetEntry: LifeCycleEntry?,
     bottomSheetSetup: BottomSheetSetup,
     container: @Composable () -> Unit
 ) {
     val currentEntry by remember { derivedStateOf { backStack.last() } }
     val navigationNode = currentBottomSheet(bottomSheetEntry)
-    val confirmStateChange = remember {
-        { sheetValue: ModalBottomSheetValue ->
-            Log.d("TEST", "$sheetValue")
-            currentBottomSheet(bottomSheetEntry)?.let {
-                it.bottomSheetOptions.confirmStateChange(sheetValue)
-            } ?: true
-        }
+    val confirmStateChange = { sheetValue: ModalBottomSheetValue ->
+        currentBottomSheet(bottomSheetEntry)?.let {
+            it.bottomSheetOptions.confirmStateChange(sheetValue)
+        } ?: true
     }
 
     val bottomSheetState = rememberBottomSheetState(
@@ -148,13 +145,15 @@ internal fun Navigator.BottomSheetContainer(
 @Composable
 private fun ColumnScope.BottomSheetContent(
     bottomSheetSetup: BottomSheetSetup,
-    bottomSheetEntry: LifecycleEntry?,
+    bottomSheetEntry: LifeCycleEntry?,
     navigationNode: NavigationNode?,
     currentNavigationNode: NavigationNode,
     currentTransition: EnterExitTransition,
-    content: @Composable (LifecycleEntry) -> Unit
+    content: @Composable (LifeCycleEntry) -> Unit
 ) = Box(
-    modifier = Modifier.fillMaxWidth(),
+    modifier = Modifier
+        .align(Alignment.CenterHorizontally)
+        .fillMaxWidth(),
     contentAlignment = Alignment.BottomCenter
 ) {
     val localDensity = LocalDensity.current
@@ -212,7 +211,11 @@ private fun ColumnScope.BottomSheetContent(
                     content(bottomSheetEntry)
                 }
             } else {
-                Box(modifier = Modifier.height(contentHeightDp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(contentHeightDp)
+                )
             }
         }
     }

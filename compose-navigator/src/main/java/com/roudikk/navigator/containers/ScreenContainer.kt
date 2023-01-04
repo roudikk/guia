@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.roudikk.navigator.animation.ProvideNavigationVisibilityScope
-import com.roudikk.navigator.backstack.LifecycleEntry
+import com.roudikk.navigator.backstack.LifeCycleEntry
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.Screen
 
@@ -18,8 +18,8 @@ import com.roudikk.navigator.core.Screen
 @Composable
 internal fun Navigator.ScreenContainer(
     modifier: Modifier,
-    screenEntry: LifecycleEntry?,
-    content: @Composable (LifecycleEntry) -> Unit
+    screenEntry: LifeCycleEntry?,
+    content: @Composable (LifeCycleEntry) -> Unit
 ) {
     AnimatedContent(
         targetState = screenEntry,
