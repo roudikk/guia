@@ -3,7 +3,7 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 
-val composeVersion = "1.3.1"
+val composeVersion = "1.3.2"
 val composeCompilerVersion = "1.3.2"
 val composeActivityVersion = "1.6.1"
 val kotlinCoroutinesVersion = "1.6.4"
@@ -75,20 +75,15 @@ dependencies {
     // Detekt
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")
 
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
-
+    // Unit test
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinCoroutinesVersion")
-    testImplementation("com.google.truth:truth:$truthVersion")
     testImplementation("junit:junit:$junit4Version")
-    testImplementation("org.junit.jupiter:junit-jupiter:$junit5Version")
-    testImplementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
-
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:$junit5Version")
-
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
 
-    androidTestImplementation("androidx.test.ext:junit:1.1.4")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
+    // Android test
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
@@ -132,18 +127,8 @@ publishing {
 
 detekt {
     autoCorrect = true
-    buildUponDefaultConfig = true // preconfigure defaults
-    allRules = false // activate all available (even unstable) rules.
-}
-
-tasks.withType<Detekt>().configureEach {
-    autoCorrect = true
-    reports {
-        html.required.set(true) // observe findings in your browser with structure and code snippets
-        xml.required.set(true) // checkstyle like format mainly for integrations like Jenkins
-        txt.required.set(true) // similar to the console output, contains issue signature to manually edit baseline files
-        sarif.required.set(true) // standardized SARIF format (https://sarifweb.azurewebsites.net/) to support integrations with Github Code Scanning
-    }
+    buildUponDefaultConfig = true
+    allRules = false
 }
 
 tasks.withType<Detekt>().configureEach {

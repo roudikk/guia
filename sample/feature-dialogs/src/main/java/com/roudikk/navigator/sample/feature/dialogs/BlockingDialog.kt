@@ -10,14 +10,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popBackstack
+import com.roudikk.navigator.extensions.requireDialog
 import com.roudikk.navigator.extensions.requireNavigator
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
 import com.roudikk.navigator.sample.feature.dialogs.api.CancelableDialogKey
@@ -41,7 +48,18 @@ private fun BlockingDialogContent(
     onNextClicked: () -> Unit = {},
     onCancelClicked: () -> Unit = {}
 ) {
+    val dialog = requireDialog()
+    var dismissDialog by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(dismissDialog) {
+        dialog.dialogOptions = dialog.dialogOptions.copy(
+            dismissOnBackPress = dismissDialog,
+            dismissOnClickOutside = dismissDialog
+        )
+    }
+
     Surface(shape = RoundedCornerShape(16.dp)) {
+
         Column(modifier = Modifier.padding(16.dp)) {
 
             Text(
@@ -53,7 +71,14 @@ private fun BlockingDialogContent(
 
             Text(
                 text = "This dialog cannot be cancelled by clicking outside or " +
-                    "pressing the back button."
+                    "pressing the back button, unless you toggle the switch below."
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Switch(
+                checked = dismissDialog,
+                onCheckedChange = { dismissDialog = it }
             )
 
             Spacer(modifier = Modifier.height(10.dp))

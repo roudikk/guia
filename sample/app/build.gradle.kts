@@ -6,7 +6,7 @@ plugins {
     id("kotlin-parcelize")
 }
 
-val composeVersion = "1.3.1"
+val composeVersion = "1.3.2"
 val jupiterVersion = "5.9.1"
 val junitVersion = "4.13.2"
 val truthVersion = "1.1.3"

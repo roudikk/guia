@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Switch
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,7 +37,7 @@ internal fun BlockingBottomSheetScreen() {
     }
 
     Column(
-        Modifier
+        modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth()
     ) {
@@ -53,9 +53,7 @@ internal fun BlockingBottomSheetScreen() {
 
         Switch(
             checked = lockStateChange,
-            onCheckedChange = {
-                lockStateChange = it
-            }
+            onCheckedChange = { lockStateChange = it }
         )
 
         Spacer(modifier = Modifier.navigationBarsPadding())

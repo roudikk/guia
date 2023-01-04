@@ -1,13 +1,12 @@
 package com.roudikk.navigator.containers
 
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -21,13 +20,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.roudikk.navigator.animation.EnterExitTransition
 import com.roudikk.navigator.backstack.LifeCycleEntry
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.NavigationNode
@@ -74,12 +71,9 @@ internal fun Navigator.BottomSheetContainer(
 ) {
     val currentBottomSheet = currentBottomSheet()
     val confirmStateChange = { sheetValue: ModalBottomSheetValue ->
-        currentBottomSheet()
-            .also { Log.d("TEST1", "Sheet: $it") }
-            ?.let {
-                it.bottomSheetOptions.confirmStateChange(sheetValue)
-                    .also { Log.d("TEST1", "Sheet: $it") }
-            } ?: true
+        currentBottomSheet()?.let {
+            it.bottomSheetOptions.confirmStateChange(sheetValue)
+        } ?: true
     }
 
     val bottomSheetState = rememberBottomSheetState(
@@ -89,9 +83,7 @@ internal fun Navigator.BottomSheetContainer(
             ModalBottomSheetValue.Expanded
         },
         animationSpec = bottomSheetSetup.animationSpec,
-        confirmStateChange = {
-            confirmStateChange(it)
-        }
+        confirmStateChange = confirmStateChange
     )
 
     // Make sure the bottom sheet is shown when the bottom sheet entry is available.
@@ -122,10 +114,13 @@ internal fun Navigator.BottomSheetContainer(
         scrimColor = bottomSheetSetup.scrimColor,
         sheetShape = RoundedCornerShape(0.dp),
         sheetContent = {
+            Spacer(modifier = Modifier.height(1.dp))
+
             BottomSheetContent(
                 bottomSheetSetup = bottomSheetSetup,
                 bottomSheetEntry = bottomSheetEntry,
                 bottomSheet = currentBottomSheet,
+                currentTransition = currentTransition,
                 content = content,
             )
         },
@@ -138,12 +133,8 @@ private fun ColumnScope.BottomSheetContent(
     bottomSheetSetup: BottomSheetSetup,
     bottomSheetEntry: LifeCycleEntry?,
     bottomSheet: NavigationNode?,
+    currentTransition: EnterExitTransition,
     content: @Composable (LifeCycleEntry) -> Unit
-) = Box(
-    modifier = Modifier
-        .align(Alignment.CenterHorizontally)
-        .fillMaxWidth(),
-    contentAlignment = Alignment.BottomCenter
 ) {
     val localDensity = LocalDensity.current
 
@@ -153,8 +144,6 @@ private fun ColumnScope.BottomSheetContent(
     var contentHeightDp by remember {
         mutableStateOf(with(localDensity) { 1.toDp() })
     }
-
-    Log.d("TEST", "height: $contentHeightDp")
 
     bottomSheetSetup.bottomSheetContainer(
         modifier = Modifier
@@ -166,28 +155,42 @@ private fun ColumnScope.BottomSheetContent(
             )
     ) {
         if (bottomSheetEntry != null) {
-            Box(
-                modifier = Modifier
-                    .testTag("BottomSheetContainer")
-                    .onGloballyPositioned {
-                        contentHeightDp = with(localDensity) {
-                            it.size.height
-                                .toFloat()
-                                .toDp()
-                        }.also {
-                            Log.d("TEST", "$contentHeightDp")
-                        }
-                    },
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                content(bottomSheetEntry)
-            }
-        } else {
-            Box(
-                modifier = Modifier
-                    .height(contentHeightDp)
-            )
+            content(bottomSheetEntry)
         }
+//        AnimatedContent(
+//            modifier = Modifier.align(Alignment.CenterHorizontally),
+//            targetState = bottomSheetEntry,
+//            transitionSpec = {
+//                val enterTransition = if (initialState == null) {
+//                    Log.d("TEST", "None")
+//                    EnterTransition.None
+//                } else {
+//                    Log.d("TEST", "Enter")
+//                    currentTransition.enter
+//                }
+//
+//                val exitTransition = when {
+//                    initialState == null && targetState != null -> {
+//                        Log.d("TEST", "None")
+//                        ExitTransition.None
+//                    }
+//
+//                    targetState == null -> {
+//                        Log.d("TEST", "Fade out")
+//                        fadeOut(animationSpec = snap(delayMillis = 300))
+//                    }
+//
+//                    else -> {
+//                        Log.d("TEST", "Exit")
+//                        currentTransition.exit
+//                    }
+//                }
+//
+//                enterTransition with exitTransition
+//            }
+//        ) { bottomSheetEntry ->
+//
+//        }
     }
 }
 
