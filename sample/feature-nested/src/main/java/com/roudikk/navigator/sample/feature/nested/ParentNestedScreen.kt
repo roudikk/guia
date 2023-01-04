@@ -91,7 +91,6 @@ private fun Navigator.navigateToIndex(index: Int) {
     }
 }
 
-
 private fun Navigator.deeplink(deepLinkViewModel: DeepLinkViewModel) {
     deepLinkViewModel.destinations
         .filterIsInstance<NestedDestination>()
@@ -129,7 +128,6 @@ private fun ParentNestedContent(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Box(modifier = Modifier.weight(1f)) {
                 container()
             }

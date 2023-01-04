@@ -1,20 +1,11 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("io.gitlab.arturbosch.detekt")
     id("kotlin-parcelize")
 }
-
-val composeVersion = "1.3.2"
-val composeCompilerVersion = "1.3.2"
-val composeMaterial3Version = "1.0.1"
-val accompanistVersion = "0.27.1"
-val lottieVersion = "5.2.0"
-val kotlinCoroutinesVersion = "1.6.4"
-val activityComposeVersion = "1.6.1"
-val viewModelVersion = "2.5.1"
-val materialVersion = "1.7.0"
-val detektVersion = "1.21.0"
 
 android {
     namespace = "com.roudikk.navigator.sample.feature.common"
@@ -30,39 +21,37 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = composeCompilerVersion
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 }
 
 dependencies {
     // Material
-    api("com.google.android.material:material:$materialVersion")
+    api(libs.google.material)
 
     // Coroutines
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
+    api(libs.coroutines)
 
     // Compose
-    api("androidx.compose.material:material:$composeVersion")
-    api("androidx.compose.ui:ui:$composeVersion")
-    api("androidx.compose.ui:ui-tooling:$composeVersion")
-    api("androidx.compose.foundation:foundation:$composeVersion")
-    api("androidx.compose.material:material-icons-core:$composeVersion")
-    api("androidx.compose.material:material-icons-extended:$composeVersion")
-    api("androidx.activity:activity-compose:$activityComposeVersion")
-    api("androidx.lifecycle:lifecycle-viewmodel-compose:$viewModelVersion")
-    api("androidx.compose.material3:material3:$composeMaterial3Version")
+    api(libs.compose.material)
+    api(libs.compose.ui)
+    api(libs.compose.viewModel)
+    api(libs.compose.ui.tooling)
+    api(libs.compose.foundation)
+    api(libs.compose.material.icons)
+    api(libs.compose.activity)
+    api(libs.compose.material3)
 
     // Accompanist
-    api("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
-    api("com.google.accompanist:accompanist-insets:$accompanistVersion")
-    api("com.google.accompanist:accompanist-pager:$accompanistVersion")
-    api("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
+    api(libs.accompanist.pager)
+    api(libs.accompanist.systemuicontroller)
+    api(libs.accompanist.pager.indicators)
 
     // Detekt
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")
+    detektPlugins(libs.detekt.formatting)
 
     // Lottie
-    api("com.airbnb.android:lottie-compose:$lottieVersion")
+    api(libs.lottie)
 
     // Navigator
     api(project(":compose-navigator"))

@@ -3,17 +3,6 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 
-val composeVersion = "1.3.2"
-val composeCompilerVersion = "1.3.2"
-val composeActivityVersion = "1.6.1"
-val kotlinCoroutinesVersion = "1.6.4"
-val kotlinVersion = "1.7.20"
-val junit4Version = "4.13.2"
-val junit5Version = "5.8.2"
-val truthVersion = "1.1.3"
-val detektVersion = "1.22.0"
-val viewModelVersion = "2.5.1"
-
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -53,7 +42,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = composeCompilerVersion
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 
     buildFeatures {
@@ -65,25 +54,25 @@ android {
 
 dependencies {
     // Compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$viewModelVersion")
-    implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.material:material:$composeVersion")
-    implementation("androidx.compose.animation:animation:$composeVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
-    implementation("androidx.activity:activity-compose:$composeActivityVersion")
+    implementation(libs.compose.viewModel)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.material)
+    implementation(libs.compose.animation)
+    implementation(libs.compose.activity)
+    implementation(libs.coroutines)
 
     // Detekt
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")
+    detektPlugins(libs.detekt.formatting)
 
     // Unit test
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinCoroutinesVersion")
-    testImplementation("junit:junit:$junit4Version")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.junit)
+    debugImplementation(libs.compose.ui.test)
 
     // Android test
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation(libs.junit.android)
+    androidTestImplementation(libs.compose.ui.junit)
+    androidTestImplementation(libs.espresso)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {

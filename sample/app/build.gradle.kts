@@ -1,36 +1,11 @@
-@file:Suppress("UnstableImplementationUsage")
+@file:Suppress("UnstableImplementationUsage", "UnstableApiUsage")
+
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.android.application")
     kotlin("android")
     id("kotlin-parcelize")
-}
-
-val composeVersion = "1.3.2"
-val jupiterVersion = "5.9.1"
-val junitVersion = "4.13.2"
-val truthVersion = "1.1.3"
-
-// Module wide Opt ins for experimental compose apis
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions.freeCompilerArgs += "-opt-in=androidx.compose.animation.ExperimentalAnimationImplementation"
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions.freeCompilerArgs += "-opt-in=androidx.compose.material3.ExperimentalMaterial3Implementation"
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions.freeCompilerArgs += "-opt-in=androidx.compose.material.ExperimentalMaterialImplementation"
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions.freeCompilerArgs += "-opt-in=androidx.compose.foundation.ExperimentalFoundationImplementation"
 }
 
 android {
@@ -64,7 +39,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 
     namespace = "com.roudikk.navigator.sample"
@@ -91,12 +66,29 @@ dependencies {
     implementation(project(":sample:feature-details:api"))
     implementation(project(":compose-navigator"))
 
-    // Test dependencies
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
-    testImplementation("junit:junit:$junitVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter:$jupiterVersion")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
-    testImplementation("com.google.truth:truth:$truthVersion")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
+    // Test
+    testImplementation(libs.junit)
+    debugImplementation(libs.compose.ui.test)
+    androidTestImplementation(libs.compose.ui.junit)
+    androidTestImplementation(libs.espresso)
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions.freeCompilerArgs += "-opt-in=androidx.compose.animation.ExperimentalAnimationImplementation"
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions.freeCompilerArgs += "-opt-in=androidx.compose.material3.ExperimentalMaterial3Implementation"
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions.freeCompilerArgs += "-opt-in=androidx.compose.material.ExperimentalMaterialImplementation"
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions.freeCompilerArgs += "-opt-in=androidx.compose.foundation.ExperimentalFoundationImplementation"
 }
