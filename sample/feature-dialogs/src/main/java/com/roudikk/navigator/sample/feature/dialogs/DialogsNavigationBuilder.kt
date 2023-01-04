@@ -2,9 +2,9 @@ package com.roudikk.navigator.sample.feature.dialogs
 
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.ui.Modifier
+import com.roudikk.navigator.core.BottomSheet.BottomSheetOptions
+import com.roudikk.navigator.core.Dialog.DialogOptions
 import com.roudikk.navigator.core.NavigatorConfigBuilder
-import com.roudikk.navigator.core.BottomSheetOptions
-import com.roudikk.navigator.core.DialogOptions
 import com.roudikk.navigator.sample.feature.dialogs.api.BlockingBottomSheetKey
 import com.roudikk.navigator.sample.feature.dialogs.api.BlockingDialogKey
 import com.roudikk.navigator.sample.feature.dialogs.api.CancelableDialogKey

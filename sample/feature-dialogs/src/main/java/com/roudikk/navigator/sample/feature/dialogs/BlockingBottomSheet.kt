@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -19,35 +20,48 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.roudikk.navigator.core.BottomSheet
+import com.roudikk.navigator.extensions.requireBottomSheet
 import com.roudikk.navigator.sample.feature.common.composables.SampleSurfaceContainer
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
 
 @Composable
 internal fun BlockingBottomSheetScreen() {
-    var lockBack by rememberSaveable { mutableStateOf(true) }
+    val bottomSheet = requireBottomSheet()
+    var lockStateChange by rememberSaveable { mutableStateOf(true) }
+
+    LaunchedEffect(lockStateChange) {
+        bottomSheet.bottomSheetOptions = BottomSheet.BottomSheetOptions(
+            confirmStateChange = { !lockStateChange }
+        )
+    }
 
     Column(
         Modifier
             .padding(16.dp)
             .fillMaxWidth()
     ) {
-        Text(text = "You can't navigate away by clicking outside this bottom sheet.")
+        Text(text = "You can't navigate away by clicking outside this bottom sheet or swiping it down.")
 
         Spacer(modifier = Modifier.size(16.dp))
 
         Text(
-            text = "Only thing you can do is hit the back button, but that won't go back to the dialogs screen" +
-                " if the below switch is turned on. Toggle it on/off to enable/disable back press."
+            text = "Toggle the switch to enable/disable state change lock."
         )
 
         Spacer(modifier = Modifier.size(16.dp))
 
-        Switch(checked = lockBack, onCheckedChange = { lockBack = it })
+        Switch(
+            checked = lockStateChange,
+            onCheckedChange = {
+                lockStateChange = it
+            }
+        )
 
         Spacer(modifier = Modifier.navigationBarsPadding())
     }
 
-    BackHandler(enabled = lockBack) {
+    BackHandler(enabled = lockStateChange) {
         // Lock back button
     }
 }

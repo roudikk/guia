@@ -2,15 +2,17 @@ package com.roudikk.navigator.containers
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import com.roudikk.navigator.backstack.LifeCycleEntry
 import com.roudikk.navigator.backstack.BackStackManager
+import com.roudikk.navigator.backstack.LifeCycleEntry
 import com.roudikk.navigator.backstack.LocalProvider
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.navigationNode
+import com.roudikk.navigator.extensions.LocalNavigationNode
 
 /**
  * Renders the [LifeCycleEntry].
@@ -24,9 +26,14 @@ internal fun Navigator.NavigationEntryContainer(
     backStackManager: BackStackManager,
     lifecycleEntry: LifeCycleEntry
 ) = with(lifecycleEntry.backStackEntry) {
+
     lifecycleEntry.LocalProvider {
         Box(modifier = Modifier.testTag(navigationKey.tag())) {
-            navigationNode(this@with).Content()
+            val navigationNode = navigationNode(this@with)
+            CompositionLocalProvider(
+                LocalNavigationNode provides navigationNode,
+                content = navigationNode.content
+            )
         }
 
         DisposableEffect(backStackManager, lifecycleEntry) {

@@ -64,7 +64,7 @@ class Navigator internal constructor(
     internal val navigatorConfig: NavigatorConfig,
     resultManager: ResultManager
 ) : ResultManager by resultManager {
-
+    val navigationNodes = mutableMapOf<String, NavigationNode>()
     var overrideBackPress by mutableStateOf(true)
     var overrideNextTransition: EnterExitTransition? = null
     var backStack by mutableStateOf(listOf<BackStackEntry>())
@@ -113,12 +113,15 @@ class Navigator internal constructor(
     }
 }
 
-internal fun Navigator.navigationNode(backStackEntry: BackStackEntry) =
-    backStackEntry.navigationKey.let { navigationKey ->
-        if (navigationKey is NavigationKey.WithNode<*>) {
-            navigationKey.navigationNode()
-        } else {
-            navigatorConfig.presentations[navigationKey::class]?.invoke(navigationKey)
-                ?: error("No presentation found for $navigationKey, add one in NavigationConfig")
+internal fun Navigator.navigationNode(backStackEntry: BackStackEntry): NavigationNode {
+    return navigationNodes.getOrPut(backStackEntry.id) {
+        backStackEntry.navigationKey.let { navigationKey ->
+            if (navigationKey is NavigationKey.WithNode<*>) {
+                navigationKey.navigationNode()
+            } else {
+                navigatorConfig.presentations[navigationKey::class]?.invoke(navigationKey)
+                    ?: error("No presentation found for $navigationKey, add one in NavigationConfig")
+            }
         }
     }
+}

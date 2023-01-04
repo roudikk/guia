@@ -1,14 +1,9 @@
 package com.roudikk.navigator.containers
 
 import android.util.Log
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.AnimationSpec
-import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.with
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,12 +17,9 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.SwipeableDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,10 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.animation.EnterExitTransition
 import com.roudikk.navigator.backstack.LifeCycleEntry
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.NavigationNode
@@ -68,8 +57,8 @@ private fun rememberBottomSheetState(
     }
 }
 
-private fun Navigator.currentBottomSheet(bottomSheetEntry: LifeCycleEntry?): BottomSheet? {
-    return bottomSheetEntry?.backStackEntry?.let(::navigationNode) as? BottomSheet
+private fun Navigator.currentBottomSheet(): BottomSheet? {
+    return backStack.last().let(::navigationNode) as? BottomSheet
 }
 
 /**
@@ -83,12 +72,14 @@ internal fun Navigator.BottomSheetContainer(
     bottomSheetSetup: BottomSheetSetup,
     container: @Composable () -> Unit
 ) {
-    val currentEntry by remember { derivedStateOf { backStack.last() } }
-    val navigationNode = currentBottomSheet(bottomSheetEntry)
+    val currentBottomSheet = currentBottomSheet()
     val confirmStateChange = { sheetValue: ModalBottomSheetValue ->
-        currentBottomSheet(bottomSheetEntry)?.let {
-            it.bottomSheetOptions.confirmStateChange(sheetValue)
-        } ?: true
+        currentBottomSheet()
+            .also { Log.d("TEST1", "Sheet: $it") }
+            ?.let {
+                it.bottomSheetOptions.confirmStateChange(sheetValue)
+                    .also { Log.d("TEST1", "Sheet: $it") }
+            } ?: true
     }
 
     val bottomSheetState = rememberBottomSheetState(
@@ -98,7 +89,9 @@ internal fun Navigator.BottomSheetContainer(
             ModalBottomSheetValue.Expanded
         },
         animationSpec = bottomSheetSetup.animationSpec,
-        confirmStateChange = confirmStateChange
+        confirmStateChange = {
+            confirmStateChange(it)
+        }
     )
 
     // Make sure the bottom sheet is shown when the bottom sheet entry is available.
@@ -132,9 +125,7 @@ internal fun Navigator.BottomSheetContainer(
             BottomSheetContent(
                 bottomSheetSetup = bottomSheetSetup,
                 bottomSheetEntry = bottomSheetEntry,
-                navigationNode = navigationNode,
-                currentNavigationNode = navigationNode(currentEntry),
-                currentTransition = currentTransition,
+                bottomSheet = currentBottomSheet,
                 content = content,
             )
         },
@@ -146,9 +137,7 @@ internal fun Navigator.BottomSheetContainer(
 private fun ColumnScope.BottomSheetContent(
     bottomSheetSetup: BottomSheetSetup,
     bottomSheetEntry: LifeCycleEntry?,
-    navigationNode: NavigationNode?,
-    currentNavigationNode: NavigationNode,
-    currentTransition: EnterExitTransition,
+    bottomSheet: NavigationNode?,
     content: @Composable (LifeCycleEntry) -> Unit
 ) = Box(
     modifier = Modifier
@@ -172,63 +161,35 @@ private fun ColumnScope.BottomSheetContent(
             .then(
                 bottomSheetEntry?.backStackEntry
                     ?.let {
-                        (navigationNode as BottomSheet).bottomSheetOptions.modifier
+                        (bottomSheet as BottomSheet).bottomSheetOptions.modifier
                     } ?: Modifier
             )
     ) {
-        AnimatedContent(
-            targetState = bottomSheetEntry,
-            transitionSpec = {
-                // Only animate bottom sheet content when navigating between
-                // bottom sheet entries.
-                if (currentNavigationNode !is BottomSheet && targetState != null) {
-                    EnterTransition.None
-                } else {
-                    currentTransition.enter
-                } with if (initialState != null && navigationNode !is BottomSheet) {
-                    fadeOut(animationSpec = snap(delayMillis = 300))
-                } else {
-                    currentTransition.exit
-                }
-            },
-            contentAlignment = Alignment.BottomCenter
-        ) { bottomSheetEntry ->
-            if (bottomSheetEntry != null) {
-                Box(
-                    modifier = Modifier
-                        .testTag("BottomSheetContainer")
-                        .onGloballyPositioned {
-                            contentHeightDp = with(localDensity) {
-                                it.size.height
-                                    .toFloat()
-                                    .toDp()
-                            }.also {
-                                Log.d("TEST", "$contentHeightDp")
-                            }
-                        },
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    content(bottomSheetEntry)
-                }
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(contentHeightDp)
-                )
+        if (bottomSheetEntry != null) {
+            Box(
+                modifier = Modifier
+                    .testTag("BottomSheetContainer")
+                    .onGloballyPositioned {
+                        contentHeightDp = with(localDensity) {
+                            it.size.height
+                                .toFloat()
+                                .toDp()
+                        }.also {
+                            Log.d("TEST", "$contentHeightDp")
+                        }
+                    },
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                content(bottomSheetEntry)
             }
+        } else {
+            Box(
+                modifier = Modifier
+                    .height(contentHeightDp)
+            )
         }
     }
 }
-
-private fun dpSaver(density: Density) = Saver<MutableState<Dp>, Int>(
-    save = {
-        with(density) { it.value.toPx().toInt() }
-    },
-    restore = {
-        mutableStateOf(with(density) { it.toDp() })
-    }
-)
 
 /**
  * Provide extra bottom sheet options.

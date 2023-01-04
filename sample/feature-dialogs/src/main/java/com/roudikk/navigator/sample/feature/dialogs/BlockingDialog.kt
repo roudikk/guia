@@ -27,6 +27,7 @@ internal fun BlockingDialogScreen(
     showNextButton: Boolean
 ) {
     val navigator = requireNavigator()
+
     BlockingDialogContent(
         showNextButton = showNextButton,
         onNextClicked = { navigator.navigate(CancelableDialogKey(true)) },
@@ -41,8 +42,8 @@ private fun BlockingDialogContent(
     onCancelClicked: () -> Unit = {}
 ) {
     Surface(shape = RoundedCornerShape(16.dp)) {
+        Column(modifier = Modifier.padding(16.dp)) {
 
-        Column(Modifier.padding(16.dp)) {
             Text(
                 text = "None Cancelable",
                 style = MaterialTheme.typography.headlineSmall
@@ -52,7 +53,7 @@ private fun BlockingDialogContent(
 
             Text(
                 text = "This dialog cannot be cancelled by clicking outside or " +
-                        "pressing the back button."
+                    "pressing the back button."
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -75,7 +76,6 @@ private fun BlockingDialogContent(
         }
     }
 }
-
 
 @Preview(
     device = Devices.PIXEL_3

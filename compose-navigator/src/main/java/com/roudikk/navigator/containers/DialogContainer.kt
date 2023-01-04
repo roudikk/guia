@@ -25,7 +25,7 @@ internal fun Navigator.DialogContainer(
     val dialog = navigationNode(dialogEntry.backStackEntry) as Dialog
 
     Dialog(
-        onDismissRequest = { popBackstack() },
+        onDismissRequest = ::popBackstack,
         properties = dialog.dialogOptions.toDialogProperties()
     ) {
         AnimatedContent(

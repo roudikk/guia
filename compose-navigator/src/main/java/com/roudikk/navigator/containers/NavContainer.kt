@@ -52,16 +52,14 @@ private fun Navigator.NavContainerContent(
     bottomSheetSetup: BottomSheetSetup = BottomSheetSetup()
 ) {
     val canGoBack by navigator.canGoBack()
-
     val backStackManager = rememberBackStackManager(navigator = navigator)
-
     val visibleBackStack by backStackManager.visibleBackStack
 
-    val enabled by remember(canGoBack, navigator.overrideBackPress) {
+    val backEnabled by remember(canGoBack, navigator.overrideBackPress) {
         derivedStateOf { canGoBack && navigator.overrideBackPress }
     }
 
-    BackHandler(enabled) {
+    BackHandler(backEnabled) {
         navigator.popBackstack()
     }
 
@@ -70,7 +68,7 @@ private fun Navigator.NavContainerContent(
         bottomSheetEntry = visibleBackStack.bottomSheetEntry,
         bottomSheetSetup = bottomSheetSetup,
         content = { entry ->
-            BackHandler(enabled) {
+            BackHandler(backEnabled) {
                 navigator.popBackstack()
             }
 
@@ -95,7 +93,7 @@ private fun Navigator.NavContainerContent(
         }
     }
 
-    DisposableEffect(navigator) {
+    DisposableEffect(Unit) {
         onDispose(backStackManager::onDispose)
     }
 }

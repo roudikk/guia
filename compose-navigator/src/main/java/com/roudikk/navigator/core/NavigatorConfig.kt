@@ -5,6 +5,8 @@ package com.roudikk.navigator.core
 import androidx.compose.runtime.Composable
 import com.roudikk.navigator.animation.EnterExitTransition
 import com.roudikk.navigator.animation.NavigationTransition
+import com.roudikk.navigator.core.BottomSheet.BottomSheetOptions
+import com.roudikk.navigator.core.Dialog.DialogOptions
 import com.roudikk.navigator.extensions.Presentations
 import com.roudikk.navigator.extensions.Transition
 import com.roudikk.navigator.extensions.Transitions
