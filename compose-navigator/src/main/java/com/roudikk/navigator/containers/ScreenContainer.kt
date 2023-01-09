@@ -17,15 +17,13 @@ import com.roudikk.navigator.core.Screen
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun Navigator.ScreenContainer(
-    modifier: Modifier,
     screenEntry: LifeCycleEntry?,
     content: @Composable (LifeCycleEntry) -> Unit
 ) {
     AnimatedContent(
         targetState = screenEntry,
         modifier = Modifier
-            .fillMaxSize()
-            .then(modifier),
+            .fillMaxSize(),
         transitionSpec = {
             currentTransition.enter with currentTransition.exit
         }

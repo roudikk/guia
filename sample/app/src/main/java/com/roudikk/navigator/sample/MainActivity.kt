@@ -22,7 +22,6 @@ import com.roudikk.navigator.extensions.popTo
 import com.roudikk.navigator.extensions.setRoot
 import com.roudikk.navigator.sample.feature.bottomnav.api.BottomNavKey
 import com.roudikk.navigator.sample.feature.bottomnav.bottomNavNavigation
-import com.roudikk.navigator.sample.feature.common.composables.sampleBottomSheetOptions
 import com.roudikk.navigator.sample.feature.common.deeplink.DeepLinkViewModel
 import com.roudikk.navigator.sample.feature.common.deeplink.MainDestination
 import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
@@ -75,9 +74,7 @@ class MainActivity : ComponentActivity() {
                     LocalRootNavigator provides rootNavigator,
                     LocalNavHostViewModelStoreOwner provides requireNotNull(LocalViewModelStoreOwner.current)
                 ) {
-                    rootNavigator.NavContainer(
-                        bottomSheetOptions = sampleBottomSheetOptions()
-                    )
+                    rootNavigator.NavContainer()
                 }
 
                 LaunchedEffect(deepLinkViewModel.destinations) {

@@ -28,8 +28,7 @@ fun NavHost.NavContainer(
     modifier: (StackKey) -> Modifier = { Modifier },
     transitionSpec: AnimatedContentScope<StackEntry?>.() -> ContentTransform = {
         EnterTransition.None with ExitTransition.None
-    },
-    bottomSheetSetup: (StackKey) -> BottomSheetSetup
+    }
 ) {
     CompositionLocalProvider(LocalNavHost provides this) {
         AnimatedContent(
@@ -40,7 +39,6 @@ fun NavHost.NavContainer(
                 saveableStateHolder.SaveableStateProvider(it.stackKey) {
                     targetEntry.navigator.NavContainer(
                         modifier = modifier(targetEntry.stackKey),
-                        bottomSheetOptions = bottomSheetSetup(targetEntry.stackKey),
                     )
                 }
             }

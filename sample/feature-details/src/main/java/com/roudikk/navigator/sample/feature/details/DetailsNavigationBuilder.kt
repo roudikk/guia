@@ -39,7 +39,9 @@ fun NavigatorConfigBuilder.detailsNavigation(screenWidth: Int) {
             SampleSurfaceContainer { DetailsContent(item = it.item) }
         }
     } else {
-        bottomSheet<DynamicDetailsKey> { DetailsContent(item = it.item) }
+        bottomSheet<DynamicDetailsKey> {
+            DetailsContent(item = it.item)
+        }
     }
 
     screen<DetailsKey> { DetailsScaffold(item = it.item) }

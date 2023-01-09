@@ -41,7 +41,7 @@ internal fun DetailsScaffold(
                     }
                 },
             )
-        },
+        }
     ) { padding ->
         Box(
             modifier = Modifier

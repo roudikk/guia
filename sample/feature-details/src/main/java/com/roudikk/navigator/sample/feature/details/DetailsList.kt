@@ -50,15 +50,15 @@ fun DetailsList(
     onOverrideScreenTransitionSelected: () -> Unit = {}
 ) {
     val height = rememberSaveable(key = "height") {
-        (200..500).random().also {
+        (300..500).random().also {
             Log.d("TEST", "New height: $it")
         }
     }
 
-
     Column(
         modifier = Modifier
             .height(height.dp)
+//            .background(Color.Red)
             .verticalScroll(rememberScrollState())
             .fillMaxWidth()
             .padding(vertical = 16.dp),

@@ -1,6 +1,7 @@
 package com.roudikk.navigator.containers
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -24,12 +25,10 @@ import com.roudikk.navigator.extensions.popBackstack
  * container.
  *
  * @param modifier, applied to [ScreenContainer] for all [Screen] navigation nodes.
- * @param bottomSheetOptions, custom options for bottom sheets rendered within this container.
  */
 @Composable
 fun Navigator.NavContainer(
-    modifier: Modifier = Modifier,
-    bottomSheetOptions: BottomSheetSetup = BottomSheetSetup()
+    modifier: Modifier = Modifier
 ) {
     val parentNavigator = findNavigator()
 
@@ -40,7 +39,6 @@ fun Navigator.NavContainer(
         NavContainerContent(
             navigator = this,
             modifier = modifier,
-            bottomSheetSetup = bottomSheetOptions
         )
     }
 }
@@ -48,9 +46,8 @@ fun Navigator.NavContainer(
 @Composable
 private fun Navigator.NavContainerContent(
     modifier: Modifier = Modifier,
-    navigator: Navigator,
-    bottomSheetSetup: BottomSheetSetup = BottomSheetSetup()
-) {
+    navigator: Navigator
+) = BoxWithConstraints(modifier = modifier) {
     val canGoBack by navigator.canGoBack()
     val backStackManager = rememberBackStackManager(navigator = navigator)
     val visibleBackStack by backStackManager.visibleBackStack
@@ -62,11 +59,16 @@ private fun Navigator.NavContainerContent(
     BackHandler(backEnabled) {
         navigator.popBackstack()
     }
+    // Screen content
+    ScreenContainer(
+        screenEntry = visibleBackStack.screenEntry
+    ) { entry ->
+        NavigationEntryContainer(backStackManager, entry)
+    }
 
     // Bottom sheet content
     BottomSheetContainer(
         bottomSheetEntry = visibleBackStack.bottomSheetEntry,
-        bottomSheetSetup = bottomSheetSetup,
         content = { entry ->
             BackHandler(backEnabled) {
                 navigator.popBackstack()
@@ -74,15 +76,7 @@ private fun Navigator.NavContainerContent(
 
             NavigationEntryContainer(backStackManager, entry)
         }
-    ) {
-        // Screen content
-        ScreenContainer(
-            modifier = modifier,
-            screenEntry = visibleBackStack.screenEntry
-        ) { entry ->
-            NavigationEntryContainer(backStackManager, entry)
-        }
-    }
+    )
 
     // Dialog content
     visibleBackStack.dialogEntry?.let { dialogEntry ->

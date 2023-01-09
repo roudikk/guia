@@ -1,8 +1,6 @@
 package com.roudikk.navigator.core
 
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -10,9 +8,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
+import com.roudikk.navigator.containers.BottomSheetValue
 import com.roudikk.navigator.core.Dialog.DialogOptions
 
 /**
@@ -99,9 +99,9 @@ class BottomSheet(
      * @property confirmStateChange, check [rememberModalBottomSheetState]
      * it reaches a hidden state.
      */
-    @OptIn(ExperimentalMaterialApi::class)
     data class BottomSheetOptions(
         val modifier: Modifier = Modifier,
-        val confirmStateChange: (value: ModalBottomSheetValue) -> Boolean = { true }
+        val scrimColor: Color? = null,
+        val confirmStateChange: (value: BottomSheetValue) -> Boolean = { true }
     )
 }
