@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.animation.EnterExitTransition
 import com.roudikk.navigator.animation.ProvideNavigationVisibilityScope
 import com.roudikk.navigator.backstack.LifeCycleEntry
+import com.roudikk.navigator.containers.BottomSheetValue.Expanded
 import com.roudikk.navigator.containers.BottomSheetValue.Hidden
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Navigator
@@ -52,11 +53,7 @@ internal fun Navigator.BottomSheetContainer(
     }
 
     val bottomSheetState = rememberBottomSheetState(
-        initialValue = if (bottomSheetEntry == null) {
-            Hidden
-        } else {
-            BottomSheetValue.Expanded
-        },
+        initialValue = bottomSheetEntry?.let { Expanded } ?: Hidden,
         confirmStateChange = confirmStateChange
     )
 
@@ -68,7 +65,6 @@ internal fun Navigator.BottomSheetContainer(
     ) {
         BottomSheetContent(
             sheetState = bottomSheetState,
-            bottomSheet = bottomSheet,
             bottomSheetEntry = bottomSheetEntry,
             currentTransition = currentTransition,
             content = content
@@ -98,7 +94,6 @@ internal fun Navigator.BottomSheetContainer(
 @Composable
 private fun BottomSheetContent(
     sheetState: BottomSheetState,
-    bottomSheet: BottomSheet?,
     bottomSheetEntry: LifeCycleEntry?,
     currentTransition: EnterExitTransition,
     content: @Composable (LifeCycleEntry) -> Unit
@@ -111,7 +106,7 @@ private fun BottomSheetContent(
         AnimatedContent(
             targetState = bottomSheetEntry,
             transitionSpec = {
-                val enterTransition = when  {
+                val enterTransition = when {
                     initialState == null -> EnterTransition.None
                     sheetState.currentValue == Hidden -> EnterTransition.None
                     else -> currentTransition.enter

@@ -15,7 +15,7 @@ fun SampleSurfaceContainer(
     Surface(
         modifier = modifier.widthIn(max = 500.dp),
         tonalElevation = 4.dp,
-        shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+        shape = RoundedCornerShape(12.dp),
         content = content
     )
 }

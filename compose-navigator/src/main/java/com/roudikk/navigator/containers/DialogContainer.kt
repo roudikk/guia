@@ -19,9 +19,11 @@ import com.roudikk.navigator.extensions.popBackstack
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun Navigator.DialogContainer(
-    dialogEntry: LifeCycleEntry,
+    dialogEntry: LifeCycleEntry?,
     content: @Composable (LifeCycleEntry) -> Unit
 ) {
+    dialogEntry ?: return
+
     val dialog = navigationNode(dialogEntry.backStackEntry) as Dialog
 
     Dialog(

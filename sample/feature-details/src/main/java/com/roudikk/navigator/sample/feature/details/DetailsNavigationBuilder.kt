@@ -56,7 +56,7 @@ fun NavigatorConfigBuilder.detailsNavigation(screenWidth: Int) {
     screen<DetailsKey> { DetailsScaffold(item = it.item) }
 
     transition<DetailsBottomSheetKey> { -> MaterialSharedAxisTransitionX }
-    transition<DetailsDialogKey> { -> CrossFadeTransition }
+    transition<DetailsDialogKey> { -> MaterialSharedAxisTransitionX }
     transition<DynamicDetailsKey> { -> CrossFadeTransition }
     transition<DetailsKey> { -> MaterialSharedAxisTransitionX }
 }

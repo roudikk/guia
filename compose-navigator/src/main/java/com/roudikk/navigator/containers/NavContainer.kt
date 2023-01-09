@@ -79,12 +79,10 @@ private fun Navigator.NavContainerContent(
     )
 
     // Dialog content
-    visibleBackStack.dialogEntry?.let { dialogEntry ->
-        DialogContainer(
-            dialogEntry = dialogEntry
-        ) { entry ->
-            NavigationEntryContainer(backStackManager, entry)
-        }
+    DialogContainer(
+        dialogEntry = visibleBackStack.dialogEntry
+    ) { entry ->
+        NavigationEntryContainer(backStackManager, entry)
     }
 
     DisposableEffect(Unit) {
