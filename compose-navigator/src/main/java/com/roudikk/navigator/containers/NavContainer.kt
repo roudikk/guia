@@ -69,6 +69,7 @@ private fun Navigator.NavContainerContent(
     BackHandler(backEnabled) {
         navigator.popBackstack()
     }
+    
     // Screen content
     ScreenContainer(
         screenEntry = visibleBackStack.screenEntry

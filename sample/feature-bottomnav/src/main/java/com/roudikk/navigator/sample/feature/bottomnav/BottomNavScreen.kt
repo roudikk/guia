@@ -10,6 +10,7 @@ import androidx.compose.animation.with
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountTree
 import androidx.compose.material.icons.filled.Home
@@ -30,7 +31,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.backstack.navhost.StackHistoryBackHandler
+import com.roudikk.navigator.backstack.navhost.DefaultStackBackHandler
 import com.roudikk.navigator.containers.NavContainer
 import com.roudikk.navigator.core.NavigatorConfigBuilder
 import com.roudikk.navigator.core.rememberNavigator
@@ -123,7 +124,7 @@ fun BottomNavScreen(
 
     BottomNavContent(navHost)
 
-    navHost.StackHistoryBackHandler()
+    navHost.DefaultStackBackHandler(HomeStackKey)
 
     LaunchedEffect(deepLinkViewModel.destinations) {
         navHost.deeplink(deepLinkViewModel)
@@ -171,17 +172,22 @@ private fun BottomNavContent(
         navHost.NavContainer(
             modifier = {
                 Modifier
-                    .padding(padding)
-                    .navigationBarsPadding()
+                    .padding(bottom = 80.dp)
             },
             bottomSheetContainer = { _, content ->
                 SampleSurfaceContainer(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .navigationBarsPadding()
+                        .statusBarsPadding(),
                     content = content
                 )
             },
             dialogContainer = { _, content ->
-                SampleSurfaceContainer(content = content)
+                SampleSurfaceContainer(
+                    modifier = Modifier.padding(16.dp),
+                    content = content
+                )
             },
             transitionSpec = {
                 if (targetState?.stackKey is NavigationTreeStackKey) {
