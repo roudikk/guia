@@ -95,12 +95,10 @@ class BottomSheet(
     /**
      * Options used in a [BottomSheet]
      *
-     * @property modifier, modifier applied to the bottom sheet container
      * @property confirmStateChange, check [rememberModalBottomSheetState]
      * it reaches a hidden state.
      */
     data class BottomSheetOptions(
-        val modifier: Modifier = Modifier,
         val scrimColor: Color? = null,
         val confirmStateChange: (value: BottomSheetValue) -> Boolean = { true }
     )

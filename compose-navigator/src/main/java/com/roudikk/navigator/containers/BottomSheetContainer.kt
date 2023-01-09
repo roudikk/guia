@@ -16,6 +16,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -41,13 +42,15 @@ internal fun Navigator.BottomSheetContainer(
     content: @Composable (LifeCycleEntry) -> Unit,
     bottomSheetEntry: LifeCycleEntry?
 ) {
-    val confirmStateChange = { sheetValue: BottomSheetValue ->
-        currentBottomSheet()?.let {
-            it.bottomSheetOptions.confirmStateChange(sheetValue)
-        } ?: true
+    val bottomSheet = currentBottomSheet()
+    val confirmStateChange = remember(bottomSheet) {
+        { sheetValue: BottomSheetValue ->
+            bottomSheet?.let {
+                it.bottomSheetOptions.confirmStateChange(sheetValue)
+            } ?: true
+        }
     }
 
-    val bottomSheet = currentBottomSheet()
     val bottomSheetState = rememberBottomSheetState(
         initialValue = if (bottomSheetEntry == null) {
             Hidden
@@ -65,6 +68,7 @@ internal fun Navigator.BottomSheetContainer(
     ) {
         BottomSheetContent(
             sheetState = bottomSheetState,
+            bottomSheet = bottomSheet,
             bottomSheetEntry = bottomSheetEntry,
             currentTransition = currentTransition,
             content = content
@@ -94,6 +98,7 @@ internal fun Navigator.BottomSheetContainer(
 @Composable
 private fun BottomSheetContent(
     sheetState: BottomSheetState,
+    bottomSheet: BottomSheet?,
     bottomSheetEntry: LifeCycleEntry?,
     currentTransition: EnterExitTransition,
     content: @Composable (LifeCycleEntry) -> Unit
@@ -106,8 +111,9 @@ private fun BottomSheetContent(
         AnimatedContent(
             targetState = bottomSheetEntry,
             transitionSpec = {
-                val enterTransition = when (initialState) {
-                    null -> EnterTransition.None
+                val enterTransition = when  {
+                    initialState == null -> EnterTransition.None
+                    sheetState.currentValue == Hidden -> EnterTransition.None
                     else -> currentTransition.enter
                 }
 
