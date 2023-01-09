@@ -1,13 +1,16 @@
 package com.roudikk.navigator.sample.feature.details
 
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.Dialog.DialogOptions
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigatorConfigBuilder
+import com.roudikk.navigator.extensions.requireBottomSheet
 import com.roudikk.navigator.sample.feature.common.composables.SampleSurfaceContainer
 import com.roudikk.navigator.sample.feature.common.navigation.CrossFadeTransition
 import com.roudikk.navigator.sample.feature.common.navigation.MaterialSharedAxisTransitionX
@@ -24,6 +27,18 @@ internal class DetailsDialogKey(val item: String) : NavigationKey.WithNode<Dialo
 @Parcelize
 class DetailsBottomSheetKey(val item: String) : NavigationKey.WithNode<BottomSheet> {
     override fun navigationNode() = BottomSheet {
+        val bottomSheet = requireBottomSheet()
+
+        LaunchedEffect(Unit) {
+            bottomSheet.bottomSheetOptions = bottomSheet.bottomSheetOptions.copy(
+                scrimColor = Color(
+                    red = (0..255).random(),
+                    green = (0..255).random(),
+                    blue = (0..255).random(),
+                ).copy(alpha = 0.12F)
+            )
+        }
+
         DetailsContent(item = item)
     }
 }
