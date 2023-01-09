@@ -11,12 +11,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -40,16 +37,15 @@ private fun Navigator.currentBottomSheet(): BottomSheet? {
  */
 @Composable
 internal fun Navigator.BottomSheetContainer(
-    content: @Composable (LifeCycleEntry) -> Unit,
-    bottomSheetEntry: LifeCycleEntry?
+    container: Container,
+    bottomSheetEntry: LifeCycleEntry?,
+    content: @Composable (LifeCycleEntry) -> Unit
 ) {
     val bottomSheet = currentBottomSheet()
-    val confirmStateChange = remember(bottomSheet) {
-        { sheetValue: BottomSheetValue ->
-            bottomSheet?.let {
-                it.bottomSheetOptions.confirmStateChange(sheetValue)
-            } ?: true
-        }
+    val confirmStateChange = { sheetValue: BottomSheetValue ->
+        currentBottomSheet()?.let {
+            it.bottomSheetOptions.confirmStateChange(sheetValue)
+        } ?: true
     }
 
     val bottomSheetState = rememberBottomSheetState(
@@ -63,12 +59,22 @@ internal fun Navigator.BottomSheetContainer(
         scrimColor = bottomSheet?.bottomSheetOptions?.scrimColor
             ?: MaterialTheme.colors.onSurface.copy(alpha = 0.12F)
     ) {
-        BottomSheetContent(
-            sheetState = bottomSheetState,
-            bottomSheetEntry = bottomSheetEntry,
-            currentTransition = currentTransition,
-            content = content
-        )
+        Box(
+            modifier = Modifier.onGloballyPositioned {
+                if (bottomSheetEntry != null) {
+                    bottomSheetState.sheetHeight = it.size.height.toFloat()
+                }
+            }
+        ) {
+            container {
+                BottomSheetContent(
+                    sheetState = bottomSheetState,
+                    bottomSheetEntry = bottomSheetEntry,
+                    currentTransition = currentTransition,
+                    content = content
+                )
+            }
+        }
     }
 
     // Make sure the bottom sheet is shown when the bottom sheet entry is available.
@@ -88,6 +94,12 @@ internal fun Navigator.BottomSheetContainer(
             popBackstack()
         }
     }
+
+    LaunchedEffect(bottomSheetState.currentValue) {
+        if (bottomSheetState.currentValue == Hidden) {
+            bottomSheetState.sheetHeight = null
+        }
+    }
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -98,46 +110,36 @@ private fun BottomSheetContent(
     currentTransition: EnterExitTransition,
     content: @Composable (LifeCycleEntry) -> Unit
 ) {
-    Surface(
-        shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
-    ) {
-        val density = LocalDensity.current
+    val density = LocalDensity.current
 
-        AnimatedContent(
-            targetState = bottomSheetEntry,
-            transitionSpec = {
-                val enterTransition = when {
-                    initialState == null -> EnterTransition.None
-                    sheetState.currentValue == Hidden -> EnterTransition.None
-                    else -> currentTransition.enter
-                }
-
-                val exitTransition = when {
-                    initialState == null && targetState != null -> ExitTransition.None
-                    targetState == null -> fadeOut(animationSpec = snap(delayMillis = 300))
-                    else -> currentTransition.exit
-                }
-
-                enterTransition with exitTransition
+    AnimatedContent(
+        targetState = bottomSheetEntry,
+        transitionSpec = {
+            val enterTransition = when {
+                initialState == null -> EnterTransition.None
+                sheetState.currentValue == Hidden -> EnterTransition.None
+                else -> currentTransition.enter
             }
-        ) { bottomSheetEntry ->
-            if (bottomSheetEntry != null) {
-                Box(
-                    modifier = Modifier.onGloballyPositioned {
-                        sheetState.sheetHeight = it.size.height.toFloat()
-                    }
-                ) {
-                    ProvideNavigationVisibilityScope {
-                        content(bottomSheetEntry)
-                    }
-                }
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(with(density) { sheetState.sheetHeight?.toDp() ?: 1.dp })
-                )
+
+            val exitTransition = when {
+                initialState == null && targetState != null -> ExitTransition.None
+                targetState == null -> fadeOut(animationSpec = snap(delayMillis = 300))
+                else -> currentTransition.exit
             }
+
+            enterTransition with exitTransition
+        }
+    ) { targetEntry ->
+        if (targetEntry != null) {
+            ProvideNavigationVisibilityScope {
+                content(targetEntry)
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(with(density) { sheetState.sheetHeight?.toDp() ?: 1.dp })
+            )
         }
     }
 }

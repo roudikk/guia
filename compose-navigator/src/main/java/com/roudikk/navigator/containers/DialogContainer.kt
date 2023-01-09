@@ -19,6 +19,7 @@ import com.roudikk.navigator.extensions.popBackstack
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun Navigator.DialogContainer(
+    container: Container,
     dialogEntry: LifeCycleEntry?,
     content: @Composable (LifeCycleEntry) -> Unit
 ) {
@@ -26,19 +27,21 @@ internal fun Navigator.DialogContainer(
 
     val dialog = navigationNode(dialogEntry.backStackEntry) as Dialog
 
-    Dialog(
-        onDismissRequest = ::popBackstack,
-        properties = dialog.dialogOptions.toDialogProperties()
-    ) {
-        AnimatedContent(
-            targetState = dialogEntry,
-            modifier = dialog.dialogOptions.modifier,
-            transitionSpec = {
-                currentTransition.enter with currentTransition.exit
-            }
-        ) { dialogEntry ->
-            ProvideNavigationVisibilityScope {
-                content(dialogEntry)
+    container {
+        Dialog(
+            onDismissRequest = ::popBackstack,
+            properties = dialog.dialogOptions.toDialogProperties()
+        ) {
+            AnimatedContent(
+                targetState = dialogEntry,
+                modifier = dialog.dialogOptions.modifier,
+                transitionSpec = {
+                    currentTransition.enter with currentTransition.exit
+                }
+            ) { dialogEntry ->
+                ProvideNavigationVisibilityScope {
+                    content(dialogEntry)
+                }
             }
         }
     }

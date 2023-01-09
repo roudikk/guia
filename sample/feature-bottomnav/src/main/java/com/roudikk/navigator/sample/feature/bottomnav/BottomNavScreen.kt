@@ -40,6 +40,7 @@ import com.roudikk.navigator.navhost.NavHost
 import com.roudikk.navigator.navhost.StackEntry
 import com.roudikk.navigator.navhost.StackKey
 import com.roudikk.navigator.navhost.rememberNavHost
+import com.roudikk.navigator.sample.feature.common.composables.SampleSurfaceContainer
 import com.roudikk.navigator.sample.feature.common.deeplink.BottomNavDestination.DialogsTab
 import com.roudikk.navigator.sample.feature.common.deeplink.BottomNavDestination.HomeTab
 import com.roudikk.navigator.sample.feature.common.deeplink.BottomNavDestination.NavigationTreeTab
@@ -170,8 +171,17 @@ private fun BottomNavContent(
         navHost.NavContainer(
             modifier = {
                 Modifier
-                    .padding(bottom = 80.dp)
+                    .padding(padding)
                     .navigationBarsPadding()
+            },
+            bottomSheetContainer = { _, content ->
+                SampleSurfaceContainer(
+                    modifier = Modifier.padding(16.dp),
+                    content = content
+                )
+            },
+            dialogContainer = { _, content ->
+                SampleSurfaceContainer(content = content)
             },
             transitionSpec = {
                 if (targetState?.stackKey is NavigationTreeStackKey) {

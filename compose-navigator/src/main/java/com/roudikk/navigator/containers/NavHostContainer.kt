@@ -15,6 +15,11 @@ import com.roudikk.navigator.navhost.NavHost
 import com.roudikk.navigator.navhost.StackEntry
 import com.roudikk.navigator.navhost.StackKey
 
+internal typealias StackKeyContainer = @Composable (
+    stackKey: StackKey,
+    content: @Composable () -> Unit
+) -> Unit
+
 /**
  * Renders the current state of a [NavHost].
  *
@@ -26,6 +31,8 @@ import com.roudikk.navigator.navhost.StackKey
 @Composable
 fun NavHost.NavContainer(
     modifier: (StackKey) -> Modifier = { Modifier },
+    bottomSheetContainer: StackKeyContainer = { _, content -> content() },
+    dialogContainer: StackKeyContainer = { _, content -> content() },
     transitionSpec: AnimatedContentScope<StackEntry?>.() -> ContentTransform = {
         EnterTransition.None with ExitTransition.None
     }
@@ -39,6 +46,12 @@ fun NavHost.NavContainer(
                 saveableStateHolder.SaveableStateProvider(it.stackKey) {
                     targetEntry.navigator.NavContainer(
                         modifier = modifier(targetEntry.stackKey),
+                        bottomSheetContainer = { content ->
+                            bottomSheetContainer(targetEntry.stackKey, content)
+                        },
+                        dialogContainer = { content ->
+                            dialogContainer(targetEntry.stackKey, content)
+                        },
                     )
                 }
             }

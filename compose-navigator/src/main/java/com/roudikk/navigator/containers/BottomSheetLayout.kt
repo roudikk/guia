@@ -27,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -65,11 +64,6 @@ class BottomSheetState(
 
     var sheetHeight by mutableStateOf<Float?>(null)
 
-    fun sheetHeight(sheetHeight: Float) {
-        val oldSheetHeight = sheetHeight
-
-    }
-
     suspend fun show() = animateTo(Expanded)
     suspend fun hide() = animateTo(Hidden)
 
@@ -106,19 +100,23 @@ fun BottomSheetLayout(
     BoxWithConstraints(modifier) {
         val fullHeight = constraints.maxHeight.toFloat()
         val sheetHeight = sheetState.sheetHeight
-        val anchors = sheetHeight?.let {
-            if (sheetHeight < fullHeight / 2) {
-                mapOf(
-                    fullHeight to Hidden,
-                    fullHeight - sheetHeight to Expanded
-                )
-            } else {
-                mapOf(
-                    fullHeight to Hidden,
-                    max(0f, fullHeight - sheetHeight) to Expanded
-                )
-            }
-        } ?: emptyMap()
+        val anchors = remember(sheetHeight) {
+            sheetHeight?.let {
+                if (sheetHeight < fullHeight / 2) {
+                    mapOf(
+                        fullHeight to Hidden,
+                        fullHeight - sheetHeight to Expanded
+                    )
+                } else {
+                    mapOf(
+                        fullHeight to Hidden,
+                        max(0f, fullHeight - sheetHeight) to Expanded
+                    )
+                }
+            } ?: emptyMap()
+        }
+
+        Log.d("TEST", "${sheetState.offset.value}, $sheetHeight")
 
         Box(Modifier.fillMaxSize()) {
             Scrim(
@@ -146,7 +144,7 @@ fun BottomSheetLayout(
                     }
                     IntOffset(0, y)
                 }
-                .bottomSheetSwipeable(sheetState, fullHeight, sheetHeight)
+                .bottomSheetSwipeable(sheetState, anchors)
                 .semantics {
                     if (sheetState.isVisible) {
                         dismiss {
@@ -168,24 +166,9 @@ fun BottomSheetLayout(
 @OptIn(ExperimentalMaterialApi::class)
 private fun Modifier.bottomSheetSwipeable(
     sheetState: BottomSheetState,
-    fullHeight: Float,
-    sheetHeight: Float?
+    anchors: Map<Float, BottomSheetValue>
 ): Modifier {
-    val modifier = if (sheetHeight != null) {
-        val anchors = if (sheetHeight < fullHeight / 2) {
-            mapOf(
-                fullHeight to Hidden,
-                fullHeight - sheetHeight to Expanded
-            )
-        } else {
-            mapOf(
-                fullHeight to Hidden,
-                max(0f, fullHeight - sheetHeight) to Expanded
-            )
-        }
-
-        Log.d("TESTA", "$anchors")
-
+    val modifier = if (anchors.isNotEmpty()) {
         Modifier.swipeable(
             state = sheetState,
             anchors = anchors,
@@ -206,32 +189,31 @@ private fun Scrim(
     onDismiss: () -> Unit,
     visible: Boolean
 ) {
-    if (color.isSpecified) {
-        val animatedColor by animateColorAsState(color)
-        val resources = LocalContext.current.resources
-        val alpha by animateFloatAsState(
-            targetValue = if (visible) 1f else 0f,
-            animationSpec = tween()
-        )
-        val closeSheet = resources.getString(androidx.compose.ui.R.string.close_sheet)
-        val dismissModifier = if (visible) {
-            Modifier
-                .pointerInput(onDismiss) { detectTapGestures { onDismiss() } }
-                .semantics(mergeDescendants = true) {
-                    contentDescription = closeSheet
-                    onClick { onDismiss(); true }
-                }
-        } else {
-            Modifier
-        }
+    val animatedColor by animateColorAsState(color)
+    val resources = LocalContext.current.resources
+    val alpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        animationSpec = tween()
+    )
+    val closeSheet = resources.getString(androidx.compose.ui.R.string.close_sheet)
 
-        Canvas(
-            Modifier
-                .fillMaxSize()
-                .then(dismissModifier)
-        ) {
-            drawRect(color = animatedColor, alpha = alpha)
-        }
+    val dismissModifier = if (visible) {
+        Modifier
+            .pointerInput(onDismiss) { detectTapGestures { onDismiss() } }
+            .semantics(mergeDescendants = true) {
+                contentDescription = closeSheet
+                onClick { onDismiss(); true }
+            }
+    } else {
+        Modifier
+    }
+
+    Canvas(
+        Modifier
+            .fillMaxSize()
+            .then(dismissModifier)
+    ) {
+        drawRect(color = animatedColor, alpha = alpha)
     }
 }
 

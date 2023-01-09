@@ -16,7 +16,9 @@ import com.roudikk.navigator.animation.to
 val MaterialSharedAxisTransitionX = NavigationTransition(
     enterExit = slideInHorizontally { (it * 0.2f).toInt() } + fadeIn(
         animationSpec = tween(300)
-    ) to slideOutHorizontally { -(it * 0.1f).toInt() },
+    ) to slideOutHorizontally { -(it * 0.1f).toInt() } + fadeOut(
+        animationSpec = tween(150)
+    ),
 
     popEnterExit = slideInHorizontally { -(it * 0.1f).toInt() } + fadeIn(
         animationSpec = tween(300)

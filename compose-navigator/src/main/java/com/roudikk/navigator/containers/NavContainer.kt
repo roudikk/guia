@@ -18,6 +18,10 @@ import com.roudikk.navigator.extensions.canGoBack
 import com.roudikk.navigator.extensions.findNavigator
 import com.roudikk.navigator.extensions.popBackstack
 
+internal typealias Container = @Composable (
+    content: @Composable () -> Unit
+) -> Unit
+
 /**
  * [NavContainer] renders the current state of a [Navigator].
  *
@@ -28,7 +32,9 @@ import com.roudikk.navigator.extensions.popBackstack
  */
 @Composable
 fun Navigator.NavContainer(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    bottomSheetContainer: Container = { content -> content() },
+    dialogContainer: Container = { content -> content() }
 ) {
     val parentNavigator = findNavigator()
 
@@ -39,14 +45,18 @@ fun Navigator.NavContainer(
         NavContainerContent(
             navigator = this,
             modifier = modifier,
+            bottomSheetContainer = bottomSheetContainer,
+            dialogContainer = dialogContainer
         )
     }
 }
 
 @Composable
 private fun Navigator.NavContainerContent(
+    navigator: Navigator,
     modifier: Modifier = Modifier,
-    navigator: Navigator
+    bottomSheetContainer: Container,
+    dialogContainer: Container,
 ) = BoxWithConstraints(modifier = modifier) {
     val canGoBack by navigator.canGoBack()
     val backStackManager = rememberBackStackManager(navigator = navigator)
@@ -69,17 +79,18 @@ private fun Navigator.NavContainerContent(
     // Bottom sheet content
     BottomSheetContainer(
         bottomSheetEntry = visibleBackStack.bottomSheetEntry,
-        content = { entry ->
-            BackHandler(backEnabled) {
-                navigator.popBackstack()
-            }
-
-            NavigationEntryContainer(backStackManager, entry)
+        container = bottomSheetContainer,
+    ) { entry ->
+        BackHandler(backEnabled) {
+            navigator.popBackstack()
         }
-    )
+
+        NavigationEntryContainer(backStackManager, entry)
+    }
 
     // Dialog content
     DialogContainer(
+        container = dialogContainer,
         dialogEntry = visibleBackStack.dialogEntry
     ) { entry ->
         NavigationEntryContainer(backStackManager, entry)
