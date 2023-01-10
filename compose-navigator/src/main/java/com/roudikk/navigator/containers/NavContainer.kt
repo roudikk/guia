@@ -1,5 +1,6 @@
 package com.roudikk.navigator.containers
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.MaterialTheme
@@ -71,6 +72,7 @@ private fun Navigator.NavContainerContent(
         derivedStateOf { canGoBack && navigator.overrideBackPress }
     }
 
+    Log.d("TEST1", "$navigator, $backEnabled")
     BackHandler(backEnabled) {
         navigator.popBackstack()
     }
@@ -97,8 +99,8 @@ private fun Navigator.NavContainerContent(
 
     // Dialog content
     DialogContainer(
+        dialogEntry = visibleBackStack.dialogEntry,
         container = dialogContainer,
-        dialogEntry = visibleBackStack.dialogEntry
     ) { entry ->
         NavigationEntryContainer(backStackManager, entry)
     }

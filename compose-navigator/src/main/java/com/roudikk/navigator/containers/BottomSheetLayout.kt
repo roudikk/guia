@@ -10,7 +10,6 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.SwipeableDefaults
@@ -23,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -129,7 +129,7 @@ fun BottomSheetLayout(
 
         Box(
             Modifier
-                .fillMaxWidth()
+                .align(TopCenter)
                 .nestedScroll(sheetState.nestedScrollConnection)
                 .offset {
                     val y = if (anchors.isEmpty()) {
@@ -139,6 +139,7 @@ fun BottomSheetLayout(
                         // if we do know our anchors, respect them
                         sheetState.offset.value.roundToInt()
                     }
+
                     IntOffset(0, y)
                 }
                 .bottomSheetSwipeable(sheetState, anchors)
