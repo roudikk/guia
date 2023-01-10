@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.backstack.navhost.DefaultStackBackHandler
+import com.roudikk.navigator.backstack.navhost.StackHistoryBackHandler
 import com.roudikk.navigator.containers.NavContainer
 import com.roudikk.navigator.core.NavigatorConfigBuilder
 import com.roudikk.navigator.core.rememberNavigator
@@ -125,7 +125,7 @@ fun BottomNavScreen(
 
     BottomNavContent(navHost)
 
-    navHost.DefaultStackBackHandler(HomeStackKey)
+    navHost.StackHistoryBackHandler()
 
     LaunchedEffect(deepLinkViewModel.destinations) {
         navHost.deeplink(deepLinkViewModel)

@@ -1,7 +1,5 @@
 package com.roudikk.navigator.containers
 
-import android.util.Log
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -12,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.roudikk.navigator.backstack.NavBackHandler
 import com.roudikk.navigator.backstack.rememberBackStackManager
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.Screen
@@ -72,8 +71,7 @@ private fun Navigator.NavContainerContent(
         derivedStateOf { canGoBack && navigator.overrideBackPress }
     }
 
-    Log.d("TEST1", "$navigator, $backEnabled")
-    BackHandler(backEnabled) {
+    NavBackHandler(enabled = backEnabled) {
         navigator.popBackstack()
     }
 
@@ -81,7 +79,10 @@ private fun Navigator.NavContainerContent(
     ScreenContainer(
         screenEntry = visibleBackStack.screenEntry
     ) { entry ->
-        NavigationEntryContainer(backStackManager, entry)
+        NavigationEntryContainer(
+            backStackManager = backStackManager,
+            lifecycleEntry = entry
+        )
     }
 
     // Bottom sheet content
@@ -90,11 +91,14 @@ private fun Navigator.NavContainerContent(
         defaultScrimColor = defaultScrimColor,
         container = bottomSheetContainer,
     ) { entry ->
-        BackHandler(backEnabled) {
+        NavBackHandler(enabled = backEnabled) {
             navigator.popBackstack()
         }
 
-        NavigationEntryContainer(backStackManager, entry)
+        NavigationEntryContainer(
+            backStackManager = backStackManager,
+            lifecycleEntry = entry
+        )
     }
 
     // Dialog content
@@ -102,7 +106,10 @@ private fun Navigator.NavContainerContent(
         dialogEntry = visibleBackStack.dialogEntry,
         container = dialogContainer,
     ) { entry ->
-        NavigationEntryContainer(backStackManager, entry)
+        NavigationEntryContainer(
+            backStackManager = backStackManager,
+            lifecycleEntry = entry
+        )
     }
 
     DisposableEffect(Unit) {
