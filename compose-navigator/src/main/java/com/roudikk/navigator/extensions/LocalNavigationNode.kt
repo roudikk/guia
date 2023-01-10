@@ -12,17 +12,17 @@ internal val LocalNavigationNode = compositionLocalOf<NavigationNode> {
 }
 
 @Composable
-fun requireNavigationNode(): NavigationNode {
+fun localNavigationNode(): NavigationNode {
     return checkNotNull(LocalNavigationNode.current) {
         "Must be called inside a Composable hosted in a navigation node."
     }
 }
 
 @Composable
-fun requireBottomSheet() = requireNavigationNode() as BottomSheet
+fun localBottomSheet() = localNavigationNode() as BottomSheet
 
 @Composable
-fun requireDialog() = requireNavigationNode() as Dialog
+fun localDialog() = localNavigationNode() as Dialog
 
 @Composable
-fun requireScreen() = requireNavigationNode() as Screen
+fun localsScreen() = localNavigationNode() as Screen

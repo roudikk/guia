@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popBackstack
-import com.roudikk.navigator.extensions.requireDialog
+import com.roudikk.navigator.extensions.localDialog
 import com.roudikk.navigator.extensions.requireNavigator
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
 import com.roudikk.navigator.sample.feature.dialogs.api.CancelableDialogKey
@@ -48,7 +48,7 @@ private fun BlockingDialogContent(
     onNextClicked: () -> Unit = {},
     onCancelClicked: () -> Unit = {}
 ) {
-    val dialog = requireDialog()
+    val dialog = localDialog()
     var dismissDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(dismissDialog) {

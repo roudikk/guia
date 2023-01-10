@@ -27,9 +27,7 @@ class BackStackEntry internal constructor(
         return other is BackStackEntry && other.id == id
     }
 
-    override fun hashCode(): Int {
-        return id.hashCode()
-    }
+    override fun hashCode() = id.hashCode()
 }
 
 fun NavigationKey.entry() = BackStackEntry(this)

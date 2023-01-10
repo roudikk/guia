@@ -20,13 +20,13 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.core.BottomSheet
-import com.roudikk.navigator.extensions.requireBottomSheet
+import com.roudikk.navigator.extensions.localBottomSheet
 import com.roudikk.navigator.sample.feature.common.composables.SampleSurfaceContainer
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
 
 @Composable
 internal fun BlockingBottomSheetScreen() {
-    val bottomSheet = requireBottomSheet()
+    val bottomSheet = localBottomSheet()
     var lockStateChange by rememberSaveable { mutableStateOf(true) }
 
     LaunchedEffect(lockStateChange) {
