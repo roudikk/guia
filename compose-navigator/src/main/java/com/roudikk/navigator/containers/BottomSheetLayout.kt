@@ -1,5 +1,7 @@
 package com.roudikk.navigator.containers
 
+import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.animateFloatAsState
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.SwipeableDefaults
 import androidx.compose.material.SwipeableState
 import androidx.compose.material.swipeable
@@ -86,6 +89,26 @@ fun rememberBottomSheetState(
     }
 }
 
+/**
+ * A copy of [ModalBottomSheetLayout] that works better with the navigation system.
+ *
+ * - No Surface is used around the content, the content can have any Surface behind it, including
+ * Material 2 or Material 3 surfaces.
+ * - The content is aligned automatically in the center.
+ * - The sheet container does not take full width, this means the left/right side of a bottom sheet
+ * that doesn't take up the full width is no longer swipeable in those empty spaces, instead clicking
+ * those spaces will now properly dismiss the sheet.
+ * - The sheet state is not saveable, this is because the initial state is decided by the navigation's
+ * bottom sheet entry. This has better result when navigating back to a container that has a BottomSheet
+ * as its last entry, instead of it sliding up every time, it would already be in the expanded state.
+ * - For some reason using [ModalBottomSheetLayout] the content would not be interactable for a split
+ * second after it changes, clicking on a button in the new content would simply not trigger.
+ * - the sheet height is now calculated in [BottomSheetContainer], which means the consumer would
+ * need to report back the height to this layout to function properly. The reason behind this is
+ * the content is wrapped in an [AnimatedContent] and we need to use the new sheet's height as the current
+ * height even when animating, this results in a much smoother animation between sheets that have
+ * different heights.
+ */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BottomSheetLayout(
@@ -193,6 +216,9 @@ private fun Scrim(
         targetValue = if (visible) 1f else 0f,
         animationSpec = tween()
     )
+
+    // We want to use Composes "Close sheet" announcement for TalkBack
+    @SuppressLint("PrivateResource")
     val closeSheet = resources.getString(androidx.compose.ui.R.string.close_sheet)
 
     val dismissModifier = if (visible) {

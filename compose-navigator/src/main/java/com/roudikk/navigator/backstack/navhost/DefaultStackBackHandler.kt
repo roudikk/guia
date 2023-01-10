@@ -2,6 +2,7 @@ package com.roudikk.navigator.backstack.navhost
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import com.roudikk.navigator.backstack.NavBackHandler
 import com.roudikk.navigator.containers.NavContainer
 import com.roudikk.navigator.navhost.NavHost
 import com.roudikk.navigator.navhost.StackKey
@@ -19,7 +20,7 @@ fun NavHost.DefaultStackBackHandler(stackKey: StackKey) {
         "$stackKey is not part of the nav host."
     }
 
-    BackHandler(stackKey != currentEntry?.stackKey) {
+    NavBackHandler(stackKey != currentEntry?.stackKey) {
         setActive(stackKey)
     }
 }

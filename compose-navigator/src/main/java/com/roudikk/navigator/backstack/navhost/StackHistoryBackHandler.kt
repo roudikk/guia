@@ -7,6 +7,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import com.roudikk.navigator.backstack.NavBackHandler
 import com.roudikk.navigator.containers.NavContainer
 import com.roudikk.navigator.core.BackStackEntry
 import com.roudikk.navigator.extensions.currentEntry
@@ -74,7 +75,7 @@ fun NavHost.StackHistoryBackHandler() {
     }
 
     // Get the previous entry and navigate to its Stack Key.
-    BackHandler(overrideBackPress) {
+    NavBackHandler(overrideBackPress) {
         stackHistory.getOrNull(stackHistory.lastIndex - 1)?.let {
             setActive(it.stackKey)
             stackHistory.removeLast()
