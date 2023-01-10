@@ -67,6 +67,7 @@ dependencies {
     // Unit test
     testImplementation(libs.coroutines.test)
     testImplementation(libs.junit)
+    testImplementation(libs.google.truth)
     debugImplementation(libs.compose.ui.test)
 
     // Android test

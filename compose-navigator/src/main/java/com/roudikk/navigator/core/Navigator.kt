@@ -64,7 +64,7 @@ class Navigator internal constructor(
     internal val navigatorConfig: NavigatorConfig,
     resultManager: ResultManager
 ) : ResultManager by resultManager {
-    val navigationNodes = mutableMapOf<String, NavigationNode>()
+    internal val navigationNodes = mutableMapOf<String, NavigationNode>()
     var overrideBackPress by mutableStateOf(true)
     var overrideNextTransition: EnterExitTransition? = null
     var backStack by mutableStateOf(listOf<BackStackEntry>())

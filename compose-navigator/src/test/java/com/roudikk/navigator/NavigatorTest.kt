@@ -1,4 +1,5 @@
 import com.google.common.truth.Truth.assertThat
+import com.roudikk.navigator.core.entries
 import com.roudikk.navigator.util.TestNavigationKey
 import com.roudikk.navigator.util.navigatorWithKey
 import org.junit.Test
@@ -10,11 +11,9 @@ class NavigatorTest {
         val navigationKey = TestNavigationKey()
         val navigator = navigatorWithKey(navigationKey)
 
-        assertThat(navigator.backStack).isEqualTo(listOf(navigationKey))
-        assertThat(navigator.navigationEntries.size).isEqualTo(1)
-        assertThat(navigator.navigationEntries.any { it.navigationKey == navigationKey }).isTrue()
-        assertThat(navigator.navigationEntriesMap.size).isEqualTo(1)
-        assertThat(navigator.navigationEntriesMap[navigationKey]).isNotNull()
+        assertThat(navigator.backStackKeys).isEqualTo(listOf(navigationKey))
+        assertThat(navigator.backStack.size).isEqualTo(1)
+        assertThat(navigator.backStack.any { it.navigationKey == navigationKey }).isTrue()
     }
 
     @Test
@@ -24,13 +23,10 @@ class NavigatorTest {
 
         val newKeys = (0 until 3).map { TestNavigationKey() }
 
-        navigator.setBackstack(newKeys)
+        navigator.setBackstack(newKeys.entries())
 
-        assertThat(navigator.backStack).isEqualTo(newKeys)
-        assertThat(navigator.navigationEntries.size).isEqualTo(3)
-        assertThat(navigator.navigationEntries.all { newKeys.contains(it.navigationKey) }).isTrue()
-        assertThat(navigator.navigationEntriesMap.size).isEqualTo(3)
-        newKeys.forEach { assertThat(navigator.navigationEntriesMap[it]).isNotNull() }
-        assertThat(navigator.navigationEntriesMap[navigationKey]).isNull()
+        assertThat(navigator.backStackKeys).isEqualTo(newKeys)
+        assertThat(navigator.backStack.size).isEqualTo(3)
+        assertThat(navigator.backStack.all { newKeys.contains(it.navigationKey) }).isTrue()
     }
 }

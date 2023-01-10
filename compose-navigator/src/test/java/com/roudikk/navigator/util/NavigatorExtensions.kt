@@ -7,7 +7,6 @@ import com.roudikk.navigator.core.NavigatorResultManager
 
 fun navigatorWithKey(navigationKey: NavigationKey) = Navigator(
     initialKey = navigationKey,
-    saveableStateHolder = TestSaveableStateHolder(),
     navigatorConfig = NavigatorConfig(),
     resultManager = NavigatorResultManager()
 )

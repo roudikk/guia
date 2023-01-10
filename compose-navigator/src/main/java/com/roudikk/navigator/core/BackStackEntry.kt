@@ -31,3 +31,4 @@ class BackStackEntry internal constructor(
 }
 
 fun NavigationKey.entry() = BackStackEntry(this)
+fun List<NavigationKey>.entries() = this.map(NavigationKey::entry)
