@@ -1,7 +1,10 @@
 package com.roudikk.navigator.sample.feature.common.composables
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,12 +14,16 @@ import androidx.compose.ui.unit.dp
 fun SampleSurfaceContainer(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
-) {
-    Box(modifier = modifier) {
-        Surface(
-            tonalElevation = 4.dp,
-            shape = RoundedCornerShape(12.dp),
-            content = content
+) = Surface(
+    modifier = modifier
+        .border(
+            width = 2.dp,
+            color = MaterialTheme.colorScheme.primary,
+            shape = RoundedCornerShape(12.dp)
         )
-    }
-}
+        .heightIn(max = 500.dp)
+        .widthIn(max = 500.dp),
+    tonalElevation = 4.dp,
+    shape = RoundedCornerShape(12.dp),
+    content = content
+)

@@ -1,6 +1,5 @@
 package com.roudikk.navigator.containers
 
-import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.animateFloatAsState
@@ -115,8 +114,6 @@ fun BottomSheetLayout(
                 }
             } ?: emptyMap()
         }
-
-        Log.d("TEST", "${sheetState.offset.value}, $sheetHeight")
 
         Box(Modifier.fillMaxSize()) {
             Scrim(

@@ -7,9 +7,11 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.with
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.roudikk.navigator.extensions.LocalNavHost
 import com.roudikk.navigator.navhost.NavHost
 import com.roudikk.navigator.navhost.StackEntry
@@ -31,6 +33,9 @@ internal typealias StackKeyContainer = @Composable (
 @Composable
 fun NavHost.NavContainer(
     modifier: (StackKey) -> Modifier = { Modifier },
+    defaultScrimColor: @Composable (StackKey) -> Color = {
+        MaterialTheme.colors.onSurface.copy(alpha = 0.32f)
+    },
     bottomSheetContainer: StackKeyContainer = { _, content -> content() },
     dialogContainer: StackKeyContainer = { _, content -> content() },
     transitionSpec: AnimatedContentScope<StackEntry?>.() -> ContentTransform = {
@@ -46,6 +51,7 @@ fun NavHost.NavContainer(
                 saveableStateHolder.SaveableStateProvider(it.stackKey) {
                     targetEntry.navigator.NavContainer(
                         modifier = modifier(targetEntry.stackKey),
+                        defaultScrimColor = defaultScrimColor(targetEntry.stackKey),
                         bottomSheetContainer = { content ->
                             bottomSheetContainer(targetEntry.stackKey, content)
                         },

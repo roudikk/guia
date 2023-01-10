@@ -1,7 +1,8 @@
 package com.roudikk.navigator.containers
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -9,6 +10,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.roudikk.navigator.backstack.rememberBackStackManager
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.Screen
@@ -33,6 +35,7 @@ internal typealias Container = @Composable (
 @Composable
 fun Navigator.NavContainer(
     modifier: Modifier = Modifier,
+    defaultScrimColor: Color = MaterialTheme.colors.onSurface.copy(alpha = 0.32F),
     bottomSheetContainer: Container = { content -> content() },
     dialogContainer: Container = { content -> content() }
 ) {
@@ -45,6 +48,7 @@ fun Navigator.NavContainer(
         NavContainerContent(
             navigator = this,
             modifier = modifier,
+            defaultScrimColor = defaultScrimColor,
             bottomSheetContainer = bottomSheetContainer,
             dialogContainer = dialogContainer
         )
@@ -55,9 +59,10 @@ fun Navigator.NavContainer(
 private fun Navigator.NavContainerContent(
     navigator: Navigator,
     modifier: Modifier = Modifier,
+    defaultScrimColor: Color,
     bottomSheetContainer: Container,
     dialogContainer: Container,
-) = BoxWithConstraints(modifier = modifier) {
+) = Box(modifier = modifier) {
     val canGoBack by navigator.canGoBack()
     val backStackManager = rememberBackStackManager(navigator = navigator)
     val visibleBackStack by backStackManager.visibleBackStack
@@ -69,7 +74,7 @@ private fun Navigator.NavContainerContent(
     BackHandler(backEnabled) {
         navigator.popBackstack()
     }
-    
+
     // Screen content
     ScreenContainer(
         screenEntry = visibleBackStack.screenEntry
@@ -80,6 +85,7 @@ private fun Navigator.NavContainerContent(
     // Bottom sheet content
     BottomSheetContainer(
         bottomSheetEntry = visibleBackStack.bottomSheetEntry,
+        defaultScrimColor = defaultScrimColor,
         container = bottomSheetContainer,
     ) { entry ->
         BackHandler(backEnabled) {

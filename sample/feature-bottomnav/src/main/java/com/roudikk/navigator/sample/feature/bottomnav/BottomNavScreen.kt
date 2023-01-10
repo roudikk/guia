@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisallowComposableCalls
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -171,8 +172,10 @@ private fun BottomNavContent(
     ) { padding ->
         navHost.NavContainer(
             modifier = {
-                Modifier
-                    .padding(bottom = 80.dp)
+                Modifier.padding(bottom = 80.dp)
+            },
+            defaultScrimColor = {
+                Color.Black.copy(alpha = 0.32F)
             },
             bottomSheetContainer = { _, content ->
                 SampleSurfaceContainer(

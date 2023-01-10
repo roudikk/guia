@@ -11,6 +11,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -77,8 +78,9 @@ class MainActivity : ComponentActivity() {
                 ) {
                     rootNavigator.NavContainer(
                         bottomSheetContainer = { content ->
-                            Surface { content() }
-                        }
+                            Surface(tonalElevation = 4.dp) { content() }
+                        },
+                        defaultScrimColor = Color.Black.copy(alpha = 0.32F),
                     )
                 }
 

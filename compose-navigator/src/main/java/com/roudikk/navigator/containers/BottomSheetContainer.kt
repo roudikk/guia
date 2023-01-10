@@ -11,10 +11,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
@@ -39,6 +39,7 @@ private fun Navigator.currentBottomSheet(): BottomSheet? {
 internal fun Navigator.BottomSheetContainer(
     container: Container,
     bottomSheetEntry: LifeCycleEntry?,
+    defaultScrimColor: Color,
     content: @Composable (LifeCycleEntry) -> Unit
 ) {
     val bottomSheet = currentBottomSheet()
@@ -56,8 +57,7 @@ internal fun Navigator.BottomSheetContainer(
     BottomSheetLayout(
         modifier = Modifier.fillMaxSize(),
         sheetState = bottomSheetState,
-        scrimColor = bottomSheet?.bottomSheetOptions?.scrimColor
-            ?: MaterialTheme.colors.onSurface.copy(alpha = 0.12F)
+        scrimColor = bottomSheet?.bottomSheetOptions?.scrimColor ?: defaultScrimColor
     ) {
         Box(
             modifier = Modifier.onGloballyPositioned {
