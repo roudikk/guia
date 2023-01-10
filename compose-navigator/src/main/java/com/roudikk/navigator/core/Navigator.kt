@@ -69,9 +69,7 @@ class Navigator internal constructor(
     var overrideNextTransition: EnterExitTransition? = null
     var backStack by mutableStateOf(listOf<BackStackEntry>())
         private set
-    val backStackKeys by derivedStateOf {
-        backStack.map { it.navigationKey }
-    }
+    val backStackKeys by derivedStateOf { backStack.map { it.navigationKey } }
 
     internal var currentTransition by mutableStateOf(EnterExitTransition.None)
 

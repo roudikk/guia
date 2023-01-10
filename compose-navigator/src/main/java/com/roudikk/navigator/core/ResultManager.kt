@@ -32,9 +32,7 @@ class NavigatorResultManager : ResultManager {
 
     internal var results = mutableStateMapOf<String, Any?>()
 
-    override fun result(key: String): Any? {
-        return results[key]
-    }
+    override fun result(key: String) = results[key]
 
     override fun setResult(key: String, result: Any) {
         results[key] = result
