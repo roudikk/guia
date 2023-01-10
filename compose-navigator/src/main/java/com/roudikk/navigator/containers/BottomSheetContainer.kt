@@ -39,7 +39,7 @@ private fun Navigator.currentBottomSheet(): BottomSheet? {
 internal fun Navigator.BottomSheetContainer(
     container: Container,
     bottomSheetEntry: LifeCycleEntry?,
-    defaultScrimColor: Color,
+    bottomSheetScrimColor: Color,
     content: @Composable (LifeCycleEntry) -> Unit
 ) {
     val bottomSheet = currentBottomSheet()
@@ -57,7 +57,7 @@ internal fun Navigator.BottomSheetContainer(
     BottomSheetLayout(
         modifier = Modifier.fillMaxSize(),
         sheetState = bottomSheetState,
-        scrimColor = bottomSheet?.bottomSheetOptions?.scrimColor ?: defaultScrimColor
+        scrimColor = bottomSheet?.bottomSheetOptions?.scrimColor ?: bottomSheetScrimColor
     ) {
         Box(
             modifier = Modifier.onGloballyPositioned {

@@ -35,7 +35,7 @@ internal typealias Container = @Composable (
 @Composable
 fun Navigator.NavContainer(
     modifier: Modifier = Modifier,
-    defaultScrimColor: Color = MaterialTheme.colors.onSurface.copy(alpha = 0.32F),
+    bottomSheetScrimColor: Color = MaterialTheme.colors.onSurface.copy(alpha = 0.32F),
     bottomSheetContainer: Container = { content -> content() },
     dialogContainer: Container = { content -> content() }
 ) {
@@ -48,7 +48,7 @@ fun Navigator.NavContainer(
         NavContainerContent(
             navigator = this,
             modifier = modifier,
-            defaultScrimColor = defaultScrimColor,
+            bottomSheetScrimColor = bottomSheetScrimColor,
             bottomSheetContainer = bottomSheetContainer,
             dialogContainer = dialogContainer
         )
@@ -59,7 +59,7 @@ fun Navigator.NavContainer(
 private fun Navigator.NavContainerContent(
     navigator: Navigator,
     modifier: Modifier = Modifier,
-    defaultScrimColor: Color,
+    bottomSheetScrimColor: Color,
     bottomSheetContainer: Container,
     dialogContainer: Container,
 ) = Box(modifier = modifier) {
@@ -88,7 +88,7 @@ private fun Navigator.NavContainerContent(
     // Bottom sheet content
     BottomSheetContainer(
         bottomSheetEntry = visibleBackStack.bottomSheetEntry,
-        defaultScrimColor = defaultScrimColor,
+        bottomSheetScrimColor = bottomSheetScrimColor,
         container = bottomSheetContainer,
     ) { entry ->
         NavBackHandler(enabled = backEnabled) {

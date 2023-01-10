@@ -80,7 +80,7 @@ class MainActivity : ComponentActivity() {
                         bottomSheetContainer = { content ->
                             Surface(tonalElevation = 4.dp) { content() }
                         },
-                        defaultScrimColor = Color.Black.copy(alpha = 0.32F),
+                        bottomSheetScrimColor = Color.Black.copy(alpha = 0.32F),
                     )
                 }
 

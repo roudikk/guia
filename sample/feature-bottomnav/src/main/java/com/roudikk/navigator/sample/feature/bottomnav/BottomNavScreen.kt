@@ -174,7 +174,7 @@ private fun BottomNavContent(
             modifier = {
                 Modifier.padding(bottom = 80.dp)
             },
-            defaultScrimColor = {
+            bottomSheetScrimColor = {
                 Color.Black.copy(alpha = 0.32F)
             },
             bottomSheetContainer = { _, content ->

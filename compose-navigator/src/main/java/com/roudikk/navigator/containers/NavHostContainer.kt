@@ -33,7 +33,7 @@ internal typealias StackKeyContainer = @Composable (
 @Composable
 fun NavHost.NavContainer(
     modifier: (StackKey) -> Modifier = { Modifier },
-    defaultScrimColor: @Composable (StackKey) -> Color = {
+    bottomSheetScrimColor: @Composable (StackKey) -> Color = {
         MaterialTheme.colors.onSurface.copy(alpha = 0.32f)
     },
     bottomSheetContainer: StackKeyContainer = { _, content -> content() },
@@ -51,7 +51,7 @@ fun NavHost.NavContainer(
                 saveableStateHolder.SaveableStateProvider(it.stackKey) {
                     targetEntry.navigator.NavContainer(
                         modifier = modifier(targetEntry.stackKey),
-                        defaultScrimColor = defaultScrimColor(targetEntry.stackKey),
+                        bottomSheetScrimColor = bottomSheetScrimColor(targetEntry.stackKey),
                         bottomSheetContainer = { content ->
                             bottomSheetContainer(targetEntry.stackKey, content)
                         },
