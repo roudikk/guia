@@ -123,15 +123,15 @@ inline fun <reified Key : NavigationKey> Navigator.moveToTop(
  *
  * @param navigationKey, the new navigation key.
  * @param match, whether should start matching from top or the bottom of the backstack.
- * @param useExisting, if true then we check the backstack first for a matching navigation key
+ * @param checkForExisting, if true then we check the backstack first for a matching navigation key
  * and use that instance instead of [navigationKey]
  */
 inline fun <reified Key : NavigationKey> Navigator.singleInstance(
     navigationKey: Key,
     match: Match = Match.Last,
-    useExisting: Boolean = true,
+    checkForExisting: Boolean = false,
 ) {
-    val existingEntry = if (useExisting) {
+    val existingEntry = if (checkForExisting) {
         when (match) {
             Match.First -> backStack.firstOrNull { it.navigationKey is Key }
             Match.Last -> backStack.lastOrNull { it.navigationKey is Key }

@@ -34,12 +34,12 @@ fun DetailsEventEffect(
 
             is DetailsEvent.OpenExistingSingleInstance -> navigator.singleInstance(
                 navigationKey = DetailsKey(event.item),
-                useExisting = true
+                checkForExisting = true
             )
 
             is DetailsEvent.OpenNewSingleInstance -> navigator.singleInstance(
                 navigationKey = DetailsKey(event.item),
-                useExisting = false
+                checkForExisting = false
             )
 
             is DetailsEvent.OpenRandomItem -> navigator.navigate(

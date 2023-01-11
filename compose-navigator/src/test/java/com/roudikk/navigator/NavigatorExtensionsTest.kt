@@ -8,6 +8,7 @@ import com.roudikk.navigator.extensions.moveToTop
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.replaceLast
 import com.roudikk.navigator.extensions.replaceUpTo
+import com.roudikk.navigator.extensions.singleInstance
 import com.roudikk.navigator.util.TestDataKey
 import com.roudikk.navigator.util.TestKey
 import com.roudikk.navigator.util.TestKey2
@@ -290,6 +291,98 @@ class NavigatorExtensionsTest {
                 add(initialKey)
                 addAll(keys)
             }
+        )
+    }
+
+    @Test
+    fun navigator_singleInstance_checkForExisting() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+
+        val keys = (0..2).map(::TestDataKey)
+        keys.forEach(navigator::navigate)
+
+        navigator.assertKeys(
+            buildList {
+                add(initialKey)
+                addAll(keys)
+            }
+        )
+
+        val newKey = TestDataKey(1)
+        navigator.singleInstance(
+            navigationKey = newKey,
+            match = Match.Last,
+            checkForExisting = true
+        )
+
+        navigator.assertKeys(initialKey, keys[2])
+
+        navigator.navigate(keys[0])
+        navigator.navigate(keys[1])
+
+        navigator.assertKeys(
+            initialKey,
+            keys[2],
+            keys[0],
+            keys[1]
+        )
+
+        navigator.singleInstance(
+            navigationKey = newKey,
+            match = Match.First,
+            checkForExisting = true
+        )
+
+        navigator.assertKeys(
+            initialKey,
+            keys[2]
+        )
+    }
+
+    @Test
+    fun navigator_singleInstance_notCheckForExisting() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+
+        val keys = (0..2).map(::TestDataKey)
+        keys.forEach(navigator::navigate)
+
+        navigator.assertKeys(
+            buildList {
+                add(initialKey)
+                addAll(keys)
+            }
+        )
+
+        val newKey = TestDataKey(1)
+        navigator.singleInstance(
+            navigationKey = newKey,
+            match = Match.Last,
+            checkForExisting = false
+        )
+
+        navigator.assertKeys(initialKey, newKey)
+
+        navigator.navigate(keys[0])
+        navigator.navigate(keys[1])
+
+        navigator.assertKeys(
+            initialKey,
+            newKey,
+            keys[0],
+            keys[1]
+        )
+
+        navigator.singleInstance(
+            navigationKey = newKey,
+            match = Match.First,
+            checkForExisting = false
+        )
+
+        navigator.assertKeys(
+            initialKey,
+            newKey
         )
     }
 }
