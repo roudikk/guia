@@ -73,21 +73,25 @@ inline fun <reified Key : NavigationKey> Navigator.replaceUpTo(
     predicate = { it::class == Key::class }
 )
 
+enum class Match {
+    First,
+    Last
+}
+
 /**
  * Moves a navigation key that matches the given condition to the top
  *
- * @param matchLast, whether should start matching from top or the bottom of the backstack.
+ * @param match, whether should start matching from top or the bottom of the backstack.
  * @param predicate, condition to be met by the navigation key.
  * @return true if there was a navigation key that matched the predicate.
  */
 fun Navigator.moveToTop(
-    matchLast: Boolean = true,
+    match: Match = Match.Last,
     predicate: (NavigationKey) -> Boolean
 ): Boolean {
-    val existingEntry = if (matchLast) {
-        backStack.findLast { predicate(it.navigationKey) }
-    } else {
-        backStack.find { predicate(it.navigationKey) }
+    val existingEntry = when (match) {
+        Match.Last -> backStack.lastOrNull { predicate(it.navigationKey) }
+        Match.First -> backStack.firstOrNull { predicate(it.navigationKey) }
     }
 
     return existingEntry?.let {
@@ -107,10 +111,10 @@ fun Navigator.moveToTop(
  * @see moveToTop
  */
 inline fun <reified Key : NavigationKey> Navigator.moveToTop(
-    matchLast: Boolean = true,
+    match: Match = Match.Last,
 ) = moveToTop(
     predicate = { it::class == Key::class },
-    matchLast = matchLast
+    match = match
 )
 
 /**
@@ -123,11 +127,17 @@ inline fun <reified Key : NavigationKey> Navigator.moveToTop(
  */
 inline fun <reified Key : NavigationKey> Navigator.singleInstance(
     navigationKey: Key,
+    match: Match = Match.Last,
     useExisting: Boolean = true,
 ) {
-    val existingEntry = backStack
-        .lastOrNull { it.navigationKey is Key }
-        .takeIf { useExisting }
+    val existingEntry = if (useExisting) {
+        when (match) {
+            Match.First -> backStack.firstOrNull { it.navigationKey is Key }
+            Match.Last -> backStack.lastOrNull { it.navigationKey is Key }
+        }
+    } else {
+        null
+    }
     val newBackStack = backStack.toMutableList()
     newBackStack.removeAll { it.navigationKey is Key }
     newBackStack.add(existingEntry ?: navigationKey.entry())
