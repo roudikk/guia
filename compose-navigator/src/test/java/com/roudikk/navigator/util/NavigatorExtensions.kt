@@ -1,5 +1,6 @@
 package com.roudikk.navigator.util
 
+import com.google.common.truth.Truth.assertThat
 import com.roudikk.navigator.core.BackStackEntry
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.Navigator
@@ -18,4 +19,13 @@ fun testNavigator(
 
 fun Navigator.entryForKey(navigationKey: NavigationKey): BackStackEntry {
     return backStack.first { it.navigationKey == navigationKey }
+}
+
+fun Navigator.assertKeys(keys: List<NavigationKey>) {
+    assertThat(backStackKeys).isEqualTo(keys)
+    assertThat(backStack.all { keys.contains(it.navigationKey) }).isTrue()
+}
+
+fun Navigator.assertKeys(vararg keys: NavigationKey) {
+    assertKeys(keys.toList())
 }
