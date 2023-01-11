@@ -122,6 +122,7 @@ inline fun <reified Key : NavigationKey> Navigator.moveToTop(
  * backstack.
  *
  * @param navigationKey, the new navigation key.
+ * @param match, whether should start matching from top or the bottom of the backstack.
  * @param useExisting, if true then we check the backstack first for a matching navigation key
  * and use that instance instead of [navigationKey]
  */
