@@ -46,49 +46,6 @@ import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.roundToInt
 
-enum class BottomSheetValue {
-    Hidden,
-    Expanded,
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-class BottomSheetState(
-    initialValue: BottomSheetValue,
-    animationSpec: AnimationSpec<Float> = SwipeableDefaults.AnimationSpec,
-    internal var confirmStateChange: (BottomSheetValue) -> Boolean = { true }
-) : SwipeableState<BottomSheetValue>(
-    initialValue = initialValue,
-    animationSpec = animationSpec,
-    confirmStateChange = confirmStateChange
-) {
-    val isVisible: Boolean
-        get() = currentValue != Hidden
-
-    var sheetHeight by mutableStateOf<Float?>(null)
-
-    suspend fun show() = animateTo(Expanded)
-    suspend fun hide() = animateTo(Hidden)
-
-    internal val nestedScrollConnection = this.PreUpPostDownNestedScrollConnection
-}
-
-@Composable
-fun rememberBottomSheetState(
-    initialValue: BottomSheetValue,
-    animationSpec: AnimationSpec<Float> = SwipeableDefaults.AnimationSpec,
-    confirmStateChange: (BottomSheetValue) -> Boolean = { true }
-): BottomSheetState {
-    return remember {
-        BottomSheetState(
-            initialValue = initialValue,
-            animationSpec = animationSpec,
-            confirmStateChange = confirmStateChange
-        )
-    }.apply {
-        this.confirmStateChange = confirmStateChange
-    }
-}
-
 /**
  * A copy of [ModalBottomSheetLayout] that works better with the navigation system.
  *
@@ -285,3 +242,46 @@ internal val <T> SwipeableState<T>.PreUpPostDownNestedScrollConnection: NestedSc
 
         private fun Offset.toFloat(): Float = this.y
     }
+
+enum class BottomSheetValue {
+    Hidden,
+    Expanded,
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+class BottomSheetState(
+    initialValue: BottomSheetValue,
+    animationSpec: AnimationSpec<Float> = SwipeableDefaults.AnimationSpec,
+    internal var confirmStateChange: (BottomSheetValue) -> Boolean = { true }
+) : SwipeableState<BottomSheetValue>(
+    initialValue = initialValue,
+    animationSpec = animationSpec,
+    confirmStateChange = confirmStateChange
+) {
+    val isVisible: Boolean
+        get() = currentValue != Hidden
+
+    var sheetHeight by mutableStateOf<Float?>(null)
+
+    suspend fun show() = animateTo(Expanded)
+    suspend fun hide() = animateTo(Hidden)
+
+    internal val nestedScrollConnection = this.PreUpPostDownNestedScrollConnection
+}
+
+@Composable
+fun rememberBottomSheetState(
+    initialValue: BottomSheetValue,
+    animationSpec: AnimationSpec<Float> = SwipeableDefaults.AnimationSpec,
+    confirmStateChange: (BottomSheetValue) -> Boolean = { true }
+): BottomSheetState {
+    return remember {
+        BottomSheetState(
+            initialValue = initialValue,
+            animationSpec = animationSpec,
+            confirmStateChange = confirmStateChange
+        )
+    }.apply {
+        this.confirmStateChange = confirmStateChange
+    }
+}

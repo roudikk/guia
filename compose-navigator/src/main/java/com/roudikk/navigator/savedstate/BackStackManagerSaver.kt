@@ -11,6 +11,9 @@ import com.roudikk.navigator.backstack.BackStackManager
 import com.roudikk.navigator.core.Navigator
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Used to save and restore the state of a [BackStackManager].
+ */
 internal fun backStackManagerSaver(
     navigator: Navigator,
     application: Application,
@@ -39,9 +42,6 @@ internal fun backStackManagerSaver(
     }
 )
 
-/**
- * Used to save and restore the state of a [BackStackManager].
- */
 @Parcelize
 internal class BackStackManagerState(
     val id: String,

@@ -31,6 +31,9 @@ internal typealias Container = @Composable (
  * container.
  *
  * @param modifier, applied to [ScreenContainer] for all [Screen] navigation nodes.
+ * @param bottomSheetScrimColor, the scrim color the bottom sheet entries.
+ * @param bottomSheetContainer, the container behind the bottom sheet entries.
+ * @param dialogContainer, the container behind the dialog entries.
  */
 @Composable
 fun Navigator.NavContainer(

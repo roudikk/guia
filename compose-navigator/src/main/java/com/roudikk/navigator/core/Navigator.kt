@@ -58,6 +58,7 @@ fun rememberNavigator(
  * @property overrideNextTransition, use this to override the next transition used in the next [setBackstack] call.
  * After the back stack is set, this is reset back to null.
  * @property backStack, the current back stack. To update, use [setBackstack].
+ * @property backStackKeys, the current back stack keys.
  */
 class Navigator internal constructor(
     internal val initialKey: NavigationKey,
@@ -78,10 +79,20 @@ class Navigator internal constructor(
         setBackstack(initialKey.entry())
     }
 
+    /**
+     * Updates the current back stack.
+     *
+     * @param entries, the new back stack entries.
+     */
     fun setBackstack(vararg entries: BackStackEntry) {
         setBackstack(entries.toList())
     }
 
+    /**
+     * Updates the current back stack.
+     *
+     * @param entries, the new back stack entries.
+     */
     fun setBackstack(
         entries: List<BackStackEntry>,
     ) {
@@ -111,6 +122,17 @@ class Navigator internal constructor(
     }
 }
 
+/**
+ * Returns the [NavigationNode] given a [BackStackEntry].
+ *
+ * If the entry's key is a [NavigationKey.WithNode] then the key itself provides its navigation node.
+ * Otherwise the key must have a defined presentation inside [NavigatorConfig.presentations]
+ *
+ * @param backStackEntry, the entry that requires a navigation node.
+ *
+ * @throws IllegalStateException if there is not presentation defined in [NavigatorConfig.presentations]
+ * for the type of [BackStackEntry] provided.
+ */
 internal fun Navigator.navigationNode(backStackEntry: BackStackEntry): NavigationNode {
     return navigationNodes.getOrPut(backStackEntry.id) {
         backStackEntry.navigationKey.let { navigationKey ->

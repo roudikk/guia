@@ -10,9 +10,7 @@ import com.roudikk.navigator.core.ResultManager
 import kotlinx.parcelize.Parcelize
 
 /**
- * Compose saver for [Navigator].
- *
- * Saves and restores the state of a navigator.
+ * Used to save and restore the state of a [Navigator].
  */
 internal fun navigatorSaver(
     navigatorConfig: NavigatorConfig,
