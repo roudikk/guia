@@ -6,8 +6,8 @@ import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popBackstack
 import com.roudikk.navigator.extensions.popToRoot
 import com.roudikk.navigator.extensions.replaceLast
-import com.roudikk.navigator.extensions.requireNavigator
-import com.roudikk.navigator.extensions.requireParentNavigator
+import com.roudikk.navigator.extensions.requireLocalNavigator
+import com.roudikk.navigator.extensions.requireLocalParentNavigator
 import com.roudikk.navigator.extensions.setResult
 import com.roudikk.navigator.extensions.singleInstance
 import com.roudikk.navigator.extensions.singleTop
@@ -16,12 +16,13 @@ import com.roudikk.navigator.sample.feature.details.api.DetailsKey
 import com.roudikk.navigator.sample.feature.details.api.DetailsResult
 import com.roudikk.navigator.sample.feature.dialogs.api.BlockingBottomSheetKey
 
+@Suppress("CyclomaticComplexMethod")
 @Composable
 fun DetailsEventEffect(
     viewModel: DetailsViewModel
 ) {
-    val navigator = requireNavigator()
-    val parentNavigator = requireParentNavigator()
+    val navigator = requireLocalNavigator()
+    val parentNavigator = requireLocalParentNavigator()
     val event = viewModel.event
 
     LaunchedEffect(event) {

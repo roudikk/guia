@@ -102,20 +102,20 @@ internal class BackStackManager(
         val currentEntry = entries.last()
 
         // Check if there's a valid screen that should be visible.
-        // It's the last entry that is a screen
+        // It's the last entry that is a screen.
         val screenEntry = entries.lastOrNull {
             navigator.navigationNode(it) is Screen
         }?.let(::createLifeCycleEntry)
 
         // Check if there's a valid dialog that should be visible.
-        // It must be the last entry in the backstack
+        // It must be the last entry in the backstack.
         val dialogEntry = currentEntry.takeIf {
             navigator.navigationNode(it) is Dialog
         }?.let(::createLifeCycleEntry)
 
         // Check if there's a valid bottom sheet that should be visible.
         // It's either the top most destination, in between a screen and a dialog
-        // or just by itself
+        // or just by itself.
         val bottomSheetEntry = entries
             .lastOrNull { navigator.navigationNode(it) is BottomSheet }
             .takeIf {
@@ -166,17 +166,17 @@ internal class BackStackManager(
     init {
         hostLifecycle.addObserver(lifecycleEventObserver)
 
-        // Clear components of restored entries
+        // Clear components of restored entries.
         initialEntryIds
             .filter { it !in backstackIds }
             .forEach(::removeComponents)
 
-        // Create back stack entries for restored navigation entries
+        // Create back stack entries for restored navigation entries.
         navigator.backStack
             .filter { it.id in initialEntryIds }
             .forEach(::createLifeCycleEntry)
 
-        // Make sure the back stack entries are initialized with the proper lifecycles
+        // Make sure the back stack entries are initialized with the proper lifecycles.
         updateLifecycles()
     }
 
@@ -184,7 +184,7 @@ internal class BackStackManager(
      * Creates a [LifeCycleEntry] from the given [BackStackEntry].
      *
      * The [SaveableStateHolder] would be the state holder associated with a [Navigator].
-     * The [ViewModelStore] is received from [viewModelStoreProvider] created in the back stack manager.l
+     * The [ViewModelStore] is received from [viewModelStoreProvider] created in the back stack manager.
      */
     private fun createLifeCycleEntry(backStackEntry: BackStackEntry): LifeCycleEntry {
         return lifeCycleEntries.getOrPut(backStackEntry.id) {
@@ -262,7 +262,7 @@ internal class BackStackManager(
     }
 
     /**
-     * Removes the saved state and view model store given an [entryId]
+     * Removes the saved state and view model store given an [entryId].
      */
     private fun removeComponents(entryId: String) {
         savedStateRegistry.unregisterSavedStateProvider(savedStateKey(entryId))
@@ -287,4 +287,3 @@ internal class BackStackManager(
      */
     private fun savedStateKey(id: String) = "back-stack-manager-$id"
 }
-

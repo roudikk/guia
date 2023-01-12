@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popBackstack
 import com.roudikk.navigator.extensions.localDialog
-import com.roudikk.navigator.extensions.requireNavigator
+import com.roudikk.navigator.extensions.requireLocalNavigator
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
 import com.roudikk.navigator.sample.feature.dialogs.api.CancelableDialogKey
 
@@ -33,7 +33,7 @@ import com.roudikk.navigator.sample.feature.dialogs.api.CancelableDialogKey
 internal fun BlockingDialogScreen(
     showNextButton: Boolean
 ) {
-    val navigator = requireNavigator()
+    val navigator = requireLocalNavigator()
 
     BlockingDialogContent(
         showNextButton = showNextButton,

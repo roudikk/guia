@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.extensions.navigate
-import com.roudikk.navigator.extensions.requireNavigator
+import com.roudikk.navigator.extensions.requireLocalNavigator
 import com.roudikk.navigator.sample.feature.common.navigation.requireRootNavigator
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
 import com.roudikk.navigator.sample.feature.dialogs.api.BlockingBottomSheetKey
@@ -31,7 +31,7 @@ import com.roudikk.navigator.sample.feature.dialogs.api.CancelableDialogKey
 
 @Composable
 internal fun DialogsScreen() {
-    val navigator = requireNavigator()
+    val navigator = requireLocalNavigator()
     val rootNavigator = requireRootNavigator()
 
     DialogsContent(

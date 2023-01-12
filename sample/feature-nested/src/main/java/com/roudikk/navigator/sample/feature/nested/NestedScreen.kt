@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.extensions.canGoBack
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popBackstack
-import com.roudikk.navigator.extensions.requireNavigator
+import com.roudikk.navigator.extensions.requireLocalNavigator
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
 import com.roudikk.navigator.sample.feature.nested.api.NestedKey
 
@@ -37,7 +37,7 @@ import com.roudikk.navigator.sample.feature.nested.api.NestedKey
 internal fun NestedScreen(
     count: Int
 ) {
-    val navigator = requireNavigator()
+    val navigator = requireLocalNavigator()
     val canGoBack by navigator.canGoBack()
     NestedContent(
         count = count,

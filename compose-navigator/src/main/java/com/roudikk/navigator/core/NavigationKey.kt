@@ -9,7 +9,7 @@ import kotlin.reflect.KClass
  * The essential component of a [Navigator]'s backstack.
  *
  * A [NavigationKey] on its own does not have a UI representation. It simply defines a key that will
- * be in the backstack. (Unless it's a [NavigationKey.WithNode], see below)
+ * be in the backstack. (Unless it's a [NavigationKey.WithNode], see below).
  *
  * The UI a [NavigationKey] renders is decided using [NavigatorConfig.presentations].
  *

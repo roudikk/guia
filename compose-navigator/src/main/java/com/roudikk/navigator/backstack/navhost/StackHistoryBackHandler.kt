@@ -69,7 +69,7 @@ fun NavHost.StackHistoryBackHandler() {
     }
 
     // If we are overriding the back press, we disable the current navigator's
-    // back handling so it doesn't override the below BackHandler
+    // back handling so it doesn't override the below BackHandler.
     LaunchedEffect(overrideBackPress) {
         currentNavigator?.overrideBackPress = !overrideBackPress
     }

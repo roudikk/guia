@@ -20,7 +20,7 @@ internal val LocalParentNavigator = compositionLocalOf<Navigator?> { null }
  * Returns an optional [Navigator] that is hosting the caller Composable.
  */
 @Composable
-fun findNavigator(): Navigator? {
+fun localNavigator(): Navigator? {
     return LocalNavigator.current
 }
 
@@ -30,7 +30,7 @@ fun findNavigator(): Navigator? {
  * @throws IllegalStateException if it's called in Composable not within a [NavContainer]
  */
 @Composable
-fun requireNavigator(): Navigator {
+fun requireLocalNavigator(): Navigator {
     return checkNotNull(LocalNavigator.current) {
         "requireNavigator() must be called in a NavigationNode hosted in a NavContainer."
     }
@@ -41,7 +41,7 @@ fun requireNavigator(): Navigator {
  * the caller Composable.
  */
 @Composable
-fun findParentNavigator(): Navigator? {
+fun localParentNavigator(): Navigator? {
     return LocalParentNavigator.current
 }
 
@@ -52,6 +52,6 @@ fun findParentNavigator(): Navigator? {
  * @throws IllegalStateException if there is no parent [Navigator] in the current context.
  */
 @Composable
-fun requireParentNavigator(): Navigator {
+fun requireLocalParentNavigator(): Navigator {
     return checkNotNull(LocalParentNavigator.current)
 }

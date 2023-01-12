@@ -13,9 +13,16 @@ import com.roudikk.navigator.containers.NavContainer
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.savedstate.navHostSaver
 
+/**
+ * Returns a saveable instance of a [NavHost].
+ *
+ * @param initialKey, the initial [StackKey]
+ * @param entries, the stack entries
+ * @param initialize, initialize the [NavHost] before it is returned.
+ */
 @Composable
 fun rememberNavHost(
-    initialKey: StackKey,
+    initialKey: StackKey?,
     entries: Set<StackEntry>,
     initialize: @DisallowComposableCalls (NavHost) -> Unit = {},
 ): NavHost {
@@ -24,7 +31,7 @@ fun rememberNavHost(
     ) {
         NavHost().apply {
             updateEntries(entries)
-            setActive(initialKey)
+            initialKey?.let(::setActive)
             initialize(this)
         }
     }.apply {

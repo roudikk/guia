@@ -52,7 +52,7 @@ class EnterExitTransition(
 }
 
 /**
- * Helper for creating a [EnterExitTransition] from an [EnterTransition] and an [ExitTransition]
+ * Helper for creating a [EnterExitTransition] from an [EnterTransition] and an [ExitTransition].
  */
 infix fun EnterTransition.to(
     exit: ExitTransition

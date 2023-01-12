@@ -40,16 +40,14 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.animation.NavigationVisibilityScope
-import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.extensions.popBackstack
-import com.roudikk.navigator.extensions.requireNavigator
+import com.roudikk.navigator.extensions.requireLocalNavigator
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
-import kotlinx.parcelize.Parcelize
 
 
 @Composable
 internal fun SettingsScreen() {
-    val navigator = requireNavigator()
+    val navigator = requireLocalNavigator()
     SettingsContent(
         onCloseClicked = navigator::popBackstack
     )

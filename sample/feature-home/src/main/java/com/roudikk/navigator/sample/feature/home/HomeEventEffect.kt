@@ -8,7 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.roudikk.navigator.extensions.clearResult
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.setResult
-import com.roudikk.navigator.extensions.requireNavigator
+import com.roudikk.navigator.extensions.requireLocalNavigator
 import com.roudikk.navigator.sample.feature.common.navigation.requireRootNavigator
 import com.roudikk.navigator.sample.feature.details.api.DetailsKey
 import com.roudikk.navigator.sample.feature.details.api.DetailsResult
@@ -18,7 +18,7 @@ import com.roudikk.navigator.sample.feature.settings.api.SettingsKey
 fun HomeEventEffect(
     viewModel: HomeViewModel
 ) {
-    val navigator = requireNavigator()
+    val navigator = requireLocalNavigator()
     val rootNavigator = requireRootNavigator()
     val context = LocalContext.current
     val event = viewModel.event

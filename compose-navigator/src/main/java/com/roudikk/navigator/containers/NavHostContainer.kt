@@ -27,9 +27,9 @@ internal typealias StackKeyContainer = @Composable (
  * Renders the current state of a [NavHost].
  *
  * @param modifier, [Modifier] for the [NavHost.currentNavigator]'s [NavContainer].
- * @param bottomSheetScrimColor, the scrim color of the [NavContainer] bottom sheet for a given [StackKey]
- * @param bottomSheetContainer, the container of the [NavContainer] bottom sheet for a given [StackKey]
- * @param dialogContainer, the container for the [NavContainer] dialog for a given [StackKey]
+ * @param bottomSheetScrimColor, the scrim color of the [NavContainer] bottom sheet for a given [StackKey].
+ * @param bottomSheetContainer, the container of the [NavContainer] bottom sheet for a given [StackKey].
+ * @param dialogContainer, the container for the [NavContainer] dialog for a given [StackKey].
  * @param transitionSpec, the transition between the stack entries.
  */
 @OptIn(ExperimentalAnimationApi::class)

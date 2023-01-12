@@ -64,7 +64,7 @@ class Dialog(
 }
 
 /**
- * Converts a [DialogOptions] to [DialogProperties]
+ * Converts a [DialogOptions] to [DialogProperties].
  */
 @OptIn(ExperimentalComposeUiApi::class)
 fun DialogOptions.toDialogProperties() = DialogProperties(
@@ -93,7 +93,7 @@ class BottomSheet(
     var bottomSheetOptions by mutableStateOf(BottomSheetOptions())
 
     /**
-     * Options used in a [BottomSheet]
+     * Options used in a [BottomSheet].
      *
      * @property confirmStateChange, check [rememberModalBottomSheetState]
      * it reaches a hidden state.

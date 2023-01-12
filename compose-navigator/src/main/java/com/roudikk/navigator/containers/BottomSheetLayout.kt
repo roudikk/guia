@@ -113,10 +113,10 @@ fun BottomSheetLayout(
                 .nestedScroll(sheetState.nestedScrollConnection)
                 .offset {
                     val y = if (anchors.isEmpty()) {
-                        // if we don't know our anchors yet, render the sheet as hidden
+                        // if we don't know our anchors yet, render the sheet as hidden.
                         fullHeight.roundToInt()
                     } else {
-                        // if we do know our anchors, respect them
+                        // if we do know our anchors, respect them.
                         sheetState.offset.value.roundToInt()
                     }
 
@@ -174,7 +174,7 @@ private fun Scrim(
         animationSpec = tween()
     )
 
-    // We want to use Composes "Close sheet" announcement for TalkBack
+    // We want to use Composes "Close sheet" announcement for TalkBack.
     @SuppressLint("PrivateResource")
     val closeSheet = resources.getString(androidx.compose.ui.R.string.close_sheet)
 

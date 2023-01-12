@@ -17,7 +17,7 @@ import com.roudikk.navigator.core.Screen
 import com.roudikk.navigator.extensions.LocalNavigator
 import com.roudikk.navigator.extensions.LocalParentNavigator
 import com.roudikk.navigator.extensions.canGoBack
-import com.roudikk.navigator.extensions.findNavigator
+import com.roudikk.navigator.extensions.localNavigator
 import com.roudikk.navigator.extensions.popBackstack
 
 internal typealias Container = @Composable (
@@ -42,7 +42,7 @@ fun Navigator.NavContainer(
     bottomSheetContainer: Container = { content -> content() },
     dialogContainer: Container = { content -> content() }
 ) {
-    val parentNavigator = findNavigator()
+    val parentNavigator = localNavigator()
 
     CompositionLocalProvider(
         LocalParentNavigator provides parentNavigator,
