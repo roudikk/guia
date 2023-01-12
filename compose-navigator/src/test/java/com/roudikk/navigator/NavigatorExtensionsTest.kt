@@ -7,6 +7,7 @@ import com.roudikk.navigator.extensions.currentKey
 import com.roudikk.navigator.extensions.moveToTop
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popTo
+import com.roudikk.navigator.extensions.popToRoot
 import com.roudikk.navigator.extensions.removeAll
 import com.roudikk.navigator.extensions.replaceLast
 import com.roudikk.navigator.extensions.replaceUpTo
@@ -652,4 +653,28 @@ class NavigatorExtensionsTest {
             testKey3
         )
     }
+
+    @Test
+    fun navigator_popToRoot_popsToRoot() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+
+        navigator.assertKeys(initialKey)
+
+        val keys = (0..2).map(::TestDataKey)
+        keys.forEach(navigator::navigate)
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+        )
+
+        navigator.popToRoot()
+        navigator.assertKeys(initialKey)
+        navigator.popToRoot()
+        navigator.assertKeys(initialKey)
+    }
+    
 }

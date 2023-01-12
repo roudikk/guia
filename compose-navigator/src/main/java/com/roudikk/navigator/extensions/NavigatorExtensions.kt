@@ -215,6 +215,9 @@ inline fun <reified Key : NavigationKey> Navigator.removeAll() {
     removeAll { it is Key }
 }
 
+/**
+ * Pops to the root of the backstack.
+ */
 fun Navigator.popToRoot() {
     setBackstack(backStack[0])
 }
