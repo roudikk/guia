@@ -9,6 +9,7 @@ import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.replaceLast
 import com.roudikk.navigator.extensions.replaceUpTo
 import com.roudikk.navigator.extensions.singleInstance
+import com.roudikk.navigator.extensions.singleTop
 import com.roudikk.navigator.util.TestDataKey
 import com.roudikk.navigator.util.TestKey
 import com.roudikk.navigator.util.TestKey2
@@ -334,10 +335,7 @@ class NavigatorExtensionsTest {
             checkForExisting = true
         )
 
-        navigator.assertKeys(
-            initialKey,
-            keys[2]
-        )
+        navigator.assertKeys(initialKey, keys[2])
     }
 
     @Test
@@ -380,9 +378,27 @@ class NavigatorExtensionsTest {
             checkForExisting = false
         )
 
-        navigator.assertKeys(
-            initialKey,
-            newKey
-        )
+        navigator.assertKeys(initialKey, newKey)
+    }
+
+    @Test
+    fun navigator_singleTop_sameType_doesNotNavigate() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+        navigator.assertKeys(initialKey)
+        navigator.singleTop(TestNavigationKey())
+        navigator.assertKeys(initialKey)
+    }
+
+    @Test
+    fun navigator_singleTop_differentType_navigates() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+        navigator.assertKeys(initialKey)
+        val newKey = TestKey()
+        navigator.singleTop(newKey)
+        navigator.assertKeys(initialKey, newKey)
+        navigator.singleTop(TestKey())
+        navigator.assertKeys(initialKey, newKey)
     }
 }

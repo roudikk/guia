@@ -146,13 +146,14 @@ inline fun <reified Key : NavigationKey> Navigator.singleInstance(
 }
 
 /**
+ * Navigates to [navigationKey] if the [currentKey] is not of the same type.
  *
+ * @param navigationKey, the new navigation key.
  */
-fun Navigator.singleTop(
-    navigationKey: NavigationKey,
-    predicate: (NavigationKey) -> Boolean = { it::class == navigationKey::class },
+inline fun <reified Key : NavigationKey> Navigator.singleTop(
+    navigationKey: Key
 ) {
-    if (currentKey.let(predicate)) return
+    if (currentKey is Key) return
     navigate(navigationKey)
 }
 
@@ -167,7 +168,7 @@ fun Navigator.popTo(
     return true
 }
 
-@JvmName("popToWithKey")
+@JvmName("popToKey")
 inline fun <reified Key : NavigationKey> Navigator.popTo(
     inclusive: Boolean = false,
     crossinline predicate: (Key) -> Boolean,
