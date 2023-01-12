@@ -248,6 +248,11 @@ fun Navigator.popBackstack(): Boolean {
     return true
 }
 
+/**
+ * Whether or not the navigator has more than one element and can pop back stack.
+ *
+ * @return true if the backstack has more than one element.
+ */
 fun Navigator.canGoBack() = derivedStateOf {
     backStack.size > 1
 }

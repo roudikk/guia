@@ -1,7 +1,9 @@
 package com.roudikk.navigator
 
+import androidx.compose.runtime.getValue
 import com.google.common.truth.Truth.assertThat
 import com.roudikk.navigator.extensions.Match
+import com.roudikk.navigator.extensions.canGoBack
 import com.roudikk.navigator.extensions.currentEntry
 import com.roudikk.navigator.extensions.currentKey
 import com.roudikk.navigator.extensions.moveToTop
@@ -738,5 +740,48 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(
             initialKey
         )
+    }
+
+    @Test
+    fun navigator_canGoBack_trueIfMoreThanOneEntry() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+
+        navigator.assertKeys(initialKey)
+
+        val keys = (0..2).map(::TestDataKey)
+        keys.forEach(navigator::navigate)
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+        )
+
+        val canGoBack by navigator.canGoBack()
+        assertThat(navigator.popBackstack()).isTrue()
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+        )
+        assertThat(canGoBack).isTrue()
+        assertThat(navigator.popBackstack()).isTrue()
+        navigator.assertKeys(
+            initialKey,
+            keys[0]
+        )
+        assertThat(canGoBack).isTrue()
+        assertThat(navigator.popBackstack()).isTrue()
+        navigator.assertKeys(
+            initialKey
+        )
+        assertThat(canGoBack).isFalse()
+        assertThat(navigator.popBackstack()).isFalse()
+        navigator.assertKeys(
+            initialKey
+        )
+        assertThat(canGoBack).isFalse()
     }
 }
