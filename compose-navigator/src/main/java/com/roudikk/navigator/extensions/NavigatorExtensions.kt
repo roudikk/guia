@@ -162,6 +162,8 @@ inline fun <reified Key : NavigationKey> Navigator.singleTop(
  *
  * @param inclusive, whether to pop the [NavigationKey] that matches the [predicate] too.
  * @param predicate, condition to be met by the navigation key.
+ *
+ * @return true, if a navigation key matching the [predicate] was found.
  */
 fun Navigator.popTo(
     inclusive: Boolean = false,
@@ -181,6 +183,8 @@ fun Navigator.popTo(
  *
  * @param inclusive, whether to pop the last [NavigationKey] of type [Key] too
  * @param predicate, optional extra condition for the navigation key that matches type [Key]
+ *
+ * @return true, if a navigation key of same [Type] and matching the [predicate] was found.
  *
  * Has same [JvmName] as [popTo] so updating it to resolve naming conflict.
  */
@@ -233,6 +237,11 @@ fun Navigator.setRoot(
     setBackstack(navigationKey.entry())
 }
 
+/**
+ * Pops the last entry in the backstack.
+ *
+ * @return true if the backstack has more than one entry and the last entry was removed.
+ */
 fun Navigator.popBackstack(): Boolean {
     if (backStack.size == 1) return false
     setBackstack(backStack.dropLast(1))

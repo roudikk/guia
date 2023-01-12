@@ -6,6 +6,7 @@ import com.roudikk.navigator.extensions.currentEntry
 import com.roudikk.navigator.extensions.currentKey
 import com.roudikk.navigator.extensions.moveToTop
 import com.roudikk.navigator.extensions.navigate
+import com.roudikk.navigator.extensions.popBackstack
 import com.roudikk.navigator.extensions.popTo
 import com.roudikk.navigator.extensions.popToRoot
 import com.roudikk.navigator.extensions.removeAll
@@ -701,4 +702,41 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(keys[1])
     }
 
+    @Test
+    fun navigator_popBackStack_popsIfMoreThanOneEntry() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+
+        navigator.assertKeys(initialKey)
+
+        val keys = (0..2).map(::TestDataKey)
+        keys.forEach(navigator::navigate)
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+        )
+
+        assertThat(navigator.popBackstack()).isTrue()
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+        )
+        assertThat(navigator.popBackstack()).isTrue()
+        navigator.assertKeys(
+            initialKey,
+            keys[0]
+        )
+        assertThat(navigator.popBackstack()).isTrue()
+        navigator.assertKeys(
+            initialKey
+        )
+        assertThat(navigator.popBackstack()).isFalse()
+        navigator.assertKeys(
+            initialKey
+        )
+    }
 }
