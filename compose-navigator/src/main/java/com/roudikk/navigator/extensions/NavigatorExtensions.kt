@@ -184,7 +184,7 @@ fun Navigator.popTo(
  * @param inclusive, whether to pop the last [NavigationKey] of type [Key] too
  * @param predicate, optional extra condition for the navigation key that matches type [Key]
  *
- * @return true, if a navigation key of same [Type] and matching the [predicate] was found.
+ * @return true, if a navigation key of same type [Key] and matching the [predicate] was found.
  *
  * Has same [JvmName] as [popTo] so updating it to resolve naming conflict.
  */
@@ -257,10 +257,30 @@ fun Navigator.canGoBack() = derivedStateOf {
     backStack.size > 1
 }
 
+/**
+ * Checks if none of the navigation keys matches the condition
+ *
+ * @param predicate, condition to be mey by the navigation key.
+ */
 fun Navigator.none(
     predicate: (NavigationKey) -> Boolean
 ) = backStack.none { predicate(it.navigationKey) }
 
+/**
+ * Checks if none of the navigation keys is of type [Key]
+ */
+inline fun <reified Key : NavigationKey> Navigator.none() = none { it is Key }
+
+/**
+ * Checks if any of the navigation keys matches the condition
+ *
+ * @param predicate, condition to be mey by the navigation key.
+ */
 fun Navigator.any(
     predicate: (NavigationKey) -> Boolean
 ) = backStack.any { predicate(it.navigationKey) }
+
+/**
+ * Checks if any of the navigation keys is of type [Key]
+ */
+inline fun <reified Key : NavigationKey> Navigator.any() = any { it is Key }

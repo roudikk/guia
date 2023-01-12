@@ -26,6 +26,7 @@ import com.roudikk.navigator.util.assertKeys
 import com.roudikk.navigator.util.testNavigator
 import org.junit.Test
 
+@Suppress("LargeClass")
 class NavigatorExtensionsTest {
 
     @Test
