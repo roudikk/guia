@@ -222,6 +222,11 @@ fun Navigator.popToRoot() {
     setBackstack(backStack[0])
 }
 
+/**
+ * Clears the backstack and sets a new root [NavigationKey]
+ *
+ * @param navigationKey, the new root key.
+ */
 fun Navigator.setRoot(
     navigationKey: NavigationKey
 ) {
