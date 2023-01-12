@@ -193,16 +193,24 @@ inline fun <reified Key : NavigationKey> Navigator.popTo(
     inclusive = inclusive
 )
 
+/**
+ * Removes all navigation keys matching [predicate].
+ *
+ * @param predicate, condition to be met by the navigation key to be removed.
+ */
 fun Navigator.removeAll(
     predicate: (NavigationKey) -> Boolean
 ) {
     setBackstack(
         backStack.toMutableList().apply {
-            removeAll(predicate)
+            removeAll { predicate(it.navigationKey) }
         }
     )
 }
 
+/**
+ * Removes all navigation keys that are of type [Key].
+ */
 inline fun <reified Key : NavigationKey> Navigator.removeAll() {
     removeAll { it is Key }
 }

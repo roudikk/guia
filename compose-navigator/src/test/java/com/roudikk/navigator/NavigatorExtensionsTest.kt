@@ -7,6 +7,7 @@ import com.roudikk.navigator.extensions.currentKey
 import com.roudikk.navigator.extensions.moveToTop
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popTo
+import com.roudikk.navigator.extensions.removeAll
 import com.roudikk.navigator.extensions.replaceLast
 import com.roudikk.navigator.extensions.replaceUpTo
 import com.roudikk.navigator.extensions.singleInstance
@@ -580,6 +581,75 @@ class NavigatorExtensionsTest {
             keys[1],
             keys[2],
             testKey,
+        )
+    }
+
+    @Test
+    fun navigator_removeAll_removesMatchingPredicate() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+
+        navigator.assertKeys(initialKey)
+
+        val keys = (0..2).map(::TestDataKey)
+        keys.forEach(navigator::navigate)
+
+        val testKey = TestKey()
+        navigator.navigate(testKey)
+
+        val dataKey0 = TestDataKey(0)
+        navigator.navigate(dataKey0)
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+            testKey,
+            dataKey0
+        )
+
+        navigator.removeAll { it is TestDataKey && it.data == 0 }
+
+        navigator.assertKeys(
+            initialKey,
+            keys[1],
+            keys[2],
+            testKey
+        )
+    }
+
+    @Test
+    fun navigator_removeAllKey_removesMatchingOfTypeKey() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+
+        navigator.assertKeys(initialKey)
+
+        val keys = (0..2).map(::TestDataKey)
+        keys.forEach(navigator::navigate)
+
+        val testKey = TestKey()
+        navigator.navigate(testKey)
+
+        val testKey3 = TestKey3()
+        navigator.navigate(testKey3)
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+            testKey,
+            testKey3
+        )
+
+        navigator.removeAll<TestDataKey>()
+
+        navigator.assertKeys(
+            initialKey,
+            testKey,
+            testKey3
         )
     }
 }
