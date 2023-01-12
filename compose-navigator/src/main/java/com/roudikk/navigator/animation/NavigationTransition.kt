@@ -14,7 +14,7 @@ class NavigationTransition(
     val popEnterExit: EnterExitTransition
 ) {
     companion object {
-        // Empty Navigation Transition
+        // Empty Navigation Transition.
         val None = NavigationTransition(
             enterExit = EnterExitTransition.None,
             popEnterExit = EnterExitTransition.None
@@ -43,7 +43,7 @@ class EnterExitTransition(
     val exit: ExitTransition
 ) {
     companion object {
-        // Empty transition
+        // Empty transition.
         val None = EnterExitTransition(
             enter = EnterTransition.None,
             exit = ExitTransition.None

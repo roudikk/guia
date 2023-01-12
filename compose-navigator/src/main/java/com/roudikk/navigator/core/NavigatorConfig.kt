@@ -33,6 +33,12 @@ class NavigatorConfigBuilder internal constructor() {
     private val transitions: Transitions = hashMapOf()
     private var defaultTransition: Transition = { _, _, _ -> EnterExitTransition.None }
 
+    /**
+     * Define a [NavigationNode] presentation between a type of [NavigationKey].
+     *
+     * @param keyClass, the class associated with a [NavigationNode].
+     * @param navigationNodeBuilder, builder that returns a [NavigationNode] for a specific [keyClass].
+     */
     fun navigationNode(
         keyClass: KClass<NavigationKey>,
         navigationNodeBuilder: (NavigationKey) -> NavigationNode
@@ -40,6 +46,11 @@ class NavigatorConfigBuilder internal constructor() {
         presentations[keyClass] = navigationNodeBuilder
     }
 
+    /**
+     * Define a [NavigationNode] presentation for a type of [Key].
+     *
+     * @param navigationNodeBuilder, builder that returns a [NavigationNode] for a type [Key].
+     */
     inline fun <reified Key : NavigationKey> navigationNode(
         noinline navigationNodeBuilder: (Key) -> NavigationNode
     ) {
@@ -49,6 +60,11 @@ class NavigatorConfigBuilder internal constructor() {
         )
     }
 
+    /**
+     * Define a [Screen] presentation for a type of [Key].
+     *
+     * @param content, composable content for a given [Key].
+     */
     inline fun <reified Key : NavigationKey> screen(
         noinline content: @Composable (Key) -> Unit
     ) {
@@ -57,6 +73,12 @@ class NavigatorConfigBuilder internal constructor() {
         }
     }
 
+    /**
+     * Define a [Dialog] presentation for a type of [Key].
+     *
+     * @param dialogOptions, optional initial [DialogOptions] to initialize the [Dialog].
+     * @param content, composable content for a given [Key].
+     */
     inline fun <reified Key : NavigationKey> dialog(
         dialogOptions: DialogOptions = DialogOptions(),
         noinline content: @Composable (Key) -> Unit
@@ -66,6 +88,12 @@ class NavigatorConfigBuilder internal constructor() {
         }
     }
 
+    /**
+     * Define a [BottomSheet] presentation for a type of [Key].
+     *
+     * @param bottomSheetOptions, optional initial [BottomSheetOptions] to initialize a [BottomSheet].
+     * @param content, composable content for a given [Key].
+     */
     inline fun <reified Key : NavigationKey> bottomSheet(
         bottomSheetOptions: BottomSheetOptions = BottomSheetOptions(),
         noinline content: @Composable (Key) -> Unit
@@ -75,6 +103,12 @@ class NavigatorConfigBuilder internal constructor() {
         }
     }
 
+    /**
+     * Define a [Transition] for a given [keyClass].
+     *
+     * @param keyClass, the type of key to associate a transition with.
+     * @param transition, the transition for a given [keyClass]
+     */
     fun transition(
         keyClass: KClass<NavigationKey>,
         transition: Transition
@@ -82,6 +116,12 @@ class NavigatorConfigBuilder internal constructor() {
         transitions[keyClass] = transition
     }
 
+    /**
+     * Define a transition for a given [Key].
+     *
+     * @param transition, lambda that returns a [EnterExitTransition], it's provided the previous key,
+     * the new key and whether or not the current transition is a push/pop.
+     */
     inline fun <reified Key : NavigationKey> transition(
         noinline transition: (previous: NavigationKey, new: Key, isPop: Boolean) -> EnterExitTransition
     ) {
@@ -91,15 +131,27 @@ class NavigatorConfigBuilder internal constructor() {
         )
     }
 
+    /**
+     * Define a transition for a given [Key].
+     *
+     * @param transition, lambda that returns a [NavigationTransition], the full enterExit and popEnterExit
+     * transitions between a given previous/new key.
+     */
     inline fun <reified Key : NavigationKey> transition(
         noinline transition: (previous: NavigationKey, new: Key) -> NavigationTransition
     ) {
         transition<Key> { previous, new, isPop ->
-            val navigationTransition = transition(previous, new as Key)
+            val navigationTransition = transition(previous, new)
             if (isPop) navigationTransition.popEnterExit else navigationTransition.enterExit
         }
     }
 
+    /**
+     * Define a transition for a given [Key].
+     *
+     * @param transition, lambda that returns a [NavigationTransition], the full enterExit and popEnterExit
+     * transitions between two navigation keys.
+     */
     inline fun <reified Key : NavigationKey> transition(
         noinline transition: () -> NavigationTransition
     ) {
@@ -109,12 +161,22 @@ class NavigatorConfigBuilder internal constructor() {
         }
     }
 
+    /**
+     * Define the default fallback transition between two navigation keys.
+     *
+     * @param transition, the default Transition.
+     */
     fun defaultTransition(
         transition: Transition
     ) {
         defaultTransition = transition
     }
 
+    /**
+     * Define the default fallback transition between two navigation keys.
+     *
+     * @param transition, the default Transition between previous/new key.
+     */
     fun defaultTransition(
         transition: (previous: NavigationKey, new: NavigationKey) -> NavigationTransition
     ) {
@@ -124,6 +186,11 @@ class NavigatorConfigBuilder internal constructor() {
         }
     }
 
+    /**
+     * Define the default fallback transition between two navigation keys.
+     *
+     * @param transition, the default Transition between any two navigation keys.
+     */
     fun defaultTransition(
         transition: () -> NavigationTransition
     ) {
@@ -133,6 +200,9 @@ class NavigatorConfigBuilder internal constructor() {
         }
     }
 
+    /**
+     * Builds a [NavigatorConfig].
+     */
     internal fun build() = NavigatorConfig(
         presentations = presentations,
         transitions = transitions,

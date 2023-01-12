@@ -12,4 +12,4 @@ internal typealias Transitions =
     HashMap<KClass<NavigationKey>, (previous: NavigationKey, new: NavigationKey, isPop: Boolean) -> EnterExitTransition>
 
 internal typealias Transition =
-    (previous: NavigationKey, new: NavigationKey, isPop: Boolean) -> EnterExitTransition
+        (previous: NavigationKey, new: NavigationKey, isPop: Boolean) -> EnterExitTransition
