@@ -10,6 +10,7 @@ import androidx.compose.animation.with
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.roudikk.navigator.extensions.LocalNavHost
@@ -26,8 +27,10 @@ internal typealias StackKeyContainer = @Composable (
  * Renders the current state of a [NavHost].
  *
  * @param modifier, [Modifier] for the [NavHost.currentNavigator]'s [NavContainer].
- * @param transitionSpec, defines the transition between the stack entries.
- * @param bottomSheetSetup, will be provided to the [NavHost.currentNavigator]'s [NavContainer].
+ * @param bottomSheetScrimColor, the scrim color of the [NavContainer] bottom sheet for a given [StackKey]
+ * @param bottomSheetContainer, the container of the [NavContainer] bottom sheet for a given [StackKey]
+ * @param dialogContainer, the container for the [NavContainer] dialog for a given [StackKey]
+ * @param transitionSpec, the transition between the stack entries.
  */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -42,6 +45,8 @@ fun NavHost.NavContainer(
         EnterTransition.None with ExitTransition.None
     }
 ) {
+    val saveableStateHolder = rememberSaveableStateHolder()
+
     CompositionLocalProvider(LocalNavHost provides this) {
         AnimatedContent(
             targetState = currentEntry,

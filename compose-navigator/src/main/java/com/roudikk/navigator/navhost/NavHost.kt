@@ -5,10 +5,11 @@ import androidx.compose.runtime.DisallowComposableCalls
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
+import com.roudikk.navigator.backstack.navhost.DefaultStackBackHandler
+import com.roudikk.navigator.backstack.navhost.StackHistoryBackHandler
+import com.roudikk.navigator.containers.NavContainer
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.savedstate.navHostSaver
 
@@ -18,14 +19,10 @@ fun rememberNavHost(
     entries: Set<StackEntry>,
     initialize: @DisallowComposableCalls (NavHost) -> Unit = {},
 ): NavHost {
-    val saveableStateHolder = rememberSaveableStateHolder()
     return rememberSaveable(
-        saver = navHostSaver(
-            entries = entries,
-            saveableStateHolder = saveableStateHolder
-        )
+        saver = navHostSaver(entries = entries)
     ) {
-        NavHost(saveableStateHolder = saveableStateHolder).apply {
+        NavHost().apply {
             updateEntries(entries)
             setActive(initialKey)
             initialize(this)
@@ -35,9 +32,15 @@ fun rememberNavHost(
     }
 }
 
-class NavHost(
-    val saveableStateHolder: SaveableStateHolder
-) {
+/**
+ * A [NavHost] is a component that can handle managing multiple navigators at the same time,
+ * allowing the consumer to render a certain navigator conditionally, animate the transition between
+ * navigator changes and implement custom back behaviour.
+ *
+ * @see [NavHost.NavContainer] to render a [NavHost]'s state
+ * @see [NavHost.DefaultStackBackHandler] and [NavHost.StackHistoryBackHandler] for back behaviours
+ */
+class NavHost {
     var stackEntries by mutableStateOf(setOf<StackEntry>())
         private set
 
@@ -46,17 +49,37 @@ class NavHost(
 
     val currentNavigator by derivedStateOf { currentEntry?.navigator }
 
+    /**
+     * Returns the navigator identified by a [StackKey]
+     *
+     * @param stackKey, key for a given navigator.
+     *
+     * @throws IllegalStateException if the  [stackKey] is not found in [stackEntries]
+     */
     fun navigator(stackKey: StackKey): Navigator {
-        return requireNotNull(stackEntries.firstOrNull { it.stackKey == stackKey }?.navigator)
+        return checkNotNull(stackEntries.firstOrNull { it.stackKey == stackKey }?.navigator)
     }
 
+    /**
+     * updates all the stack entries and tries to update the [currentEntry] if one of the new entries
+     * has a matching [StackKey], otherwise the [currentEntry] will be set to null.
+     *
+     * @param entries, the new stack entries.
+     */
     fun updateEntries(entries: Set<StackEntry>) {
         this.stackEntries = entries
         currentEntry = entries.firstOrNull { it.stackKey == currentEntry?.stackKey }
     }
 
+    /**
+     * Updates the current active [StackEntry]
+     *
+     * @param stackKey, the new stack key.
+     *
+     * @throws IllegalStateException if the [stackKey] is not part of the stack entries.
+     */
     fun setActive(stackKey: StackKey) {
-        require(stackEntries.any { it.stackKey == stackKey }) {
+        check(stackEntries.any { it.stackKey == stackKey }) {
             "$stackKey does not exist in this NavHost, must be provided when calling rememberNavHost"
         }
 
