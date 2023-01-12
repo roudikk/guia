@@ -3,6 +3,7 @@ package com.roudikk.navigator
 import androidx.compose.runtime.getValue
 import com.google.common.truth.Truth.assertThat
 import com.roudikk.navigator.extensions.Match
+import com.roudikk.navigator.extensions.any
 import com.roudikk.navigator.extensions.canGoBack
 import com.roudikk.navigator.extensions.currentEntry
 import com.roudikk.navigator.extensions.currentKey
@@ -868,6 +869,90 @@ class NavigatorExtensionsTest {
         )
 
         assertThat(navigator.none<TestDataKey>())
+            .isFalse()
+    }
+
+    @Test
+    fun navigator_any_noneMatching_returnsFalse() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+
+        navigator.assertKeys(initialKey)
+
+        val keys = (0..2).map(::TestDataKey)
+        keys.forEach(navigator::navigate)
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+        )
+
+        assertThat(navigator.any { it is TestDataKey && it.data == 4 })
+            .isFalse()
+    }
+
+    @Test
+    fun navigator_any_foundMatching_returnsTrue() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+
+        navigator.assertKeys(initialKey)
+
+        val keys = (0..2).map(::TestDataKey)
+        keys.forEach(navigator::navigate)
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+        )
+
+        assertThat(navigator.any { it is TestDataKey && it.data == 1 })
+            .isTrue()
+    }
+
+    @Test
+    fun navigator_anyKey_noneMatching_returnsFalse() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+
+        navigator.assertKeys(initialKey)
+
+        val keys = (0..2).map(::TestDataKey)
+        keys.forEach(navigator::navigate)
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+        )
+
+        assertThat(navigator.any<TestKey>())
+            .isFalse()
+    }
+
+    @Test
+    fun navigator_anyKey_foundMatching_returnsTrue() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+
+        navigator.assertKeys(initialKey)
+
+        val keys = (0..2).map(::TestDataKey)
+        keys.forEach(navigator::navigate)
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+        )
+
+        assertThat(navigator.any<TestDataKey>())
             .isFalse()
     }
 }
