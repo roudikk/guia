@@ -104,7 +104,7 @@ class Navigator internal constructor(
         val isPop = backStack.contains(newEntry)
 
         currentTransition = when {
-            // If the current transition is being overridden, then we use that transition
+            // If the current transition is being overridden, then we use that transition.
             overrideNextTransition != null -> overrideNextTransition!!
 
             // We check if the current backstack is not empty and get the appropriate
@@ -113,7 +113,7 @@ class Navigator internal constructor(
                 ?.invoke(currentKey, newEntry.navigationKey, isPop)
                 ?: navigatorConfig.defaultTransition(currentKey, newEntry.navigationKey, isPop)
 
-            // Otherwise we don't show any transitions
+            // Otherwise we don't show any transition.
             else -> EnterExitTransition.None
         }
 
