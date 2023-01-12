@@ -6,6 +6,7 @@ import com.roudikk.navigator.extensions.currentEntry
 import com.roudikk.navigator.extensions.currentKey
 import com.roudikk.navigator.extensions.moveToTop
 import com.roudikk.navigator.extensions.navigate
+import com.roudikk.navigator.extensions.popTo
 import com.roudikk.navigator.extensions.replaceLast
 import com.roudikk.navigator.extensions.replaceUpTo
 import com.roudikk.navigator.extensions.singleInstance
@@ -400,5 +401,185 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey, newKey)
         navigator.singleTop(TestKey())
         navigator.assertKeys(initialKey, newKey)
+    }
+
+    @Test
+    fun navigator_popTo_found_PopsToKey() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+
+        navigator.assertKeys(initialKey)
+
+        val keys = (0..2).map(::TestDataKey)
+        keys.forEach(navigator::navigate)
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+        )
+
+        assertThat(navigator.popTo(inclusive = true) { it is TestDataKey && it.data == 0 })
+            .isTrue()
+
+        navigator.assertKeys(initialKey)
+
+        val testKey = TestKey()
+        navigator.navigate(keys[1])
+        navigator.navigate(testKey)
+        navigator.navigate(keys[2])
+
+        navigator.assertKeys(
+            initialKey,
+            keys[1],
+            testKey,
+            keys[2]
+        )
+
+        assertThat(navigator.popTo(inclusive = false) { it is TestNavigationKey })
+            .isTrue()
+
+        navigator.assertKeys(initialKey)
+    }
+
+    @Test
+    fun navigator_popTo_notFound_returnsFalse() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+
+        navigator.assertKeys(initialKey)
+
+        val keys = (0..2).map(::TestDataKey)
+        keys.forEach(navigator::navigate)
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+        )
+
+        assertThat(navigator.popTo(inclusive = true) { it is TestKey })
+            .isFalse()
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+        )
+
+        val testKey = TestKey()
+        navigator.navigate(testKey)
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+            testKey,
+        )
+
+        assertThat(navigator.popTo(inclusive = false) { it is TestKey3 })
+            .isFalse()
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+            testKey,
+        )
+    }
+
+    @Test
+    fun navigator_popToKey_found_PopsToKey() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+
+        navigator.assertKeys(initialKey)
+
+        val keys = (0..2).map(::TestDataKey)
+        keys.forEach(navigator::navigate)
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+        )
+
+        assertThat(navigator.popTo<TestDataKey>(inclusive = true) { it.data == 0 })
+            .isTrue()
+
+        navigator.assertKeys(initialKey)
+
+        val testKey = TestKey()
+        navigator.navigate(keys[1])
+        navigator.navigate(testKey)
+        navigator.navigate(keys[2])
+
+        navigator.assertKeys(
+            initialKey,
+            keys[1],
+            testKey,
+            keys[2]
+        )
+
+        assertThat(navigator.popTo<TestNavigationKey>(inclusive = false))
+            .isTrue()
+
+        navigator.assertKeys(initialKey)
+    }
+
+    @Test
+    fun navigator_popToKey_notFound_returnsFalse() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+
+        navigator.assertKeys(initialKey)
+
+        val keys = (0..2).map(::TestDataKey)
+        keys.forEach(navigator::navigate)
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+        )
+
+        assertThat(navigator.popTo<TestKey>(inclusive = true))
+            .isFalse()
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+        )
+
+        val testKey = TestKey()
+        navigator.navigate(testKey)
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+            testKey,
+        )
+
+        assertThat(navigator.popTo<TestKey3>(inclusive = false))
+            .isFalse()
+
+        navigator.assertKeys(
+            initialKey,
+            keys[0],
+            keys[1],
+            keys[2],
+            testKey,
+        )
     }
 }

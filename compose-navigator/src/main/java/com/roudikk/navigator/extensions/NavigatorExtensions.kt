@@ -157,37 +157,54 @@ inline fun <reified Key : NavigationKey> Navigator.singleTop(
     navigate(navigationKey)
 }
 
+/**
+ * Pops to a [NavigationKey] matching [predicate].
+ *
+ * @param inclusive, whether to pop the [NavigationKey] that matches the [predicate] too.
+ * @param predicate, condition to be met by the navigation key.
+ */
 fun Navigator.popTo(
     inclusive: Boolean = false,
     predicate: (NavigationKey) -> Boolean,
 ): Boolean {
     val existingEntry = backStack.find { predicate(it.navigationKey) } ?: return false
     var newBackStack = backStack.dropLastWhile { it != existingEntry }
-    if (inclusive) newBackStack = newBackStack.drop(1)
+    if (inclusive) {
+        newBackStack = newBackStack.dropLast(1)
+    }
     setBackstack(newBackStack)
     return true
 }
 
+/**
+ * Pops to a [NavigationKey] of the same type [Key].
+ *
+ * @param inclusive, whether to pop the last [NavigationKey] of type [Key] too
+ * @param predicate, optional extra condition for the navigation key that matches type [Key]
+ *
+ * Has same [JvmName] as [popTo] so updating it to resolve naming conflict.
+ */
 @JvmName("popToKey")
 inline fun <reified Key : NavigationKey> Navigator.popTo(
     inclusive: Boolean = false,
-    crossinline predicate: (Key) -> Boolean,
+    crossinline predicate: (Key) -> Boolean = { true },
 ) = popTo(
     predicate = { it is Key && predicate(it) },
-    inclusive = inclusive
-)
-
-inline fun <reified Key : NavigationKey> Navigator.popTo(
-    inclusive: Boolean = false
-) = popTo(
-    predicate = { it::class == Key::class },
     inclusive = inclusive
 )
 
 fun Navigator.removeAll(
     predicate: (NavigationKey) -> Boolean
 ) {
-    setBackstack(backStack.toMutableList().apply { removeAll(predicate) })
+    setBackstack(
+        backStack.toMutableList().apply {
+            removeAll(predicate)
+        }
+    )
+}
+
+inline fun <reified Key : NavigationKey> Navigator.removeAll() {
+    removeAll { it is Key }
 }
 
 fun Navigator.popToRoot() {
