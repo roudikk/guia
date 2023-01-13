@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisallowComposableCalls
 import androidx.compose.runtime.LaunchedEffect
-import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.core.ResultManager
 
 /**
  * Returns result of type [Result] using its class name as key.
  */
-inline fun <reified Result : Any> Navigator.result(): Result? {
+inline fun <reified Result : Any> ResultManager.result(): Result? {
     return result(Result::class.java.simpleName) as Result?
 }
 
@@ -18,14 +18,14 @@ inline fun <reified Result : Any> Navigator.result(): Result? {
  *
  * @param result, the new updated result.
  */
-inline fun <reified Result : Any> Navigator.setResult(result: Result) {
+inline fun <reified Result : Any> ResultManager.setResult(result: Result) {
     setResult(Result::class.java.simpleName, result)
 }
 
 /**
  * Clears a result of type [Result] using its class name as key.
  */
-inline fun <reified Result : Any> Navigator.clearResult() {
+inline fun <reified Result : Any> ResultManager.clearResult() {
     clearResult(Result::class.java.simpleName)
 }
 
@@ -36,7 +36,7 @@ inline fun <reified Result : Any> Navigator.clearResult() {
  * @param onResult, lambda for consuming the result.
  */
 @Composable
-inline fun <reified Result : Any> Navigator.onResult(
+inline fun <reified Result : Any> ResultManager.onResult(
     crossinline onResult: @DisallowComposableCalls (Result) -> Unit
 ) {
     val result = result<Result>()
@@ -55,7 +55,7 @@ inline fun <reified Result : Any> Navigator.onResult(
  */
 @SuppressLint("ComposableNaming")
 @Composable
-fun Navigator.onResult(
+fun ResultManager.onResult(
     key: String,
     onResult: @DisallowComposableCalls (Any) -> Unit
 ) {
