@@ -166,7 +166,7 @@ class NavHostTest {
     }
 
     @Test
-    fun navHost_navigator_keyNotFound_throwsExcpetion() {
+    fun navHost_navigator_keyNotFound_throwsException() {
         val navHost = NavHost()
         assertThat(navHost.stackEntries).isEmpty()
         val entry1 = StackEntry(
