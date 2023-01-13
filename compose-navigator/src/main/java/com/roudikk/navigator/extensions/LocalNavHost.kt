@@ -15,7 +15,7 @@ internal val LocalNavHost = staticCompositionLocalOf<NavHost?> { error("Must be 
  * Returns an optional [NavHost] that is hosting the caller Composable.
  */
 @Composable
-fun findNavHost() = LocalNavHost.current
+fun localNavHost() = LocalNavHost.current
 
 /**
  * Returns a [NavHost] that is hosting the caller Composable.
@@ -23,6 +23,6 @@ fun findNavHost() = LocalNavHost.current
  * @throws IllegalStateException if the [LocalNavHost] was not provided.
  */
 @Composable
-fun requireNavHost() = checkNotNull(LocalNavHost.current) {
+fun requireLocalNavHost() = checkNotNull(LocalNavHost.current) {
     "No NavHost found, Call requireNavHost inside a NavigationKey hosted by a NavHost."
 }

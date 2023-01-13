@@ -34,7 +34,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
-import com.roudikk.navigator.extensions.requireNavHost
+import com.roudikk.navigator.extensions.requireLocalNavHost
 import com.roudikk.navigator.navhost.NavHost
 import kotlinx.coroutines.launch
 
@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
 )
 @Composable
 internal fun NavigationTreeScreen(
-    navHost: NavHost = requireNavHost()
+    navHost: NavHost = requireLocalNavHost()
 ) {
     val stackEntries by remember {
         derivedStateOf {
