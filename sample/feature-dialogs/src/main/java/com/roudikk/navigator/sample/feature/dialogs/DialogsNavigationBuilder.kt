@@ -3,6 +3,7 @@ package com.roudikk.navigator.sample.feature.dialogs
 import com.roudikk.navigator.core.BottomSheet.BottomSheetOptions
 import com.roudikk.navigator.core.Dialog.DialogOptions
 import com.roudikk.navigator.core.NavigatorConfigBuilder
+import com.roudikk.navigator.sample.feature.common.navigation.MaterialSharedAxisTransitionX
 import com.roudikk.navigator.sample.feature.dialogs.api.BlockingBottomSheetKey
 import com.roudikk.navigator.sample.feature.dialogs.api.BlockingDialogKey
 import com.roudikk.navigator.sample.feature.dialogs.api.CancelableDialogKey
@@ -28,4 +29,6 @@ fun NavigatorConfigBuilder.dialogsNavigation() {
     }
 
     screen<DialogsKey> { DialogsScreen() }
+
+    defaultTransition { -> MaterialSharedAxisTransitionX }
 }

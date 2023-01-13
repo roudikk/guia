@@ -953,6 +953,6 @@ class NavigatorExtensionsTest {
         )
 
         assertThat(navigator.any<TestDataKey>())
-            .isFalse()
+            .isTrue()
     }
 }

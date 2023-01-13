@@ -70,7 +70,7 @@ internal fun Navigator.BottomSheetContainer(
                 BottomSheetContent(
                     sheetState = bottomSheetState,
                     bottomSheetEntry = bottomSheetEntry,
-                    currentTransition = currentTransition,
+                    currentTransition = currentBottomSheetTransition,
                     content = content
                 )
             }

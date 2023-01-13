@@ -11,7 +11,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.roudikk.navigator.animation.EnterExitTransition
 import com.roudikk.navigator.containers.NavContainer
-import com.roudikk.navigator.extensions.currentKey
 import com.roudikk.navigator.savedstate.navigatorSaver
 
 /**
@@ -55,7 +54,7 @@ fun rememberNavigator(
  * navigation operations check the extensions in NavigationExtensions, or create your own.
  *
  * @property overrideBackPress, enable or disable the current [BackHandler] used in the navigator's [NavContainer]
- * @property overrideNextTransition, use this to override the next transition used in the next [setBackstack] call.
+ * @property overrideScreenTransition, use this to override the next transition used in the next [setBackstack] call.
  * After the back stack is set, this is reset back to null.
  * @property backStack, the current back stack. To update, use [setBackstack].
  * @property backStackKeys, the current back stack keys.
@@ -67,12 +66,17 @@ class Navigator internal constructor(
 ) : ResultManager by resultManager {
     internal val navigationNodes = mutableMapOf<String, NavigationNode>()
     var overrideBackPress by mutableStateOf(true)
-    var overrideNextTransition: EnterExitTransition? = null
     var backStack by mutableStateOf(listOf<BackStackEntry>())
         private set
     val backStackKeys by derivedStateOf { backStack.map { it.navigationKey } }
 
-    internal var currentTransition by mutableStateOf(EnterExitTransition.None)
+    internal var currentScreenTransition by mutableStateOf(EnterExitTransition.None)
+    internal var currentBottomSheetTransition by mutableStateOf(EnterExitTransition.None)
+    internal var currentDialogTransition by mutableStateOf(EnterExitTransition.None)
+
+    var overrideScreenTransition: EnterExitTransition? = null
+    var overrideBottomSheetTransition: EnterExitTransition? = null
+    var overrideDialogTransition: EnterExitTransition? = null
 
     init {
         // Initialize the back stack with the initial key.
@@ -103,22 +107,67 @@ class Navigator internal constructor(
         val newEntry = entries.last()
         val isPop = backStack.contains(newEntry)
 
-        currentTransition = when {
-            // If the current transition is being overridden, then we use that transition.
-            overrideNextTransition != null -> overrideNextTransition!!
+        currentScreenTransition = getTransition(
+            previousEntry = backStack.lastOrNull { optionalNode(it) is Screen },
+            newEntry = entries.lastOrNull { optionalNode(it) is Screen },
+            overrideTransition = overrideScreenTransition,
+            isPop = isPop
+        )
 
-            // We check if the current backstack is not empty and get the appropriate
-            // transition from previous backstack to the new backstack.
-            backStack.isNotEmpty() -> navigatorConfig.transitions[newEntry.navigationKey::class]
-                ?.invoke(currentKey, newEntry.navigationKey, isPop)
-                ?: navigatorConfig.defaultTransition(currentKey, newEntry.navigationKey, isPop)
+        currentBottomSheetTransition = getTransition(
+            previousEntry = backStack.lastOrNull { optionalNode(it) is BottomSheet },
+            newEntry = entries.lastOrNull { optionalNode(it) is BottomSheet },
+            overrideTransition = overrideBottomSheetTransition,
+            isPop = isPop
+        )
 
-            // Otherwise we don't show any transition.
-            else -> EnterExitTransition.None
-        }
+        currentDialogTransition = getTransition(
+            previousEntry = backStack.lastOrNull { optionalNode(it) is Dialog },
+            newEntry = entries.lastOrNull { optionalNode(it) is Dialog },
+            overrideTransition = overrideDialogTransition,
+            isPop = isPop
+        )
 
-        overrideNextTransition = null
+        overrideScreenTransition = null
+        overrideBottomSheetTransition = null
+        overrideDialogTransition = null
+
         backStack = entries
+    }
+}
+
+private fun Navigator.getTransition(
+    previousEntry: BackStackEntry?,
+    newEntry: BackStackEntry?,
+    overrideTransition: EnterExitTransition?,
+    isPop: Boolean
+): EnterExitTransition {
+    return when {
+        previousEntry == null || newEntry == null -> EnterExitTransition.None
+
+        // If the current transition is being overridden, then we use that transition.
+        overrideTransition != null -> overrideTransition
+
+        // We check if the current backstack is not empty and get the appropriate
+        // transition from previous backstack to the new backstack.
+        backStack.isNotEmpty() -> navigatorConfig.transitions[newEntry.navigationKey::class]
+            ?.invoke(previousEntry.navigationKey, newEntry.navigationKey, isPop)
+            ?: navigatorConfig.defaultTransition(
+                previousEntry.navigationKey,
+                newEntry.navigationKey,
+                isPop
+            )
+
+        // Otherwise we don't show any transition.
+        else -> EnterExitTransition.None
+    }
+}
+
+private fun Navigator.optionalNode(backStackEntry: BackStackEntry): NavigationNode? {
+    return try {
+        navigationNode(backStackEntry)
+    } catch (_: Exception) {
+        null
     }
 }
 

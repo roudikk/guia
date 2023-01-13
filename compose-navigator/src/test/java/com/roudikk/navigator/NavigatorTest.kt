@@ -92,6 +92,10 @@ class NavigatorTest {
             navigationKey = navigationKey,
             navigatorConfig = NavigatorConfigBuilder()
                 .apply {
+                    screen<TestNavigationKey> { }
+                    screen<TestKey> { }
+                    screen<TestKey2> { }
+                    screen<TestKey3> { }
                     transition<TestNavigationKey> { -> navigationKeyTransition }
                     transition<TestKey> { -> testKeyTransition }
                     defaultTransition { _, newKey, _ ->
@@ -106,19 +110,19 @@ class NavigatorTest {
         )
 
         navigator.setBackstack(navigator.backStack + testKey.entry())
-        assertThat(navigator.currentTransition.enter).isEqualTo(testKeyTransition.enterExit.enter)
-        assertThat(navigator.currentTransition.exit).isEqualTo(testKeyTransition.enterExit.exit)
+        assertThat(navigator.currentScreenTransition.enter).isEqualTo(testKeyTransition.enterExit.enter)
+        assertThat(navigator.currentScreenTransition.exit).isEqualTo(testKeyTransition.enterExit.exit)
 
         navigator.setBackstack(navigator.backStack.dropLast(1))
-        assertThat(navigator.currentTransition.enter).isEqualTo(navigationKeyTransition.popEnterExit.enter)
-        assertThat(navigator.currentTransition.exit).isEqualTo(navigationKeyTransition.popEnterExit.exit)
+        assertThat(navigator.currentScreenTransition.enter).isEqualTo(navigationKeyTransition.popEnterExit.enter)
+        assertThat(navigator.currentScreenTransition.exit).isEqualTo(navigationKeyTransition.popEnterExit.exit)
 
         navigator.setBackstack(navigator.backStack + testKey2.entry())
-        assertThat(navigator.currentTransition.enter).isEqualTo(EnterTransition.None)
-        assertThat(navigator.currentTransition.exit).isEqualTo(ExitTransition.None)
+        assertThat(navigator.currentScreenTransition.enter).isEqualTo(EnterTransition.None)
+        assertThat(navigator.currentScreenTransition.exit).isEqualTo(ExitTransition.None)
 
         navigator.setBackstack(navigator.backStack + testKey3.entry())
-        assertThat(navigator.currentTransition.enter).isEqualTo(fadeIn())
-        assertThat(navigator.currentTransition.exit).isEqualTo(fadeOut())
+        assertThat(navigator.currentScreenTransition.enter).isEqualTo(fadeIn())
+        assertThat(navigator.currentScreenTransition.exit).isEqualTo(fadeOut())
     }
 }

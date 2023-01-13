@@ -72,7 +72,7 @@ fun DetailsEventEffect(
             )
 
             is DetailsEvent.OverrideScreenTransition -> {
-                navigator.overrideNextTransition = CrossFadeTransition.enterExit
+                navigator.overrideScreenTransition = CrossFadeTransition.enterExit
                 navigator.navigate(DetailsKey(event.item))
             }
 

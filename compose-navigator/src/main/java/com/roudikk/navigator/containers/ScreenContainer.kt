@@ -25,7 +25,7 @@ internal fun Navigator.ScreenContainer(
         modifier = Modifier
             .fillMaxSize(),
         transitionSpec = {
-            currentTransition.enter with currentTransition.exit
+            currentScreenTransition.enter with currentScreenTransition.exit
         }
     ) { backStackEntry ->
         backStackEntry?.let {
