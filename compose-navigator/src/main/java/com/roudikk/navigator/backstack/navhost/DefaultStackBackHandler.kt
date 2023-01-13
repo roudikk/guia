@@ -8,11 +8,10 @@ import com.roudikk.navigator.navhost.NavHost
 import com.roudikk.navigator.navhost.StackKey
 
 /**
- * [BackHandler] for a [NavHost] that goes to [stackKey] whenever the [NavHost.currentNavigator]
+ * [BackHandler] for a [NavHost] that falls back to [stackKey] whenever the [NavHost.currentNavigator]
  * is no longer handling the back press.
  *
- * Make sure to call this before the [NavHost]'s [NavContainer] so entries navigation entries
- * inside the nav host's navigators can override the back press.
+ * Make sure to call this before [NavHost.NavContainer] so navigators can override the back press.
  */
 @Composable
 fun NavHost.DefaultStackBackHandler(stackKey: StackKey) {
