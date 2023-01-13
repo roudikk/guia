@@ -85,11 +85,14 @@ class NavHost {
      *
      * @throws IllegalStateException if the [stackKey] is not part of the stack entries.
      */
-    fun setActive(stackKey: StackKey) {
-        check(stackEntries.any { it.stackKey == stackKey }) {
-            "$stackKey does not exist in this NavHost, must be provided when calling rememberNavHost"
+    fun setActive(stackKey: StackKey?) {
+        currentEntry = if (stackKey != null) {
+            check(stackEntries.any { it.stackKey == stackKey }) {
+                "$stackKey does not exist in this NavHost, must be provided when calling rememberNavHost"
+            }
+            stackEntries.first { it.stackKey == stackKey }
+        } else {
+            null
         }
-
-        currentEntry = stackEntries.first { it.stackKey == stackKey }
     }
 }
