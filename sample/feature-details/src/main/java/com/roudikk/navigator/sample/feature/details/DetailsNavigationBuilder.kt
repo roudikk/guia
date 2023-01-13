@@ -24,7 +24,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 internal class DetailsDialogKey(val item: String) : NavigationKey.WithNode<Dialog> {
     override fun navigationNode() = Dialog {
-        SampleSurfaceContainer { DetailsContent(item = item) }
+        DetailsContent(item = item)
     }
 }
 
