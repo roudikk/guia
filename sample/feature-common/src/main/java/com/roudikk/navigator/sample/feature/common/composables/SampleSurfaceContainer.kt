@@ -17,13 +17,14 @@ fun SampleSurfaceContainer(
 ) = Surface(
     modifier = modifier
         .border(
-            width = 2.dp,
+            width = 1.dp,
             color = MaterialTheme.colorScheme.primary,
             shape = RoundedCornerShape(12.dp)
         )
         .heightIn(max = 500.dp)
-        .widthIn(max = 500.dp),
+        .widthIn(max = 400.dp),
     tonalElevation = 4.dp,
     shape = RoundedCornerShape(12.dp),
+    shadowElevation = 2.dp,
     content = content
 )

@@ -100,6 +100,8 @@ class BottomSheet(
      */
     data class BottomSheetOptions(
         val scrimColor: Color? = null,
-        val confirmStateChange: (value: BottomSheetValue) -> Boolean = { true }
+        val confirmStateChange: (value: BottomSheetValue) -> Boolean = { true },
+        val dismissOnClickOutside: Boolean = true,
+        val onOutsideClick: () -> Unit = {}
     )
 }

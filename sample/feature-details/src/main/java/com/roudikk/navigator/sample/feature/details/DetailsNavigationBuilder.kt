@@ -14,6 +14,8 @@ import com.roudikk.navigator.core.Dialog.DialogOptions
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigatorConfigBuilder
 import com.roudikk.navigator.extensions.localBottomSheet
+import com.roudikk.navigator.extensions.popBackstack
+import com.roudikk.navigator.extensions.requireLocalNavigator
 import com.roudikk.navigator.sample.feature.common.composables.SampleSurfaceContainer
 import com.roudikk.navigator.sample.feature.common.navigation.CrossFadeTransition
 import com.roudikk.navigator.sample.feature.common.navigation.MaterialSharedAxisTransitionX
@@ -45,6 +47,7 @@ private val colorSaver = Saver<Color, List<Float>>(
 @Parcelize
 class DetailsBottomSheetKey(val item: String) : NavigationKey.WithNode<BottomSheet> {
     override fun navigationNode() = BottomSheet {
+        val navigator = requireLocalNavigator()
         val bottomSheet = localBottomSheet()
         val scrimColor = rememberSaveable(key = "color", saver = colorSaver) {
             Color(
@@ -56,7 +59,9 @@ class DetailsBottomSheetKey(val item: String) : NavigationKey.WithNode<BottomShe
 
         LaunchedEffect(LocalConfiguration.current) {
             bottomSheet.bottomSheetOptions = bottomSheet.bottomSheetOptions.copy(
-                scrimColor = scrimColor
+                scrimColor = scrimColor,
+                dismissOnClickOutside = false,
+                onOutsideClick = { navigator.popBackstack() }
             )
         }
 

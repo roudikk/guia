@@ -65,12 +65,14 @@ import kotlin.math.roundToInt
  * the content is wrapped in an [AnimatedContent] and we need to use the new sheet's height as the current
  * height even when animating, this results in a much smoother animation between sheets that have
  * different heights.
+ * - Allows the ability to override outside click behaviour.
  */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BottomSheetLayout(
     modifier: Modifier = Modifier,
     sheetState: BottomSheetState = rememberBottomSheetState(Hidden),
+    onClickOutside: () -> Unit,
     scrimColor: Color,
     sheetContent: @Composable () -> Unit
 ) {
@@ -98,11 +100,7 @@ fun BottomSheetLayout(
         Box(Modifier.fillMaxSize()) {
             Scrim(
                 color = scrimColor,
-                onDismiss = {
-                    if (sheetState.confirmStateChange(Hidden)) {
-                        scope.launch { sheetState.hide() }
-                    }
-                },
+                onDismiss = onClickOutside,
                 visible = sheetState.targetValue != Hidden
             )
         }

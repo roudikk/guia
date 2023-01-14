@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -27,6 +28,7 @@ import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.navigationNode
 import com.roudikk.navigator.extensions.popBackstack
+import kotlinx.coroutines.launch
 
 private fun Navigator.currentBottomSheet(): BottomSheet? {
     return backStack.last().let(::navigationNode) as? BottomSheet
@@ -42,6 +44,7 @@ internal fun Navigator.BottomSheetContainer(
     bottomSheetScrimColor: Color,
     content: @Composable (LifeCycleEntry) -> Unit
 ) {
+    val scope = rememberCoroutineScope()
     val bottomSheet = currentBottomSheet()
     val confirmStateChange = { sheetValue: BottomSheetValue ->
         currentBottomSheet()?.let {
@@ -57,6 +60,16 @@ internal fun Navigator.BottomSheetContainer(
     BottomSheetLayout(
         modifier = Modifier.fillMaxSize(),
         sheetState = bottomSheetState,
+        onClickOutside = {
+            currentBottomSheet()?.let {
+                it.bottomSheetOptions.onOutsideClick()
+                if (it.bottomSheetOptions.dismissOnClickOutside) {
+                    if (bottomSheetState.confirmStateChange(Hidden)) {
+                        scope.launch { bottomSheetState.hide() }
+                    }
+                }
+            }
+        },
         scrimColor = bottomSheet?.bottomSheetOptions?.scrimColor ?: bottomSheetScrimColor
     ) {
         Box(
@@ -95,6 +108,7 @@ internal fun Navigator.BottomSheetContainer(
         }
     }
 
+    // Reset the sheet height back to null when the sheet is dismissed.
     LaunchedEffect(bottomSheetState.currentValue) {
         if (bottomSheetState.currentValue == Hidden) {
             bottomSheetState.sheetHeight = null
