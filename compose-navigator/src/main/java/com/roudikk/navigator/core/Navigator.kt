@@ -59,12 +59,13 @@ fun rememberNavigator(
  * @property backStack, the current back stack. To update, use [setBackstack].
  * @property backStackKeys, the current back stack keys.
  */
-class Navigator internal constructor(
+class Navigator(
     internal val initialKey: NavigationKey,
     internal val navigatorConfig: NavigatorConfig,
     resultManager: ResultManager
 ) : ResultManager by resultManager {
     internal val navigationNodes = mutableMapOf<String, NavigationNode>()
+
     var overrideBackPress by mutableStateOf(true)
     var backStack by mutableStateOf(listOf<BackStackEntry>())
         private set
