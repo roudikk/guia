@@ -27,8 +27,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -41,7 +43,7 @@ import com.roudikk.navigator.sample.feature.navtree.api.NavigationTreeStackKey
 import kotlinx.coroutines.launch
 
 @OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalPagerApi::class
+    ExperimentalMaterial3Api::class, ExperimentalPagerApi::class, ExperimentalComposeUiApi::class
 )
 @Composable
 internal fun NavigationTreeScreen(
@@ -107,18 +109,19 @@ internal fun NavigationTreeScreen(
                     items(navigator.backStack) { backStackKey ->
                         Box(
                             Modifier
+                                .pointerInteropFilter { true }
                                 .sizeIn(minWidth = 200.dp)
                                 .aspectRatio(9F / 16F)
                                 .clip(RoundedCornerShape(2.dp))
                                 .background(MaterialTheme.colorScheme.primary)
-                                .padding(2.dp)
+                                .padding(1.dp)
                         ) {
                             Column(
                                 Modifier.clip(RoundedCornerShape(2.dp))
                             ) {
                                 Box(
                                     modifier = Modifier
-                                        .padding(2.dp)
+                                        .padding(1.dp)
                                         .fillMaxSize()
                                         .padding(1.dp)
                                         .background(MaterialTheme.colorScheme.surface),

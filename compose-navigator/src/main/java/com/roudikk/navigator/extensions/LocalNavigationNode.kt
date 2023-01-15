@@ -10,9 +10,15 @@ import com.roudikk.navigator.core.Screen
 /**
  * The local navigation node that is hosting a certain composable.
  */
-internal val LocalNavigationNode = compositionLocalOf<NavigationNode> {
+internal val LocalNavigationNode = compositionLocalOf<NavigationNode?> {
     error("Must be called inside a Composable hosted in a navigation node.")
 }
+
+/**
+ * Returns the current local [NavigationNode] if one is avaialble.
+ */
+@Composable
+fun localNavigationNode(): NavigationNode? = LocalNavigationNode.current
 
 /**
  * Returns the current local [NavigationNode].
@@ -20,11 +26,17 @@ internal val LocalNavigationNode = compositionLocalOf<NavigationNode> {
  * @throws IllegalStateException if called inside a Composable not hosted by a [NavigationNode]
  */
 @Composable
-fun localNavigationNode(): NavigationNode {
+fun requireLocalNavigationNode(): NavigationNode {
     return checkNotNull(LocalNavigationNode.current) {
         "Must be called inside a Composable hosted in a navigation node."
     }
 }
+
+/**
+ * Returns the current local [BottomSheet] if one is available.
+ */
+@Composable
+fun localBottomSheet() = localNavigationNode() as? BottomSheet
 
 /**
  * Returns the current local [BottomSheet].
@@ -32,7 +44,15 @@ fun localNavigationNode(): NavigationNode {
  * @throws IllegalStateException if the navigation node is not a bottom sheet.
  */
 @Composable
-fun localBottomSheet() = checkNotNull(localNavigationNode() as? BottomSheet)
+fun requireLocalBottomSheet() = checkNotNull(localBottomSheet()) {
+    "Must be called in a Composable hosted in a BottomSheet"
+}
+
+/**
+ * Returns the current local [Dialog] if one is available.
+ */
+@Composable
+fun localDialog() = localNavigationNode() as? Dialog
 
 /**
  * Returns the current local [Dialog].
@@ -40,7 +60,15 @@ fun localBottomSheet() = checkNotNull(localNavigationNode() as? BottomSheet)
  * @throws IllegalStateException if the navigation node is not a dialog.
  */
 @Composable
-fun localDialog() = checkNotNull(localNavigationNode() as? Dialog)
+fun requireLocalDialog() = checkNotNull(localDialog()) {
+    "Must be called in a Composable hosted in a Dialog"
+}
+
+/**
+ * Returns the current local [Screen] if one is available.
+ */
+@Composable
+fun localScreen() = localNavigationNode() as? Screen
 
 /**
  * Returns the current local [Screen].
@@ -48,4 +76,6 @@ fun localDialog() = checkNotNull(localNavigationNode() as? Dialog)
  * @throws IllegalStateException if the navigation node is not a screen.
  */
 @Composable
-fun localsScreen() = checkNotNull(localNavigationNode() as? Screen)
+fun requireLocalScreen() = checkNotNull(localScreen()) {
+    "Must be called in a Composable hosted in a screen"
+}
