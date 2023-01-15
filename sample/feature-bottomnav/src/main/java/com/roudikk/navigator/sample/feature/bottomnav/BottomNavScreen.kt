@@ -92,7 +92,12 @@ fun rememberBottomNavHost(
 
     val navigationTreeNavigator = rememberNavigator(
         initialKey = NavigationTreeKey(),
-        builder = navigationTreeNavigation
+        builder = {
+            navigationTreeNavigation()
+            homeNavigation()
+            nestedNavigation()
+            dialogsNavigation()
+        }
     )
 
     return rememberNavHost(

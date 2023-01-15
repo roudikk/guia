@@ -34,8 +34,10 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
+import com.roudikk.navigator.core.navigationNode
 import com.roudikk.navigator.extensions.requireLocalNavHost
 import com.roudikk.navigator.navhost.NavHost
+import com.roudikk.navigator.sample.feature.navtree.api.NavigationTreeStackKey
 import kotlinx.coroutines.launch
 
 @OptIn(
@@ -47,7 +49,9 @@ internal fun NavigationTreeScreen(
 ) {
     val stackEntries by remember {
         derivedStateOf {
-            navHost.stackEntries.toList()
+            navHost.stackEntries.toMutableList().apply {
+                removeAll { it.stackKey == NavigationTreeStackKey }
+            }
         }
     }
 
@@ -95,15 +99,15 @@ internal fun NavigationTreeScreen(
                 LazyVerticalGrid(
                     modifier = Modifier
                         .fillMaxSize(),
-                    columns = GridCells.Adaptive(100.dp),
+                    columns = GridCells.Adaptive(200.dp),
                     contentPadding = PaddingValues(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    items(navigator.backStackKeys) { navigationKey ->
+                    items(navigator.backStack) { backStackKey ->
                         Box(
                             Modifier
-                                .sizeIn(minWidth = 100.dp)
+                                .sizeIn(minWidth = 200.dp)
                                 .aspectRatio(9F / 16F)
                                 .clip(RoundedCornerShape(2.dp))
                                 .background(MaterialTheme.colorScheme.primary)
@@ -120,7 +124,8 @@ internal fun NavigationTreeScreen(
                                         .background(MaterialTheme.colorScheme.surface),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    Text(text = navigationKey.tag())
+                                    val navigationNode = navigator.navigationNode(backStackKey)
+                                    navigationNode.content()
                                 }
                             }
                         }

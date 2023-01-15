@@ -18,8 +18,8 @@ import com.roudikk.navigator.core.Dialog.DialogOptions
 /**
  * Represents how a navigation key will be displayed in the navigation tree.
  */
-sealed class NavigationNode {
-    abstract val content: @Composable () -> Unit
+interface NavigationNode {
+    val content: @Composable () -> Unit
 }
 
 /**
@@ -27,7 +27,7 @@ sealed class NavigationNode {
  */
 class Screen(
     override val content: @Composable () -> Unit
-) : NavigationNode()
+) : NavigationNode
 
 /**
  * A Dialog representation of a [NavigationKey].
@@ -36,7 +36,7 @@ class Screen(
  */
 class Dialog(
     override val content: @Composable () -> Unit
-) : NavigationNode() {
+) : NavigationNode {
 
     constructor(
         dialogOptions: DialogOptions,
@@ -81,7 +81,7 @@ fun DialogOptions.toDialogProperties() = DialogProperties(
  */
 class BottomSheet(
     override val content: @Composable () -> Unit
-) : NavigationNode() {
+) : NavigationNode {
 
     constructor(
         bottomSheetOptions: BottomSheetOptions,

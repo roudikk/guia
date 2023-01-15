@@ -182,7 +182,7 @@ private fun Navigator.optionalNode(backStackEntry: BackStackEntry): NavigationNo
  * @throws IllegalStateException if there is not presentation defined in [NavigatorConfig.presentations]
  * for the type of [BackStackEntry] provided.
  */
-internal fun Navigator.navigationNode(backStackEntry: BackStackEntry): NavigationNode {
+fun Navigator.navigationNode(backStackEntry: BackStackEntry): NavigationNode {
     return navigationNodes.getOrPut(backStackEntry.id) {
         backStackEntry.navigationKey.let { navigationKey ->
             if (navigationKey is NavigationKey.WithNode<*>) {
