@@ -15,7 +15,7 @@ internal val LocalNavigationNode = compositionLocalOf<NavigationNode?> {
 }
 
 /**
- * Returns the current local [NavigationNode] if one is avaialble.
+ * Returns the current local [NavigationNode] if one is available.
  */
 @Composable
 fun localNavigationNode(): NavigationNode? = LocalNavigationNode.current
