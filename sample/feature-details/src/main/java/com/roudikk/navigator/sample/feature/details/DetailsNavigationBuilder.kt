@@ -58,6 +58,7 @@ class DetailsBottomSheetKey(val item: String) : NavigationKey.WithNode<BottomShe
         }
 
         LaunchedEffect(LocalConfiguration.current) {
+            bottomSheet ?: return@LaunchedEffect
             bottomSheet.bottomSheetOptions = bottomSheet.bottomSheetOptions.copy(
                 scrimColor = scrimColor,
                 dismissOnClickOutside = false,

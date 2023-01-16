@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountTree
+import androidx.compose.material.icons.filled.Grid4x4
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.StackedBarChart
 import androidx.compose.material.icons.filled.Window
@@ -54,6 +55,8 @@ import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination.C
 import com.roudikk.navigator.sample.feature.common.deeplink.HomeDestination.Details
 import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
+import com.roudikk.navigator.sample.feature.custom.api.CustomRootKey
+import com.roudikk.navigator.sample.feature.custom.api.CustomStackKey
 import com.roudikk.navigator.sample.feature.details.api.DetailsKey
 import com.roudikk.navigator.sample.feature.dialogs.api.BlockingBottomSheetKey
 import com.roudikk.navigator.sample.feature.dialogs.api.BlockingDialogKey
@@ -72,6 +75,7 @@ fun rememberBottomNavHost(
     homeNavigation: NavigatorConfigBuilder.() -> Unit,
     nestedNavigation: NavigatorConfigBuilder.() -> Unit,
     dialogsNavigation: NavigatorConfigBuilder.() -> Unit,
+    customNavigation: NavigatorConfigBuilder.() -> Unit,
     navigationTreeNavigation: NavigatorConfigBuilder.() -> Unit,
     initialize: @DisallowComposableCalls (NavHost) -> Unit,
 ): NavHost {
@@ -90,6 +94,11 @@ fun rememberBottomNavHost(
         builder = dialogsNavigation
     )
 
+    val customNavigator = rememberNavigator(
+        initialKey = CustomRootKey(),
+        builder = customNavigation
+    )
+
     val navigationTreeNavigator = rememberNavigator(
         initialKey = NavigationTreeKey(),
         builder = {
@@ -106,6 +115,7 @@ fun rememberBottomNavHost(
             StackEntry(HomeStackKey, homeNavigator),
             StackEntry(NestedStackKey, nestedNavigator),
             StackEntry(DialogsStackKey, dialogsNavigator),
+            StackEntry(CustomStackKey, customNavigator),
             StackEntry(NavigationTreeStackKey, navigationTreeNavigator)
         ),
         initialize = initialize,
@@ -117,6 +127,7 @@ fun BottomNavScreen(
     homeNavigation: NavigatorConfigBuilder.() -> Unit,
     nestedNavigation: NavigatorConfigBuilder.() -> Unit,
     dialogsNavigation: NavigatorConfigBuilder.() -> Unit,
+    customNavigation: NavigatorConfigBuilder.() -> Unit,
     navigationTreeNavigation: NavigatorConfigBuilder.() -> Unit
 ) {
     val deepLinkViewModel = viewModel<DeepLinkViewModel>(LocalNavHostViewModelStoreOwner.current)
@@ -125,6 +136,7 @@ fun BottomNavScreen(
         homeNavigation = homeNavigation,
         nestedNavigation = nestedNavigation,
         dialogsNavigation = dialogsNavigation,
+        customNavigation = customNavigation,
         navigationTreeNavigation = navigationTreeNavigation
     ) { it.deeplink(deepLinkViewModel) }
 
@@ -225,9 +237,9 @@ private fun BottomNavigation(navHost: NavHost) {
             selected = currentStackKey == HomeStackKey,
             onClick = {
                 navigatorToStackOrRoot(
-                    navHost,
-                    currentStackKey,
-                    HomeStackKey
+                    navHost = navHost,
+                    currentKey = currentStackKey,
+                    newKey = HomeStackKey
                 )
             },
             icon = {
@@ -246,9 +258,9 @@ private fun BottomNavigation(navHost: NavHost) {
             selected = currentStackKey == NestedStackKey,
             onClick = {
                 navigatorToStackOrRoot(
-                    navHost,
-                    currentStackKey,
-                    NestedStackKey
+                    navHost = navHost,
+                    currentKey = currentStackKey,
+                    newKey = NestedStackKey
                 )
             },
             icon = {
@@ -267,14 +279,35 @@ private fun BottomNavigation(navHost: NavHost) {
             selected = currentStackKey == DialogsStackKey,
             onClick = {
                 navigatorToStackOrRoot(
-                    navHost,
-                    currentStackKey,
-                    DialogsStackKey
+                    navHost = navHost,
+                    currentKey = currentStackKey,
+                    newKey = DialogsStackKey
                 )
             },
             icon = {
                 Icon(
                     imageVector = Icons.Default.Window,
+                    contentDescription = "Dialogs"
+                )
+            }
+        )
+
+        NavigationBarItem(
+            modifier = Modifier
+                .navigationBarsPadding()
+                .testTag("tab_custom"),
+            label = { Text("Custom") },
+            selected = currentStackKey == CustomStackKey,
+            onClick = {
+                navigatorToStackOrRoot(
+                    navHost = navHost,
+                    currentKey = currentStackKey,
+                    newKey = CustomStackKey
+                )
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Grid4x4,
                     contentDescription = "Dialogs"
                 )
             }
@@ -328,6 +361,7 @@ private fun BottomNavContentPreviewDark() = AppTheme {
         homeNavigation = {},
         nestedNavigation = {},
         dialogsNavigation = {},
+        customNavigation = {},
         navigationTreeNavigation = {}
     )
 }

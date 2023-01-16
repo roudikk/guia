@@ -30,7 +30,7 @@ internal fun BlockingBottomSheetScreen() {
     var lockStateChange by rememberSaveable { mutableStateOf(true) }
 
     LaunchedEffect(lockStateChange) {
-        bottomSheet.bottomSheetOptions = BottomSheet.BottomSheetOptions(
+        bottomSheet?.bottomSheetOptions = BottomSheet.BottomSheetOptions(
             confirmStateChange = { !lockStateChange }
         )
     }

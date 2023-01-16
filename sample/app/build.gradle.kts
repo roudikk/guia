@@ -64,6 +64,8 @@ dependencies {
     implementation(project(":sample:feature-bottomnav:api"))
     implementation(project(":sample:feature-settings:api"))
     implementation(project(":sample:feature-details:api"))
+    implementation(project(":sample:feature-custom"))
+    implementation(project(":sample:feature-custom:api"))
     implementation(project(":compose-navigator"))
 
     // Test

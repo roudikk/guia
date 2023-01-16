@@ -7,6 +7,7 @@ fun NavigatorConfigBuilder.bottomNavNavigation(
     homeNavigation: NavigatorConfigBuilder.() -> Unit,
     nestedNavigation: NavigatorConfigBuilder.() -> Unit,
     dialogsNavigation: NavigatorConfigBuilder.() -> Unit,
+    customNavigation: NavigatorConfigBuilder.() -> Unit,
     navigationTreeNavigation: NavigatorConfigBuilder.() -> Unit,
 ) {
     screen<BottomNavKey> {
@@ -14,6 +15,7 @@ fun NavigatorConfigBuilder.bottomNavNavigation(
             homeNavigation = homeNavigation,
             nestedNavigation = nestedNavigation,
             dialogsNavigation = dialogsNavigation,
+            customNavigation = customNavigation,
             navigationTreeNavigation = navigationTreeNavigation
         )
     }

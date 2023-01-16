@@ -22,9 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.roudikk.navigator.extensions.localDialog
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popBackstack
-import com.roudikk.navigator.extensions.localDialog
 import com.roudikk.navigator.extensions.requireLocalNavigator
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
 import com.roudikk.navigator.sample.feature.dialogs.api.CancelableDialogKey
@@ -52,6 +52,7 @@ private fun BlockingDialogContent(
     var dismissDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(dismissDialog) {
+        dialog ?: return@LaunchedEffect
         dialog.dialogOptions = dialog.dialogOptions.copy(
             dismissOnBackPress = dismissDialog,
             dismissOnClickOutside = dismissDialog
