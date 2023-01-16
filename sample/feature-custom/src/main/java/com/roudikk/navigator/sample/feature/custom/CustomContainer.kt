@@ -1,6 +1,5 @@
 package com.roudikk.navigator.sample.feature.custom
 
-import android.util.Log
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -61,8 +60,8 @@ internal fun Navigator.CustomContainer(
                             ),
                             orientation = Orientation.Horizontal
                         )
-                        .alpha(1F - abs(offset / alphaMaxWidth))
-                        .rotate((offset * 45 / widthPx))
+                        .alpha(1.2F - abs(offset / alphaMaxWidth))
+                        .rotate((offset * 25 / widthPx))
                         .offset {
                             IntOffset(x = offset, y = 0)
                         }
@@ -72,7 +71,6 @@ internal fun Navigator.CustomContainer(
 
                 LaunchedEffect(swipeableState.currentValue) {
                     if (swipeableState.currentValue != CardState.IDLE) {
-                        Log.d("TEST", "Pop first")
                         popFirst()
                     }
                 }

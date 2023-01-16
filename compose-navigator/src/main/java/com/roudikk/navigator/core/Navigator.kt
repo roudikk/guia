@@ -22,7 +22,7 @@ import com.roudikk.navigator.savedstate.navigatorSaver
  */
 @Composable
 fun rememberNavigator(
-    initialKey: NavigationKey,
+    initialKey: NavigationKey? = null,
     initialize: @DisallowComposableCalls (Navigator) -> Unit = {},
     builder: @DisallowComposableCalls NavigatorConfigBuilder.() -> Unit = {}
 ): Navigator {
@@ -40,10 +40,10 @@ fun rememberNavigator(
         )
     ) {
         Navigator(
-            initialKey = initialKey,
             navigatorConfig = navigatorConfig,
             resultManager = resultManager
-        ).apply(initialize)
+        ).apply { initialKey?.let { setBackstack(it.entry()) } }
+            .apply(initialize)
     }
 }
 
@@ -60,10 +60,18 @@ fun rememberNavigator(
  * @property backStackKeys, the current back stack keys.
  */
 class Navigator(
-    internal val initialKey: NavigationKey,
     internal val navigatorConfig: NavigatorConfig,
     resultManager: ResultManager
 ) : ResultManager by resultManager {
+
+    constructor(
+        initialKey: NavigationKey,
+        navigatorConfig: NavigatorConfig,
+        resultManager: ResultManager,
+    ) : this(navigatorConfig, resultManager) {
+        setBackstack(initialKey.entry())
+    }
+
     internal val navigationNodes = mutableMapOf<String, NavigationNode>()
 
     var overrideBackPress by mutableStateOf(true)
@@ -78,11 +86,6 @@ class Navigator(
     var overrideScreenTransition: EnterExitTransition? = null
     var overrideBottomSheetTransition: EnterExitTransition? = null
     var overrideDialogTransition: EnterExitTransition? = null
-
-    init {
-        // Initialize the back stack with the initial key.
-        setBackstack(initialKey.entry())
-    }
 
     /**
      * Updates the current back stack.
@@ -101,37 +104,36 @@ class Navigator(
     fun setBackstack(
         entries: List<BackStackEntry>,
     ) {
-        require(entries.isNotEmpty()) {
-            "Backstack cannot be empty. Please pass at least one BackStackEntry"
+        val newEntry = entries.lastOrNull()
+
+        if (newEntry != null) {
+            val isPop = backStack.contains(newEntry)
+
+            currentScreenTransition = getTransition(
+                previousEntry = backStack.lastOrNull { optionalNode(it) is Screen },
+                newEntry = entries.lastOrNull { optionalNode(it) is Screen },
+                overrideTransition = overrideScreenTransition,
+                isPop = isPop
+            )
+
+            currentBottomSheetTransition = getTransition(
+                previousEntry = backStack.lastOrNull { optionalNode(it) is BottomSheet },
+                newEntry = entries.lastOrNull { optionalNode(it) is BottomSheet },
+                overrideTransition = overrideBottomSheetTransition,
+                isPop = isPop
+            )
+
+            currentDialogTransition = getTransition(
+                previousEntry = backStack.lastOrNull { optionalNode(it) is Dialog },
+                newEntry = entries.lastOrNull { optionalNode(it) is Dialog },
+                overrideTransition = overrideDialogTransition,
+                isPop = isPop
+            )
+
+            overrideScreenTransition = null
+            overrideBottomSheetTransition = null
+            overrideDialogTransition = null
         }
-
-        val newEntry = entries.last()
-        val isPop = backStack.contains(newEntry)
-
-        currentScreenTransition = getTransition(
-            previousEntry = backStack.lastOrNull { optionalNode(it) is Screen },
-            newEntry = entries.lastOrNull { optionalNode(it) is Screen },
-            overrideTransition = overrideScreenTransition,
-            isPop = isPop
-        )
-
-        currentBottomSheetTransition = getTransition(
-            previousEntry = backStack.lastOrNull { optionalNode(it) is BottomSheet },
-            newEntry = entries.lastOrNull { optionalNode(it) is BottomSheet },
-            overrideTransition = overrideBottomSheetTransition,
-            isPop = isPop
-        )
-
-        currentDialogTransition = getTransition(
-            previousEntry = backStack.lastOrNull { optionalNode(it) is Dialog },
-            newEntry = entries.lastOrNull { optionalNode(it) is Dialog },
-            overrideTransition = overrideDialogTransition,
-            isPop = isPop
-        )
-
-        overrideScreenTransition = null
-        overrideBottomSheetTransition = null
-        overrideDialogTransition = null
 
         backStack = entries
     }

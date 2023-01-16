@@ -3,7 +3,6 @@ package com.roudikk.navigator.savedstate
 import android.os.Parcelable
 import androidx.compose.runtime.saveable.Saver
 import com.roudikk.navigator.core.BackStackEntry
-import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.NavigatorConfig
 import com.roudikk.navigator.core.ResultManager
@@ -19,7 +18,6 @@ internal fun navigatorSaver(
     save = { it.save() },
     restore = { navigatorState ->
         Navigator(
-            initialKey = navigatorState.initialKey,
             navigatorConfig = navigatorConfig,
             resultManager = resultManager
         ).apply {
@@ -29,7 +27,6 @@ internal fun navigatorSaver(
 )
 
 private fun Navigator.save() = NavigatorState(
-    initialKey = initialKey,
     backstack = backStack,
     overrideBackPress = overrideBackPress
 )
@@ -46,7 +43,6 @@ private fun Navigator.restore(
  */
 @Parcelize
 internal data class NavigatorState(
-    val initialKey: NavigationKey,
     val backstack: List<BackStackEntry>,
     val overrideBackPress: Boolean
 ) : Parcelable

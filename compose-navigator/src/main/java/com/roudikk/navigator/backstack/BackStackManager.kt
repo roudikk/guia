@@ -99,7 +99,7 @@ internal class BackStackManager(
 
     val visibleBackStack = derivedStateOf {
         val entries = navigator.backStack
-        val currentEntry = entries.last()
+        val currentEntry = entries.lastOrNull() ?: return@derivedStateOf VisibleBackStack()
 
         // Check if there's a valid screen that should be visible.
         // It's the last entry that is a screen.
