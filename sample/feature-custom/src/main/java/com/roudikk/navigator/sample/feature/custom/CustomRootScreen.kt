@@ -5,6 +5,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,7 +33,6 @@ fun CustomRootScreen() {
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-
         Button(onClick = { navigator.addCards() }) {
             Text("Add cards")
         }
@@ -43,6 +44,8 @@ fun CustomRootScreen() {
         ) {
             navigator.CustomContainer(
                 modifier = Modifier
+                    .statusBarsPadding()
+                    .navigationBarsPadding()
                     .fillMaxSize()
             )
         }

@@ -31,7 +31,7 @@ import com.roudikk.navigator.core.NavigationNode
  * access to [Lifecycle], [ViewModelStore] and [SavedStateRegistry] critical to handling screen
  * state restoration and [ViewModel] creation and restoration.
  */
-internal class LifeCycleEntry(
+class LifeCycleEntry(
     application: Application?,
     val backStackEntry: BackStackEntry,
     val saveableStateHolder: SaveableStateHolder,
