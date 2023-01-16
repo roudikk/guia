@@ -1,10 +1,10 @@
 package com.roudikk.navigator.sample.feature.custom
 
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.rememberSwipeableState
@@ -13,6 +13,7 @@ import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
@@ -37,20 +38,30 @@ enum class CardState {
 @Composable
 internal fun Navigator.CustomContainer(
     modifier: Modifier = Modifier
-) = Box(modifier = modifier) {
+) {
     val saveableStateHolder = rememberSaveableStateHolder()
 
     backStack.reversed().forEach { backStackEntry ->
         saveableStateHolder.SaveableStateProvider(backStackEntry.id) {
-            BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+            BoxWithConstraints(
+                modifier = modifier,
+                contentAlignment = Alignment.Center
+            ) {
                 val swipeableState = rememberSwipeableState(initialValue = CardState.IDLE)
                 val widthPx = with(LocalDensity.current) { (maxWidth + 16.dp).toPx() }
                 val offset = swipeableState.offset.value.toInt()
                 val alphaMaxWidth = 0.8F * widthPx
 
                 Card(
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(16.dp),
                     modifier = Modifier
+                        .width(maxWidth - 32.dp)
+                        .height(maxHeight - 32.dp)
+                        .offset {
+                            IntOffset(x = offset, y = 0)
+                        }
+                        .rotate((offset * 25 / widthPx))
+                        .alpha(1.2F - abs(offset / alphaMaxWidth))
                         .swipeable(
                             state = swipeableState,
                             anchors = mapOf(
@@ -60,11 +71,6 @@ internal fun Navigator.CustomContainer(
                             ),
                             orientation = Orientation.Horizontal
                         )
-                        .alpha(1.2F - abs(offset / alphaMaxWidth))
-                        .rotate((offset * 25 / widthPx))
-                        .offset {
-                            IntOffset(x = offset, y = 0)
-                        }
                 ) {
                     navigationNode(backStackEntry).content()
                 }

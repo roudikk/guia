@@ -36,9 +36,9 @@ private val colorSaver = Saver<Color, List<Float>>(
 fun CustomScreen(id: Int) {
     val backgroundColor = rememberSaveable(saver = colorSaver) {
         Color(
-            red = (0..155).random(),
-            green = (0..155).random(),
-            blue = (0..155).random(),
+            red = 255 - (77..99).random(),
+            green = 255 - (77..99).random(),
+            blue = 255 - (77..99).random(),
         )
     }
 
