@@ -88,6 +88,6 @@ internal fun Navigator.CustomContainer(
     }
 
     DisposableEffect(Unit) {
-        onDispose { customBackStackManager.onDispose() }
+        onDispose(customBackStackManager::onDispose)
     }
 }

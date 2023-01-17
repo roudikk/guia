@@ -17,12 +17,12 @@ internal fun rememberCustomBackStackManager(navigator: Navigator): BackStackMana
             CustomVisibleBackStack(
                 backStack
                     .reversed()
-                    .takeLast(2)
+                    .takeLast(4)
                     .map(createEntry)
             )
         },
         updateLifeCycles = { visibleBackStack, lifeCycleEntries ->
-            lifeCycleEntries.values.filter { it !in visibleBackStack.entries }
+            lifeCycleEntries.filter { it !in visibleBackStack.entries }
                 .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
 
             visibleBackStack.entries.forEach {

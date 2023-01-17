@@ -31,6 +31,9 @@ import java.util.UUID
 internal fun rememberNavVisibleBackStackManager(navigator: Navigator): BackStackManager<NavVisibleBackStack> {
     return rememberBackStackManager(
         navigator = navigator,
+        /**
+         * Update the current visible back stack.
+         */
         getVisibleBackStack = { backStack, createLifeCycleEntry ->
             val currentEntry = backStack.lastOrNull()
                 ?: return@rememberBackStackManager NavVisibleBackStack()
@@ -101,7 +104,7 @@ internal fun rememberNavVisibleBackStackManager(navigator: Navigator): BackStack
          * - If the entry is not the current last entry, then it's paused.
          */
         updateLifeCycles = { visibleBackStack, lifeCycleEntries ->
-            lifeCycleEntries.values.filter { it !in visibleBackStack.entries }
+            lifeCycleEntries.filter { it !in visibleBackStack.entries }
                 .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
 
             visibleBackStack.entries.forEach {
@@ -122,7 +125,7 @@ internal fun rememberNavVisibleBackStackManager(navigator: Navigator): BackStack
 fun <VB : VisibleBackStack> rememberBackStackManager(
     navigator: Navigator,
     getVisibleBackStack: (backStack: List<BackStackEntry>, createEntry: (BackStackEntry) -> LifeCycleEntry) -> VB,
-    updateLifeCycles: (visibleBackStack: VB, entries: Map<String, LifeCycleEntry>) -> Unit
+    updateLifeCycles: (visibleBackStack: VB, entries: List<LifeCycleEntry>) -> Unit
 ): BackStackManager<VB> {
     val application = LocalContext.current.applicationContext as Application
     val viewModelStoreOwner = requireNotNull(LocalViewModelStoreOwner.current)
@@ -174,19 +177,21 @@ class BackStackManager<VB : VisibleBackStack> internal constructor(
         backStack: List<BackStackEntry>,
         createEntry: (BackStackEntry) -> LifeCycleEntry
     ) -> VB,
-    private val updateLifeCycles: (visibleBackStack: VB, entries: Map<String, LifeCycleEntry>) -> Unit,
+    private val updateLifeCycles: (visibleBackStack: VB, entries: List<LifeCycleEntry>) -> Unit,
     viewModelStoreOwner: ViewModelStoreOwner,
     initialEntryIds: List<String>,
 ) {
-    val lifeCycleEntries = mutableMapOf<String, LifeCycleEntry>()
+    private val lifeCycleEntriesMap = mutableMapOf<String, LifeCycleEntry>()
+    internal val lifeCycleEntries: List<LifeCycleEntry>
+        get() = lifeCycleEntriesMap.values.toList()
 
     private var hostLifecycleState: Lifecycle.State = Lifecycle.State.INITIALIZED
-    internal val entryIds get() = lifeCycleEntries.keys
+    internal val entryIds get() = lifeCycleEntriesMap.keys
 
     private val lifecycleEventObserver = LifecycleEventObserver { _, event ->
         // Update all entries with the current host life cycle state.
         hostLifecycleState = event.targetState
-        lifeCycleEntries.values.forEach {
+        lifeCycleEntries.forEach {
             it.navHostLifecycleState = event.targetState
         }
     }
@@ -224,8 +229,8 @@ class BackStackManager<VB : VisibleBackStack> internal constructor(
      * The [SaveableStateHolder] would be the state holder associated with a [Navigator].
      * The [ViewModelStore] is received from [viewModelStoreProvider] created in the back stack manager.
      */
-    fun createLifeCycleEntry(backStackEntry: BackStackEntry): LifeCycleEntry {
-        return lifeCycleEntries.getOrPut(backStackEntry.id) {
+    private fun createLifeCycleEntry(backStackEntry: BackStackEntry): LifeCycleEntry {
+        return lifeCycleEntriesMap.getOrPut(backStackEntry.id) {
             LifeCycleEntry(
                 backStackEntry = backStackEntry,
                 saveableStateHolder = saveableStateHolder,
@@ -262,7 +267,7 @@ class BackStackManager<VB : VisibleBackStack> internal constructor(
      * and remove the lifecycle observer.
      */
     fun onDispose() {
-        lifeCycleEntries.values.forEach {
+        lifeCycleEntries.forEach {
             it.navHostLifecycleState = Lifecycle.State.DESTROYED
         }
         hostLifecycle.removeObserver(lifecycleEventObserver)
@@ -290,8 +295,8 @@ class BackStackManager<VB : VisibleBackStack> internal constructor(
      * Destroy and remove all components of all the entries.
      */
     private fun cleanupEntries() {
-        lifeCycleEntries.keys.filter { it !in backstackIds }.forEach { entryId ->
-            lifeCycleEntries.remove(entryId)?.let { entry ->
+        lifeCycleEntriesMap.keys.filter { it !in backstackIds }.forEach { entryId ->
+            lifeCycleEntriesMap.remove(entryId)?.let { entry ->
                 entry.maxLifecycleState = Lifecycle.State.DESTROYED
                 removeComponents(entry.id)
             }

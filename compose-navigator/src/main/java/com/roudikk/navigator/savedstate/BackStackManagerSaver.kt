@@ -25,7 +25,7 @@ internal fun <VB : VisibleBackStack> backStackManagerSaver(
     lifecycle: Lifecycle,
     savedStateRegistry: SavedStateRegistry,
     getVisibleBackStack: (backStack: List<BackStackEntry>, createEntry: (BackStackEntry) -> LifeCycleEntry) -> VB,
-    updateLifeCycles: (visibleBackStack: VB, entries: Map<String, LifeCycleEntry>) -> Unit
+    updateLifeCycles: (visibleBackStack: VB, entries: List<LifeCycleEntry>) -> Unit
 ) = Saver<BackStackManager<VB>, BackStackManagerState>(
     save = {
         BackStackManagerState(
