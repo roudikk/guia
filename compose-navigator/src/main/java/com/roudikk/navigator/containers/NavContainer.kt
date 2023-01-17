@@ -11,7 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.roudikk.navigator.backstack.NavBackHandler
-import com.roudikk.navigator.backstack.rememberBackStackManager
+import com.roudikk.navigator.backstack.rememberNavVisibleBackStackManager
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.Screen
 import com.roudikk.navigator.extensions.LocalNavigator
@@ -67,8 +67,8 @@ private fun Navigator.NavContainerContent(
     dialogContainer: Container,
 ) = Box(modifier = modifier) {
     val canGoBack by navigator.canGoBack()
-    val backStackManager = rememberBackStackManager(navigator = navigator)
-    val visibleBackStack by backStackManager.visibleBackStack
+    val backStackManager = rememberNavVisibleBackStackManager(navigator = navigator)
+    val visibleBackStack = backStackManager.visibleBackStack
 
     val backEnabled by remember(canGoBack, navigator.overrideBackPress) {
         derivedStateOf { canGoBack && navigator.overrideBackPress }

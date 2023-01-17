@@ -27,11 +27,103 @@ import com.roudikk.navigator.core.navigationNode
 import com.roudikk.navigator.savedstate.backStackManagerSaver
 import java.util.UUID
 
+@Composable
+internal fun rememberNavVisibleBackStackManager(navigator: Navigator): BackStackManager<NavVisibleBackStack> {
+    return rememberBackStackManager(
+        navigator = navigator,
+        getVisibleBackStack = { backStack, createLifeCycleEntry ->
+            val currentEntry = backStack.lastOrNull()
+                ?: return@rememberBackStackManager NavVisibleBackStack()
+
+            // Check if there's a valid screen that should be visible.
+            // It's the last entry that is a screen.
+            val screenEntry = backStack.lastOrNull {
+                navigator.navigationNode(it) is Screen
+            }?.let(createLifeCycleEntry)
+
+            // Check if there's a valid dialog that should be visible.
+            // It must be the last entry in the backstack.
+            val dialogEntry = currentEntry.takeIf {
+                navigator.navigationNode(it) is Dialog
+            }?.let(createLifeCycleEntry)
+
+            // Check if there's a valid bottom sheet that should be visible.
+            // It's either the top most destination, in between a screen and a dialog
+            // or just by itself.
+            val bottomSheetEntry = backStack
+                .lastOrNull { navigator.navigationNode(it) is BottomSheet }
+                .takeIf {
+                    if (currentEntry == it) return@takeIf true
+                    val bottomSheetIndex = backStack.indexOf(it)
+                    val entriesAfter = backStack.subList(bottomSheetIndex + 1, backStack.size)
+                    entriesAfter.all { entry -> navigator.navigationNode(entry) is Dialog }
+                }?.let(createLifeCycleEntry)
+
+            val visibleBackStack = NavVisibleBackStack(
+                screenEntry = screenEntry,
+                dialogEntry = dialogEntry,
+                bottomSheetEntry = bottomSheetEntry
+            )
+
+            val navigatingToDialog = navigator.navigationNode(currentEntry) is Dialog &&
+                backStack.getOrNull(backStack.lastIndex - 1)
+                    ?.let(navigator::navigationNode) !is Dialog
+
+            val navigatingToBottomSheet = navigator.navigationNode(currentEntry) is BottomSheet &&
+                backStack.getOrNull(backStack.lastIndex - 1)
+                    ?.let(navigator::navigationNode) !is BottomSheet
+
+            visibleBackStack.entries.forEach {
+                // If the current destination is a bottom sheet or a dialog
+                // we need to pause whatever is behind it. In the case of a dialog
+                // we might have a bottom sheet and/or a screen behind it, whereas a bottom sheet
+                // would just have a screen behind it.
+                if (navigatingToDialog || navigatingToBottomSheet) {
+                    if (it.id == currentEntry.id) {
+                        it.maxLifecycleState = Lifecycle.State.RESUMED
+                    } else {
+                        it.maxLifecycleState = Lifecycle.State.STARTED
+                    }
+                } else {
+                    it.maxLifecycleState = Lifecycle.State.STARTED
+                }
+            }
+
+            visibleBackStack
+        },
+        /**
+         * Make sure all entries' lifecycle is up to date.
+         *
+         * All entries that are not in the current visibleBackStack will be in the destroyed state.
+         *
+         * We then check the entries that are in the visibleBackStack:
+         * - If the entry is the current last entry in the [Navigator] backstack, it's resumed.
+         * - If the entry is not the current last entry, then it's paused.
+         */
+        updateLifeCycles = { visibleBackStack, lifeCycleEntries ->
+            lifeCycleEntries.values.filter { it !in visibleBackStack.entries }
+                .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
+
+            visibleBackStack.entries.forEach {
+                if (it.id == navigator.backStack.last().id) {
+                    it.maxLifecycleState = Lifecycle.State.RESUMED
+                } else {
+                    it.maxLifecycleState = Lifecycle.State.STARTED
+                }
+            }
+        },
+    )
+}
+
 /**
  * Creates an instance a saveable instance of a [BackStackManager].
  */
 @Composable
-internal fun rememberBackStackManager(navigator: Navigator): BackStackManager {
+fun <VB : VisibleBackStack> rememberBackStackManager(
+    navigator: Navigator,
+    getVisibleBackStack: (backStack: List<BackStackEntry>, createEntry: (BackStackEntry) -> LifeCycleEntry) -> VB,
+    updateLifeCycles: (visibleBackStack: VB, entries: Map<String, LifeCycleEntry>) -> Unit
+): BackStackManager<VB> {
     val application = LocalContext.current.applicationContext as Application
     val viewModelStoreOwner = requireNotNull(LocalViewModelStoreOwner.current)
     val savedStateRegistry = LocalSavedStateRegistryOwner.current.savedStateRegistry
@@ -45,7 +137,9 @@ internal fun rememberBackStackManager(navigator: Navigator): BackStackManager {
             viewModelStoreOwner = viewModelStoreOwner,
             savedStateRegistry = savedStateRegistry,
             lifecycle = lifecycle,
-            saveableStateHolder = saveableStateHolder
+            saveableStateHolder = saveableStateHolder,
+            getVisibleBackStack = getVisibleBackStack,
+            updateLifeCycles = updateLifeCycles
         )
     ) {
         BackStackManager(
@@ -56,8 +150,10 @@ internal fun rememberBackStackManager(navigator: Navigator): BackStackManager {
             viewModelStoreOwner = viewModelStoreOwner,
             saveableStateHolder = saveableStateHolder,
             hostLifecycle = lifecycle,
-            savedStateRegistry = savedStateRegistry
-        )
+            savedStateRegistry = savedStateRegistry,
+            getVisibleBackStack = getVisibleBackStack,
+            updateLifeCycles = updateLifeCycles
+        ).apply { updateLifeCycles(visibleBackStack, lifeCycleEntries) }
     }
 }
 
@@ -67,18 +163,24 @@ internal fun rememberBackStackManager(navigator: Navigator): BackStackManager {
  * That includes managing the Lifecycle of each [LifeCycleEntry].
  * All entries in the current [Navigator]'s back stack will have a corresponding [LifeCycleEntry].
  */
-internal class BackStackManager(
+class BackStackManager<VB : VisibleBackStack> internal constructor(
     internal val id: String,
     private val navigator: Navigator,
     private val application: Application?,
     private val savedStateRegistry: SavedStateRegistry,
     private val saveableStateHolder: SaveableStateHolder,
     private val hostLifecycle: Lifecycle,
+    private val getVisibleBackStack: (
+        backStack: List<BackStackEntry>,
+        createEntry: (BackStackEntry) -> LifeCycleEntry
+    ) -> VB,
+    private val updateLifeCycles: (visibleBackStack: VB, entries: Map<String, LifeCycleEntry>) -> Unit,
     viewModelStoreOwner: ViewModelStoreOwner,
     initialEntryIds: List<String>,
 ) {
+    val lifeCycleEntries = mutableMapOf<String, LifeCycleEntry>()
+
     private var hostLifecycleState: Lifecycle.State = Lifecycle.State.INITIALIZED
-    private val lifeCycleEntries = mutableMapOf<String, LifeCycleEntry>()
     internal val entryIds get() = lifeCycleEntries.keys
 
     private val lifecycleEventObserver = LifecycleEventObserver { _, event ->
@@ -97,70 +199,9 @@ internal class BackStackManager(
         navigator.backStack.map { it.id }
     }
 
-    val visibleBackStack = derivedStateOf {
-        val entries = navigator.backStack
-        val currentEntry = entries.lastOrNull() ?: return@derivedStateOf VisibleBackStack()
-
-        // Check if there's a valid screen that should be visible.
-        // It's the last entry that is a screen.
-        val screenEntry = entries.lastOrNull {
-            navigator.navigationNode(it) is Screen
-        }?.let(::createLifeCycleEntry)
-
-        // Check if there's a valid dialog that should be visible.
-        // It must be the last entry in the backstack.
-        val dialogEntry = currentEntry.takeIf {
-            navigator.navigationNode(it) is Dialog
-        }?.let(::createLifeCycleEntry)
-
-        // Check if there's a valid bottom sheet that should be visible.
-        // It's either the top most destination, in between a screen and a dialog
-        // or just by itself.
-        val bottomSheetEntry = entries
-            .lastOrNull { navigator.navigationNode(it) is BottomSheet }
-            .takeIf {
-                if (currentEntry == it) return@takeIf true
-                val bottomSheetIndex = entries.indexOf(it)
-                val entriesAfter = entries.subList(bottomSheetIndex + 1, entries.size)
-                entriesAfter.all { entry -> navigator.navigationNode(entry) is Dialog }
-            }?.let(::createLifeCycleEntry)
-
-        val visibleBackStack = VisibleBackStack(
-            screenEntry = screenEntry,
-            dialogEntry = dialogEntry,
-            bottomSheetEntry = bottomSheetEntry
-        )
-
-        // Any entries that are not in the visible stack must now be destroyed.
-        lifeCycleEntries.values
-            .filter { it !in visibleBackStack.entries }
-            .forEach { it.maxLifecycleState = minOf(it.maxLifecycleState, Lifecycle.State.STARTED) }
-
-        val navigatingToDialog = navigator.navigationNode(currentEntry) is Dialog &&
-            entries.getOrNull(entries.lastIndex - 1)
-                ?.let(navigator::navigationNode) !is Dialog
-
-        val navigatingToBottomSheet = navigator.navigationNode(currentEntry) is BottomSheet &&
-            entries.getOrNull(entries.lastIndex - 1)
-                ?.let(navigator::navigationNode) !is BottomSheet
-
-        visibleBackStack.entries.forEach {
-            // If the current destination is a bottom sheet or a dialog
-            // we need to pause whatever is behind it. In the case of a dialog
-            // we might have a bottom sheet and/or a screen behind it, whereas a bottom sheet
-            // would just have a screen behind it.
-            if (navigatingToDialog || navigatingToBottomSheet) {
-                if (it.id == currentEntry.id) {
-                    it.maxLifecycleState = Lifecycle.State.RESUMED
-                } else {
-                    it.maxLifecycleState = Lifecycle.State.STARTED
-                }
-            } else {
-                it.maxLifecycleState = Lifecycle.State.STARTED
-            }
-        }
-
-        visibleBackStack
+    val visibleBackStack: VB by derivedStateOf {
+        getVisibleBackStack(navigator.backStack, ::createLifeCycleEntry)
+            .also { updateLifeCycles(it, lifeCycleEntries) }
     }
 
     init {
@@ -175,9 +216,6 @@ internal class BackStackManager(
         navigator.backStack
             .filter { it.id in initialEntryIds }
             .forEach(::createLifeCycleEntry)
-
-        // Make sure the back stack entries are initialized with the proper lifecycles.
-        updateLifecycles()
     }
 
     /**
@@ -186,7 +224,7 @@ internal class BackStackManager(
      * The [SaveableStateHolder] would be the state holder associated with a [Navigator].
      * The [ViewModelStore] is received from [viewModelStoreProvider] created in the back stack manager.
      */
-    private fun createLifeCycleEntry(backStackEntry: BackStackEntry): LifeCycleEntry {
+    fun createLifeCycleEntry(backStackEntry: BackStackEntry): LifeCycleEntry {
         return lifeCycleEntries.getOrPut(backStackEntry.id) {
             LifeCycleEntry(
                 backStackEntry = backStackEntry,
@@ -235,30 +273,8 @@ internal class BackStackManager(
      * of other entries.
      */
     fun onEntryDisposed() {
-        updateLifecycles()
+        updateLifeCycles(visibleBackStack, lifeCycleEntries)
         cleanupEntries()
-    }
-
-    /**
-     * Make sure all entries' lifecycle is up to date.
-     *
-     * All entries that are not in the current [visibleBackStack] will be in the destroyed state.
-     *
-     * We then check the entries that are in the [visibleBackStack]:
-     * - If the entry is the current last entry in the [Navigator] backstack, it's resumed.
-     * - If the entry is not the current last entry, then it's paused.
-     */
-    private fun updateLifecycles() {
-        lifeCycleEntries.values.filter { it !in visibleBackStack.value.entries }
-            .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
-
-        visibleBackStack.value.entries.forEach {
-            if (it.id == navigator.backStack.last().id) {
-                it.maxLifecycleState = Lifecycle.State.RESUMED
-            } else {
-                it.maxLifecycleState = Lifecycle.State.STARTED
-            }
-        }
     }
 
     /**

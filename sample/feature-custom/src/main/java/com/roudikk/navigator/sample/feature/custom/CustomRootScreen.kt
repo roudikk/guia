@@ -34,7 +34,7 @@ fun CustomRootScreen() {
         contentAlignment = Alignment.Center
     ) {
         Button(onClick = { navigator.addCards() }) {
-            Text("Add cards")
+            Text("Add Cards")
         }
 
         AnimatedVisibility(

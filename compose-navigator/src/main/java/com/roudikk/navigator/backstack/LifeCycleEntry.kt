@@ -100,7 +100,7 @@ internal fun LifeCycleEntry.LocalProvider(
     SaveableStateProvider(content)
 }
 
-internal val LifeCycleEntry.id: String
+val LifeCycleEntry.id: String
     get() = backStackEntry.id
 
 @Composable

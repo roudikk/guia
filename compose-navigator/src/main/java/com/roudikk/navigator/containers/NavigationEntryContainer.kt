@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.testTag
 import com.roudikk.navigator.backstack.BackStackManager
 import com.roudikk.navigator.backstack.LifeCycleEntry
 import com.roudikk.navigator.backstack.LocalProvider
+import com.roudikk.navigator.backstack.VisibleBackStack
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.navigationNode
@@ -22,8 +23,8 @@ import com.roudikk.navigator.extensions.LocalNavigationNode
  * for usage.
  */
 @Composable
-internal fun Navigator.NavigationEntryContainer(
-    backStackManager: BackStackManager,
+fun <VB : VisibleBackStack> Navigator.NavigationEntryContainer(
+    backStackManager: BackStackManager<VB>,
     lifecycleEntry: LifeCycleEntry
 ) = with(lifecycleEntry.backStackEntry) {
 

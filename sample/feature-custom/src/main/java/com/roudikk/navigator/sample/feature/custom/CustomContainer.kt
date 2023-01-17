@@ -11,8 +11,9 @@ import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.saveable.rememberSaveableStateHolder
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -20,8 +21,9 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.roudikk.navigator.backstack.id
+import com.roudikk.navigator.containers.NavigationEntryContainer
 import com.roudikk.navigator.core.Navigator
-import com.roudikk.navigator.core.navigationNode
 import kotlin.math.abs
 
 fun Navigator.popFirst() {
@@ -39,10 +41,10 @@ enum class CardState {
 internal fun Navigator.CustomContainer(
     modifier: Modifier = Modifier
 ) {
-    val saveableStateHolder = rememberSaveableStateHolder()
+    val customBackStackManager = rememberCustomBackStackManager(navigator = this)
 
-    backStack.reversed().forEach { backStackEntry ->
-        saveableStateHolder.SaveableStateProvider(backStackEntry.id) {
+    customBackStackManager.visibleBackStack.entries.forEach { entry ->
+        key(entry.id) {
             BoxWithConstraints(
                 modifier = modifier,
                 contentAlignment = Alignment.Center
@@ -57,9 +59,7 @@ internal fun Navigator.CustomContainer(
                     modifier = Modifier
                         .width(maxWidth - 32.dp)
                         .height(maxHeight - 32.dp)
-                        .offset {
-                            IntOffset(x = offset, y = 0)
-                        }
+                        .offset { IntOffset(x = offset, y = 0) }
                         .rotate((offset * 25 / widthPx))
                         .alpha(1.2F - abs(offset / alphaMaxWidth))
                         .swipeable(
@@ -72,15 +72,22 @@ internal fun Navigator.CustomContainer(
                             orientation = Orientation.Horizontal
                         )
                 ) {
-                    navigationNode(backStackEntry).content()
-                }
+                    NavigationEntryContainer(
+                        backStackManager = customBackStackManager,
+                        lifecycleEntry = entry
+                    )
 
-                LaunchedEffect(swipeableState.currentValue) {
-                    if (swipeableState.currentValue != CardState.IDLE) {
-                        popFirst()
+                    LaunchedEffect(swipeableState.currentValue) {
+                        if (swipeableState.currentValue != CardState.IDLE) {
+                            popFirst()
+                        }
                     }
                 }
             }
         }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { customBackStackManager.onDispose() }
     }
 }

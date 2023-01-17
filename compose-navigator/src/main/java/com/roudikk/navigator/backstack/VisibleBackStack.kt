@@ -36,12 +36,16 @@ import com.roudikk.navigator.core.Screen
  * - [Screen], [BottomSheet]
  * Then [screenEntry] and [bottomSheetEntry] will be available
  */
-internal class VisibleBackStack(
+internal class NavVisibleBackStack(
     val screenEntry: LifeCycleEntry? = null,
     val dialogEntry: LifeCycleEntry? = null,
     val bottomSheetEntry: LifeCycleEntry? = null
-) {
+) : VisibleBackStack {
 
-    val entries: List<LifeCycleEntry>
+    override val entries: List<LifeCycleEntry>
         get() = listOfNotNull(screenEntry, dialogEntry, bottomSheetEntry)
+}
+
+interface VisibleBackStack {
+    val entries: List<LifeCycleEntry>
 }
