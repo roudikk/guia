@@ -28,7 +28,6 @@ dependencies {
     implementation(project(":sample:feature-home:api"))
     implementation(project(":sample:feature-nested:api"))
     implementation(project(":sample:feature-dialogs:api"))
-    implementation(project(":sample:feature-navtree:api"))
     implementation(project(":sample:feature-details:api"))
     implementation(project(":sample:feature-custom:api"))
     implementation(project(":compose-navigator"))

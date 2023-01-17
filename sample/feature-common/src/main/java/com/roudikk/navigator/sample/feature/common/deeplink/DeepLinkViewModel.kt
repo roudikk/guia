@@ -70,7 +70,7 @@ class DeepLinkViewModel : ViewModel() {
                                     }
                                 }
 
-                                "navigation-tree" -> newDestinations.add(BottomNavDestination.NavigationTreeTab)
+                                "custom" -> newDestinations.add(BottomNavDestination.CustomTab)
                             }
                         }
                 }
@@ -80,6 +80,10 @@ class DeepLinkViewModel : ViewModel() {
         }
 
         destinations = newDestinations
+    }
+
+    fun navigate(destinations: List<DeepLinkDestination>) {
+        this.destinations = destinations
     }
 
     fun onMainDestinationsHandled() {
@@ -118,7 +122,7 @@ sealed class BottomNavDestination : DeepLinkDestination() {
     object HomeTab : BottomNavDestination()
     object NestedTab : BottomNavDestination()
     object DialogsTab : BottomNavDestination()
-    object NavigationTreeTab : BottomNavDestination()
+    object CustomTab : BottomNavDestination()
 }
 
 sealed class NestedDestination : DeepLinkDestination() {

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountTree
 import androidx.compose.material.icons.filled.Grid4x4
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.StackedBarChart
@@ -46,7 +45,6 @@ import com.roudikk.navigator.navhost.rememberNavHost
 import com.roudikk.navigator.sample.feature.common.composables.SampleSurfaceContainer
 import com.roudikk.navigator.sample.feature.common.deeplink.BottomNavDestination.DialogsTab
 import com.roudikk.navigator.sample.feature.common.deeplink.BottomNavDestination.HomeTab
-import com.roudikk.navigator.sample.feature.common.deeplink.BottomNavDestination.NavigationTreeTab
 import com.roudikk.navigator.sample.feature.common.deeplink.BottomNavDestination.NestedTab
 import com.roudikk.navigator.sample.feature.common.deeplink.DeepLinkViewModel
 import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination.BlockingBottomSheet
@@ -65,8 +63,6 @@ import com.roudikk.navigator.sample.feature.dialogs.api.DialogsKey
 import com.roudikk.navigator.sample.feature.dialogs.api.DialogsStackKey
 import com.roudikk.navigator.sample.feature.home.api.HomeKey
 import com.roudikk.navigator.sample.feature.home.api.HomeStackKey
-import com.roudikk.navigator.sample.feature.navtree.api.NavigationTreeKey
-import com.roudikk.navigator.sample.feature.navtree.api.NavigationTreeStackKey
 import com.roudikk.navigator.sample.feature.nested.api.NestedStackKey
 import com.roudikk.navigator.sample.feature.nested.api.ParentNestedKey
 
@@ -76,7 +72,6 @@ fun rememberBottomNavHost(
     nestedNavigation: NavigatorConfigBuilder.() -> Unit,
     dialogsNavigation: NavigatorConfigBuilder.() -> Unit,
     customNavigation: NavigatorConfigBuilder.() -> Unit,
-    navigationTreeNavigation: NavigatorConfigBuilder.() -> Unit,
     initialize: @DisallowComposableCalls (NavHost) -> Unit,
 ): NavHost {
     val homeNavigator = rememberNavigator(
@@ -99,16 +94,6 @@ fun rememberBottomNavHost(
         builder = customNavigation
     )
 
-    val navigationTreeNavigator = rememberNavigator(
-        initialKey = NavigationTreeKey(),
-        builder = {
-            navigationTreeNavigation()
-            homeNavigation()
-            nestedNavigation()
-            dialogsNavigation()
-        }
-    )
-
     return rememberNavHost(
         initialKey = HomeStackKey,
         entries = setOf(
@@ -116,7 +101,6 @@ fun rememberBottomNavHost(
             StackEntry(NestedStackKey, nestedNavigator),
             StackEntry(DialogsStackKey, dialogsNavigator),
             StackEntry(CustomStackKey, customNavigator),
-            StackEntry(NavigationTreeStackKey, navigationTreeNavigator)
         ),
         initialize = initialize,
     )
@@ -127,8 +111,7 @@ fun BottomNavScreen(
     homeNavigation: NavigatorConfigBuilder.() -> Unit,
     nestedNavigation: NavigatorConfigBuilder.() -> Unit,
     dialogsNavigation: NavigatorConfigBuilder.() -> Unit,
-    customNavigation: NavigatorConfigBuilder.() -> Unit,
-    navigationTreeNavigation: NavigatorConfigBuilder.() -> Unit
+    customNavigation: NavigatorConfigBuilder.() -> Unit
 ) {
     val deepLinkViewModel = viewModel<DeepLinkViewModel>(LocalNavHostViewModelStoreOwner.current)
 
@@ -136,8 +119,7 @@ fun BottomNavScreen(
         homeNavigation = homeNavigation,
         nestedNavigation = nestedNavigation,
         dialogsNavigation = dialogsNavigation,
-        customNavigation = customNavigation,
-        navigationTreeNavigation = navigationTreeNavigation
+        customNavigation = customNavigation
     ) { it.deeplink(deepLinkViewModel) }
 
     BottomNavContent(navHost)
@@ -157,7 +139,6 @@ private fun NavHost.deeplink(deepLinkViewModel: DeepLinkViewModel) {
                 HomeTab -> setActive(HomeStackKey)
                 NestedTab -> setActive(NestedStackKey)
                 DialogsTab -> setActive(DialogsStackKey)
-                NavigationTreeTab -> setActive(NavigationTreeStackKey)
 
                 // Dialog destinations
                 BlockingBottomSheet -> currentNavigator?.navigate(BlockingBottomSheetKey())
@@ -210,10 +191,10 @@ private fun BottomNavContent(
                 )
             },
             transitionSpec = {
-                if (targetState?.stackKey is NavigationTreeStackKey) {
+                if (targetState?.stackKey is CustomStackKey) {
                     slideInHorizontally { it } with slideOutHorizontally { -it }
                 } else {
-                    if (initialState?.stackKey is NavigationTreeStackKey) {
+                    if (initialState?.stackKey is CustomStackKey) {
                         slideInHorizontally { -it } with slideOutHorizontally { it }
                     } else {
                         fadeIn() with fadeOut()
@@ -312,27 +293,6 @@ private fun BottomNavigation(navHost: NavHost) {
                 )
             }
         )
-
-        NavigationBarItem(
-            modifier = Modifier
-                .navigationBarsPadding()
-                .testTag("tab_nav_tree"),
-            label = { Text("Nav Tree") },
-            selected = currentStackKey == NavigationTreeStackKey,
-            onClick = {
-                navigatorToStackOrRoot(
-                    navHost,
-                    currentStackKey,
-                    NavigationTreeStackKey
-                )
-            },
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.AccountTree,
-                    contentDescription = "Nav Tree"
-                )
-            }
-        )
     }
 }
 
@@ -362,6 +322,5 @@ private fun BottomNavContentPreviewDark() = AppTheme {
         nestedNavigation = {},
         dialogsNavigation = {},
         customNavigation = {},
-        navigationTreeNavigation = {}
     )
 }

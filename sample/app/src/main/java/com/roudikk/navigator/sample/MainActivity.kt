@@ -34,7 +34,6 @@ import com.roudikk.navigator.sample.feature.custom.customNavigation
 import com.roudikk.navigator.sample.feature.details.detailsNavigation
 import com.roudikk.navigator.sample.feature.dialogs.dialogsNavigation
 import com.roudikk.navigator.sample.feature.home.homeNavigation
-import com.roudikk.navigator.sample.feature.navtree.navigationTreeNavigation
 import com.roudikk.navigator.sample.feature.nested.nestedNavigation
 import com.roudikk.navigator.sample.feature.settings.api.SettingsKey
 import com.roudikk.navigator.sample.feature.settings.settingsNavigation
@@ -110,9 +109,6 @@ class MainActivity : ComponentActivity() {
             },
             customNavigation = {
                 customNavigation()
-            },
-            navigationTreeNavigation = {
-                navigationTreeNavigation()
             }
         )
         settingsNavigation()

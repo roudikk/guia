@@ -1,9 +1,16 @@
 package com.roudikk.navigator.sample.feature.custom
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -18,9 +25,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.roudikk.navigator.sample.feature.common.deeplink.BottomNavDestination
+import com.roudikk.navigator.sample.feature.common.deeplink.DeepLinkViewModel
+import com.roudikk.navigator.sample.feature.common.deeplink.HomeDestination
+import com.roudikk.navigator.sample.feature.common.deeplink.MainDestination
+import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
 import kotlinx.coroutines.delay
 
 private val colorSaver = Saver<Color, List<Float>>(
@@ -39,18 +53,20 @@ private val colorSaver = Saver<Color, List<Float>>(
 
 @Composable
 fun CustomScreen(id: Int) {
+    val deepLinkViewModel = viewModel<DeepLinkViewModel>(LocalNavHostViewModelStoreOwner.current)
     val backgroundColor = rememberSaveable(saver = colorSaver) {
         Color(
-            red = 255 - (77..99).random(),
-            green = 255 - (77..99).random(),
-            blue = 255 - (77..99).random(),
+            red = 255 - (88..111).random(),
+            green = 255 - (88..111).random(),
+            blue = 255 - (88..111).random(),
         )
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor),
+            .background(backgroundColor)
+            .border(8.dp, Color.Black.copy(alpha = 0.2F), RoundedCornerShape(32.dp)),
         contentAlignment = Alignment.Center
     ) {
         var timer by rememberSaveable { mutableStateOf(0) }
@@ -75,11 +91,41 @@ fun CustomScreen(id: Int) {
             }
         }
 
-        Text(
-            text = "$id: $timer",
-            fontSize = 20.sp,
-            color = Color.White,
-            fontWeight = FontWeight.Bold
-        )
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = "Card $id: $timer",
+                fontSize = 30.sp,
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "(Timer will only start when resumed)",
+                fontSize = 14.sp,
+                color = Color.White
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            TextButton(
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = Color.White,
+                    backgroundColor = Color.Black.copy(alpha = 0.4F)
+                ),
+                onClick = {
+                    deepLinkViewModel.navigate(
+                        listOf(
+                            MainDestination.BottomNav,
+                            BottomNavDestination.HomeTab,
+                            HomeDestination.Details(id.toString())
+                        )
+                    )
+                }
+            ) {
+                Text(text = "Open Details")
+            }
+        }
     }
 }

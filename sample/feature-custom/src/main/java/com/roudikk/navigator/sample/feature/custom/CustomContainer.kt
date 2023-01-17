@@ -1,10 +1,11 @@
 package com.roudikk.navigator.sample.feature.custom
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.rememberSwipeableState
@@ -13,11 +14,13 @@ import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -42,8 +45,9 @@ internal fun Navigator.CustomContainer(
     modifier: Modifier = Modifier
 ) {
     val customBackStackManager = rememberCustomBackStackManager(navigator = this)
+    val entries = customBackStackManager.visibleBackStack.entries
 
-    customBackStackManager.visibleBackStack.entries.forEach { entry ->
+    entries.forEach { entry ->
         key(entry.id) {
             BoxWithConstraints(
                 modifier = modifier,
@@ -53,12 +57,14 @@ internal fun Navigator.CustomContainer(
                 val widthPx = with(LocalDensity.current) { (maxWidth + 16.dp).toPx() }
                 val offset = swipeableState.offset.value.toInt()
                 val alphaMaxWidth = 0.8F * widthPx
+                val scale by animateFloatAsState(if (entry == entries.lastOrNull()) 1F else 0.9F)
 
                 Card(
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(32.dp),
                     modifier = Modifier
-                        .width(maxWidth - 32.dp)
-                        .height(maxHeight - 32.dp)
+                        .scale(scale)
+                        .widthIn(min = 500.dp, max = minOf(maxWidth - 32.dp, 500.dp))
+                        .heightIn(min = 800.dp, max = minOf(maxHeight - 32.dp, 800.dp))
                         .offset { IntOffset(x = offset, y = 0) }
                         .rotate((offset * 25 / widthPx))
                         .alpha(1.2F - abs(offset / alphaMaxWidth))
