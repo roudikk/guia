@@ -37,7 +37,6 @@ import com.roudikk.navigator.sample.feature.home.homeNavigation
 import com.roudikk.navigator.sample.feature.nested.nestedNavigation
 import com.roudikk.navigator.sample.feature.settings.api.SettingsKey
 import com.roudikk.navigator.sample.feature.settings.settingsNavigation
-import com.roudikk.navigator.sample.feature.welcome.api.WelcomeKey
 import com.roudikk.navigator.sample.feature.welcome.welcomeNavigation
 
 class MainActivity : ComponentActivity() {
@@ -68,7 +67,6 @@ class MainActivity : ComponentActivity() {
             AppTheme {
                 val configuration = LocalConfiguration.current
                 val rootNavigator = rememberNavigator(
-                    initialKey = WelcomeKey(),
                     initialize = { it.deeplink(globalNavigator) }
                 ) { rootNavigation(configuration.screenWidthDp) }
 

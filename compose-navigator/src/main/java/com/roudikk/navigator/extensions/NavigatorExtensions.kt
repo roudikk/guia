@@ -8,14 +8,14 @@ import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.entry
 
-val Navigator.currentEntry: BackStackEntry
-    get() = backStack.last()
+val Navigator.currentEntry: BackStackEntry?
+    get() = backStack.lastOrNull()
 
 /**
  * Returns the current [NavigationKey]
  */
-val Navigator.currentKey: NavigationKey
-    get() = currentEntry.navigationKey
+val Navigator.currentKey: NavigationKey?
+    get() = currentEntry?.navigationKey
 
 /**
  * Adds a new key to the backstack.

@@ -36,7 +36,7 @@ class NavigatorExtensionsTest {
         val initialKey = TestNavigationKey()
         val navigator = testNavigator(initialKey)
 
-        assertThat(navigator.currentEntry.navigationKey).isEqualTo(initialKey)
+        assertThat(navigator.currentEntry?.navigationKey).isEqualTo(initialKey)
         assertThat(navigator.currentEntry).isEqualTo(navigator.backStack.last())
     }
 

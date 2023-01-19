@@ -38,15 +38,15 @@ fun NavHost.StackHistoryBackHandler() {
 
     // Add an history entry whenever the current stack entry has been changed.
     LaunchedEffect(currentEntry) {
-        currentEntry?.let {
-            if (stackHistory.lastOrNull()?.stackKey != it.stackKey) {
-                stackHistory.add(
-                    StackHistoryEntry(
-                        stackKey = it.stackKey,
-                        backStackEntry = it.navigator.currentEntry
-                    )
+        val currentEntry = currentEntry ?: return@LaunchedEffect
+        val backStackEntry = currentEntry.navigator.currentEntry ?: return@LaunchedEffect
+        if (stackHistory.lastOrNull()?.stackKey != currentEntry.stackKey) {
+            stackHistory.add(
+                StackHistoryEntry(
+                    stackKey = currentEntry.stackKey,
+                    backStackEntry = backStackEntry
                 )
-            }
+            )
         }
     }
 
@@ -63,8 +63,8 @@ fun NavHost.StackHistoryBackHandler() {
     val overrideBackPress by remember {
         derivedStateOf {
             stackHistory.size > 1 &&
-                stackHistory.last().stackKey == currentEntry?.stackKey &&
-                stackHistory.last().backStackEntry == currentEntry?.navigator?.currentEntry
+                stackHistory.lastOrNull()?.stackKey == currentEntry?.stackKey &&
+                stackHistory.lastOrNull()?.backStackEntry == currentEntry?.navigator?.currentEntry
         }
     }
 

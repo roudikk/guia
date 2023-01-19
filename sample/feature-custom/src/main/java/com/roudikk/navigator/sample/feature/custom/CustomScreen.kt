@@ -112,7 +112,7 @@ fun CustomScreen(id: Int) {
                     backgroundColor = Color.Black.copy(alpha = 0.4F)
                 ),
                 onClick = {
-                    globalNavigator.navigateToDetails(id.toString())
+                    globalNavigator.navigateToDetails(item = id.toString())
                 }
             ) {
                 Text(text = "Open Details")

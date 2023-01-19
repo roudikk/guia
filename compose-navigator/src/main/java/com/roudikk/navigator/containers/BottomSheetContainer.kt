@@ -31,7 +31,7 @@ import com.roudikk.navigator.extensions.popBackstack
 import kotlinx.coroutines.launch
 
 private fun Navigator.currentBottomSheet(): BottomSheet? {
-    return backStack.last().let(::navigationNode) as? BottomSheet
+    return backStack.lastOrNull()?.let(::navigationNode) as? BottomSheet
 }
 
 /**

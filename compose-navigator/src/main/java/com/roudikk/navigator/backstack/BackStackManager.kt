@@ -108,7 +108,7 @@ internal fun rememberNavVisibleBackStackManager(navigator: Navigator): BackStack
                 .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
 
             visibleBackStack.entries.forEach {
-                if (it.id == navigator.backStack.last().id) {
+                if (it.id == navigator.backStack.lastOrNull()?.id) {
                     it.maxLifecycleState = Lifecycle.State.RESUMED
                 } else {
                     it.maxLifecycleState = Lifecycle.State.STARTED
