@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -119,11 +118,10 @@ private fun ParentNestedContent(
                 scrollBehavior = scrollBehavior
             )
         }
-    ) { padding ->
+    ) { _ ->
 
         Column(
             modifier = Modifier
-                .padding(padding)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -134,7 +132,6 @@ private fun ParentNestedContent(
 
             Row(
                 modifier = Modifier
-                    .imePadding()
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 16.dp)
                     .height(52.dp),

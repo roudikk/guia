@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -94,22 +95,22 @@ private fun HomeContent(
     val enabled by remember {
         derivedStateOf {
             lazyListState.firstVisibleItemIndex > 0 ||
-                    lazyListState.firstVisibleItemScrollOffset > 0
+                lazyListState.firstVisibleItemScrollOffset > 0
         }
     }
 
     BackHandler(
         enabled = enabled
     ) {
-        scope.launch {
-            lazyListState.scrollToItem(0)
-        }
+        scope.launch { lazyListState.scrollToItem(0) }
     }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        contentWindowInsets = WindowInsets(0.dp),
         topBar = {
             TopAppBar(
                 title = { Text(text = "Home") },
@@ -146,7 +147,7 @@ private fun HomeContent(
         }
     ) { padding ->
         Crossfade(
-            modifier = Modifier.padding(padding),
+            modifier = Modifier.padding(top = padding.calculateTopPadding()),
             targetState = listItems.isEmpty()
         ) { itemsEmpty ->
             if (itemsEmpty) {

@@ -54,7 +54,6 @@ private fun NestedContent(
     onRemoveClicked: () -> Unit = {},
     onAddClicked: () -> Unit = {}
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -62,7 +61,6 @@ private fun NestedContent(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         IconButton(
             enabled = canGoBack,
             onClick = onRemoveClicked

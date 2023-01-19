@@ -37,6 +37,7 @@ import com.roudikk.navigator.sample.feature.home.homeNavigation
 import com.roudikk.navigator.sample.feature.nested.nestedNavigation
 import com.roudikk.navigator.sample.feature.settings.api.SettingsKey
 import com.roudikk.navigator.sample.feature.settings.settingsNavigation
+import com.roudikk.navigator.sample.feature.welcome.api.WelcomeKey
 import com.roudikk.navigator.sample.feature.welcome.welcomeNavigation
 
 class MainActivity : ComponentActivity() {
@@ -67,6 +68,7 @@ class MainActivity : ComponentActivity() {
             AppTheme {
                 val configuration = LocalConfiguration.current
                 val rootNavigator = rememberNavigator(
+                    initialKey = WelcomeKey(),
                     initialize = { it.deeplink(globalNavigator) }
                 ) { rootNavigation(configuration.screenWidthDp) }
 
@@ -93,24 +95,18 @@ class MainActivity : ComponentActivity() {
         screenWidth: Int
     ) {
         welcomeNavigation()
+        settingsNavigation()
+        dialogsNavigation()
         bottomNavNavigation(
             homeNavigation = {
                 homeNavigation()
                 detailsNavigation(screenWidth)
                 settingsNavigation()
             },
-            nestedNavigation = {
-                nestedNavigation()
-            },
-            dialogsNavigation = {
-                dialogsNavigation()
-            },
-            customNavigation = {
-                customNavigation()
-            }
+            nestedNavigation = { nestedNavigation() },
+            dialogsNavigation = { dialogsNavigation() },
+            customNavigation = { customNavigation() }
         )
-        settingsNavigation()
-        dialogsNavigation()
         defaultTransition { -> MaterialSharedAxisTransitionXY }
     }
 
