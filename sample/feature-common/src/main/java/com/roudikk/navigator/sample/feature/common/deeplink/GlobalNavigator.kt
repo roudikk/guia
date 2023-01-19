@@ -1,7 +1,6 @@
 package com.roudikk.navigator.sample.feature.common.deeplink
 
 import android.net.Uri
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,26 +10,6 @@ class GlobalNavigator : ViewModel() {
 
     var destinations by mutableStateOf(emptyList<NavigationDestination>())
         private set
-
-    val mainDestinations by derivedStateOf {
-        destinations.filterIsInstance<MainDestination>()
-    }
-
-    val homeDestinations by derivedStateOf {
-        destinations.filterIsInstance<HomeDestination>()
-    }
-
-    val nestedDestinations by derivedStateOf {
-        destinations.filterIsInstance<NestedDestination>()
-    }
-
-    val bottomTabDestinations by derivedStateOf {
-        destinations.filterIsInstance<BottomTabDestination>()
-    }
-
-    val dialogsDestinations by derivedStateOf {
-        destinations.filterIsInstance<DialogsDestination>()
-    }
 
     fun onDeeplinkData(data: String?) {
         data ?: return

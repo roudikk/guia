@@ -117,7 +117,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun Navigator.deeplink(globalNavigator: GlobalNavigator) {
-        globalNavigator.mainDestinations
+        globalNavigator.destinations
+            .filterIsInstance<MainDestination>()
             .forEach { destination ->
                 when (destination) {
                     MainDestination.BottomNav -> {

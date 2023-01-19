@@ -43,10 +43,12 @@ import com.roudikk.navigator.navhost.StackEntry
 import com.roudikk.navigator.navhost.StackKey
 import com.roudikk.navigator.navhost.rememberNavHost
 import com.roudikk.navigator.sample.feature.common.composables.SampleSurfaceContainer
+import com.roudikk.navigator.sample.feature.common.deeplink.BottomTabDestination
 import com.roudikk.navigator.sample.feature.common.deeplink.BottomTabDestination.CustomTab
 import com.roudikk.navigator.sample.feature.common.deeplink.BottomTabDestination.DialogsTab
 import com.roudikk.navigator.sample.feature.common.deeplink.BottomTabDestination.HomeTab
 import com.roudikk.navigator.sample.feature.common.deeplink.BottomTabDestination.NestedTab
+import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination
 import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination.BlockingBottomSheet
 import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination.BlockingDialog
 import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination.Cancelable
@@ -133,7 +135,8 @@ fun BottomNavScreen(
 }
 
 private fun NavHost.deeplink(globalNavigator: GlobalNavigator) {
-    globalNavigator.bottomTabDestinations
+    globalNavigator.destinations
+        .filterIsInstance<BottomTabDestination>()
         .forEach { destination ->
             when (destination) {
                 HomeTab -> setActive(HomeStackKey)
@@ -143,7 +146,8 @@ private fun NavHost.deeplink(globalNavigator: GlobalNavigator) {
             }
         }
 
-    globalNavigator.dialogsDestinations
+    globalNavigator.destinations
+        .filterIsInstance<DialogsDestination>()
         .forEach { destination ->
             when (destination) {
                 BlockingBottomSheet -> navigator(DialogsStackKey).navigate(
@@ -160,7 +164,8 @@ private fun NavHost.deeplink(globalNavigator: GlobalNavigator) {
             }
         }
 
-    globalNavigator.homeDestinations
+    globalNavigator.destinations
+        .filterIsInstance<HomeDestination>()
         .forEach { destination ->
             when (destination) {
                 is HomeDestination.Details -> navigator(HomeStackKey).navigate(

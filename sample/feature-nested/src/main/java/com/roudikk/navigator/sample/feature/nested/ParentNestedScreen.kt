@@ -92,7 +92,8 @@ private fun Navigator.navigateToIndex(index: Int) {
 }
 
 private fun Navigator.deeplink(globalNavigator: GlobalNavigator) {
-    globalNavigator.nestedDestinations
+    globalNavigator.destinations
+        .filterIsInstance<NestedDestination>()
         .forEach { destination ->
             when (destination) {
                 is NestedDestination.Nested -> navigateToIndex(destination.index)
