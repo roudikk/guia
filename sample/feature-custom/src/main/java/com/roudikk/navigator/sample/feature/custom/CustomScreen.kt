@@ -30,10 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.sample.feature.common.deeplink.BottomNavDestination
-import com.roudikk.navigator.sample.feature.common.deeplink.DeepLinkViewModel
-import com.roudikk.navigator.sample.feature.common.deeplink.HomeDestination
-import com.roudikk.navigator.sample.feature.common.deeplink.MainDestination
+import com.roudikk.navigator.sample.feature.common.deeplink.GlobalNavigator
 import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
 import kotlinx.coroutines.delay
 
@@ -53,7 +50,7 @@ private val colorSaver = Saver<Color, List<Float>>(
 
 @Composable
 fun CustomScreen(id: Int) {
-    val deepLinkViewModel = viewModel<DeepLinkViewModel>(LocalNavHostViewModelStoreOwner.current)
+    val globalNavigator = viewModel<GlobalNavigator>(LocalNavHostViewModelStoreOwner.current)
     val backgroundColor = rememberSaveable(saver = colorSaver) {
         Color(
             red = 255 - (88..111).random(),
@@ -115,13 +112,7 @@ fun CustomScreen(id: Int) {
                     backgroundColor = Color.Black.copy(alpha = 0.4F)
                 ),
                 onClick = {
-                    deepLinkViewModel.navigate(
-                        listOf(
-                            MainDestination.BottomNav,
-                            BottomNavDestination.HomeTab,
-                            HomeDestination.Details(id.toString())
-                        )
-                    )
+                    globalNavigator.navigateToDetails(id.toString())
                 }
             ) {
                 Text(text = "Open Details")

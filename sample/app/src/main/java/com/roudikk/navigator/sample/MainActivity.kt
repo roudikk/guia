@@ -24,7 +24,7 @@ import com.roudikk.navigator.extensions.popTo
 import com.roudikk.navigator.extensions.setRoot
 import com.roudikk.navigator.sample.feature.bottomnav.api.BottomNavKey
 import com.roudikk.navigator.sample.feature.bottomnav.bottomNavNavigation
-import com.roudikk.navigator.sample.feature.common.deeplink.DeepLinkViewModel
+import com.roudikk.navigator.sample.feature.common.deeplink.GlobalNavigator
 import com.roudikk.navigator.sample.feature.common.deeplink.MainDestination
 import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.feature.common.navigation.LocalRootNavigator
@@ -42,14 +42,14 @@ import com.roudikk.navigator.sample.feature.welcome.welcomeNavigation
 
 class MainActivity : ComponentActivity() {
 
-    private val deepLinkViewModel: DeepLinkViewModel by viewModels()
+    private val globalNavigator: GlobalNavigator by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        deepLinkViewModel.onDeeplinkData(intent.dataString)
+        globalNavigator.onDeeplinkData(intent.dataString)
 
         setContent {
             val systemUiController = rememberSystemUiController()
@@ -69,7 +69,7 @@ class MainActivity : ComponentActivity() {
                 val configuration = LocalConfiguration.current
                 val rootNavigator = rememberNavigator(
                     initialKey = WelcomeKey(),
-                    initialize = { it.deeplink(deepLinkViewModel) }
+                    initialize = { it.deeplink(globalNavigator) }
                 ) { rootNavigation(configuration.screenWidthDp) }
 
                 CompositionLocalProvider(
@@ -84,8 +84,8 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                LaunchedEffect(deepLinkViewModel.destinations) {
-                    rootNavigator.deeplink(deepLinkViewModel)
+                LaunchedEffect(globalNavigator.destinations) {
+                    rootNavigator.deeplink(globalNavigator)
                 }
             }
         }
@@ -116,9 +116,8 @@ class MainActivity : ComponentActivity() {
         defaultTransition { -> MaterialSharedAxisTransitionXY }
     }
 
-    private fun Navigator.deeplink(deepLinkViewModel: DeepLinkViewModel) {
-        deepLinkViewModel.destinations
-            .filterIsInstance<MainDestination>()
+    private fun Navigator.deeplink(globalNavigator: GlobalNavigator) {
+        globalNavigator.mainDestinations
             .forEach { destination ->
                 when (destination) {
                     MainDestination.BottomNav -> {
@@ -127,16 +126,14 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    MainDestination.Settings -> {
-                        navigate(SettingsKey())
-                    }
+                    MainDestination.Settings -> navigate(SettingsKey())
                 }
             }
-        deepLinkViewModel.onMainDestinationsHandled()
+        globalNavigator.onMainDestinationsHandled()
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        deepLinkViewModel.onDeeplinkData(intent?.dataString)
+        globalNavigator.onDeeplinkData(intent?.dataString)
     }
 }

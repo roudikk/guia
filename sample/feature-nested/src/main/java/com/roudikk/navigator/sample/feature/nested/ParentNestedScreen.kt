@@ -44,7 +44,7 @@ import com.roudikk.navigator.core.rememberNavigator
 import com.roudikk.navigator.extensions.currentKey
 import com.roudikk.navigator.extensions.popTo
 import com.roudikk.navigator.extensions.popToRoot
-import com.roudikk.navigator.sample.feature.common.deeplink.DeepLinkViewModel
+import com.roudikk.navigator.sample.feature.common.deeplink.GlobalNavigator
 import com.roudikk.navigator.sample.feature.common.deeplink.NestedDestination
 import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.feature.common.navigation.VerticalSlideTransition
@@ -53,11 +53,11 @@ import com.roudikk.navigator.sample.feature.nested.api.NestedKey
 
 @Composable
 fun ParentNestedScreen() {
-    val deepLinkViewModel = viewModel<DeepLinkViewModel>(LocalNavHostViewModelStoreOwner.current)
+    val globalNavigator = viewModel<GlobalNavigator>(LocalNavHostViewModelStoreOwner.current)
 
     val nestedNavigator = rememberNavigator(
         initialKey = NestedKey(1),
-        initialize = { it.deeplink(deepLinkViewModel) }
+        initialize = { it.deeplink(globalNavigator) }
     ) {
         defaultTransition { -> VerticalSlideTransition }
         nestedNavigation()
@@ -72,8 +72,8 @@ fun ParentNestedScreen() {
         nestedNavigator.NavContainer()
     }
 
-    LaunchedEffect(deepLinkViewModel.destinations) {
-        nestedNavigator.deeplink(deepLinkViewModel)
+    LaunchedEffect(globalNavigator.destinations) {
+        nestedNavigator.deeplink(globalNavigator)
     }
 }
 
@@ -91,15 +91,14 @@ private fun Navigator.navigateToIndex(index: Int) {
     }
 }
 
-private fun Navigator.deeplink(deepLinkViewModel: DeepLinkViewModel) {
-    deepLinkViewModel.destinations
-        .filterIsInstance<NestedDestination>()
+private fun Navigator.deeplink(globalNavigator: GlobalNavigator) {
+    globalNavigator.nestedDestinations
         .forEach { destination ->
             when (destination) {
                 is NestedDestination.Nested -> navigateToIndex(destination.index)
             }
         }
-    deepLinkViewModel.onNestedDestinationsHandled()
+    globalNavigator.onNestedDestinationsHandled()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

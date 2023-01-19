@@ -43,14 +43,15 @@ import com.roudikk.navigator.navhost.StackEntry
 import com.roudikk.navigator.navhost.StackKey
 import com.roudikk.navigator.navhost.rememberNavHost
 import com.roudikk.navigator.sample.feature.common.composables.SampleSurfaceContainer
-import com.roudikk.navigator.sample.feature.common.deeplink.BottomNavDestination.DialogsTab
-import com.roudikk.navigator.sample.feature.common.deeplink.BottomNavDestination.HomeTab
-import com.roudikk.navigator.sample.feature.common.deeplink.BottomNavDestination.NestedTab
-import com.roudikk.navigator.sample.feature.common.deeplink.DeepLinkViewModel
+import com.roudikk.navigator.sample.feature.common.deeplink.BottomTabDestination.CustomTab
+import com.roudikk.navigator.sample.feature.common.deeplink.BottomTabDestination.DialogsTab
+import com.roudikk.navigator.sample.feature.common.deeplink.BottomTabDestination.HomeTab
+import com.roudikk.navigator.sample.feature.common.deeplink.BottomTabDestination.NestedTab
 import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination.BlockingBottomSheet
 import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination.BlockingDialog
 import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination.Cancelable
-import com.roudikk.navigator.sample.feature.common.deeplink.HomeDestination.Details
+import com.roudikk.navigator.sample.feature.common.deeplink.GlobalNavigator
+import com.roudikk.navigator.sample.feature.common.deeplink.HomeDestination
 import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
 import com.roudikk.navigator.sample.feature.custom.api.CustomRootKey
@@ -113,46 +114,64 @@ fun BottomNavScreen(
     dialogsNavigation: NavigatorConfigBuilder.() -> Unit,
     customNavigation: NavigatorConfigBuilder.() -> Unit
 ) {
-    val deepLinkViewModel = viewModel<DeepLinkViewModel>(LocalNavHostViewModelStoreOwner.current)
+    val globalNavigator = viewModel<GlobalNavigator>(LocalNavHostViewModelStoreOwner.current)
 
     val navHost = rememberBottomNavHost(
         homeNavigation = homeNavigation,
         nestedNavigation = nestedNavigation,
         dialogsNavigation = dialogsNavigation,
         customNavigation = customNavigation
-    ) { it.deeplink(deepLinkViewModel) }
+    ) { it.deeplink(globalNavigator) }
 
     BottomNavContent(navHost)
 
     navHost.StackHistoryBackHandler()
 
-    LaunchedEffect(deepLinkViewModel.destinations) {
-        navHost.deeplink(deepLinkViewModel)
+    LaunchedEffect(globalNavigator.destinations) {
+        navHost.deeplink(globalNavigator)
     }
 }
 
-private fun NavHost.deeplink(deepLinkViewModel: DeepLinkViewModel) {
-    deepLinkViewModel.destinations
+private fun NavHost.deeplink(globalNavigator: GlobalNavigator) {
+    globalNavigator.bottomTabDestinations
         .forEach { destination ->
             when (destination) {
-                // Tab destinations
                 HomeTab -> setActive(HomeStackKey)
                 NestedTab -> setActive(NestedStackKey)
                 DialogsTab -> setActive(DialogsStackKey)
-
-                // Dialog destinations
-                BlockingBottomSheet -> currentNavigator?.navigate(BlockingBottomSheetKey())
-                BlockingDialog -> currentNavigator?.navigate(BlockingDialogKey(false))
-                Cancelable -> currentNavigator?.navigate(CancelableDialogKey(false))
-
-                // Home destinations
-                is Details -> currentNavigator?.navigate(DetailsKey(destination.item))
-
-                // Ignore other destinations
-                else -> Unit
+                CustomTab -> setActive(CustomStackKey)
             }
         }
-    deepLinkViewModel.onBottomNavDestinationsHandled()
+
+    globalNavigator.dialogsDestinations
+        .forEach { destination ->
+            when (destination) {
+                BlockingBottomSheet -> navigator(DialogsStackKey).navigate(
+                    navigationKey = BlockingBottomSheetKey()
+                )
+
+                BlockingDialog -> navigator(DialogsStackKey).navigate(
+                    navigationKey = BlockingDialogKey(showNextButton = false)
+                )
+
+                Cancelable -> navigator(DialogsStackKey).navigate(
+                    navigationKey = CancelableDialogKey(showNextButton = false)
+                )
+            }
+        }
+
+    globalNavigator.homeDestinations
+        .forEach { destination ->
+            when (destination) {
+                is HomeDestination.Details -> navigator(HomeStackKey).navigate(
+                    navigationKey = DetailsKey(item = destination.item)
+                )
+            }
+        }
+
+    globalNavigator.onBottomTabDestinationsHandled()
+    globalNavigator.onHomeDestinationsHandled()
+    globalNavigator.onDialogsDestinationsHandled()
 }
 
 @OptIn(
