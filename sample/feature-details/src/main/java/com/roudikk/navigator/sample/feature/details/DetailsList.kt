@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,8 +52,8 @@ fun DetailsList(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
             .fillMaxWidth()
-            .padding(vertical = 16.dp),
-        verticalArrangement = Arrangement.Center,
+            .padding(vertical = 16.dp, horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         var counter by rememberSaveable(key = "counter") { mutableStateOf(0) }
@@ -72,64 +73,63 @@ fun DetailsList(
         Spacer(modifier = Modifier.size(16.dp))
 
         DetailsAction(
-            title = "New random item",
+            title = "Screen: navigate",
             onClick = onRandomItemSelected
         )
 
         DetailsAction(
-            title = "New dynamic item",
-            onClick = onDynamicSelected
-        )
-
-        DetailsAction(
-            title = "Send result back to home",
-            onClick = onSendResultSelected
-        )
-
-        DetailsAction(
-            title = "BottomSheet",
-            onClick = onBottomSheetSelected
-        )
-
-        DetailsAction(
-            title = "Single top Screen",
+            title = "Screen: Single Top",
             onClick = onSingleTopSelected
-
         )
 
         DetailsAction(
-            title = "Single top bottom sheet",
-            onClick = onSingleTopBottomSheetSelected
-        )
-
-        DetailsAction(
-            title = "Single Instance (New)",
-            onClick = onNewSingleInstanceSelected
-        )
-
-        DetailsAction(
-            title = "Single Instance (Existing)",
-            onClick = onExistingSingleInstanceSelected
-        )
-
-        DetailsAction(
-            title = "Navigate and pop last (Replace)",
+            title = "Screen: Replace",
             onClick = onReplaceSelected
         )
 
         DetailsAction(
-            title = "Open Dialog",
-            onClick = onOpenDialogSelected
+            title = "Screen: Single Instance (New)",
+            onClick = onNewSingleInstanceSelected
         )
 
         DetailsAction(
-            title = "Open Blocking BottomSheet",
+            title = "Screen: Single Instance (Existing)",
+            onClick = onExistingSingleInstanceSelected
+        )
+
+        DetailsAction(
+            title = "Dynamic: Dialog < 600dp <= Bottom Sheet",
+            onClick = onDynamicSelected
+        )
+
+        DetailsAction(
+            title = "BottomSheet: Navigate",
+            onClick = onBottomSheetSelected
+        )
+
+        DetailsAction(
+            title = "Bottom Sheet: Single Top",
+            onClick = onSingleTopBottomSheetSelected
+        )
+
+        DetailsAction(
+            title = "BottomSheet: Blocking",
             onClick = onOpenBlockingBottomSheet
+        )
+
+        DetailsAction(
+            title = "Dialog: Navigate",
+            onClick = onOpenDialogSelected
         )
 
         DetailsAction(
             title = "Override screen transition",
             onClick = onOverrideScreenTransitionSelected
+        )
+
+        DetailsAction(
+            title = "Send Result To Home",
+            onClick = onSendResultSelected
         )
     }
 }
@@ -139,7 +139,7 @@ fun DetailsList(
 private fun DetailsAction(title: String, onClick: () -> Unit) {
     Surface(
         modifier = Modifier
-            .widthIn(min = 300.dp),
+            .widthIn(min = 350.dp),
         onClick = onClick,
         color = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(4.dp),
@@ -153,7 +153,8 @@ private fun DetailsAction(title: String, onClick: () -> Unit) {
             Text(
                 text = title,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center
             )
         }
     }

@@ -76,7 +76,7 @@ internal class DynamicDetailsKey(val item: String) : NavigationKey
 fun NavigatorConfigBuilder.detailsNavigation(screenWidth: Int) {
     if (screenWidth <= 600) {
         dialog<DynamicDetailsKey>(
-            dialogOptions = DialogOptions(modifier = Modifier.widthIn(max = 320.dp))
+            dialogOptions = DialogOptions(modifier = Modifier.widthIn(max = 300.dp))
         ) {
             SampleSurfaceContainer { DetailsContent(item = it.item) }
         }
