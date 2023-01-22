@@ -86,20 +86,6 @@ class LifeCycleEntry(
     override fun hashCode() = id.hashCode()
 }
 
-/**
- * Provides [ViewModelStore], [LifecycleOwner] and [SavedStateRegistry] to [content].
- */
-@Composable
-internal fun LifeCycleEntry.LocalProvider(
-    content: @Composable () -> Unit
-) = CompositionLocalProvider(
-    LocalViewModelStoreOwner provides this,
-    LocalLifecycleOwner provides this,
-    LocalSavedStateRegistryOwner provides this
-) {
-    SaveableStateProvider(content)
-}
-
 val LifeCycleEntry.id: String
     get() = backStackEntry.id
 
@@ -110,3 +96,17 @@ internal fun LifeCycleEntry.SaveableStateProvider(
     key = id,
     content = content
 )
+
+/**
+ * Provides [ViewModelStore], [LifecycleOwner] and [SavedStateRegistry] to [content].
+ */
+@Composable
+fun LifeCycleEntry.LocalProvider(
+    content: @Composable () -> Unit
+) = CompositionLocalProvider(
+    LocalViewModelStoreOwner provides this,
+    LocalLifecycleOwner provides this,
+    LocalSavedStateRegistryOwner provides this
+) {
+    SaveableStateProvider(content)
+}
