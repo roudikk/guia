@@ -26,4 +26,5 @@ dependencies {
     implementation(project(":sample:feature-common"))
     implementation(project(":sample:feature-custom:api"))
     implementation(project(":compose-navigator"))
+    implementation(libs.accompanist.pager)
 }

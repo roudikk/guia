@@ -60,8 +60,8 @@ import com.roudikk.navigator.sample.feature.common.deeplink.GlobalNavigator
 import com.roudikk.navigator.sample.feature.common.deeplink.HomeDestination
 import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
-import com.roudikk.navigator.sample.feature.custom.api.CustomRootKey
-import com.roudikk.navigator.sample.feature.custom.api.CustomStackKey
+import com.roudikk.navigator.sample.feature.custom.api.ViewPagerRootKey
+import com.roudikk.navigator.sample.feature.custom.api.ViewPagerStackKey
 import com.roudikk.navigator.sample.feature.details.api.DetailsKey
 import com.roudikk.navigator.sample.feature.dialogs.api.BlockingBottomSheetKey
 import com.roudikk.navigator.sample.feature.dialogs.api.BlockingDialogKey
@@ -97,7 +97,7 @@ fun rememberBottomNavHost(
     )
 
     val customNavigator = rememberNavigator(
-        initialKey = CustomRootKey(),
+        initialKey = ViewPagerRootKey(),
         builder = customNavigation
     )
 
@@ -107,7 +107,7 @@ fun rememberBottomNavHost(
             StackEntry(HomeStackKey, homeNavigator),
             StackEntry(NestedStackKey, nestedNavigator),
             StackEntry(DialogsStackKey, dialogsNavigator),
-            StackEntry(CustomStackKey, customNavigator),
+            StackEntry(ViewPagerStackKey, customNavigator),
         ),
         initialize = initialize,
     )
@@ -146,7 +146,7 @@ private fun NavHost.deeplink(globalNavigator: GlobalNavigator) {
                 HomeTab -> setActive(HomeStackKey)
                 NestedTab -> setActive(NestedStackKey)
                 DialogsTab -> setActive(DialogsStackKey)
-                CustomTab -> setActive(CustomStackKey)
+                CustomTab -> setActive(ViewPagerStackKey)
             }
         }
 
@@ -221,10 +221,10 @@ private fun BottomNavContent(
                 )
             },
             transitionSpec = {
-                if (targetState?.stackKey is CustomStackKey) {
+                if (targetState?.stackKey is ViewPagerStackKey) {
                     slideInHorizontally { it } with slideOutHorizontally { -it }
                 } else {
-                    if (initialState?.stackKey is CustomStackKey) {
+                    if (initialState?.stackKey is ViewPagerStackKey) {
                         slideInHorizontally { -it } with slideOutHorizontally { it }
                     } else {
                         fadeIn() with fadeOut()
@@ -308,12 +308,12 @@ private fun BottomNavigation(navHost: NavHost) {
                 .navigationBarsPadding()
                 .testTag("tab_custom"),
             label = { Text("Custom") },
-            selected = currentStackKey == CustomStackKey,
+            selected = currentStackKey == ViewPagerStackKey,
             onClick = {
                 navigatorToStackOrRoot(
                     navHost = navHost,
                     currentKey = currentStackKey,
-                    newKey = CustomStackKey
+                    newKey = ViewPagerStackKey
                 )
             },
             icon = {

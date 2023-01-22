@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.custom
+package com.roudikk.navigator.sample.feature.custom.card
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.gestures.Orientation
@@ -41,10 +41,10 @@ enum class CardState {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-internal fun Navigator.CustomContainer(
+internal fun Navigator.CardContainer(
     modifier: Modifier = Modifier
 ) {
-    val customBackStackManager = rememberCustomBackStackManager(navigator = this)
+    val customBackStackManager = cardBackStackManager(navigator = this)
     val entries = customBackStackManager.visibleBackStack.entries
 
     entries.forEach { entry ->

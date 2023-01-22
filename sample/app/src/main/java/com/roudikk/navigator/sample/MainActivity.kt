@@ -30,7 +30,7 @@ import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewMo
 import com.roudikk.navigator.sample.feature.common.navigation.LocalRootNavigator
 import com.roudikk.navigator.sample.feature.common.navigation.MaterialSharedAxisTransitionXY
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
-import com.roudikk.navigator.sample.feature.custom.customNavigation
+import com.roudikk.navigator.sample.feature.custom.viewpager.viewPagerNavigation
 import com.roudikk.navigator.sample.feature.details.detailsNavigation
 import com.roudikk.navigator.sample.feature.dialogs.dialogsNavigation
 import com.roudikk.navigator.sample.feature.home.homeNavigation
@@ -105,7 +105,7 @@ class MainActivity : ComponentActivity() {
             },
             nestedNavigation = { nestedNavigation() },
             dialogsNavigation = { dialogsNavigation() },
-            customNavigation = { customNavigation() }
+            customNavigation = { viewPagerNavigation() }
         )
         defaultTransition { -> MaterialSharedAxisTransitionXY }
     }

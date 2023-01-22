@@ -11,7 +11,7 @@ import java.util.UUID
  * @property navigationKey, navigation key for this entry.
  */
 @Parcelize
-class BackStackEntry internal constructor(
+data class BackStackEntry internal constructor(
     val navigationKey: NavigationKey,
     val id: String
 ) : Parcelable {
@@ -22,12 +22,6 @@ class BackStackEntry internal constructor(
         navigationKey = navigationKey,
         id = UUID.randomUUID().toString()
     )
-
-    override fun equals(other: Any?): Boolean {
-        return other is BackStackEntry && other.id == id
-    }
-
-    override fun hashCode() = id.hashCode()
 }
 
 fun NavigationKey.entry() = BackStackEntry(this)

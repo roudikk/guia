@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.custom
+package com.roudikk.navigator.sample.feature.custom.card
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -49,7 +49,7 @@ private val colorSaver = Saver<Color, List<Float>>(
 )
 
 @Composable
-fun CustomScreen(id: Int) {
+fun CardScreen(id: Int) {
     val globalNavigator = viewModel<GlobalNavigator>(LocalNavHostViewModelStoreOwner.current)
     val backgroundColor = rememberSaveable(saver = colorSaver) {
         Color(

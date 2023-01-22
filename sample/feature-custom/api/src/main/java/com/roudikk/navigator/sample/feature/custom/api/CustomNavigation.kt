@@ -5,10 +5,13 @@ import com.roudikk.navigator.navhost.StackKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-object CustomStackKey : StackKey
+object ViewPagerStackKey : StackKey
 
 @Parcelize
-class CustomRootKey : NavigationKey
+class ViewPagerRootKey : NavigationKey
 
 @Parcelize
-class CustomKey(val id: Int) : NavigationKey
+class CardKey(val id: Int) : NavigationKey
+
+@Parcelize
+class PageKey(var isActive: Boolean) : NavigationKey
