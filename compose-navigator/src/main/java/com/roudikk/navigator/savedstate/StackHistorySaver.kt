@@ -8,9 +8,5 @@ internal fun stackHistorySaver() = Saver<
     SnapshotStateList<StackHistoryEntry>,
     List<StackHistoryEntry>>(
     save = { it.toList() },
-    restore = {
-        SnapshotStateList<StackHistoryEntry>().apply {
-            addAll(it)
-        }
-    }
+    restore = { SnapshotStateList<StackHistoryEntry>().apply { addAll(it) } }
 )
