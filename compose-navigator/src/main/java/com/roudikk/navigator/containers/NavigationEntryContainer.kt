@@ -27,7 +27,6 @@ fun <VB : VisibleBackStack> Navigator.NavigationEntryContainer(
     backStackManager: BackStackManager<VB>,
     lifecycleEntry: LifeCycleEntry
 ) = with(lifecycleEntry.backStackEntry) {
-
     lifecycleEntry.LocalProvider {
         Box(modifier = Modifier.testTag(navigationKey.tag())) {
             val navigationNode = navigationNode(this@with)

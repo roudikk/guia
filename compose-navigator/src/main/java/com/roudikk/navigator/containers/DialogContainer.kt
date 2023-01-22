@@ -19,7 +19,7 @@ import com.roudikk.navigator.extensions.popBackstack
  */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-internal fun Navigator.DialogContainer(
+fun Navigator.DialogContainer(
     container: Container,
     dialogEntry: LifeCycleEntry?,
     content: @Composable (LifeCycleEntry) -> Unit

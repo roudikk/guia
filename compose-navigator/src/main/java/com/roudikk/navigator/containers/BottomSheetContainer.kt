@@ -39,7 +39,7 @@ private fun Navigator.currentBottomSheet(): BottomSheet? {
  * Renders a Compose BottomSheet if a [Navigator]'s current entry is a [BottomSheet].
  */
 @Composable
-internal fun Navigator.BottomSheetContainer(
+fun Navigator.BottomSheetContainer(
     container: Container,
     bottomSheetEntry: LifeCycleEntry?,
     bottomSheetScrimColor: Color,

@@ -17,7 +17,7 @@ import com.roudikk.navigator.core.transition
  */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-internal fun Navigator.ScreenContainer(
+fun Navigator.ScreenContainer(
     screenEntry: LifeCycleEntry?,
     content: @Composable (LifeCycleEntry) -> Unit
 ) {
