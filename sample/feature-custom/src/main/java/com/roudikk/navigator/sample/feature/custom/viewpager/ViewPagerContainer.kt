@@ -34,7 +34,9 @@ fun Navigator.ViewPagerContainer(
     }
 
     LaunchedEffect(pagerState.currentPage) {
-        setActive(pagerState.currentPage)
+        if (!pagerState.isScrollInProgress) {
+            setActive(pagerState.currentPage)
+        }
     }
 
     LaunchedEffect(backStack) {

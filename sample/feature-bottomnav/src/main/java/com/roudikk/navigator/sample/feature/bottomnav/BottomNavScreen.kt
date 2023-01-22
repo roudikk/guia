@@ -129,9 +129,9 @@ fun BottomNavScreen(
         customNavigation = customNavigation
     ) { it.deeplink(globalNavigator) }
 
-    BottomNavContent(navHost)
-
     navHost.StackHistoryBackHandler()
+
+    BottomNavContent(navHost)
 
     LaunchedEffect(globalNavigator.destinations) {
         navHost.deeplink(globalNavigator)
