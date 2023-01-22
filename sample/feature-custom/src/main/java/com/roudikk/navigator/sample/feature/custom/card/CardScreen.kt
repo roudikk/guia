@@ -7,12 +7,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,14 +23,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.navigator.sample.feature.common.deeplink.GlobalNavigator
+import com.roudikk.navigator.sample.feature.common.lifecycle.LifecycleEventEffect
 import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
 import kotlinx.coroutines.delay
 
@@ -67,20 +67,14 @@ fun CardScreen(id: Int) {
         contentAlignment = Alignment.Center
     ) {
         var timer by rememberSaveable { mutableStateOf(0) }
-        val lifecycle = LocalLifecycleOwner.current.lifecycle
-        var currentState by remember { mutableStateOf<Lifecycle.State?>(null) }
+        var lifecycleState by remember { mutableStateOf<Lifecycle.State?>(null) }
 
-        DisposableEffect(Unit) {
-            val observer = LifecycleEventObserver { _, event ->
-                currentState = event.targetState
-            }
-
-            lifecycle.addObserver(observer)
-            onDispose { lifecycle.removeObserver(observer) }
+        LifecycleEventEffect {
+            lifecycleState = it.targetState
         }
 
-        LaunchedEffect(currentState) {
-            if (currentState == Lifecycle.State.RESUMED) {
+        LaunchedEffect(lifecycleState) {
+            if (lifecycleState == Lifecycle.State.RESUMED) {
                 while (true) {
                     delay(1000)
                     timer++
@@ -99,9 +93,11 @@ fun CardScreen(id: Int) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
+                modifier = Modifier.padding(16.dp),
                 text = "(Timer will only start when resumed)",
                 fontSize = 14.sp,
-                color = Color.White
+                color = Color.White,
+                textAlign = TextAlign.Center
             )
 
             Spacer(modifier = Modifier.height(8.dp))

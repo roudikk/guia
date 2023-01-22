@@ -1,7 +1,6 @@
 package com.roudikk.navigator.sample.feature.home
 
 import android.content.res.Configuration
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -50,6 +49,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.roudikk.navigator.backstack.NavBackHandler
 import com.roudikk.navigator.extensions.requireLocalNavigator
 import com.roudikk.navigator.extensions.result
 import com.roudikk.navigator.sample.feature.details.api.DetailsResult
@@ -99,10 +99,10 @@ private fun HomeContent(
         }
     }
 
-    BackHandler(
+    NavBackHandler(
         enabled = enabled
     ) {
-        scope.launch { lazyListState.scrollToItem(0) }
+        scope.launch { lazyListState.animateScrollToItem(0) }
     }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()

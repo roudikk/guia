@@ -1,7 +1,6 @@
 package com.roudikk.navigator.sample.feature.dialogs
 
 import android.content.res.Configuration
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.roudikk.navigator.backstack.NavBackHandler
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.extensions.localBottomSheet
 import com.roudikk.navigator.sample.feature.common.composables.SampleSurfaceContainer
@@ -56,7 +56,7 @@ internal fun BlockingBottomSheetScreen() {
         )
     }
 
-    BackHandler(enabled = lockStateChange) {
+    NavBackHandler(enabled = lockStateChange) {
         // Lock back button
     }
 }

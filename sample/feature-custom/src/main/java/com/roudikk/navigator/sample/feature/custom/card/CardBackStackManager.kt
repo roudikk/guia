@@ -17,7 +17,7 @@ internal fun rememberCardBackStackManager(navigator: Navigator): BackStackManage
             VisibleCardStack(
                 backStack
                     .reversed()
-                    .takeLast(4)
+                    .takeLast(2)
                     .map(createEntry)
             )
         },
