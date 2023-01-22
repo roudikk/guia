@@ -16,7 +16,7 @@ fun rememberViewPagerBackStackManager(navigator: Navigator): BackStackManager<Vi
     return rememberBackStackManager(
         navigator = navigator,
         getVisibleBackStack = { backStack, createEntry ->
-            val activeIndex = backStack.indexOfFirst { (it.navigationKey as PageKey).isActive }
+            val activeIndex = navigator.activeIndex
             val left = backStack.getOrNull(activeIndex - 1)
             val center = backStack.getOrNull(activeIndex)
             val right = backStack.getOrNull(activeIndex + 1)
