@@ -24,7 +24,7 @@ import com.roudikk.navigator.core.rememberNavigator
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ViewPagerRootScreen() {
-    val navigator = rememberNavigator(builder = { viewPagerNavigation() })
+    val navigator = rememberNavigator { viewPagerNavigation() }
 
     Scaffold(
         topBar = {
