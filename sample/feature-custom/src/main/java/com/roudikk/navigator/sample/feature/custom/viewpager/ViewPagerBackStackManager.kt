@@ -8,6 +8,7 @@ import com.roudikk.navigator.backstack.VisibleBackStack
 import com.roudikk.navigator.backstack.id
 import com.roudikk.navigator.backstack.rememberBackStackManager
 import com.roudikk.navigator.core.Navigator
+import com.roudikk.navigator.core.entry
 import com.roudikk.navigator.sample.feature.custom.api.PageKey
 
 @Composable
@@ -51,6 +52,7 @@ class ViewPagerVisibleStack(
 
 val Navigator.activeIndex: Int
     get() = backStack.indexOfFirst { (it.navigationKey as PageKey).isActive }
+        .takeIf { it != -1 } ?: 0
 
 fun Navigator.setActive(activeIndex: Int) {
     setBackstack(
@@ -58,4 +60,25 @@ fun Navigator.setActive(activeIndex: Int) {
             entry.copy(navigationKey = PageKey(isActive = index == activeIndex))
         }
     )
+}
+
+fun Navigator.addPage() {
+    val shouldSetActive = backStack.isEmpty()
+    setBackstack(backStack + PageKey(isActive = shouldSetActive).entry())
+}
+
+fun Navigator.removePage() {
+    val shouldSetPreviousActive = ((activeIndex == backStack.lastIndex) && backStack.size > 1)
+    val newBackStack = if (shouldSetPreviousActive) {
+        backStack.mapIndexed { index, entry ->
+            if (index == backStack.lastIndex - 1) {
+                entry.copy(navigationKey = PageKey(isActive = true))
+            } else {
+                entry
+            }
+        } - backStack.last()
+    } else {
+        (backStack - backStack.last())
+    }
+    setBackstack(newBackStack)
 }

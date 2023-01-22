@@ -63,7 +63,7 @@ internal fun Navigator.CardContainer(
                     shape = RoundedCornerShape(32.dp),
                     modifier = Modifier
                         .scale(scale)
-                        .widthIn(min = 500.dp, max = minOf(maxWidth - 32.dp, 500.dp))
+                        .widthIn(min = 400.dp, max = minOf(maxWidth - 32.dp, 400.dp))
                         .heightIn(min = 800.dp, max = minOf(maxHeight - 32.dp, 800.dp))
                         .offset { IntOffset(x = offset, y = 0) }
                         .rotate((offset * 25 / widthPx))
