@@ -44,7 +44,7 @@ enum class CardState {
 internal fun Navigator.CardContainer(
     modifier: Modifier = Modifier
 ) {
-    val customBackStackManager = cardBackStackManager(navigator = this)
+    val customBackStackManager = rememberCardBackStackManager(navigator = this)
     val entries = customBackStackManager.visibleBackStack.entries
 
     entries.forEach { entry ->

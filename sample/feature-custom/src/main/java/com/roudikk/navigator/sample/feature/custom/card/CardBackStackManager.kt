@@ -10,7 +10,7 @@ import com.roudikk.navigator.backstack.rememberBackStackManager
 import com.roudikk.navigator.core.Navigator
 
 @Composable
-internal fun cardBackStackManager(navigator: Navigator): BackStackManager<VisibleCardStack> {
+internal fun rememberCardBackStackManager(navigator: Navigator): BackStackManager<VisibleCardStack> {
     return rememberBackStackManager(
         navigator = navigator,
         getVisibleBackStack = { backStack, createEntry ->
