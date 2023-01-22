@@ -60,9 +60,7 @@ private fun BlockingDialogContent(
     }
 
     Surface(shape = RoundedCornerShape(16.dp)) {
-
         Column(modifier = Modifier.padding(16.dp)) {
-
             Text(
                 text = "None Cancelable",
                 style = MaterialTheme.typography.headlineSmall
