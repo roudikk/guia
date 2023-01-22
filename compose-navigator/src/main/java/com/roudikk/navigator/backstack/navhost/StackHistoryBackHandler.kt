@@ -1,5 +1,6 @@
 package com.roudikk.navigator.backstack.navhost
 
+import android.os.Parcelable
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -7,23 +8,15 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import com.roudikk.navigator.backstack.NavBackHandler
 import com.roudikk.navigator.containers.NavContainer
 import com.roudikk.navigator.core.BackStackEntry
 import com.roudikk.navigator.extensions.currentEntry
 import com.roudikk.navigator.navhost.NavHost
 import com.roudikk.navigator.navhost.StackKey
-
-/**
- * An entry in the stack history.
- *
- * @property stackKey, the stack key at that point in history.
- * @property backStackEntry, the navigation key at that point in history.
- */
-private class StackHistoryEntry(
-    val stackKey: StackKey,
-    val backStackEntry: BackStackEntry
-)
+import com.roudikk.navigator.savedstate.stackHistorySaver
+import kotlinx.parcelize.Parcelize
 
 /**
  * A [BackHandler] for a [NavHost] that will navigate between stack keys as [NavHost.setActive]
@@ -34,7 +27,7 @@ private class StackHistoryEntry(
  */
 @Composable
 fun NavHost.StackHistoryBackHandler() {
-    val stackHistory = remember { mutableStateListOf<StackHistoryEntry>() }
+    val stackHistory = rememberSaveable(saver = stackHistorySaver()) { mutableStateListOf() }
 
     // Add an history entry whenever the current stack entry has been changed.
     LaunchedEffect(currentEntry) {
@@ -82,3 +75,15 @@ fun NavHost.StackHistoryBackHandler() {
         }
     }
 }
+
+/**
+ * An entry in the stack history.
+ *
+ * @property stackKey, the stack key at that point in history.
+ * @property backStackEntry, the navigation key at that point in history.
+ */
+@Parcelize
+internal class StackHistoryEntry(
+    val stackKey: StackKey,
+    val backStackEntry: BackStackEntry
+) : Parcelable
