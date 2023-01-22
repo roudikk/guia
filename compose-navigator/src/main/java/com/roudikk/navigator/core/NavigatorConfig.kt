@@ -12,6 +12,12 @@ import com.roudikk.navigator.extensions.Transition
 import com.roudikk.navigator.extensions.Transitions
 import kotlin.reflect.KClass
 
+private val defaultNavigationNodes = listOf(
+    Screen::class,
+    BottomSheet::class,
+    Dialog::class
+)
+
 /**
  * A Navigator's configuration.
  *
@@ -22,7 +28,8 @@ import kotlin.reflect.KClass
 class NavigatorConfig internal constructor(
     internal val presentations: Presentations = hashMapOf(),
     internal val transitions: Transitions = hashMapOf(),
-    internal val defaultTransition: Transition = { _, _, _ -> EnterExitTransition.None }
+    internal val defaultTransition: Transition = { _, _, _ -> EnterExitTransition.None },
+    internal val supportedNavigationNodes: List<KClass<out NavigationNode>> = defaultNavigationNodes
 )
 
 /**
@@ -32,6 +39,7 @@ class NavigatorConfigBuilder internal constructor() {
     private val presentations: Presentations = hashMapOf()
     private val transitions: Transitions = hashMapOf()
     private var defaultTransition: Transition = { _, _, _ -> EnterExitTransition.None }
+    private var supportedNavigationNodes: List<KClass<out NavigationNode>> = defaultNavigationNodes
 
     /**
      * Define a [NavigationNode] presentation between a type of [NavigationKey].
@@ -200,12 +208,19 @@ class NavigatorConfigBuilder internal constructor() {
         }
     }
 
+    fun supportedNavigationNodes(
+        vararg navigationNodeClass: KClass<out NavigationNode>
+    ) {
+        supportedNavigationNodes = navigationNodeClass.toList()
+    }
+
     /**
      * Builds a [NavigatorConfig].
      */
     internal fun build() = NavigatorConfig(
         presentations = presentations,
         transitions = transitions,
-        defaultTransition = defaultTransition
+        defaultTransition = defaultTransition,
+        supportedNavigationNodes = supportedNavigationNodes
     )
 }

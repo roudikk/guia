@@ -11,6 +11,7 @@ import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.navigationNode
 import com.roudikk.navigator.core.toDialogProperties
+import com.roudikk.navigator.core.transition
 import com.roudikk.navigator.extensions.popBackstack
 
 /**
@@ -36,7 +37,7 @@ internal fun Navigator.DialogContainer(
                 targetState = dialogEntry,
                 modifier = dialog.dialogOptions.modifier,
                 transitionSpec = {
-                    currentDialogTransition.enter with currentDialogTransition.exit
+                    transition<Dialog>().let { it.enter with it.exit }
                 }
             ) { dialogEntry ->
                 ProvideNavigationVisibilityScope {

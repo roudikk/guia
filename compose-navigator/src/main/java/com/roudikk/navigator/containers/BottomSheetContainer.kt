@@ -27,6 +27,7 @@ import com.roudikk.navigator.containers.BottomSheetValue.Hidden
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.navigationNode
+import com.roudikk.navigator.core.transition
 import com.roudikk.navigator.extensions.popBackstack
 import kotlinx.coroutines.launch
 
@@ -83,7 +84,7 @@ internal fun Navigator.BottomSheetContainer(
                 BottomSheetContent(
                     sheetState = bottomSheetState,
                     bottomSheetEntry = bottomSheetEntry,
-                    currentTransition = currentBottomSheetTransition,
+                    currentTransition = transition<BottomSheet>(),
                     content = content
                 )
             }

@@ -2,6 +2,8 @@ package com.roudikk.navigator.sample.feature.details
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import com.roudikk.navigator.core.Screen
+import com.roudikk.navigator.core.overrideTransition
 import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popBackstack
 import com.roudikk.navigator.extensions.popToRoot
@@ -72,7 +74,7 @@ fun DetailsEventEffect(
             )
 
             is DetailsEvent.OverrideScreenTransition -> {
-                navigator.overrideScreenTransition = CrossFadeTransition.enterExit
+                navigator.overrideTransition<Screen>(CrossFadeTransition.enterExit)
                 navigator.navigate(DetailsKey(event.item))
             }
 

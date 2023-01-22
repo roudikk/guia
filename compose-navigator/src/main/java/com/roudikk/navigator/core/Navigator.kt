@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisallowComposableCalls
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -12,6 +13,7 @@ import androidx.compose.runtime.setValue
 import com.roudikk.navigator.animation.EnterExitTransition
 import com.roudikk.navigator.containers.NavContainer
 import com.roudikk.navigator.savedstate.navigatorSaver
+import kotlin.reflect.KClass
 
 /**
  * Creates a saveable instance of a [Navigator].
@@ -79,13 +81,15 @@ class Navigator(
         private set
     val backStackKeys by derivedStateOf { backStack.map { it.navigationKey } }
 
-    internal var currentScreenTransition by mutableStateOf(EnterExitTransition.None)
-    internal var currentBottomSheetTransition by mutableStateOf(EnterExitTransition.None)
-    internal var currentDialogTransition by mutableStateOf(EnterExitTransition.None)
+    private val transitions = mutableStateMapOf<KClass<out NavigationNode>, EnterExitTransition>()
+    private val overrideTransitions =
+        mutableStateMapOf<KClass<out NavigationNode>, EnterExitTransition?>()
 
-    var overrideScreenTransition: EnterExitTransition? = null
-    var overrideBottomSheetTransition: EnterExitTransition? = null
-    var overrideDialogTransition: EnterExitTransition? = null
+    init {
+        navigatorConfig.supportedNavigationNodes.forEach { kClass ->
+            transitions[kClass] = EnterExitTransition.None
+        }
+    }
 
     /**
      * Updates the current back stack.
@@ -109,34 +113,43 @@ class Navigator(
         if (newEntry != null) {
             val isPop = backStack.contains(newEntry)
 
-            currentScreenTransition = getTransition(
-                previousEntry = backStack.lastOrNull { optionalNode(it) is Screen },
-                newEntry = entries.lastOrNull { optionalNode(it) is Screen },
-                overrideTransition = overrideScreenTransition,
-                isPop = isPop
-            )
+            navigatorConfig.supportedNavigationNodes.forEach { kClass ->
+                transitions[kClass] = getTransition(
+                    previousEntry = backStack.lastOrNull { entry ->
+                        optionalNode(entry)?.let { it::class } == kClass
+                    },
+                    newEntry = entries.lastOrNull { entry ->
+                        optionalNode(entry)?.let { it::class } == kClass
+                    },
+                    overrideTransition = overrideTransitions[kClass],
+                    isPop = isPop
+                )
+            }
 
-            currentBottomSheetTransition = getTransition(
-                previousEntry = backStack.lastOrNull { optionalNode(it) is BottomSheet },
-                newEntry = entries.lastOrNull { optionalNode(it) is BottomSheet },
-                overrideTransition = overrideBottomSheetTransition,
-                isPop = isPop
-            )
-
-            currentDialogTransition = getTransition(
-                previousEntry = backStack.lastOrNull { optionalNode(it) is Dialog },
-                newEntry = entries.lastOrNull { optionalNode(it) is Dialog },
-                overrideTransition = overrideDialogTransition,
-                isPop = isPop
-            )
-
-            overrideScreenTransition = null
-            overrideBottomSheetTransition = null
-            overrideDialogTransition = null
+            overrideTransitions.clear()
         }
 
         backStack = entries
     }
+
+    fun transition(kClass: KClass<out NavigationNode>) = transitions[kClass]
+
+    fun overrideTransition(
+        kClass: KClass<out NavigationNode>,
+        enterExitTransition: EnterExitTransition
+    ) {
+        transitions[kClass] = enterExitTransition
+    }
+}
+
+inline fun <reified Node : NavigationNode> Navigator.transition(): EnterExitTransition {
+    return transition(Node::class) ?: EnterExitTransition.None
+}
+
+inline fun <reified Node : NavigationNode> Navigator.overrideTransition(
+    transition: EnterExitTransition
+) {
+    overrideTransition(Node::class, transition)
 }
 
 private fun Navigator.getTransition(
