@@ -24,6 +24,7 @@ private val defaultNavigationNodes = listOf(
  * @property presentations, defines how a [NavigationKey] is rendered using a [NavigationNode].
  * @property transitions, defines how transitions happen between [NavigationKey].
  * @property defaultTransition, the default transition
+ * @property supportedNavigationNodes, the supported navigation nodes for transitions.
  */
 class NavigatorConfig internal constructor(
     internal val presentations: Presentations = hashMapOf(),
