@@ -8,4 +8,5 @@
 * [Navigation Node](getting-started/navigation-node.md)
   * [Screen](getting-started/navigation-node/screen.md)
   * [Bottom Sheet](getting-started/navigation-node/bottom-sheet.md)
+  * [Dialog](getting-started/navigation-node/dialog.md)
 * [Navigation Key](getting-started/navigation-key.md)
