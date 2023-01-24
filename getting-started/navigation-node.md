@@ -12,4 +12,4 @@ interface NavigationNode {
 
 By default, Guia provides 3 conventional navigation node implementations.
 
-Navigation nodes don't provide argument passing or can be navigated to directly. They simply render a UI, passing arguments and navigating is done using [Navigation Keys](../navigation-key.md) which will see in the next step.
+Navigation nodes don't provide argument passing or can be navigated to directly. They simply render a UI, passing arguments and navigating is done using [Navigation Keys](navigation-key.md) which will see in the next step.
