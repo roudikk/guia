@@ -1,3 +1,3 @@
 # Table of contents
 
-* [Compose Navigator](README.md)
+* [Overview](README.md)
