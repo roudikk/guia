@@ -1,6 +1,6 @@
 # Setup
 
-1. Add Maven Central to your project level gradle file.
+Add Maven Central to your project level gradle file.
 
 ```kotlin
 repositories {
@@ -8,10 +8,14 @@ repositories {
 }
 ```
 
-2\. Add the dependency to your module level gradle file
+Add the dependency to your module level gradle file
 
 ```
 dependencies {
-    implementation("com.roudikk.guia:guia")
+    implementation("com.roudikk.guia:guia:currentVersion")
 }
 ```
+
+{% hint style="info" %}
+Latest version found [here](https://github.com/roudikk/compose-navigator/releases)
+{% endhint %}
