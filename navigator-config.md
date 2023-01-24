@@ -1,3 +1,0 @@
-# Navigator Config
-
-Navigator

@@ -26,4 +26,4 @@ myNavigator.setBackstack(HomeKey().entry(), ProfileKey("MyProfileId").entry())
 
 You can see we call `.entry()` inside our `setBackstack` call. This is because the back stack is not a list of `NavigationKey` but a list of `BackstackEntry` which is a unique entry of a given key inside our backstack, it simply provides a unique id for a given key, that way we can differentiate two keys of the same type inside our backstack. That id is later used for lifecycle management and state saving/restoration.
 
-Next, we will learn how to tie a `NavigationKey` to a `NavigationNode` inside our `Navigator` using [NavigatorConfig](../../navigator-config.md).
+Next, we will learn how to tie a `NavigationKey` to a `NavigationNode` inside our `Navigator` using [NavigatorConfig](../navigator-config.md).
