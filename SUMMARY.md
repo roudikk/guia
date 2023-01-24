@@ -10,3 +10,9 @@
   * [Bottom Sheet](getting-started/navigation-node/bottom-sheet.md)
   * [Dialog](getting-started/navigation-node/dialog.md)
 * [Navigation Key](getting-started/navigation-key.md)
+* [Navigator](getting-started/navigator/README.md)
+  * [Navigation Operations](getting-started/navigator/navigation-operations.md)
+
+***
+
+* [Navigator Config](navigator-config.md)
