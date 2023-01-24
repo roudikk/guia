@@ -3,6 +3,6 @@
 * [Overview](README.md)
 * [Setup](setup.md)
 
-## Group 1
+## 🚀 Getting Started
 
-* [Page 1](group-1/page-1.md)
+* [Page 1](getting-started/page-1.md)
