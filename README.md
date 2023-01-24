@@ -10,4 +10,4 @@ To get started, check the [Setup](setup.md) page.
 
 
 
-The name "Guia" means Guidance. Very original, I know. Naming things is hard.
+_Guia \~ \[ˈɡia ] feminine noun. Means guidance._
