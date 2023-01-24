@@ -1,6 +1,6 @@
 # Dialog
 
-A `Dialog` will be rendered inside, well, a `Dialog` Composable.
+A `Dialog` will be rendered inside a `Dialog` Composable.
 
 ```kotlin
 class Dialog(
@@ -22,3 +22,5 @@ data class DialogOptions(
     val securePolicy: SecureFlagPolicy = SecureFlagPolicy.Inherit,
 )
 ```
+
+Navigating between 2 Dialogs will also animate the changes within the dialog container that hosts them.

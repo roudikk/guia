@@ -22,3 +22,4 @@ Every `BottomSheet` has a sateful `BottomSheetOptions` that can be updated at an
 )
 </code></pre>
 
+Navigating between two bottom sheets will animate the content of the bottom sheet container that hosts them.
