@@ -3,7 +3,7 @@ package com.roudikk.navigator.sample.feature.custom.card
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.Lifecycle
 import com.roudikk.navigator.backstack.BackStackManager
-import com.roudikk.navigator.backstack.LifeCycleEntry
+import com.roudikk.navigator.backstack.LifecycleEntry
 import com.roudikk.navigator.backstack.VisibleBackStack
 import com.roudikk.navigator.backstack.id
 import com.roudikk.navigator.backstack.rememberBackStackManager
@@ -21,7 +21,7 @@ internal fun rememberCardBackStackManager(navigator: Navigator): BackStackManage
                     .map(createEntry)
             )
         },
-        updateLifeCycles = { visibleBackStack, entries ->
+        updateLifecycles = { visibleBackStack, entries ->
             entries.filter { it !in visibleBackStack.entries }
                 .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
 
@@ -37,5 +37,5 @@ internal fun rememberCardBackStackManager(navigator: Navigator): BackStackManage
 }
 
 class VisibleCardStack(
-    override val entries: List<LifeCycleEntry>
+    override val entries: List<LifecycleEntry>
 ) : VisibleBackStack

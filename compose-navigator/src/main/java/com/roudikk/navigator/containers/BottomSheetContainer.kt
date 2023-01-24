@@ -21,7 +21,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.animation.EnterExitTransition
 import com.roudikk.navigator.animation.ProvideNavigationVisibilityScope
-import com.roudikk.navigator.backstack.LifeCycleEntry
+import com.roudikk.navigator.backstack.LifecycleEntry
 import com.roudikk.navigator.containers.BottomSheetValue.Expanded
 import com.roudikk.navigator.containers.BottomSheetValue.Hidden
 import com.roudikk.navigator.core.BottomSheet
@@ -41,9 +41,9 @@ private fun Navigator.currentBottomSheet(): BottomSheet? {
 @Composable
 fun Navigator.BottomSheetContainer(
     container: Container,
-    bottomSheetEntry: LifeCycleEntry?,
+    bottomSheetEntry: LifecycleEntry?,
     bottomSheetScrimColor: Color,
-    content: @Composable (LifeCycleEntry) -> Unit
+    content: @Composable (LifecycleEntry) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val bottomSheet = currentBottomSheet()
@@ -121,9 +121,9 @@ fun Navigator.BottomSheetContainer(
 @Composable
 private fun BottomSheetContent(
     sheetState: BottomSheetState,
-    bottomSheetEntry: LifeCycleEntry?,
+    bottomSheetEntry: LifecycleEntry?,
     currentTransition: EnterExitTransition,
-    content: @Composable (LifeCycleEntry) -> Unit
+    content: @Composable (LifecycleEntry) -> Unit
 ) {
     val density = LocalDensity.current
 

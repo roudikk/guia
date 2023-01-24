@@ -6,7 +6,7 @@ import androidx.compose.animation.with
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.Dialog
 import com.roudikk.navigator.animation.ProvideNavigationVisibilityScope
-import com.roudikk.navigator.backstack.LifeCycleEntry
+import com.roudikk.navigator.backstack.LifecycleEntry
 import com.roudikk.navigator.core.Dialog
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.navigationNode
@@ -21,8 +21,8 @@ import com.roudikk.navigator.extensions.popBackstack
 @Composable
 fun Navigator.DialogContainer(
     container: Container,
-    dialogEntry: LifeCycleEntry?,
-    content: @Composable (LifeCycleEntry) -> Unit
+    dialogEntry: LifecycleEntry?,
+    content: @Composable (LifecycleEntry) -> Unit
 ) {
     dialogEntry ?: return
 

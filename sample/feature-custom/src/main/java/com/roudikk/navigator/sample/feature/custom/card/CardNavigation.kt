@@ -3,6 +3,7 @@ package com.roudikk.navigator.sample.feature.custom.card
 import androidx.compose.runtime.Composable
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigatorConfigBuilder
+import com.roudikk.navigator.sample.feature.common.navigation.CrossFadeTransition
 import com.roudikk.navigator.sample.feature.custom.api.CardKey
 
 inline fun <reified Key : NavigationKey> NavigatorConfigBuilder.card(
@@ -13,4 +14,6 @@ inline fun <reified Key : NavigationKey> NavigatorConfigBuilder.card(
 
 fun NavigatorConfigBuilder.cardNavigation() {
     card<CardKey> { key -> CardScreen(id = key.id) }
+    supportedNavigationNodes(Card::class)
+    defaultTransition { -> CrossFadeTransition }
 }

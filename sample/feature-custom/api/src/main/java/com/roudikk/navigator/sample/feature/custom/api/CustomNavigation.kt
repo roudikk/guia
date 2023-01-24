@@ -14,4 +14,4 @@ class ViewPagerRootKey : NavigationKey
 class CardKey(val id: Int) : NavigationKey
 
 @Parcelize
-class PageKey(var isActive: Boolean) : NavigationKey
+class PageKey(val isActive: Boolean) : NavigationKey

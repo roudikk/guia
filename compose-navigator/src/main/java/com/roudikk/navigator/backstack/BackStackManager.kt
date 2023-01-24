@@ -34,7 +34,7 @@ internal fun rememberNavVisibleBackStackManager(navigator: Navigator): BackStack
         /**
          * Update the current visible back stack.
          */
-        getVisibleBackStack = { backStack, createLifeCycleEntry ->
+        getVisibleBackStack = { backStack, createLifecycleEntry ->
             val currentEntry = backStack.lastOrNull()
                 ?: return@rememberBackStackManager NavVisibleBackStack()
 
@@ -42,13 +42,13 @@ internal fun rememberNavVisibleBackStackManager(navigator: Navigator): BackStack
             // It's the last entry that is a screen.
             val screenEntry = backStack.lastOrNull {
                 navigator.navigationNode(it) is Screen
-            }?.let(createLifeCycleEntry)
+            }?.let(createLifecycleEntry)
 
             // Check if there's a valid dialog that should be visible.
             // It must be the last entry in the backstack.
             val dialogEntry = currentEntry.takeIf {
                 navigator.navigationNode(it) is Dialog
-            }?.let(createLifeCycleEntry)
+            }?.let(createLifecycleEntry)
 
             // Check if there's a valid bottom sheet that should be visible.
             // It's either the top most destination, in between a screen and a dialog
@@ -60,7 +60,7 @@ internal fun rememberNavVisibleBackStackManager(navigator: Navigator): BackStack
                     val bottomSheetIndex = backStack.indexOf(it)
                     val entriesAfter = backStack.subList(bottomSheetIndex + 1, backStack.size)
                     entriesAfter.all { entry -> navigator.navigationNode(entry) is Dialog }
-                }?.let(createLifeCycleEntry)
+                }?.let(createLifecycleEntry)
 
             val visibleBackStack = NavVisibleBackStack(
                 screenEntry = screenEntry,
@@ -103,7 +103,7 @@ internal fun rememberNavVisibleBackStackManager(navigator: Navigator): BackStack
          * - If the entry is the current last entry in the [Navigator] backstack, it's resumed.
          * - If the entry is not the current last entry, then it's paused.
          */
-        updateLifeCycles = { visibleBackStack, lifeCycleEntries ->
+        updateLifecycles = { visibleBackStack, lifeCycleEntries ->
             lifeCycleEntries.filter { it !in visibleBackStack.entries }
                 .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
 
@@ -124,8 +124,8 @@ internal fun rememberNavVisibleBackStackManager(navigator: Navigator): BackStack
 @Composable
 fun <VB : VisibleBackStack> rememberBackStackManager(
     navigator: Navigator,
-    getVisibleBackStack: (backStack: List<BackStackEntry>, createEntry: (BackStackEntry) -> LifeCycleEntry) -> VB,
-    updateLifeCycles: (visibleBackStack: VB, entries: List<LifeCycleEntry>) -> Unit
+    getVisibleBackStack: (backStack: List<BackStackEntry>, createEntry: (BackStackEntry) -> LifecycleEntry) -> VB,
+    updateLifecycles: (visibleBackStack: VB, entries: List<LifecycleEntry>) -> Unit
 ): BackStackManager<VB> {
     val application = LocalContext.current.applicationContext as Application
     val viewModelStoreOwner = requireNotNull(LocalViewModelStoreOwner.current)
@@ -142,7 +142,7 @@ fun <VB : VisibleBackStack> rememberBackStackManager(
             lifecycle = lifecycle,
             saveableStateHolder = saveableStateHolder,
             getVisibleBackStack = getVisibleBackStack,
-            updateLifeCycles = updateLifeCycles
+            updateLifecycles = updateLifecycles
         )
     ) {
         BackStackManager(
@@ -155,16 +155,16 @@ fun <VB : VisibleBackStack> rememberBackStackManager(
             hostLifecycle = lifecycle,
             savedStateRegistry = savedStateRegistry,
             getVisibleBackStack = getVisibleBackStack,
-            updateLifeCycles = updateLifeCycles
-        ).apply { updateLifeCycles(visibleBackStack, lifeCycleEntries) }
+            updateLifecycles = updateLifecycles
+        ).apply { updateLifecycles(visibleBackStack, lifeCycleEntries) }
     }
 }
 
 /**
  * Manages the BackStack state of a [Navigator].
  *
- * That includes managing the Lifecycle of each [LifeCycleEntry].
- * All entries in the current [Navigator]'s back stack will have a corresponding [LifeCycleEntry].
+ * That includes managing the Lifecycle of each [LifecycleEntry].
+ * All entries in the current [Navigator]'s back stack will have a corresponding [LifecycleEntry].
  */
 class BackStackManager<VB : VisibleBackStack> internal constructor(
     internal val id: String,
@@ -175,14 +175,14 @@ class BackStackManager<VB : VisibleBackStack> internal constructor(
     private val hostLifecycle: Lifecycle,
     private val getVisibleBackStack: (
         backStack: List<BackStackEntry>,
-        createEntry: (BackStackEntry) -> LifeCycleEntry
+        createEntry: (BackStackEntry) -> LifecycleEntry
     ) -> VB,
-    private val updateLifeCycles: (visibleBackStack: VB, entries: List<LifeCycleEntry>) -> Unit,
+    private val updateLifecycles: (visibleBackStack: VB, entries: List<LifecycleEntry>) -> Unit,
     viewModelStoreOwner: ViewModelStoreOwner,
     initialEntryIds: List<String>,
 ) {
-    private val lifeCycleEntriesMap = mutableMapOf<String, LifeCycleEntry>()
-    internal val lifeCycleEntries: List<LifeCycleEntry>
+    private val lifeCycleEntriesMap = mutableMapOf<String, LifecycleEntry>()
+    internal val lifeCycleEntries: List<LifecycleEntry>
         get() = lifeCycleEntriesMap.values.toList()
 
     private var hostLifecycleState: Lifecycle.State = Lifecycle.State.INITIALIZED
@@ -205,8 +205,8 @@ class BackStackManager<VB : VisibleBackStack> internal constructor(
     }
 
     val visibleBackStack: VB by derivedStateOf {
-        getVisibleBackStack(navigator.backStack, ::createLifeCycleEntry)
-            .also { updateLifeCycles(it, lifeCycleEntries) }
+        getVisibleBackStack(navigator.backStack, ::createLifecycleEntry)
+            .also { updateLifecycles(it, lifeCycleEntries) }
     }
 
     init {
@@ -220,18 +220,18 @@ class BackStackManager<VB : VisibleBackStack> internal constructor(
         // Create back stack entries for restored navigation entries.
         navigator.backStack
             .filter { it.id in initialEntryIds }
-            .forEach(::createLifeCycleEntry)
+            .forEach(::createLifecycleEntry)
     }
 
     /**
-     * Creates a [LifeCycleEntry] from the given [BackStackEntry].
+     * Creates a [LifecycleEntry] from the given [BackStackEntry].
      *
      * The [SaveableStateHolder] would be the state holder associated with a [Navigator].
      * The [ViewModelStore] is received from [viewModelStoreProvider] created in the back stack manager.
      */
-    private fun createLifeCycleEntry(backStackEntry: BackStackEntry): LifeCycleEntry {
+    private fun createLifecycleEntry(backStackEntry: BackStackEntry): LifecycleEntry {
         return lifeCycleEntriesMap.getOrPut(backStackEntry.id) {
-            LifeCycleEntry(
+            LifecycleEntry(
                 backStackEntry = backStackEntry,
                 saveableStateHolder = saveableStateHolder,
                 viewModelStore = viewModelStoreProvider.getViewModelStore(backStackEntry.id),
@@ -241,12 +241,12 @@ class BackStackManager<VB : VisibleBackStack> internal constructor(
     }
 
     /**
-     * Initializes a [LifeCycleEntry] with the proper state.
+     * Initializes a [LifecycleEntry] with the proper state.
      *
      * First, we make sure the [hostLifecycleState] is not restored before restoring the saved state.
      * Then, we update the lifecycle given the host lifecycle and [Lifecycle.State.STARTED].
      */
-    private fun initialBackStackState(backStackLifecycleOwner: LifeCycleEntry) {
+    private fun initialBackStackState(backStackLifecycleOwner: LifecycleEntry) {
         if (hostLifecycleState != Lifecycle.State.DESTROYED) {
             val key = savedStateKey(backStackLifecycleOwner.id)
             savedStateRegistry.consumeRestoredStateForKey(key).let { savedState ->
@@ -278,7 +278,7 @@ class BackStackManager<VB : VisibleBackStack> internal constructor(
      * of other entries.
      */
     fun onEntryDisposed() {
-        updateLifeCycles(visibleBackStack, lifeCycleEntries)
+        updateLifecycles(visibleBackStack, lifeCycleEntries)
         cleanupEntries()
     }
 

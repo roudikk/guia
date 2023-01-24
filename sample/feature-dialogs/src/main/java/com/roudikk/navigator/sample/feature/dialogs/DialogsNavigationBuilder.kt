@@ -11,9 +11,7 @@ import com.roudikk.navigator.sample.feature.dialogs.api.DialogsKey
 
 fun NavigatorConfigBuilder.dialogsNavigation() {
     bottomSheet<BlockingBottomSheetKey>(
-        bottomSheetOptions = BottomSheetOptions(
-            confirmStateChange = { false },
-        )
+        bottomSheetOptions = BottomSheetOptions(confirmStateChange = { false })
     ) {
         BlockingBottomSheetScreen()
     }

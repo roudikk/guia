@@ -3,7 +3,7 @@ package com.roudikk.navigator.sample.feature.custom.viewpager
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.Lifecycle
 import com.roudikk.navigator.backstack.BackStackManager
-import com.roudikk.navigator.backstack.LifeCycleEntry
+import com.roudikk.navigator.backstack.LifecycleEntry
 import com.roudikk.navigator.backstack.VisibleBackStack
 import com.roudikk.navigator.backstack.id
 import com.roudikk.navigator.backstack.rememberBackStackManager
@@ -26,7 +26,7 @@ fun rememberViewPagerBackStackManager(navigator: Navigator): BackStackManager<Vi
                 right = right?.let(createEntry)
             )
         },
-        updateLifeCycles = { visibleBackStack, entries ->
+        updateLifecycles = { visibleBackStack, entries ->
             entries.filter { it !in visibleBackStack.entries }
                 .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
 
@@ -42,12 +42,12 @@ fun rememberViewPagerBackStackManager(navigator: Navigator): BackStackManager<Vi
 }
 
 class ViewPagerVisibleStack(
-    val left: LifeCycleEntry?,
-    val center: LifeCycleEntry?,
-    val right: LifeCycleEntry?
+    val left: LifecycleEntry?,
+    val center: LifecycleEntry?,
+    val right: LifecycleEntry?
 ) : VisibleBackStack {
 
-    override val entries: List<LifeCycleEntry> = listOfNotNull(left, center, right)
+    override val entries: List<LifecycleEntry> = listOfNotNull(left, center, right)
 }
 
 val Navigator.activeIndex: Int

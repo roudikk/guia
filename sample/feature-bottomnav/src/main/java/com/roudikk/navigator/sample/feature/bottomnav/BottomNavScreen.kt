@@ -115,13 +115,12 @@ fun rememberBottomNavHost(
 
 @Composable
 fun BottomNavScreen(
+    globalNavigator: GlobalNavigator = viewModel(LocalNavHostViewModelStoreOwner.current),
     homeNavigation: NavigatorConfigBuilder.() -> Unit,
     nestedNavigation: NavigatorConfigBuilder.() -> Unit,
     dialogsNavigation: NavigatorConfigBuilder.() -> Unit,
     customNavigation: NavigatorConfigBuilder.() -> Unit
 ) {
-    val globalNavigator = viewModel<GlobalNavigator>(LocalNavHostViewModelStoreOwner.current)
-
     val navHost = rememberBottomNavHost(
         homeNavigation = homeNavigation,
         nestedNavigation = nestedNavigation,
@@ -197,11 +196,13 @@ private fun BottomNavContent(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        contentWindowInsets = WindowInsets(0.dp),
         bottomBar = { BottomNavigation(navHost) }
-    ) { _ ->
+    ) { padding ->
         navHost.NavContainer(
             modifier = {
-                Modifier.padding(bottom = maxOf(80.dp + navBarsPadding, imePadding))
+                Modifier
+                    .padding(bottom = maxOf(padding.calculateBottomPadding() + navBarsPadding, imePadding))
             },
             bottomSheetScrimColor = {
                 Color.Black.copy(alpha = 0.32F)
@@ -348,6 +349,7 @@ private fun navigatorToStackOrRoot(
 @Composable
 private fun BottomNavContentPreviewDark() = AppTheme {
     BottomNavScreen(
+        globalNavigator = GlobalNavigator(),
         homeNavigation = {},
         nestedNavigation = {},
         dialogsNavigation = {},

@@ -81,8 +81,11 @@ class Navigator(
         private set
     val backStackKeys by derivedStateOf { backStack.map { it.navigationKey } }
 
-    private val transitions = mutableStateMapOf<KClass<out NavigationNode>, EnterExitTransition>()
-    private val overrideTransitions =
+    @PublishedApi
+    internal val transitions = mutableStateMapOf<KClass<out NavigationNode>, EnterExitTransition>()
+
+    @PublishedApi
+    internal val overrideTransitions =
         mutableStateMapOf<KClass<out NavigationNode>, EnterExitTransition?>()
 
     init {
@@ -131,25 +134,16 @@ class Navigator(
 
         backStack = entries
     }
-
-    fun transition(kClass: KClass<out NavigationNode>) = transitions[kClass]
-
-    fun overrideTransition(
-        kClass: KClass<out NavigationNode>,
-        enterExitTransition: EnterExitTransition
-    ) {
-        transitions[kClass] = enterExitTransition
-    }
 }
 
 inline fun <reified Node : NavigationNode> Navigator.transition(): EnterExitTransition {
-    return transition(Node::class) ?: EnterExitTransition.None
+    return transitions[Node::class] ?: EnterExitTransition.None
 }
 
 inline fun <reified Node : NavigationNode> Navigator.overrideTransition(
     transition: EnterExitTransition
 ) {
-    overrideTransition(Node::class, transition)
+    overrideTransitions[Node::class] = transition
 }
 
 private fun Navigator.getTransition(

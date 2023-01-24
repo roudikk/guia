@@ -8,7 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistry
 import com.roudikk.navigator.backstack.BackStackManager
-import com.roudikk.navigator.backstack.LifeCycleEntry
+import com.roudikk.navigator.backstack.LifecycleEntry
 import com.roudikk.navigator.backstack.VisibleBackStack
 import com.roudikk.navigator.core.BackStackEntry
 import com.roudikk.navigator.core.Navigator
@@ -24,8 +24,8 @@ internal fun <VB : VisibleBackStack> backStackManagerSaver(
     saveableStateHolder: SaveableStateHolder,
     lifecycle: Lifecycle,
     savedStateRegistry: SavedStateRegistry,
-    getVisibleBackStack: (backStack: List<BackStackEntry>, createEntry: (BackStackEntry) -> LifeCycleEntry) -> VB,
-    updateLifeCycles: (visibleBackStack: VB, entries: List<LifeCycleEntry>) -> Unit
+    getVisibleBackStack: (backStack: List<BackStackEntry>, createEntry: (BackStackEntry) -> LifecycleEntry) -> VB,
+    updateLifecycles: (visibleBackStack: VB, entries: List<LifecycleEntry>) -> Unit
 ) = Saver<BackStackManager<VB>, BackStackManagerState>(
     save = {
         BackStackManagerState(
@@ -44,8 +44,8 @@ internal fun <VB : VisibleBackStack> backStackManagerSaver(
             hostLifecycle = lifecycle,
             savedStateRegistry = savedStateRegistry,
             getVisibleBackStack = getVisibleBackStack,
-            updateLifeCycles = updateLifeCycles
-        ).apply { updateLifeCycles(visibleBackStack, lifeCycleEntries) }
+            updateLifecycles = updateLifecycles
+        ).apply { updateLifecycles(visibleBackStack, lifeCycleEntries) }
     }
 )
 
