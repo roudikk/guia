@@ -6,6 +6,8 @@ The motivation behind creating this library is to provide a simple, yet customiz
 
 Guia also has proper android Lifecycle, ViewModel and saved state support.
 
+To get started, check the [Setup](setup.md) page.
+
 
 
 The name "Guia" means Guidance. Very original, I know. Naming things is hard.
