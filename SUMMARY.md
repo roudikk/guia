@@ -5,4 +5,4 @@
 
 ## 🚀 Getting Started
 
-* [Page 1](getting-started/page-1.md)
+* [Navigation Key](getting-started/navigation-key.md)

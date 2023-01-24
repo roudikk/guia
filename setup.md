@@ -10,7 +10,7 @@ repositories {
 
 Add the dependency to your module level gradle file
 
-```
+```kotlin
 dependencies {
     implementation("com.roudikk.guia:guia:currentVersion")
 }
