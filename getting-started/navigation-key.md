@@ -13,9 +13,7 @@ The reason why the key is not tied to the UI directly is to make multi module na
 
 We will see later how we can tie a key to `Composable` and render some UI.
 
-However, not all projects are multi module, to make it easier to have support for both multi module or single module applications. Or even modules that have their own navigation flows and don't require this separation.&#x20;
-
-For that we can use `NavigationKey.WithNode<NavigationNode>`:
+However, not all projects are multi module, to make it easier to have support for both multi module or single module applications. Or even modules that have their own navigation flows and don't require this separation within that module, we can use `NavigationKey.WithNode<NavigationNode>`:
 
 ```kotlin
 @Parcelize
