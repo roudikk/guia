@@ -63,13 +63,3 @@ navHost.currentNavigator?.push(SomeKey())
 // Although we aren't on HomeStackKey, we can still navigate in that context
 navHost.navigator(HomeStackKey).push(SomeKey())
 ```
-
-### Getting NavHost Instance
-
-```kotlin
-// Get the local nav host, returns nullable NavHost
-val navHost = localNavHost()
-
-// Use when you are 100% sure there's a nav host in the tree hierarchy
-val navHost = requireLocalNavHost()
-```
