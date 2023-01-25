@@ -11,7 +11,7 @@ class ProfileKey(val profileId: String): NavigationKey
 
 The reason why the key is not tied to the UI directly is to make multi module navigation easier.&#x20;
 
-We will see later how we can tie a key to [NavigationNode ](navigation-node.md)and render some UI.
+We will see later how we can tie a key to [NavigationNode ](navigation-node/)and render some UI.
 
 ### Self hosted NavigationKey
 

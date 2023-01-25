@@ -10,4 +10,4 @@ To get started, check the [Setup](setup.md) page.
 
 
 
-_Guia \~ \[ˈɡia ] feminine noun. Means guidance._
+_Guia \~ \[ˈɡia] feminine noun. Means guidance._
