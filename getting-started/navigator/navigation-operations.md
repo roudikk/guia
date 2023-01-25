@@ -18,10 +18,10 @@ val Navigator.currentEntry
 
 Returns the current `BackStackEntry`
 
-#### navigate
+#### push
 
 ```kotlin
-fun Navigator.navigate(
+fun Navigator.push(
     navigationKey: NavigationKey
 )
 ```
