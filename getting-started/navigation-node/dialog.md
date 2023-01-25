@@ -24,3 +24,28 @@ data class DialogOptions(
 ```
 
 Navigating between 2 Dialogs will also animate the changes within the dialog container that hosts them.
+
+### Updating Dialog state
+
+Note that `DialogOptions` currently are not saved/restored so make sure you have a backing saveable state if needed in your Composable.
+
+```kotlin
+@Composable
+fun MyDialog() {
+    val dialog = requireLocalDialog() // Get the local dialog node
+    var dismissOnBackPress by rememberSaveable { mutableStateOf(false)) }
+    
+    LaunchedEffect(dismissOnBackPress) {
+        dialog.dialogOptions = dialog.dialogOptions.copy(
+            dismissOnBackPress = dismissOnBackPress,
+            dismissOnClickOutside = dismissOnBackPress
+        )
+    }
+    
+    Button(onClick = { 
+        dismissOnBackPress = !dismissOnBackPress
+    }) {
+        Text(text = "Toggle Back Press!")
+    }
+}
+```
