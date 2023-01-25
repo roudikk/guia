@@ -13,11 +13,12 @@
 * [Navigator](getting-started/navigator/README.md)
   * [Navigation Operations](getting-started/navigator/navigation-operations.md)
   * [Navigator Instance](getting-started/navigator/navigator-instance.md)
+  * [Back Handling](getting-started/navigator/back-handling.md)
 * [Navigator Config](navigator-config.md)
   * [Dynamic Navigation Node](getting-started/navigator-config/dynamic-navigation-node.md)
   * [Transitions](getting-started/navigator-config/transitions.md)
+  * [Multi module navigation](getting-started/navigator-config/multi-module-navigation.md)
 * [Containers](getting-started/containers.md)
-* [Back Handling](getting-started/back-handling.md)
 * [NavHost](getting-started/navhost.md)
 
 ## 🤖 Advanced

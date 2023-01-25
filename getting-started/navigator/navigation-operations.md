@@ -2,7 +2,7 @@
 
 Guia provides an extensive list of navigation operations.
 
-#### currentKey
+### currentKey
 
 ```kotlin
 val Navigator.currentKey
@@ -10,7 +10,7 @@ val Navigator.currentKey
 
 Returns the current `NavigationKey`
 
-#### currentEntry
+### currentEntry
 
 ```kotlin
 val Navigator.currentEntry
@@ -18,17 +18,17 @@ val Navigator.currentEntry
 
 Returns the current `BackStackEntry`
 
-#### navigate
+### push
 
 ```kotlin
-fun Navigator.navigate(
+fun Navigator.push(
     navigationKey: NavigationKey
 )
 ```
 
 Adds a new key to the backstack.
 
-#### pop
+### pop
 
 ```kotlin
 fun Navigator.pop(): Boolean
@@ -36,7 +36,7 @@ fun Navigator.pop(): Boolean
 
 Pops the last entry in the backstack.
 
-#### replaceLast
+### replaceLast
 
 ```kotlin
 fun Navigator.replaceLast(
@@ -46,7 +46,7 @@ fun Navigator.replaceLast(
 
 Adds a new key to the backstack.
 
-#### replaceUpTo
+### replaceUpTo
 
 ```kotlin
 fun Navigator.replaceUpTo(
@@ -58,7 +58,7 @@ fun Navigator.replaceUpTo(
 
 Loops through navigation keys from the top of the backstack until the predicate is satisfied and replaces all those keys with a new key.
 
-#### replaceUpTo \[Key]
+### replaceUpTo \[Key]
 
 ```kotlin
 inline fun <reified Key : NavigationKey> Navigator.replaceUpTo(
@@ -69,7 +69,7 @@ inline fun <reified Key : NavigationKey> Navigator.replaceUpTo(
 
 Replaces all navigation keys in the backstack until a key of type \[Key] is reached.
 
-#### moveToTop
+### moveToTop
 
 ```kotlin
 fun Navigator.moveToTop(
@@ -80,7 +80,7 @@ fun Navigator.moveToTop(
 
 Moves a navigation key that matches the given condition to the top
 
-#### moveToTop \[Key]
+### moveToTop \[Key]
 
 ```kotlin
 inline fun <reified Key : NavigationKey> Navigator.moveToTop(
@@ -90,7 +90,7 @@ inline fun <reified Key : NavigationKey> Navigator.moveToTop(
 
 Moves a navigation key of type \[Key] to the top of backstack.
 
-#### singleInstance
+### singleInstance
 
 ```kotlin
 inline fun <reified Key : NavigationKey> Navigator.singleInstance(
@@ -102,7 +102,7 @@ inline fun <reified Key : NavigationKey> Navigator.singleInstance(
 
 Navigates to a navigation key and removes all navigation keys that are of the same type from the backstack.
 
-#### singleTop
+### singleTop
 
 ```kotlin
 inline fun <reified Key : NavigationKey> Navigator.singleTop(
@@ -112,7 +112,7 @@ inline fun <reified Key : NavigationKey> Navigator.singleTop(
 
 Navigates to \[navigationKey] if the [currentKey](navigation-operations.md#currentkey) is not of the same type.
 
-#### popTo
+### popTo
 
 ```kotlin
 fun Navigator.popTo(
@@ -123,7 +123,7 @@ fun Navigator.popTo(
 
 Pops to a \[NavigationKey] matching \[predicate]
 
-#### popTo \[Key]
+### popTo \[Key]
 
 ```kotlin
 inline fun <reified Key : NavigationKey> Navigator.popTo(
@@ -134,7 +134,7 @@ inline fun <reified Key : NavigationKey> Navigator.popTo(
 
 Pops to a \[NavigationKey] of the same type \[Key].
 
-#### removeAll
+### removeAll
 
 ```kotlin
 fun Navigator.removeAll(
@@ -144,7 +144,7 @@ fun Navigator.removeAll(
 
 Removes all navigation keys matching \[predicate].
 
-#### removeAll \[Key]
+### removeAll \[Key]
 
 ```kotlin
 inline fun <reified Key : NavigationKey> Navigator.removeAll()
@@ -152,7 +152,7 @@ inline fun <reified Key : NavigationKey> Navigator.removeAll()
 
 Removes all navigation keys that are of type \[Key].
 
-#### popToRoot
+### popToRoot
 
 ```kotlin
 fun Navigator.popToRoot()
@@ -160,7 +160,7 @@ fun Navigator.popToRoot()
 
 Pops to the root of the backstack.
 
-#### setRoot
+### setRoot
 
 ```kotlin
 fun Navigator.setRoot(
@@ -170,7 +170,7 @@ fun Navigator.setRoot(
 
 Clears the backstack and sets a new root \[NavigationKey]
 
-#### canGoback
+### canGoback
 
 ```kotlin
 fun Navigator.canGoBack(): Boolean
@@ -178,7 +178,7 @@ fun Navigator.canGoBack(): Boolean
 
 Whether or not the navigator has more than one element and can pop back stack.
 
-#### none
+### none
 
 ```kotlin
 fun Navigator.none(
@@ -188,7 +188,7 @@ fun Navigator.none(
 
 Checks if none of the navigation keys matches the condition.
 
-#### none \[Key]
+### none \[Key]
 
 ```kotlin
 inline fun <reified Key : NavigationKey> Navigator.none()
@@ -196,7 +196,7 @@ inline fun <reified Key : NavigationKey> Navigator.none()
 
 Checks if none of the navigation keys is of type \[Key].
 
-#### any
+### any
 
 ```kotlin
 fun Navigator.any(
@@ -206,7 +206,7 @@ fun Navigator.any(
 
 Checks if any of the navigation keys matches the condition.
 
-#### any \[Key]
+### any \[Key]
 
 ```kotlin
 inline fun <reified Key : NavigationKey> Navigator.any()
