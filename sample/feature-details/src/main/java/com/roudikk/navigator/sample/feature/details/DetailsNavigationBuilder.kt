@@ -1,22 +1,17 @@
 package com.roudikk.navigator.sample.feature.details
 
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Dialog
-import com.roudikk.navigator.core.Dialog.DialogOptions
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.NavigatorConfigBuilder
 import com.roudikk.navigator.extensions.localBottomSheet
-import com.roudikk.navigator.extensions.popBackstack
+import com.roudikk.navigator.extensions.pop
 import com.roudikk.navigator.extensions.requireLocalNavigator
-import com.roudikk.navigator.sample.feature.common.composables.SampleSurfaceContainer
 import com.roudikk.navigator.sample.feature.common.navigation.CrossFadeTransition
 import com.roudikk.navigator.sample.feature.common.navigation.MaterialSharedAxisTransitionX
 import com.roudikk.navigator.sample.feature.common.navigation.VerticalSlideTransition
@@ -62,7 +57,7 @@ class DetailsBottomSheetKey(val item: String) : NavigationKey.WithNode<BottomShe
             bottomSheet.bottomSheetOptions = bottomSheet.bottomSheetOptions.copy(
                 scrimColor = scrimColor,
                 dismissOnClickOutside = false,
-                onOutsideClick = { navigator.popBackstack() }
+                onOutsideClick = { navigator.pop() }
             )
         }
 
@@ -75,10 +70,8 @@ internal class DynamicDetailsKey(val item: String) : NavigationKey
 
 fun NavigatorConfigBuilder.detailsNavigation(screenWidth: Int) {
     if (screenWidth <= 600) {
-        dialog<DynamicDetailsKey>(
-            dialogOptions = DialogOptions(modifier = Modifier.widthIn(max = 300.dp))
-        ) {
-            SampleSurfaceContainer { DetailsContent(item = it.item) }
+        dialog<DynamicDetailsKey> {
+            DetailsContent(item = it.item)
         }
     } else {
         bottomSheet<DynamicDetailsKey> {

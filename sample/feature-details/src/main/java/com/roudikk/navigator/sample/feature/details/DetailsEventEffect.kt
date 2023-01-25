@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.roudikk.navigator.core.Screen
 import com.roudikk.navigator.core.overrideTransition
-import com.roudikk.navigator.extensions.navigate
-import com.roudikk.navigator.extensions.popBackstack
+import com.roudikk.navigator.extensions.push
+import com.roudikk.navigator.extensions.pop
 import com.roudikk.navigator.extensions.popToRoot
 import com.roudikk.navigator.extensions.replaceLast
 import com.roudikk.navigator.extensions.requireLocalNavigator
@@ -29,9 +29,9 @@ fun DetailsEventEffect(
 
     LaunchedEffect(event) {
         when (event) {
-            DetailsEvent.GoBack -> navigator.popBackstack()
+            DetailsEvent.GoBack -> navigator.pop()
 
-            is DetailsEvent.OpenBottomSheet -> navigator.navigate(
+            is DetailsEvent.OpenBottomSheet -> navigator.push(
                 navigationKey = DetailsBottomSheetKey(event.item)
             )
 
@@ -45,11 +45,11 @@ fun DetailsEventEffect(
                 checkForExisting = false
             )
 
-            is DetailsEvent.OpenRandomItem -> navigator.navigate(
+            is DetailsEvent.OpenRandomItem -> navigator.push(
                 navigationKey = DetailsKey(event.item),
             )
 
-            is DetailsEvent.OpenDynamicItem -> navigator.navigate(
+            is DetailsEvent.OpenDynamicItem -> navigator.push(
                 navigationKey = DynamicDetailsKey(event.item)
             )
 
@@ -65,17 +65,17 @@ fun DetailsEventEffect(
                 navigationKey = DetailsBottomSheetKey(event.item)
             )
 
-            is DetailsEvent.OpenDialog -> navigator.navigate(
+            is DetailsEvent.OpenDialog -> navigator.push(
                 navigationKey = DetailsDialogKey(event.item)
             )
 
-            is DetailsEvent.OpenBlockingBottomSheet -> parentNavigator.navigate(
+            is DetailsEvent.OpenBlockingBottomSheet -> parentNavigator.push(
                 navigationKey = BlockingBottomSheetKey()
             )
 
             is DetailsEvent.OverrideScreenTransition -> {
                 navigator.overrideTransition<Screen>(CrossFadeTransition.enterExit)
-                navigator.navigate(DetailsKey(event.item))
+                navigator.push(DetailsKey(event.item))
             }
 
             is DetailsEvent.SendResult -> {

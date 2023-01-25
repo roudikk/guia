@@ -1,56 +1,53 @@
 package com.roudikk.navigator.savedstate
 
-import android.app.Application
 import android.os.Parcelable
 import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.Saver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistry
-import com.roudikk.navigator.backstack.BackStackManager
 import com.roudikk.navigator.backstack.LifecycleEntry
-import com.roudikk.navigator.backstack.VisibleBackStack
-import com.roudikk.navigator.core.BackStackEntry
+import com.roudikk.navigator.backstack.VisibleBackstack
+import com.roudikk.navigator.backstack.manager.BackstackManager
+import com.roudikk.navigator.core.BackstackEntry
 import com.roudikk.navigator.core.Navigator
 import kotlinx.parcelize.Parcelize
 
 /**
- * Used to save and restore the state of a [BackStackManager].
+ * Used to save and restore the state of a [BackstackManager].
  */
-internal fun <VB : VisibleBackStack> backStackManagerSaver(
+internal fun <VB : VisibleBackstack> backStackManagerSaver(
     navigator: Navigator,
-    application: Application,
     viewModelStoreOwner: ViewModelStoreOwner,
     saveableStateHolder: SaveableStateHolder,
     lifecycle: Lifecycle,
     savedStateRegistry: SavedStateRegistry,
-    getVisibleBackStack: (backStack: List<BackStackEntry>, createEntry: (BackStackEntry) -> LifecycleEntry) -> VB,
-    updateLifecycles: (visibleBackStack: VB, entries: List<LifecycleEntry>) -> Unit
-) = Saver<BackStackManager<VB>, BackStackManagerState>(
+    getVisibleBackstack: (backStack: List<BackstackEntry>, createEntry: (BackstackEntry) -> LifecycleEntry) -> VB,
+    updateLifecycles: (visibleBackstack: VB, entries: List<LifecycleEntry>) -> Unit
+) = Saver<BackstackManager<VB>, BackstackManagerState>(
     save = {
-        BackStackManagerState(
+        BackstackManagerState(
             id = it.id,
             entryIds = it.entryIds.toList()
         )
     },
     restore = {
-        BackStackManager(
+        BackstackManager(
             id = it.id,
             initialEntryIds = it.entryIds,
             navigator = navigator,
-            application = application,
             viewModelStoreOwner = viewModelStoreOwner,
             saveableStateHolder = saveableStateHolder,
             hostLifecycle = lifecycle,
             savedStateRegistry = savedStateRegistry,
-            getVisibleBackStack = getVisibleBackStack,
+            getVisibleBackstack = getVisibleBackstack,
             updateLifecycles = updateLifecycles
-        ).apply { updateLifecycles(visibleBackStack, lifeCycleEntries) }
+        ).apply { updateLifecycles(visibleBackstack, lifeCycleEntries) }
     }
 )
 
 @Parcelize
-class BackStackManagerState(
+class BackstackManagerState(
     val id: String,
     val entryIds: List<String>
 ) : Parcelable

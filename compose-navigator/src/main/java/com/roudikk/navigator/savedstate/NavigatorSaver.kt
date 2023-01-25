@@ -2,7 +2,7 @@ package com.roudikk.navigator.savedstate
 
 import android.os.Parcelable
 import androidx.compose.runtime.saveable.Saver
-import com.roudikk.navigator.core.BackStackEntry
+import com.roudikk.navigator.core.BackstackEntry
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.NavigatorConfig
 import com.roudikk.navigator.core.ResultManager
@@ -43,6 +43,6 @@ private fun Navigator.restore(
  */
 @Parcelize
 internal data class NavigatorState(
-    val backstack: List<BackStackEntry>,
+    val backstack: List<BackstackEntry>,
     val overrideBackPress: Boolean
 ) : Parcelable

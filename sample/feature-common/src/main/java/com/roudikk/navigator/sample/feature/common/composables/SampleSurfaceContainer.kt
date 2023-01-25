@@ -15,14 +15,15 @@ fun SampleSurfaceContainer(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) = Surface(
-    modifier = modifier
+    modifier = Modifier
+        .heightIn(max = 500.dp)
+        .widthIn(max = 400.dp)
+        .then(modifier)
         .border(
             width = 1.dp,
             color = MaterialTheme.colorScheme.primary,
             shape = RoundedCornerShape(12.dp)
-        )
-        .heightIn(max = 500.dp)
-        .widthIn(max = 400.dp),
+        ),
     tonalElevation = 4.dp,
     shape = RoundedCornerShape(12.dp),
     shadowElevation = 2.dp,

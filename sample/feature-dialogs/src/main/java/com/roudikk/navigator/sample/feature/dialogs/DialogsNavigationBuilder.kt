@@ -28,5 +28,5 @@ fun NavigatorConfigBuilder.dialogsNavigation() {
 
     screen<DialogsKey> { DialogsScreen() }
 
-    defaultTransition { -> MaterialSharedAxisTransitionX }
+    defaultTransition { previousKey, newKey -> MaterialSharedAxisTransitionX }
 }

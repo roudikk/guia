@@ -11,14 +11,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.roudikk.navigator.backstack.NavBackHandler
-import com.roudikk.navigator.backstack.rememberNavVisibleBackStackManager
+import com.roudikk.navigator.backstack.manager.rememberDefaultBackstackManager
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.Screen
 import com.roudikk.navigator.extensions.LocalNavigator
 import com.roudikk.navigator.extensions.LocalParentNavigator
 import com.roudikk.navigator.extensions.canGoBack
 import com.roudikk.navigator.extensions.localNavigator
-import com.roudikk.navigator.extensions.popBackstack
+import com.roudikk.navigator.extensions.pop
 
 internal typealias Container = @Composable (
     content: @Composable () -> Unit
@@ -67,20 +67,20 @@ private fun Navigator.NavContainerContent(
     dialogContainer: Container,
 ) = Box(modifier = modifier) {
     val canGoBack by navigator.canGoBack()
-    val backStackManager = rememberNavVisibleBackStackManager(navigator = navigator)
-    val visibleBackStack = backStackManager.visibleBackStack
+    val backStackManager = rememberDefaultBackstackManager(navigator = navigator)
+    val visibleBackstack = backStackManager.visibleBackstack
 
     val backEnabled by remember(canGoBack, navigator.overrideBackPress) {
         derivedStateOf { canGoBack && navigator.overrideBackPress }
     }
 
     NavBackHandler(enabled = backEnabled) {
-        navigator.popBackstack()
+        navigator.pop()
     }
 
     // Screen content
     ScreenContainer(
-        screenEntry = visibleBackStack.screenEntry
+        screenEntry = visibleBackstack.screenEntry
     ) { entry ->
         NavigationEntryContainer(
             backStackManager = backStackManager,
@@ -90,12 +90,12 @@ private fun Navigator.NavContainerContent(
 
     // Bottom sheet content
     BottomSheetContainer(
-        bottomSheetEntry = visibleBackStack.bottomSheetEntry,
+        bottomSheetEntry = visibleBackstack.bottomSheetEntry,
         bottomSheetScrimColor = bottomSheetScrimColor,
         container = bottomSheetContainer,
     ) { entry ->
         NavBackHandler(enabled = backEnabled) {
-            navigator.popBackstack()
+            navigator.pop()
         }
 
         NavigationEntryContainer(
@@ -106,7 +106,7 @@ private fun Navigator.NavContainerContent(
 
     // Dialog content
     DialogContainer(
-        dialogEntry = visibleBackStack.dialogEntry,
+        dialogEntry = visibleBackstack.dialogEntry,
         container = dialogContainer,
     ) { entry ->
         NavigationEntryContainer(

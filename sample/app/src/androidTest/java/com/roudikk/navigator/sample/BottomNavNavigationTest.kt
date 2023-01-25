@@ -5,9 +5,9 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import com.roudikk.navigator.core.NavigationKey.Companion.tag
+import com.roudikk.navigator.sample.feature.custom.api.ViewPagerRootKey
 import com.roudikk.navigator.sample.feature.dialogs.api.DialogsKey
 import com.roudikk.navigator.sample.feature.home.api.HomeKey
-import com.roudikk.navigator.sample.feature.navtree.api.NavigationTreeKey
 import com.roudikk.navigator.sample.feature.nested.api.ParentNestedKey
 import com.roudikk.navigator.sample.utils.navigateHome
 import org.junit.Rule
@@ -29,7 +29,7 @@ class BottomNavNavigationTest {
         rule.onNodeWithTag("tab_dialogs").performClick()
         rule.onNodeWithTag(tag<DialogsKey>()).assertIsDisplayed()
 
-        rule.onNodeWithTag("tab_nav_tree").performClick()
-        rule.onNodeWithTag(tag<NavigationTreeKey>()).assertIsDisplayed()
+        rule.onNodeWithTag("tab_custom").performClick()
+        rule.onNodeWithTag(tag<ViewPagerRootKey>()).assertIsDisplayed()
     }
 }

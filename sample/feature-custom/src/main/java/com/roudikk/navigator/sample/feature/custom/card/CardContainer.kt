@@ -44,8 +44,8 @@ enum class CardState {
 internal fun Navigator.CardContainer(
     modifier: Modifier = Modifier
 ) {
-    val customBackStackManager = rememberCardBackStackManager(navigator = this)
-    val entries = customBackStackManager.visibleBackStack.entries
+    val customBackstackManager = rememberCardBackstackManager(navigator = this)
+    val entries = customBackstackManager.visibleBackstack.entries
 
     entries.forEach { entry ->
         key(entry.id) {
@@ -79,7 +79,7 @@ internal fun Navigator.CardContainer(
                         )
                 ) {
                     NavigationEntryContainer(
-                        backStackManager = customBackStackManager,
+                        backStackManager = customBackstackManager,
                         lifecycleEntry = entry
                     )
 
@@ -94,6 +94,6 @@ internal fun Navigator.CardContainer(
     }
 
     DisposableEffect(Unit) {
-        onDispose(customBackStackManager::onDispose)
+        onDispose(customBackstackManager::onDispose)
     }
 }

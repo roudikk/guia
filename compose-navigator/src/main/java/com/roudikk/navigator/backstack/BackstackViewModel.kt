@@ -2,11 +2,12 @@ package com.roudikk.navigator.backstack
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelStore
+import com.roudikk.navigator.backstack.manager.BackstackManager
 
 /**
- * Dictionary for storing and accessing the [ViewModel] entries inside a [BackStackManager].
+ * Dictionary for storing and accessing the [ViewModel] entries inside a [BackstackManager].
  */
-internal class BackStackViewModel : ViewModel() {
+internal class BackstackViewModel : ViewModel() {
 
     private val viewModelStores = mutableMapOf<String, ViewModelStore>()
 

@@ -2,20 +2,20 @@ package com.roudikk.navigator.sample.feature.custom.viewpager
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.Lifecycle
-import com.roudikk.navigator.backstack.BackStackManager
+import com.roudikk.navigator.backstack.manager.BackstackManager
 import com.roudikk.navigator.backstack.LifecycleEntry
-import com.roudikk.navigator.backstack.VisibleBackStack
+import com.roudikk.navigator.backstack.VisibleBackstack
 import com.roudikk.navigator.backstack.id
-import com.roudikk.navigator.backstack.rememberBackStackManager
+import com.roudikk.navigator.backstack.manager.rememberBackstackManager
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.entry
 import com.roudikk.navigator.sample.feature.custom.api.PageKey
 
 @Composable
-fun rememberViewPagerBackStackManager(navigator: Navigator): BackStackManager<ViewPagerVisibleStack> {
-    return rememberBackStackManager(
+fun rememberViewPagerBackstackManager(navigator: Navigator): BackstackManager<ViewPagerVisibleStack> {
+    return rememberBackstackManager(
         navigator = navigator,
-        getVisibleBackStack = { backStack, createEntry ->
+        getVisibleBackstack = { backStack, createEntry ->
             val activeIndex = navigator.activeIndex
             val left = backStack.getOrNull(activeIndex - 1)
             val center = backStack.getOrNull(activeIndex)
@@ -26,12 +26,12 @@ fun rememberViewPagerBackStackManager(navigator: Navigator): BackStackManager<Vi
                 right = right?.let(createEntry)
             )
         },
-        updateLifecycles = { visibleBackStack, entries ->
-            entries.filter { it !in visibleBackStack.entries }
+        updateLifecycles = { visibleBackstack, entries ->
+            entries.filter { it !in visibleBackstack.entries }
                 .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
 
-            visibleBackStack.entries.forEach {
-                if (it.id == visibleBackStack.center?.id) {
+            visibleBackstack.entries.forEach {
+                if (it.id == visibleBackstack.center?.id) {
                     it.maxLifecycleState = Lifecycle.State.RESUMED
                 } else {
                     it.maxLifecycleState = Lifecycle.State.STARTED
@@ -45,7 +45,7 @@ class ViewPagerVisibleStack(
     val left: LifecycleEntry?,
     val center: LifecycleEntry?,
     val right: LifecycleEntry?
-) : VisibleBackStack {
+) : VisibleBackstack {
 
     override val entries: List<LifecycleEntry> = listOfNotNull(left, center, right)
 }
@@ -69,7 +69,7 @@ fun Navigator.addPage() {
 
 fun Navigator.removePage() {
     val shouldSetPreviousActive = ((activeIndex == backStack.lastIndex) && backStack.size > 1)
-    val newBackStack = if (shouldSetPreviousActive) {
+    val newBackstack = if (shouldSetPreviousActive) {
         backStack.mapIndexed { index, entry ->
             if (index == backStack.lastIndex - 1) {
                 entry.copy(navigationKey = PageKey(isActive = true))
@@ -80,5 +80,5 @@ fun Navigator.removePage() {
     } else {
         (backStack - backStack.last())
     }
-    setBackstack(newBackStack)
+    setBackstack(newBackstack)
 }

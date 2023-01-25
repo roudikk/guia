@@ -122,9 +122,9 @@ to all bottom sheets.
 
 ### Lifeycle <a name="lifecycle"/>
 
-Each `NavigationNode` will have a corresponding `BackStackEntry` when added to the backstack.
+Each `NavigationNode` will have a corresponding `BackstackEntry` when added to the backstack.
 
-A `BackStackEntry` is a `LifecycleOwner`, `ViewModelStoreOwner` and a `SavedStateRegistryOwner` which means
+A `BackstackEntry` is a `LifecycleOwner`, `ViewModelStoreOwner` and a `SavedStateRegistryOwner` which means
 every navigation node has its own lifecycle and can have its own scoped ViewModels and supporting `SavedStateHandle`.
 
 In addition, the library provides `LifecycleEffect` to listen to lifecycle events:
@@ -199,7 +199,7 @@ val myNavigator = remmeberNavigator(
         NavigationConfig.MultiStack(
             entries = this,
             initialStackKey = this[0].key,
-            backStackStrategy = BackStackStrategy.Default,
+            backStackStrategy = BackstackStrategy.Default,
             defaultTransition = MaterialSharedAxisTransitionX, // Optional
             stackEnterExitTransition = navFadeIn() to navFadeOut() // Optional
         )
@@ -238,7 +238,7 @@ requireNavigator().navigate(navigationNode, transition) // Navigates the new nod
 requireNavigator().navigateToStack(stackKey, transition) // Navigates to a stack with stack key.
 
 // Pop back stack
-requireNavigator().popBackStack() // Pops the last node from the current stack.
+requireNavigator().popBackstack() // Pops the last node from the current stack.
 
 // Pop to
 requireNavigator().popTo<NavigationNode>(inclusive)
@@ -440,7 +440,7 @@ class Screen2 : Screen {
 
         Button(onClick = {
             navigator.sendResult<Screen1>("Hello!")
-            navigator.popBackStack()
+            navigator.popBackstack()
         }) {
             Text(text = "Send Result")
         }
@@ -495,7 +495,7 @@ For more details on how deeplinking can be implemented check [DeepLinkViewModel]
 
 ## ViewModels <a name="view-models"/>
 
-Each Navigation node is wrapped around a `BackStackEntry` that has its own Lifecycle, viewModelStoreOwner and savedStateRegistry.
+Each Navigation node is wrapped around a `BackstackEntry` that has its own Lifecycle, viewModelStoreOwner and savedStateRegistry.
 
 This means calling `viewModel()` inside a Navigation Node will provide a `ViewModel` tied to the node's lifecycle and will be disposed
 when the `NavigationNode` is no longer used.

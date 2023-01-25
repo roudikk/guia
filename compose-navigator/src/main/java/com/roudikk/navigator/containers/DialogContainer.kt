@@ -12,7 +12,7 @@ import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.navigationNode
 import com.roudikk.navigator.core.toDialogProperties
 import com.roudikk.navigator.core.transition
-import com.roudikk.navigator.extensions.popBackstack
+import com.roudikk.navigator.extensions.pop
 
 /**
  * Renders a Compose Dialog if a [Navigator]'s current entry is a [Dialog].
@@ -29,13 +29,12 @@ fun Navigator.DialogContainer(
     val dialog = navigationNode(dialogEntry.backStackEntry) as Dialog
 
     Dialog(
-        onDismissRequest = ::popBackstack,
+        onDismissRequest = ::pop,
         properties = dialog.dialogOptions.toDialogProperties()
     ) {
         container {
             AnimatedContent(
                 targetState = dialogEntry,
-                modifier = dialog.dialogOptions.modifier,
                 transitionSpec = {
                     transition<Dialog>().let { it.enter with it.exit }
                 }

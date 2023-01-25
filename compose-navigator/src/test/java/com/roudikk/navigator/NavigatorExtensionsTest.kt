@@ -8,9 +8,9 @@ import com.roudikk.navigator.extensions.canGoBack
 import com.roudikk.navigator.extensions.currentEntry
 import com.roudikk.navigator.extensions.currentKey
 import com.roudikk.navigator.extensions.moveToTop
-import com.roudikk.navigator.extensions.navigate
+import com.roudikk.navigator.extensions.push
 import com.roudikk.navigator.extensions.none
-import com.roudikk.navigator.extensions.popBackstack
+import com.roudikk.navigator.extensions.pop
 import com.roudikk.navigator.extensions.popTo
 import com.roudikk.navigator.extensions.popToRoot
 import com.roudikk.navigator.extensions.removeAll
@@ -57,7 +57,7 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val newKey = TestNavigationKey()
-        navigator.navigate(newKey)
+        navigator.push(newKey)
 
         navigator.assertKeys(initialKey, newKey)
     }
@@ -81,7 +81,7 @@ class NavigatorExtensionsTest {
         val navigator = testNavigator(initialKey)
 
         val keys = (0..2).map { TestNavigationKey() }
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             buildList {
@@ -104,7 +104,7 @@ class NavigatorExtensionsTest {
         val navigator = testNavigator(initialKey)
 
         val keys = (0..2).map { TestNavigationKey() }
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             buildList {
@@ -126,12 +126,12 @@ class NavigatorExtensionsTest {
         val initialKey = TestNavigationKey()
         val navigator = testNavigator(initialKey)
         val key = TestKey()
-        navigator.navigate(key)
+        navigator.push(key)
 
         navigator.assertKeys(initialKey, key)
 
         val keys = (0..2).map { TestKey2() }
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             buildList {
@@ -152,12 +152,12 @@ class NavigatorExtensionsTest {
         val initialKey = TestNavigationKey()
         val navigator = testNavigator(initialKey)
         val key = TestKey()
-        navigator.navigate(key)
+        navigator.push(key)
 
         navigator.assertKeys(initialKey, key)
 
         val keys = (0..2).map { TestKey2() }
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             buildList {
@@ -179,7 +179,7 @@ class NavigatorExtensionsTest {
         val navigator = testNavigator(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             buildList {
@@ -199,7 +199,7 @@ class NavigatorExtensionsTest {
         )
 
         val newDataKey = TestDataKey(1)
-        navigator.navigate(newDataKey)
+        navigator.push(newDataKey)
 
         navigator.moveToTop(match = Match.First) { it is TestDataKey && it.data == 1 }
 
@@ -218,7 +218,7 @@ class NavigatorExtensionsTest {
         val navigator = testNavigator(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             buildList {
@@ -247,7 +247,7 @@ class NavigatorExtensionsTest {
         val navigator = testNavigator(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             buildList {
@@ -282,7 +282,7 @@ class NavigatorExtensionsTest {
         val navigator = testNavigator(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             buildList {
@@ -311,7 +311,7 @@ class NavigatorExtensionsTest {
         val navigator = testNavigator(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             buildList {
@@ -329,8 +329,8 @@ class NavigatorExtensionsTest {
 
         navigator.assertKeys(initialKey, keys[2])
 
-        navigator.navigate(keys[0])
-        navigator.navigate(keys[1])
+        navigator.push(keys[0])
+        navigator.push(keys[1])
 
         navigator.assertKeys(
             initialKey,
@@ -354,7 +354,7 @@ class NavigatorExtensionsTest {
         val navigator = testNavigator(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             buildList {
@@ -372,8 +372,8 @@ class NavigatorExtensionsTest {
 
         navigator.assertKeys(initialKey, newKey)
 
-        navigator.navigate(keys[0])
-        navigator.navigate(keys[1])
+        navigator.push(keys[0])
+        navigator.push(keys[1])
 
         navigator.assertKeys(
             initialKey,
@@ -420,7 +420,7 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             initialKey,
@@ -435,9 +435,9 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val testKey = TestKey()
-        navigator.navigate(keys[1])
-        navigator.navigate(testKey)
-        navigator.navigate(keys[2])
+        navigator.push(keys[1])
+        navigator.push(testKey)
+        navigator.push(keys[2])
 
         navigator.assertKeys(
             initialKey,
@@ -460,7 +460,7 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             initialKey,
@@ -480,7 +480,7 @@ class NavigatorExtensionsTest {
         )
 
         val testKey = TestKey()
-        navigator.navigate(testKey)
+        navigator.push(testKey)
 
         navigator.assertKeys(
             initialKey,
@@ -510,7 +510,7 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             initialKey,
@@ -525,9 +525,9 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val testKey = TestKey()
-        navigator.navigate(keys[1])
-        navigator.navigate(testKey)
-        navigator.navigate(keys[2])
+        navigator.push(keys[1])
+        navigator.push(testKey)
+        navigator.push(keys[2])
 
         navigator.assertKeys(
             initialKey,
@@ -550,7 +550,7 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             initialKey,
@@ -570,7 +570,7 @@ class NavigatorExtensionsTest {
         )
 
         val testKey = TestKey()
-        navigator.navigate(testKey)
+        navigator.push(testKey)
 
         navigator.assertKeys(
             initialKey,
@@ -600,13 +600,13 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         val testKey = TestKey()
-        navigator.navigate(testKey)
+        navigator.push(testKey)
 
         val dataKey0 = TestDataKey(0)
-        navigator.navigate(dataKey0)
+        navigator.push(dataKey0)
 
         navigator.assertKeys(
             initialKey,
@@ -635,13 +635,13 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         val testKey = TestKey()
-        navigator.navigate(testKey)
+        navigator.push(testKey)
 
         val testKey3 = TestKey3()
-        navigator.navigate(testKey3)
+        navigator.push(testKey3)
 
         navigator.assertKeys(
             initialKey,
@@ -669,7 +669,7 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             initialKey,
@@ -692,7 +692,7 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             initialKey,
@@ -708,14 +708,14 @@ class NavigatorExtensionsTest {
     }
 
     @Test
-    fun navigator_popBackStack_popsIfMoreThanOneEntry() {
+    fun navigator_popBackstack_popsIfMoreThanOneEntry() {
         val initialKey = TestNavigationKey()
         val navigator = testNavigator(initialKey)
 
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             initialKey,
@@ -724,22 +724,22 @@ class NavigatorExtensionsTest {
             keys[2],
         )
 
-        assertThat(navigator.popBackstack()).isTrue()
+        assertThat(navigator.pop()).isTrue()
         navigator.assertKeys(
             initialKey,
             keys[0],
             keys[1],
         )
-        assertThat(navigator.popBackstack()).isTrue()
+        assertThat(navigator.pop()).isTrue()
         navigator.assertKeys(
             initialKey,
             keys[0]
         )
-        assertThat(navigator.popBackstack()).isTrue()
+        assertThat(navigator.pop()).isTrue()
         navigator.assertKeys(
             initialKey
         )
-        assertThat(navigator.popBackstack()).isFalse()
+        assertThat(navigator.pop()).isFalse()
         navigator.assertKeys(
             initialKey
         )
@@ -753,7 +753,7 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             initialKey,
@@ -763,25 +763,25 @@ class NavigatorExtensionsTest {
         )
 
         val canGoBack by navigator.canGoBack()
-        assertThat(navigator.popBackstack()).isTrue()
+        assertThat(navigator.pop()).isTrue()
         navigator.assertKeys(
             initialKey,
             keys[0],
             keys[1],
         )
         assertThat(canGoBack).isTrue()
-        assertThat(navigator.popBackstack()).isTrue()
+        assertThat(navigator.pop()).isTrue()
         navigator.assertKeys(
             initialKey,
             keys[0]
         )
         assertThat(canGoBack).isTrue()
-        assertThat(navigator.popBackstack()).isTrue()
+        assertThat(navigator.pop()).isTrue()
         navigator.assertKeys(
             initialKey
         )
         assertThat(canGoBack).isFalse()
-        assertThat(navigator.popBackstack()).isFalse()
+        assertThat(navigator.pop()).isFalse()
         navigator.assertKeys(
             initialKey
         )
@@ -796,7 +796,7 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             initialKey,
@@ -817,7 +817,7 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             initialKey,
@@ -838,7 +838,7 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             initialKey,
@@ -859,7 +859,7 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             initialKey,
@@ -880,7 +880,7 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             initialKey,
@@ -901,7 +901,7 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             initialKey,
@@ -922,7 +922,7 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             initialKey,
@@ -943,7 +943,7 @@ class NavigatorExtensionsTest {
         navigator.assertKeys(initialKey)
 
         val keys = (0..2).map(::TestDataKey)
-        keys.forEach(navigator::navigate)
+        keys.forEach(navigator::push)
 
         navigator.assertKeys(
             initialKey,

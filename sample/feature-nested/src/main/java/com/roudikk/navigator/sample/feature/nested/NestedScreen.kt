@@ -27,8 +27,8 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.extensions.canGoBack
-import com.roudikk.navigator.extensions.navigate
-import com.roudikk.navigator.extensions.popBackstack
+import com.roudikk.navigator.extensions.push
+import com.roudikk.navigator.extensions.pop
 import com.roudikk.navigator.extensions.requireLocalNavigator
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
 import com.roudikk.navigator.sample.feature.nested.api.NestedKey
@@ -42,8 +42,8 @@ internal fun NestedScreen(
     NestedContent(
         count = count,
         canGoBack = canGoBack,
-        onRemoveClicked = navigator::popBackstack,
-        onAddClicked = { navigator.navigate(NestedKey(count + 1)) }
+        onRemoveClicked = navigator::pop,
+        onAddClicked = { navigator.push(NestedKey(count + 1)) }
     )
 }
 

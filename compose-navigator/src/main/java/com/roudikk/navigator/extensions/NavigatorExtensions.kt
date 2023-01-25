@@ -3,12 +3,15 @@
 package com.roudikk.navigator.extensions
 
 import androidx.compose.runtime.derivedStateOf
-import com.roudikk.navigator.core.BackStackEntry
+import com.roudikk.navigator.core.BackstackEntry
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.entry
 
-val Navigator.currentEntry: BackStackEntry?
+/**
+ * Returns the current [BackstackEntry]
+ */
+val Navigator.currentEntry: BackstackEntry?
     get() = backStack.lastOrNull()
 
 /**
@@ -22,7 +25,7 @@ val Navigator.currentKey: NavigationKey?
  *
  * @param navigationKey, the new key to be added.
  */
-fun Navigator.navigate(
+fun Navigator.push(
     navigationKey: NavigationKey
 ) {
     setBackstack(backStack + navigationKey.entry())
@@ -139,10 +142,10 @@ inline fun <reified Key : NavigationKey> Navigator.singleInstance(
     } else {
         null
     }
-    val newBackStack = backStack.toMutableList()
-    newBackStack.removeAll { it.navigationKey is Key }
-    newBackStack.add(existingEntry ?: navigationKey.entry())
-    setBackstack(newBackStack)
+    val newBackstack = backStack.toMutableList()
+    newBackstack.removeAll { it.navigationKey is Key }
+    newBackstack.add(existingEntry ?: navigationKey.entry())
+    setBackstack(newBackstack)
 }
 
 /**
@@ -154,7 +157,7 @@ inline fun <reified Key : NavigationKey> Navigator.singleTop(
     navigationKey: Key
 ) {
     if (currentKey is Key) return
-    navigate(navigationKey)
+    push(navigationKey)
 }
 
 /**
@@ -170,11 +173,11 @@ fun Navigator.popTo(
     predicate: (NavigationKey) -> Boolean,
 ): Boolean {
     val existingEntry = backStack.find { predicate(it.navigationKey) } ?: return false
-    var newBackStack = backStack.dropLastWhile { it != existingEntry }
+    var newBackstack = backStack.dropLastWhile { it != existingEntry }
     if (inclusive) {
-        newBackStack = newBackStack.dropLast(1)
+        newBackstack = newBackstack.dropLast(1)
     }
-    setBackstack(newBackStack)
+    setBackstack(newBackstack)
     return true
 }
 
@@ -242,7 +245,7 @@ fun Navigator.setRoot(
  *
  * @return true if the backstack has more than one entry and the last entry was removed.
  */
-fun Navigator.popBackstack(): Boolean {
+fun Navigator.pop(): Boolean {
     if (backStack.size == 1) return false
     setBackstack(backStack.dropLast(1))
     return true

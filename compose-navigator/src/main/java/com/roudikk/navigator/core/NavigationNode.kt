@@ -1,15 +1,12 @@
 package com.roudikk.navigator.core
 
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.roudikk.navigator.containers.BottomSheetValue
@@ -54,12 +51,12 @@ class Dialog(
      * its bounds.
      * @property dismissOnBackPress, whether to dismiss the dialog when pressing the back
      * button.
+     * @property secureFlagPolicy, @see [SecureFlagPolicy]
      */
     data class DialogOptions(
-        val modifier: Modifier = Modifier.widthIn(max = 350.dp),
         val dismissOnClickOutside: Boolean = true,
         val dismissOnBackPress: Boolean = true,
-        val securePolicy: SecureFlagPolicy = SecureFlagPolicy.Inherit,
+        val secureFlagPolicy: SecureFlagPolicy = SecureFlagPolicy.Inherit,
     )
 }
 
@@ -70,7 +67,7 @@ class Dialog(
 fun DialogOptions.toDialogProperties() = DialogProperties(
     dismissOnBackPress = dismissOnBackPress,
     dismissOnClickOutside = dismissOnClickOutside,
-    securePolicy = securePolicy,
+    securePolicy = secureFlagPolicy,
     usePlatformDefaultWidth = false
 )
 

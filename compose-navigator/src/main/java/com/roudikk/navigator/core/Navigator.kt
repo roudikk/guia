@@ -44,8 +44,10 @@ fun rememberNavigator(
         Navigator(
             navigatorConfig = navigatorConfig,
             resultManager = resultManager
-        ).apply { initialKey?.let { setBackstack(it.entry()) } }
-            .apply(initialize)
+        ).apply {
+            initialKey?.let { setBackstack(it.entry()) }
+            initialize(this)
+        }
     }
 }
 
@@ -56,7 +58,7 @@ fun rememberNavigator(
  * navigation operations check the extensions in NavigationExtensions, or create your own.
  *
  * @property overrideBackPress, enable or disable the current [BackHandler] used in the navigator's [NavContainer]
- * @property overrideScreenTransition, use this to override the next transition used in the next [setBackstack] call.
+ * @property overrideTransitions, use this to override the next transition used in the next [setBackstack] call.
  * After the back stack is set, this is reset back to null.
  * @property backStack, the current back stack. To update, use [setBackstack].
  * @property backStackKeys, the current back stack keys.
@@ -77,7 +79,7 @@ class Navigator(
     internal val navigationNodes = mutableMapOf<String, NavigationNode>()
 
     var overrideBackPress by mutableStateOf(true)
-    var backStack by mutableStateOf(listOf<BackStackEntry>())
+    var backStack by mutableStateOf(listOf<BackstackEntry>())
         private set
     val backStackKeys by derivedStateOf { backStack.map { it.navigationKey } }
 
@@ -99,7 +101,7 @@ class Navigator(
      *
      * @param entries, the new back stack entries.
      */
-    fun setBackstack(vararg entries: BackStackEntry) {
+    fun setBackstack(vararg entries: BackstackEntry) {
         setBackstack(entries.toList())
     }
 
@@ -109,7 +111,7 @@ class Navigator(
      * @param entries, the new back stack entries.
      */
     fun setBackstack(
-        entries: List<BackStackEntry>,
+        entries: List<BackstackEntry>,
     ) {
         val newEntry = entries.lastOrNull()
 
@@ -147,8 +149,8 @@ inline fun <reified Node : NavigationNode> Navigator.overrideTransition(
 }
 
 private fun Navigator.getTransition(
-    previousEntry: BackStackEntry?,
-    newEntry: BackStackEntry?,
+    previousEntry: BackstackEntry?,
+    newEntry: BackstackEntry?,
     overrideTransition: EnterExitTransition?,
     isPop: Boolean
 ): EnterExitTransition {
@@ -173,7 +175,7 @@ private fun Navigator.getTransition(
     }
 }
 
-private fun Navigator.optionalNode(backStackEntry: BackStackEntry): NavigationNode? {
+private fun Navigator.optionalNode(backStackEntry: BackstackEntry): NavigationNode? {
     return try {
         navigationNode(backStackEntry)
     } catch (_: Exception) {
@@ -182,7 +184,7 @@ private fun Navigator.optionalNode(backStackEntry: BackStackEntry): NavigationNo
 }
 
 /**
- * Returns the [NavigationNode] given a [BackStackEntry].
+ * Returns the [NavigationNode] given a [BackstackEntry].
  *
  * If the entry's key is a [NavigationKey.WithNode] then the key itself provides its navigation node.
  * Otherwise the key must have a defined presentation inside [NavigatorConfig.presentations]
@@ -190,9 +192,9 @@ private fun Navigator.optionalNode(backStackEntry: BackStackEntry): NavigationNo
  * @param backStackEntry, the entry that requires a navigation node.
  *
  * @throws IllegalStateException if there is not presentation defined in [NavigatorConfig.presentations]
- * for the type of [BackStackEntry] provided.
+ * for the type of [BackstackEntry] provided.
  */
-fun Navigator.navigationNode(backStackEntry: BackStackEntry): NavigationNode {
+fun Navigator.navigationNode(backStackEntry: BackstackEntry): NavigationNode {
     return navigationNodes.getOrPut(backStackEntry.id) {
         backStackEntry.navigationKey.let { navigationKey ->
             if (navigationKey is NavigationKey.WithNode<*>) {

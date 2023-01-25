@@ -2,18 +2,18 @@ package com.roudikk.navigator.sample.feature.custom.card
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.Lifecycle
-import com.roudikk.navigator.backstack.BackStackManager
 import com.roudikk.navigator.backstack.LifecycleEntry
-import com.roudikk.navigator.backstack.VisibleBackStack
+import com.roudikk.navigator.backstack.VisibleBackstack
 import com.roudikk.navigator.backstack.id
-import com.roudikk.navigator.backstack.rememberBackStackManager
+import com.roudikk.navigator.backstack.manager.BackstackManager
+import com.roudikk.navigator.backstack.manager.rememberBackstackManager
 import com.roudikk.navigator.core.Navigator
 
 @Composable
-internal fun rememberCardBackStackManager(navigator: Navigator): BackStackManager<VisibleCardStack> {
-    return rememberBackStackManager(
+internal fun rememberCardBackstackManager(navigator: Navigator): BackstackManager<VisibleCardStack> {
+    return rememberBackstackManager(
         navigator = navigator,
-        getVisibleBackStack = { backStack, createEntry ->
+        getVisibleBackstack = { backStack, createEntry ->
             VisibleCardStack(
                 backStack
                     .reversed()
@@ -21,11 +21,11 @@ internal fun rememberCardBackStackManager(navigator: Navigator): BackStackManage
                     .map(createEntry)
             )
         },
-        updateLifecycles = { visibleBackStack, entries ->
-            entries.filter { it !in visibleBackStack.entries }
+        updateLifecycles = { visibleBackstack, entries ->
+            entries.filter { it !in visibleBackstack.entries }
                 .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
 
-            visibleBackStack.entries.forEach {
+            visibleBackstack.entries.forEach {
                 if (it.id == navigator.backStack.first().id) {
                     it.maxLifecycleState = Lifecycle.State.RESUMED
                 } else {
@@ -38,4 +38,4 @@ internal fun rememberCardBackStackManager(navigator: Navigator): BackStackManage
 
 class VisibleCardStack(
     override val entries: List<LifecycleEntry>
-) : VisibleBackStack
+) : VisibleBackstack

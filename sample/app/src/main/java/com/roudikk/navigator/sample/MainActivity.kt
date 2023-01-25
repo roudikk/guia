@@ -19,8 +19,8 @@ import com.roudikk.navigator.containers.NavContainer
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.NavigatorConfigBuilder
 import com.roudikk.navigator.core.rememberNavigator
-import com.roudikk.navigator.extensions.navigate
 import com.roudikk.navigator.extensions.popTo
+import com.roudikk.navigator.extensions.push
 import com.roudikk.navigator.extensions.setRoot
 import com.roudikk.navigator.sample.feature.bottomnav.api.BottomNavKey
 import com.roudikk.navigator.sample.feature.bottomnav.bottomNavNavigation
@@ -121,7 +121,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    MainDestination.Settings -> navigate(SettingsKey())
+                    MainDestination.Settings -> push(SettingsKey())
                 }
             }
         globalNavigator.onMainDestinationsHandled()

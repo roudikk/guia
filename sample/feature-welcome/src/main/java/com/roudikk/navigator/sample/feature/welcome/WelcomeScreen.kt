@@ -26,7 +26,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.roudikk.navigator.animation.NavigationVisibilityScope
-import com.roudikk.navigator.extensions.navigate
+import com.roudikk.navigator.extensions.push
 import com.roudikk.navigator.extensions.requireLocalNavigator
 import com.roudikk.navigator.extensions.setRoot
 import com.roudikk.navigator.sample.feature.bottomnav.api.BottomNavKey
@@ -38,7 +38,7 @@ internal fun WelcomeScreen() {
     val navigator = requireLocalNavigator()
 
     WelcomeContent(
-        onNavigateBottomNav = { navigator.navigate(BottomNavKey()) },
+        onNavigateBottomNav = { navigator.push(BottomNavKey()) },
         onSetRooBottomNav = { navigator.setRoot(BottomNavKey()) },
     )
 }

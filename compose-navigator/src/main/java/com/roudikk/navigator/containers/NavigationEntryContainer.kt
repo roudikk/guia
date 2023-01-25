@@ -6,10 +6,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import com.roudikk.navigator.backstack.BackStackManager
+import com.roudikk.navigator.backstack.manager.BackstackManager
 import com.roudikk.navigator.backstack.LifecycleEntry
 import com.roudikk.navigator.backstack.LocalProvider
-import com.roudikk.navigator.backstack.VisibleBackStack
+import com.roudikk.navigator.backstack.VisibleBackstack
 import com.roudikk.navigator.core.NavigationKey
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.navigationNode
@@ -23,8 +23,8 @@ import com.roudikk.navigator.extensions.LocalNavigationNode
  * for usage.
  */
 @Composable
-fun <VB : VisibleBackStack> Navigator.NavigationEntryContainer(
-    backStackManager: BackStackManager<VB>,
+fun <VB : VisibleBackstack> Navigator.NavigationEntryContainer(
+    backStackManager: BackstackManager<VB>,
     lifecycleEntry: LifecycleEntry
 ) = with(lifecycleEntry.backStackEntry) {
     lifecycleEntry.LocalProvider {

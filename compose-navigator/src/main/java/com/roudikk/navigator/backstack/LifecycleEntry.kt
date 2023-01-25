@@ -1,6 +1,5 @@
 package com.roudikk.navigator.backstack
 
-import android.app.Application
 import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -19,21 +18,20 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
-import com.roudikk.navigator.core.BackStackEntry
+import com.roudikk.navigator.core.BackstackEntry
 import com.roudikk.navigator.core.NavigationNode
 
 /**
- * [LifecycleEntry] for a [BackStackEntry].
+ * [LifecycleEntry] for a [BackstackEntry].
  *
  * Each entry will have a single [LifecycleEntry] representing it.
  *
- * Unlike [BackStackEntry] which only contains the [NavigationNode], [LifecycleEntry] provides
+ * Unlike [BackstackEntry] which only contains the [NavigationNode], [LifecycleEntry] provides
  * access to [Lifecycle], [ViewModelStore] and [SavedStateRegistry] critical to handling screen
  * state restoration and [ViewModel] creation and restoration.
  */
 class LifecycleEntry(
-    application: Application?,
-    val backStackEntry: BackStackEntry,
+    val backStackEntry: BackstackEntry,
     val saveableStateHolder: SaveableStateHolder,
     private val viewModelStore: ViewModelStore,
 ) : ViewModelStoreOwner,
@@ -61,7 +59,7 @@ class LifecycleEntry(
     }
 
     private val defaultFactory by lazy {
-        SavedStateViewModelFactory(application, this)
+        SavedStateViewModelFactory(null, this)
     }
 
     private fun updateLifecycleRegistry() {

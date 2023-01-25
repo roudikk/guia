@@ -22,7 +22,7 @@ import com.roudikk.navigator.savedstate.navHostSaver
  */
 @Composable
 fun rememberNavHost(
-    initialKey: StackKey?,
+    initialKey: StackKey? = null,
     entries: Set<StackEntry>,
     initialize: @DisallowComposableCalls (NavHost) -> Unit = {},
 ): NavHost {

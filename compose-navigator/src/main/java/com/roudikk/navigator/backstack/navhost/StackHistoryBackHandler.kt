@@ -12,7 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.roudikk.navigator.backstack.NavBackHandler
 import com.roudikk.navigator.containers.NavContainer
-import com.roudikk.navigator.core.BackStackEntry
+import com.roudikk.navigator.core.BackstackEntry
 import com.roudikk.navigator.extensions.currentEntry
 import com.roudikk.navigator.navhost.NavHost
 import com.roudikk.navigator.navhost.StackKey
@@ -44,14 +44,14 @@ fun NavHost.StackHistoryBackHandler() {
         }
     }
 
-    val allBackStacks = stackEntries
+    val fullBackstack = stackEntries
         .map { it.navigator }
         .map { it.backStack }
         .flatten()
 
     // Cleanup history entries if their associated navigation key is no longer in any backstack.
-    LaunchedEffect(allBackStacks) {
-        stackHistory.removeAll { entry -> allBackStacks.none { it.id == entry.backStackEntry.id } }
+    LaunchedEffect(fullBackstack) {
+        stackHistory.removeAll { entry -> fullBackstack.none { it.id == entry.backStackEntry.id } }
     }
 
     val overrideBackPress by remember {
@@ -88,5 +88,5 @@ fun NavHost.StackHistoryBackHandler() {
 @Parcelize
 internal class StackHistoryEntry(
     val stackKey: StackKey,
-    val backStackEntry: BackStackEntry
+    val backStackEntry: BackstackEntry
 ) : Parcelable

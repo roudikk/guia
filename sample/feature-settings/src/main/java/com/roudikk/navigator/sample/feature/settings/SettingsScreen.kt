@@ -40,7 +40,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.animation.NavigationVisibilityScope
-import com.roudikk.navigator.extensions.popBackstack
+import com.roudikk.navigator.extensions.pop
 import com.roudikk.navigator.extensions.requireLocalNavigator
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
 
@@ -49,7 +49,7 @@ import com.roudikk.navigator.sample.feature.common.theme.AppTheme
 internal fun SettingsScreen() {
     val navigator = requireLocalNavigator()
     SettingsContent(
-        onCloseClicked = navigator::popBackstack
+        onCloseClicked = navigator::pop
     )
 }
 

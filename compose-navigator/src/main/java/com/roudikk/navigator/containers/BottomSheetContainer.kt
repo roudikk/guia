@@ -28,7 +28,7 @@ import com.roudikk.navigator.core.BottomSheet
 import com.roudikk.navigator.core.Navigator
 import com.roudikk.navigator.core.navigationNode
 import com.roudikk.navigator.core.transition
-import com.roudikk.navigator.extensions.popBackstack
+import com.roudikk.navigator.extensions.pop
 import kotlinx.coroutines.launch
 
 private fun Navigator.currentBottomSheet(): BottomSheet? {
@@ -105,7 +105,7 @@ fun Navigator.BottomSheetContainer(
     // hidden.
     LaunchedEffect(bottomSheetState.currentValue) {
         if (bottomSheetEntry != null && bottomSheetState.currentValue == Hidden) {
-            popBackstack()
+            pop()
         }
     }
 

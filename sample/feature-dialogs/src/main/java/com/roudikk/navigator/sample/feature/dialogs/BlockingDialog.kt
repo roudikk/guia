@@ -23,8 +23,8 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.navigator.extensions.localDialog
-import com.roudikk.navigator.extensions.navigate
-import com.roudikk.navigator.extensions.popBackstack
+import com.roudikk.navigator.extensions.push
+import com.roudikk.navigator.extensions.pop
 import com.roudikk.navigator.extensions.requireLocalNavigator
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
 import com.roudikk.navigator.sample.feature.dialogs.api.CancelableDialogKey
@@ -37,8 +37,8 @@ internal fun BlockingDialogScreen(
 
     BlockingDialogContent(
         showNextButton = showNextButton,
-        onNextClicked = { navigator.navigate(CancelableDialogKey(true)) },
-        onCancelClicked = navigator::popBackstack
+        onNextClicked = { navigator.push(CancelableDialogKey(true)) },
+        onCancelClicked = navigator::pop
     )
 }
 
