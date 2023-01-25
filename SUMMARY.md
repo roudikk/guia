@@ -3,24 +3,24 @@
 * [Overview](README.md)
 * [Setup](setup.md)
 
-## 📖 The Lore
+## 🚀 Getting Started
 
-* [Navigation Node](the-lore/navigation-node/README.md)
-  * [Screen](the-lore/navigation-node/screen.md)
-  * [Bottom Sheet](the-lore/navigation-node/bottom-sheet.md)
-  * [Dialog](the-lore/navigation-node/dialog.md)
-* [Navigation Key](the-lore/navigation-key.md)
-* [Navigator](the-lore/navigator/README.md)
-  * [Navigation Operations](the-lore/navigator/navigation-operations.md)
-  * [Navigator Instance](the-lore/navigator/navigator-instance.md)
-  * [Back Handling](the-lore/navigator/back-handling.md)
-* [Navigator Config](the-lore/navigator-config/README.md)
-  * [Dynamic Navigation Node](the-lore/navigator-config/dynamic-navigation-node.md)
-  * [Transitions](the-lore/navigator-config/transitions.md)
-* [Containers](the-lore/containers.md)
-* [Multi module navigation](the-lore/multi-module-navigation.md)
-* [NavHost](the-lore/navhost/README.md)
-  * [Back Handling](the-lore/navhost/back-handling.md)
+* [Navigation Node](getting-started/navigation-node.md)
+  * [Screen](getting-started/navigation-node/screen.md)
+  * [Bottom Sheet](getting-started/navigation-node/bottom-sheet.md)
+  * [Dialog](getting-started/navigation-node/dialog.md)
+* [Navigation Key](getting-started/navigation-key.md)
+* [Navigator](getting-started/navigator/README.md)
+  * [Navigation Operations](getting-started/navigator/navigation-operations.md)
+  * [Navigator Instance](getting-started/navigator/navigator-instance.md)
+  * [Back Handling](getting-started/navigator/back-handling.md)
+* [Navigator Config](navigator-config.md)
+  * [Dynamic Navigation Node](getting-started/navigator-config/dynamic-navigation-node.md)
+  * [Transitions](getting-started/navigator-config/transitions.md)
+* [Containers](getting-started/containers.md)
+* [Multi module navigation](getting-started/multi-module-navigation.md)
+* [NavHost](getting-started/navhost/README.md)
+  * [Back Handling](getting-started/navhost/back-handling.md)
 
 ## 🤖 Advanced
 
