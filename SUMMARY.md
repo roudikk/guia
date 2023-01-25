@@ -19,7 +19,8 @@
   * [Transitions](getting-started/navigator-config/transitions.md)
 * [Containers](getting-started/containers.md)
 * [Multi module navigation](getting-started/multi-module-navigation.md)
-* [NavHost](getting-started/navhost.md)
+* [NavHost](getting-started/navhost/README.md)
+  * [Back Handling](getting-started/navhost/back-handling.md)
 
 ## 🤖 Advanced
 
