@@ -45,7 +45,7 @@ class ProfileScreen(val profileId: String) {
 
 ### Home feature module
 
-Our `:feature:home` gradle file will depend on `:feature:profile:navigation` and `:feature:home:navigation` modules. So we only have access to `ProfileKey`
+Our `:feature:home` gradle file will depend on `:feature:profile:navigation` and `:feature:home:navigation` modules. So we only have access to `ProfileKey` and not the entire `feautre:profile` module
 
 Inside `:feature:home:navigation` we can declare our keys:
 
