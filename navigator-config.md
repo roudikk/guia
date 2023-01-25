@@ -12,4 +12,4 @@ val myNavigator = rememberNavigator {
 }
 ```
 
-Note that a `NavigationKey` that uses [WithNode](../navigation-key.md#self-hosted-navigationkey) don't need to define a representation inside `NavigatorConfig`
+Note that a `NavigationKey` that uses [WithNode](getting-started/navigation-key.md#self-hosted-navigationkey) don't need to define a representation inside `NavigatorConfig`

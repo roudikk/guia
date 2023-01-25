@@ -12,6 +12,6 @@
 * [Navigation Key](getting-started/navigation-key.md)
 * [Navigator](getting-started/navigator/README.md)
   * [Navigation Operations](getting-started/navigator/navigation-operations.md)
-* [Navigator Config](getting-started/navigator-config/README.md)
+* [Navigator Config](navigator-config.md)
   * [Dynamic Navigation Node](getting-started/navigator-config/dynamic-navigation-node.md)
   * [Transitions](getting-started/navigator-config/transitions.md)
