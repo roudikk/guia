@@ -12,6 +12,8 @@ And ofcourse we have our `:app` module.
 
 ### Profile feature module
 
+`:feature:profile` will depend on `feature:profile:navigation`
+
 First, inside `:feature:profile:navigation` module we can declare our profile key:
 
 ```kotlin
@@ -43,7 +45,7 @@ class ProfileScreen(val profileId: String) {
 
 ### Home feature module
 
-Our `:feature:home` gradle file will depend on `:feature:profile:navigation` module. So we only have access to `ProfileKey`
+Our `:feature:home` gradle file will depend on `:feature:profile:navigation` and `:feature:home:navigation` modules. So we only have access to `ProfileKey`
 
 Inside `:feature:home:navigation` we can declare our keys:
 
