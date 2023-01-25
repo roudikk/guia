@@ -39,3 +39,7 @@ fun Navigator.NavContainer(
 ```
 
 We can override the above parameter to provide a surface for our dialogs. In Guia, dialogs don't have any surface by default, for the same reasoning mentioned in [BottomSheetContainer](containers.md#bottomsheetcontainer).
+
+{% hint style="info" %}
+All Containers can be used individually, we are not tied to a `NavContainer`. We will see later how to create our own containers, navigation nodes and create custom navigation lgoic.
+{% endhint %}
