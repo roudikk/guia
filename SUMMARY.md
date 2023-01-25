@@ -20,7 +20,7 @@
 * [Containers](the-lore/containers.md)
 * [NavHost](the-lore/navhost/README.md)
   * [Back Handling](the-lore/navhost/back-handling.md)
-* [Multi module navigation](the-lore/multi-module-navigation/README.md)
+* [Multi module navigation](the-lore/multi-module-navigation.md)
   * [NavHost Multi module](the-lore/multi-module-navigation/navhost-multi-module.md)
 
 ## 🤖 Advanced
