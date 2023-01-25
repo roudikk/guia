@@ -26,13 +26,13 @@ Navigating between two bottom sheets will animate the content of the bottom shee
 
 ### Updating BottomSheet state
 
-Note that `BottomSheetOptions`  currently are not saved/restored so make sure you have a backing saveable state if needed in your Composable.
+Note that `BottomSheetOptions` currently are not saved/restored so make sure you have a backing saveable state if needed in your Composable.
 
 ```kotlin
 @Composable
 fun MyBottomSheet() {
     val bottomSheet = requireLocalBottomSheet() // Get the local bottom sheet node
-    var scrimColor by remember { mutableStateOf(Color.Back)) }
+    var scrimColor by remember { mutableStateOf(Color.Back) }
     
     LaunchedEffect(scrimColor) {
         bottomSheet.bottomSheetOptions = bottomSheet.bottomSheetOptions.copy(
