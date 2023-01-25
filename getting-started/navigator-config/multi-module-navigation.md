@@ -10,7 +10,38 @@ First, we can create these modules:
 
 And ofcourse we have our `:app` module.
 
+### Profile feature module
 
+First, inside `:feature:profile:navigation` module we can declare our profile key:
+
+```kotlin
+ProfileNavigation.kt
+
+@Parcelize
+class ProfileKey(val profileId: String): NavigationKey
+```
+
+Then, inside our `:feature:profile` we can create an extension function on `NavigatorConfigBuilder`  to tie our key to a Composable:
+
+```kotlin
+ProfileNavigationBuilder.kt
+
+fun NavigatorConfigBuilder.profileNavigation() {
+    screen<ProfileKey> { key -> ProfileScreen(profileId = key.profileId) }
+}
+
+class ProfileScreen(val profileId: String) {
+    val navigator = requireLocalNavigator()
+    Column {
+        Text("Profile for: $profileId")
+        Button(onClick = { navigator.pop() }) {
+            Text("Go back home")
+        }
+    }
+}
+```
+
+### Home feature module
 
 Our `:feature:home` gradle file will depend on `:feature:profile:navigation` module. So we only have access to `ProfileKey`
 
@@ -43,3 +74,15 @@ fun HomeScreen() {
     }
 }
 ```
+
+### app module
+
+Finally we can link those features in our `:app` module, since it depends on all those modules above:
+
+```kotlin
+val navigator = rememberNavigator(initialKey = HomeKey()) {
+    homeNavigation()
+    profileNavigation()
+}
+```
+
