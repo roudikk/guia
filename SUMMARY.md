@@ -15,3 +15,8 @@
 * [Navigator Config](navigator-config.md)
   * [Dynamic Navigation Node](getting-started/navigator-config/dynamic-navigation-node.md)
   * [Transitions](getting-started/navigator-config/transitions.md)
+* [Containers](getting-started/containers.md)
+
+## 🤖 Advanced
+
+* [Updating BottomSheet state](advanced/updating-bottomsheet-state.md)
