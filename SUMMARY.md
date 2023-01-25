@@ -18,9 +18,10 @@
   * [Dynamic Navigation Node](the-lore/navigator-config/dynamic-navigation-node.md)
   * [Transitions](the-lore/navigator-config/transitions.md)
 * [Containers](the-lore/containers.md)
-* [Multi module navigation](the-lore/multi-module-navigation.md)
 * [NavHost](the-lore/navhost/README.md)
   * [Back Handling](the-lore/navhost/back-handling.md)
+* [Multi module navigation](the-lore/multi-module-navigation/README.md)
+  * [NavHost Multi module](the-lore/multi-module-navigation/navhost-multi-module.md)
 
 ## 🤖 Advanced
 
