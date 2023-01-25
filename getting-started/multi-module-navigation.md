@@ -84,5 +84,7 @@ val navigator = rememberNavigator(initialKey = HomeKey()) {
     homeNavigation()
     profileNavigation()
 }
+
+navigator.NavContainer()
 ```
 

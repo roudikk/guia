@@ -10,6 +10,6 @@ interface NavigationNode {
 }
 ```
 
-By default, Guia provides 3 conventional navigation node implementations.
+By default, Guia provides 3 conventional navigation node implementations: [Screen](navigation-node/screen.md), [BottomSheet](navigation-node/bottom-sheet.md) and [Dialog](navigation-node/dialog.md).
 
-Navigation nodes don't provide argument passing or can be navigated to directly. They simply render a UI, passing arguments and navigating is done using [Navigation Keys](navigation-key.md) which will see in the next step.
+Navigation nodes don't provide argument passing or can be navigated to directly. They simply render a UI and provide UI Logic. Passing arguments and navigating is done using [Navigation Keys](navigation-key.md) which will see in the next step.

@@ -17,8 +17,8 @@
 * [Navigator Config](navigator-config.md)
   * [Dynamic Navigation Node](getting-started/navigator-config/dynamic-navigation-node.md)
   * [Transitions](getting-started/navigator-config/transitions.md)
-  * [Multi module navigation](getting-started/navigator-config/multi-module-navigation.md)
 * [Containers](getting-started/containers.md)
+* [Multi module navigation](getting-started/multi-module-navigation.md)
 * [NavHost](getting-started/navhost.md)
 
 ## 🤖 Advanced
