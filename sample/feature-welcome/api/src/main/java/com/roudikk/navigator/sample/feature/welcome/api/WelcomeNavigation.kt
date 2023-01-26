@@ -1,6 +1,6 @@
-package com.roudikk.navigator.sample.feature.welcome.api
+package com.roudikk.guia.sample.feature.welcome.api
 
-import com.roudikk.navigator.core.NavigationKey
+import com.roudikk.guia.core.NavigationKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

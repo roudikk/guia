@@ -1,21 +1,21 @@
-package com.roudikk.navigator.sample.feature.details
+package com.roudikk.guia.sample.feature.details
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import com.roudikk.navigator.core.BottomSheet
-import com.roudikk.navigator.core.Dialog
-import com.roudikk.navigator.core.NavigationKey
-import com.roudikk.navigator.core.NavigatorConfigBuilder
-import com.roudikk.navigator.extensions.localBottomSheet
-import com.roudikk.navigator.extensions.pop
-import com.roudikk.navigator.extensions.requireLocalNavigator
-import com.roudikk.navigator.sample.feature.common.navigation.CrossFadeTransition
-import com.roudikk.navigator.sample.feature.common.navigation.MaterialSharedAxisTransitionX
-import com.roudikk.navigator.sample.feature.common.navigation.VerticalSlideTransition
-import com.roudikk.navigator.sample.feature.details.api.DetailsKey
+import com.roudikk.guia.core.BottomSheet
+import com.roudikk.guia.core.Dialog
+import com.roudikk.guia.core.NavigationKey
+import com.roudikk.guia.core.NavigatorConfigBuilder
+import com.roudikk.guia.extensions.localBottomSheet
+import com.roudikk.guia.extensions.pop
+import com.roudikk.guia.extensions.requireLocalNavigator
+import com.roudikk.guia.sample.feature.common.navigation.CrossFadeTransition
+import com.roudikk.guia.sample.feature.common.navigation.MaterialSharedAxisTransitionX
+import com.roudikk.guia.sample.feature.common.navigation.VerticalSlideTransition
+import com.roudikk.guia.sample.feature.details.api.DetailsKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.custom.viewpager
+package com.roudikk.guia.sample.feature.custom.viewpager
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
@@ -9,8 +9,8 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import com.roudikk.navigator.containers.NavigationEntryContainer
-import com.roudikk.navigator.core.Navigator
+import com.roudikk.guia.containers.NavigationEntryContainer
+import com.roudikk.guia.core.Navigator
 import kotlin.math.abs
 
 @OptIn(ExperimentalPagerApi::class)

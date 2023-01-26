@@ -1,9 +1,9 @@
-package com.roudikk.navigator.sample.feature.custom.viewpager
+package com.roudikk.guia.sample.feature.custom.viewpager
 
-import com.roudikk.navigator.core.NavigatorConfigBuilder
-import com.roudikk.navigator.sample.feature.custom.api.PageKey
-import com.roudikk.navigator.sample.feature.custom.api.ViewPagerRootKey
-import com.roudikk.navigator.sample.feature.custom.card.CardRootScreen
+import com.roudikk.guia.core.NavigatorConfigBuilder
+import com.roudikk.guia.sample.feature.custom.api.PageKey
+import com.roudikk.guia.sample.feature.custom.api.ViewPagerRootKey
+import com.roudikk.guia.sample.feature.custom.card.CardRootScreen
 
 fun NavigatorConfigBuilder.viewPagerNavigation() {
     screen<ViewPagerRootKey> { ViewPagerRootScreen() }

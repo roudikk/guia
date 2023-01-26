@@ -1,7 +1,7 @@
-package com.roudikk.navigator.sample.feature.welcome
+package com.roudikk.guia.sample.feature.welcome
 
-import com.roudikk.navigator.core.NavigatorConfigBuilder
-import com.roudikk.navigator.sample.feature.welcome.api.WelcomeKey
+import com.roudikk.guia.core.NavigatorConfigBuilder
+import com.roudikk.guia.sample.feature.welcome.api.WelcomeKey
 
 fun NavigatorConfigBuilder.welcomeNavigation() {
     screen<WelcomeKey> { WelcomeScreen() }

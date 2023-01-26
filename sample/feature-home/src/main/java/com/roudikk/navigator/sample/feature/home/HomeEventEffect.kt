@@ -1,18 +1,18 @@
-package com.roudikk.navigator.sample.feature.home
+package com.roudikk.guia.sample.feature.home
 
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import com.roudikk.navigator.extensions.clearResult
-import com.roudikk.navigator.extensions.push
-import com.roudikk.navigator.extensions.setResult
-import com.roudikk.navigator.extensions.requireLocalNavigator
-import com.roudikk.navigator.sample.feature.common.navigation.requireRootNavigator
-import com.roudikk.navigator.sample.feature.details.api.DetailsKey
-import com.roudikk.navigator.sample.feature.details.api.DetailsResult
-import com.roudikk.navigator.sample.feature.settings.api.SettingsKey
+import com.roudikk.guia.extensions.clearResult
+import com.roudikk.guia.extensions.push
+import com.roudikk.guia.extensions.setResult
+import com.roudikk.guia.extensions.requireLocalNavigator
+import com.roudikk.guia.sample.feature.common.navigation.requireRootNavigator
+import com.roudikk.guia.sample.feature.details.api.DetailsKey
+import com.roudikk.guia.sample.feature.details.api.DetailsResult
+import com.roudikk.guia.sample.feature.settings.api.SettingsKey
 
 @Composable
 fun HomeEventEffect(

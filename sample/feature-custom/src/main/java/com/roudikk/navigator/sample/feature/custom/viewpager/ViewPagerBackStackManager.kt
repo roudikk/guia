@@ -1,15 +1,15 @@
-package com.roudikk.navigator.sample.feature.custom.viewpager
+package com.roudikk.guia.sample.feature.custom.viewpager
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.Lifecycle
-import com.roudikk.navigator.backstack.manager.BackstackManager
-import com.roudikk.navigator.backstack.LifecycleEntry
-import com.roudikk.navigator.backstack.VisibleBackstack
-import com.roudikk.navigator.backstack.id
-import com.roudikk.navigator.backstack.manager.rememberBackstackManager
-import com.roudikk.navigator.core.Navigator
-import com.roudikk.navigator.core.entry
-import com.roudikk.navigator.sample.feature.custom.api.PageKey
+import com.roudikk.guia.backstack.manager.BackstackManager
+import com.roudikk.guia.backstack.LifecycleEntry
+import com.roudikk.guia.backstack.VisibleBackstack
+import com.roudikk.guia.backstack.id
+import com.roudikk.guia.backstack.manager.rememberBackstackManager
+import com.roudikk.guia.core.Navigator
+import com.roudikk.guia.core.entry
+import com.roudikk.guia.sample.feature.custom.api.PageKey
 
 @Composable
 fun rememberViewPagerBackstackManager(navigator: Navigator): BackstackManager<ViewPagerVisibleStack> {

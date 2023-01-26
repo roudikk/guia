@@ -1,7 +1,7 @@
-package com.roudikk.navigator.sample.feature.details.api
+package com.roudikk.guia.sample.feature.details.api
 
 import android.os.Parcelable
-import com.roudikk.navigator.core.NavigationKey
+import com.roudikk.guia.core.NavigationKey
 import kotlinx.parcelize.Parcelize
 
 @JvmInline

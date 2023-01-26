@@ -1,7 +1,7 @@
-package com.roudikk.navigator.sample.feature.dialogs.api
+package com.roudikk.guia.sample.feature.dialogs.api
 
-import com.roudikk.navigator.core.NavigationKey
-import com.roudikk.navigator.navhost.StackKey
+import com.roudikk.guia.core.NavigationKey
+import com.roudikk.guia.navhost.StackKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

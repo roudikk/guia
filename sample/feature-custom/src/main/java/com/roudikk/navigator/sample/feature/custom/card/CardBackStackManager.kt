@@ -1,13 +1,13 @@
-package com.roudikk.navigator.sample.feature.custom.card
+package com.roudikk.guia.sample.feature.custom.card
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.Lifecycle
-import com.roudikk.navigator.backstack.LifecycleEntry
-import com.roudikk.navigator.backstack.VisibleBackstack
-import com.roudikk.navigator.backstack.id
-import com.roudikk.navigator.backstack.manager.BackstackManager
-import com.roudikk.navigator.backstack.manager.rememberBackstackManager
-import com.roudikk.navigator.core.Navigator
+import com.roudikk.guia.backstack.LifecycleEntry
+import com.roudikk.guia.backstack.VisibleBackstack
+import com.roudikk.guia.backstack.id
+import com.roudikk.guia.backstack.manager.BackstackManager
+import com.roudikk.guia.backstack.manager.rememberBackstackManager
+import com.roudikk.guia.core.Navigator
 
 @Composable
 internal fun rememberCardBackstackManager(navigator: Navigator): BackstackManager<VisibleCardStack> {

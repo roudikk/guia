@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.home
+package com.roudikk.guia.sample.feature.home
 
 import android.content.res.Configuration
 import androidx.compose.animation.Crossfade
@@ -49,10 +49,10 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.backstack.NavBackHandler
-import com.roudikk.navigator.extensions.requireLocalNavigator
-import com.roudikk.navigator.extensions.result
-import com.roudikk.navigator.sample.feature.details.api.DetailsResult
+import com.roudikk.guia.backstack.NavBackHandler
+import com.roudikk.guia.extensions.requireLocalNavigator
+import com.roudikk.guia.extensions.result
+import com.roudikk.guia.sample.feature.details.api.DetailsResult
 import kotlinx.coroutines.launch
 
 @Composable

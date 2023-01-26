@@ -1,9 +1,9 @@
-package com.roudikk.navigator.sample.feature.common.navigation
+package com.roudikk.guia.sample.feature.common.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.ViewModelStoreOwner
-import com.roudikk.navigator.core.Navigator
+import com.roudikk.guia.core.Navigator
 
 val LocalRootNavigator = staticCompositionLocalOf<Navigator> { error("Must be provided.") }
 

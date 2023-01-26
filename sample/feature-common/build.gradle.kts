@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.roudikk.navigator.sample.feature.common"
+    namespace = "com.roudikk.guia.sample.feature.common"
     compileSdk = 33
 
     defaultConfig {
@@ -54,7 +54,7 @@ dependencies {
     api(libs.lottie)
 
     // Navigator
-    api(project(":compose-navigator"))
+    api(project(":guia"))
 }
 
 detekt {

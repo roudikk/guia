@@ -6,10 +6,10 @@ pluginManagement {
     }
 }
 
-rootProject.name = "compose-navigator"
+rootProject.name = "guia"
 
 include(":sample:app")
-include(":compose-navigator")
+include(":guia")
 include(":sample:feature-welcome")
 include(":sample:feature-home")
 include(":sample:feature-nested")

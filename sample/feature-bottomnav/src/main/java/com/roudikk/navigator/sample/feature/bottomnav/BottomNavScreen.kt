@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.bottomnav
+package com.roudikk.guia.sample.feature.bottomnav
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -33,42 +32,42 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.backstack.navhost.StackHistoryBackHandler
-import com.roudikk.navigator.containers.NavContainer
-import com.roudikk.navigator.core.NavigatorConfigBuilder
-import com.roudikk.navigator.core.rememberNavigator
-import com.roudikk.navigator.extensions.popToRoot
-import com.roudikk.navigator.extensions.push
-import com.roudikk.navigator.navhost.NavHost
-import com.roudikk.navigator.navhost.StackEntry
-import com.roudikk.navigator.navhost.StackKey
-import com.roudikk.navigator.navhost.rememberNavHost
-import com.roudikk.navigator.sample.feature.common.composables.SampleSurfaceContainer
-import com.roudikk.navigator.sample.feature.common.deeplink.BottomTabDestination
-import com.roudikk.navigator.sample.feature.common.deeplink.BottomTabDestination.CustomTab
-import com.roudikk.navigator.sample.feature.common.deeplink.BottomTabDestination.DialogsTab
-import com.roudikk.navigator.sample.feature.common.deeplink.BottomTabDestination.HomeTab
-import com.roudikk.navigator.sample.feature.common.deeplink.BottomTabDestination.NestedTab
-import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination
-import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination.BlockingBottomSheet
-import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination.BlockingDialog
-import com.roudikk.navigator.sample.feature.common.deeplink.DialogsDestination.Cancelable
-import com.roudikk.navigator.sample.feature.common.deeplink.GlobalNavigator
-import com.roudikk.navigator.sample.feature.common.deeplink.HomeDestination
-import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
-import com.roudikk.navigator.sample.feature.common.theme.AppTheme
-import com.roudikk.navigator.sample.feature.custom.api.CustomStackKey
-import com.roudikk.navigator.sample.feature.custom.api.ViewPagerRootKey
-import com.roudikk.navigator.sample.feature.details.api.DetailsKey
-import com.roudikk.navigator.sample.feature.dialogs.api.BlockingBottomSheetKey
-import com.roudikk.navigator.sample.feature.dialogs.api.BlockingDialogKey
-import com.roudikk.navigator.sample.feature.dialogs.api.CancelableDialogKey
-import com.roudikk.navigator.sample.feature.dialogs.api.DialogsKey
-import com.roudikk.navigator.sample.feature.dialogs.api.DialogsStackKey
-import com.roudikk.navigator.sample.feature.home.api.HomeKey
-import com.roudikk.navigator.sample.feature.home.api.HomeStackKey
-import com.roudikk.navigator.sample.feature.nested.api.NestedStackKey
-import com.roudikk.navigator.sample.feature.nested.api.ParentNestedKey
+import com.roudikk.guia.backstack.navhost.StackHistoryBackHandler
+import com.roudikk.guia.containers.NavContainer
+import com.roudikk.guia.core.NavigatorConfigBuilder
+import com.roudikk.guia.core.rememberNavigator
+import com.roudikk.guia.extensions.popToRoot
+import com.roudikk.guia.extensions.push
+import com.roudikk.guia.navhost.NavHost
+import com.roudikk.guia.navhost.StackEntry
+import com.roudikk.guia.navhost.StackKey
+import com.roudikk.guia.navhost.rememberNavHost
+import com.roudikk.guia.sample.feature.common.composables.SampleSurfaceContainer
+import com.roudikk.guia.sample.feature.common.deeplink.BottomTabDestination
+import com.roudikk.guia.sample.feature.common.deeplink.BottomTabDestination.CustomTab
+import com.roudikk.guia.sample.feature.common.deeplink.BottomTabDestination.DialogsTab
+import com.roudikk.guia.sample.feature.common.deeplink.BottomTabDestination.HomeTab
+import com.roudikk.guia.sample.feature.common.deeplink.BottomTabDestination.NestedTab
+import com.roudikk.guia.sample.feature.common.deeplink.DialogsDestination
+import com.roudikk.guia.sample.feature.common.deeplink.DialogsDestination.BlockingBottomSheet
+import com.roudikk.guia.sample.feature.common.deeplink.DialogsDestination.BlockingDialog
+import com.roudikk.guia.sample.feature.common.deeplink.DialogsDestination.Cancelable
+import com.roudikk.guia.sample.feature.common.deeplink.GlobalNavigator
+import com.roudikk.guia.sample.feature.common.deeplink.HomeDestination
+import com.roudikk.guia.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
+import com.roudikk.guia.sample.feature.common.theme.AppTheme
+import com.roudikk.guia.sample.feature.custom.api.CustomStackKey
+import com.roudikk.guia.sample.feature.custom.api.ViewPagerRootKey
+import com.roudikk.guia.sample.feature.details.api.DetailsKey
+import com.roudikk.guia.sample.feature.dialogs.api.BlockingBottomSheetKey
+import com.roudikk.guia.sample.feature.dialogs.api.BlockingDialogKey
+import com.roudikk.guia.sample.feature.dialogs.api.CancelableDialogKey
+import com.roudikk.guia.sample.feature.dialogs.api.DialogsKey
+import com.roudikk.guia.sample.feature.dialogs.api.DialogsStackKey
+import com.roudikk.guia.sample.feature.home.api.HomeKey
+import com.roudikk.guia.sample.feature.home.api.HomeStackKey
+import com.roudikk.guia.sample.feature.nested.api.NestedStackKey
+import com.roudikk.guia.sample.feature.nested.api.ParentNestedKey
 
 @Composable
 fun rememberBottomNavHost(
@@ -151,14 +150,13 @@ private fun NavHostContainer(
 ) {
     val density = LocalDensity.current
     val imePadding = with(density) { WindowInsets.ime.getBottom(this).toDp() }
-    val navBarsPadding = with(density) { WindowInsets.navigationBars.getBottom(this).toDp() }
 
     navHost.NavContainer(
         modifier = {
             Modifier
                 .padding(
                     bottom = maxOf(
-                        padding.calculateBottomPadding() + navBarsPadding,
+                        padding.calculateBottomPadding(),
                         imePadding
                     )
                 )

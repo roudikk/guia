@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.welcome
+package com.roudikk.guia.sample.feature.welcome
 
 import android.content.res.Configuration
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -25,13 +25,13 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.roudikk.navigator.animation.NavigationVisibilityScope
-import com.roudikk.navigator.extensions.push
-import com.roudikk.navigator.extensions.requireLocalNavigator
-import com.roudikk.navigator.extensions.setRoot
-import com.roudikk.navigator.sample.feature.bottomnav.api.BottomNavKey
-import com.roudikk.navigator.sample.feature.common.composables.NavigationAnimationPreview
-import com.roudikk.navigator.sample.feature.common.theme.AppTheme
+import com.roudikk.guia.animation.NavigationVisibilityScope
+import com.roudikk.guia.extensions.push
+import com.roudikk.guia.extensions.requireLocalNavigator
+import com.roudikk.guia.extensions.setRoot
+import com.roudikk.guia.sample.feature.bottomnav.api.BottomNavKey
+import com.roudikk.guia.sample.feature.common.composables.NavigationAnimationPreview
+import com.roudikk.guia.sample.feature.common.theme.AppTheme
 
 @Composable
 internal fun WelcomeScreen() {

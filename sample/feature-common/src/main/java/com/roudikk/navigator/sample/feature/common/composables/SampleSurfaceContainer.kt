@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.common.composables
+package com.roudikk.guia.sample.feature.common.composables
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.heightIn

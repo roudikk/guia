@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.custom.card
+package com.roudikk.guia.sample.feature.custom.card
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -11,10 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.roudikk.navigator.core.Navigator
-import com.roudikk.navigator.core.entries
-import com.roudikk.navigator.core.rememberNavigator
-import com.roudikk.navigator.sample.feature.custom.api.CardKey
+import com.roudikk.guia.core.Navigator
+import com.roudikk.guia.core.entries
+import com.roudikk.guia.core.rememberNavigator
+import com.roudikk.guia.sample.feature.custom.api.CardKey
 
 private fun Navigator.addCards() {
     setBackstack((0..20).map { CardKey(it) }.entries())

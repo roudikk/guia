@@ -1,7 +1,7 @@
-package com.roudikk.navigator.sample.feature.bottomnav
+package com.roudikk.guia.sample.feature.bottomnav
 
-import com.roudikk.navigator.core.NavigatorConfigBuilder
-import com.roudikk.navigator.sample.feature.bottomnav.api.BottomNavKey
+import com.roudikk.guia.core.NavigatorConfigBuilder
+import com.roudikk.guia.sample.feature.bottomnav.api.BottomNavKey
 
 fun NavigatorConfigBuilder.bottomNavNavigation(
     homeNavigation: NavigatorConfigBuilder.() -> Unit,

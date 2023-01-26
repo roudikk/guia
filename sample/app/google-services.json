@@ -1,15 +1,15 @@
 {
   "project_info": {
     "project_number": "947321250683",
-    "project_id": "compose-navigator",
-    "storage_bucket": "compose-navigator.appspot.com"
+    "project_id": "guia",
+    "storage_bucket": "guia.appspot.com"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:947321250683:android:700b727faa9f11aea553de",
         "android_client_info": {
-          "package_name": "com.roudikk.navigator.sample"
+          "package_name": "com.roudikk.guia.sample"
         }
       },
       "oauth_client": [
@@ -38,7 +38,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:947321250683:android:700b727faa9f11aea553de",
         "android_client_info": {
-          "package_name": "com.roudikk.navigator.sample.debug"
+          "package_name": "com.roudikk.guia.sample.debug"
         }
       },
       "oauth_client": [

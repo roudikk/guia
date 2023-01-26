@@ -1,13 +1,13 @@
-package com.roudikk.navigator.sample.feature.dialogs
+package com.roudikk.guia.sample.feature.dialogs
 
-import com.roudikk.navigator.core.BottomSheet.BottomSheetOptions
-import com.roudikk.navigator.core.Dialog.DialogOptions
-import com.roudikk.navigator.core.NavigatorConfigBuilder
-import com.roudikk.navigator.sample.feature.common.navigation.MaterialSharedAxisTransitionX
-import com.roudikk.navigator.sample.feature.dialogs.api.BlockingBottomSheetKey
-import com.roudikk.navigator.sample.feature.dialogs.api.BlockingDialogKey
-import com.roudikk.navigator.sample.feature.dialogs.api.CancelableDialogKey
-import com.roudikk.navigator.sample.feature.dialogs.api.DialogsKey
+import com.roudikk.guia.core.BottomSheet.BottomSheetOptions
+import com.roudikk.guia.core.Dialog.DialogOptions
+import com.roudikk.guia.core.NavigatorConfigBuilder
+import com.roudikk.guia.sample.feature.common.navigation.MaterialSharedAxisTransitionX
+import com.roudikk.guia.sample.feature.dialogs.api.BlockingBottomSheetKey
+import com.roudikk.guia.sample.feature.dialogs.api.BlockingDialogKey
+import com.roudikk.guia.sample.feature.dialogs.api.CancelableDialogKey
+import com.roudikk.guia.sample.feature.dialogs.api.DialogsKey
 
 fun NavigatorConfigBuilder.dialogsNavigation() {
     bottomSheet<BlockingBottomSheetKey>(

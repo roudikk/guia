@@ -12,7 +12,7 @@ android {
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "com.roudikk.navigator.sample"
+        applicationId = "com.roudikk.guia.sample"
         minSdk = 24
         targetSdk = 33
         versionCode = 3
@@ -42,7 +42,7 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 
-    namespace = "com.roudikk.navigator.sample"
+    namespace = "com.roudikk.guia.sample"
 }
 
 dependencies {
@@ -64,7 +64,7 @@ dependencies {
     implementation(project(":sample:feature-details:api"))
     implementation(project(":sample:feature-custom"))
     implementation(project(":sample:feature-custom:api"))
-    implementation(project(":compose-navigator"))
+    implementation(project(":guia"))
 
     // Test
     testImplementation(libs.junit)

@@ -17,5 +17,5 @@ dependencies {
 ```
 
 {% hint style="info" %}
-Latest version found [here](https://github.com/roudikk/compose-navigator/releases)
+Latest version found [here](https://github.com/roudikk/guia/releases)
 {% endhint %}

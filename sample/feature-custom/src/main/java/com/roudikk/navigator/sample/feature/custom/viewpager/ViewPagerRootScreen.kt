@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.custom.viewpager
+package com.roudikk.guia.sample.feature.custom.viewpager
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,8 +22,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.backstack.NavBackHandler
-import com.roudikk.navigator.core.rememberNavigator
+import com.roudikk.guia.backstack.NavBackHandler
+import com.roudikk.guia.core.rememberNavigator
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

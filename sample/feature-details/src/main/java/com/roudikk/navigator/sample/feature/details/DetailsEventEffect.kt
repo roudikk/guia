@@ -1,22 +1,22 @@
-package com.roudikk.navigator.sample.feature.details
+package com.roudikk.guia.sample.feature.details
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import com.roudikk.navigator.core.Screen
-import com.roudikk.navigator.core.overrideTransition
-import com.roudikk.navigator.extensions.push
-import com.roudikk.navigator.extensions.pop
-import com.roudikk.navigator.extensions.popToRoot
-import com.roudikk.navigator.extensions.replaceLast
-import com.roudikk.navigator.extensions.requireLocalNavigator
-import com.roudikk.navigator.extensions.requireLocalParentNavigator
-import com.roudikk.navigator.extensions.setResult
-import com.roudikk.navigator.extensions.singleInstance
-import com.roudikk.navigator.extensions.singleTop
-import com.roudikk.navigator.sample.feature.common.navigation.CrossFadeTransition
-import com.roudikk.navigator.sample.feature.details.api.DetailsKey
-import com.roudikk.navigator.sample.feature.details.api.DetailsResult
-import com.roudikk.navigator.sample.feature.dialogs.api.BlockingBottomSheetKey
+import com.roudikk.guia.core.Screen
+import com.roudikk.guia.core.overrideTransition
+import com.roudikk.guia.extensions.push
+import com.roudikk.guia.extensions.pop
+import com.roudikk.guia.extensions.popToRoot
+import com.roudikk.guia.extensions.replaceLast
+import com.roudikk.guia.extensions.requireLocalNavigator
+import com.roudikk.guia.extensions.requireLocalParentNavigator
+import com.roudikk.guia.extensions.setResult
+import com.roudikk.guia.extensions.singleInstance
+import com.roudikk.guia.extensions.singleTop
+import com.roudikk.guia.sample.feature.common.navigation.CrossFadeTransition
+import com.roudikk.guia.sample.feature.details.api.DetailsKey
+import com.roudikk.guia.sample.feature.details.api.DetailsResult
+import com.roudikk.guia.sample.feature.dialogs.api.BlockingBottomSheetKey
 
 @Suppress("CyclomaticComplexMethod")
 @Composable

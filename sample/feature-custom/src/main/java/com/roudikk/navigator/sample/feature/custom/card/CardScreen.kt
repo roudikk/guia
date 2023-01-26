@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.custom.card
+package com.roudikk.guia.sample.feature.custom.card
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,9 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.sample.feature.common.deeplink.GlobalNavigator
-import com.roudikk.navigator.sample.feature.common.lifecycle.LifecycleEventEffect
-import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
+import com.roudikk.guia.sample.feature.common.deeplink.GlobalNavigator
+import com.roudikk.guia.sample.feature.common.lifecycle.LifecycleEventEffect
+import com.roudikk.guia.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
 import kotlinx.coroutines.delay
 
 private val colorSaver = Saver<Color, List<Float>>(

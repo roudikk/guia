@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.dialogs
+package com.roudikk.guia.sample.feature.dialogs
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
@@ -22,12 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.extensions.localDialog
-import com.roudikk.navigator.extensions.push
-import com.roudikk.navigator.extensions.pop
-import com.roudikk.navigator.extensions.requireLocalNavigator
-import com.roudikk.navigator.sample.feature.common.theme.AppTheme
-import com.roudikk.navigator.sample.feature.dialogs.api.CancelableDialogKey
+import com.roudikk.guia.extensions.localDialog
+import com.roudikk.guia.extensions.push
+import com.roudikk.guia.extensions.pop
+import com.roudikk.guia.extensions.requireLocalNavigator
+import com.roudikk.guia.sample.feature.common.theme.AppTheme
+import com.roudikk.guia.sample.feature.dialogs.api.CancelableDialogKey
 
 @Composable
 internal fun BlockingDialogScreen(

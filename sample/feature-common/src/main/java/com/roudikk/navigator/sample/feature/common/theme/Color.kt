@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.common.theme
+package com.roudikk.guia.sample.feature.common.theme
 
 import androidx.compose.ui.graphics.Color
 

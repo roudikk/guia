@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.roudikk.navigator.sample.feature.settings.api"
+    namespace = "com.roudikk.guia.sample.feature.settings.api"
     compileSdk = 33
 
     defaultConfig {
@@ -16,5 +16,5 @@ android {
 
 dependencies {
     implementation(project(":sample:feature-common"))
-    implementation(project(":compose-navigator"))
+    implementation(project(":guia"))
 }

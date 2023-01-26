@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.roudikk.navigator.sample.feature.bottomnav"
+    namespace = "com.roudikk.guia.sample.feature.bottomnav"
     compileSdk = 33
 
     defaultConfig {
@@ -30,5 +30,5 @@ dependencies {
     implementation(project(":sample:feature-dialogs:api"))
     implementation(project(":sample:feature-details:api"))
     implementation(project(":sample:feature-custom:api"))
-    implementation(project(":compose-navigator"))
+    implementation(project(":guia"))
 }

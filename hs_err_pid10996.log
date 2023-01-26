@@ -27,7 +27,7 @@
 
 ---------------  S U M M A R Y ------------
 
-Command Line: org.jetbrains.kotlin.cli.jvm.K2JVMCompiler @C:\Users\roudi\Documents\GitHub\compose-navigator\sample\feature-common\build\20230110_8763593384093273817.compiler.options
+Command Line: org.jetbrains.kotlin.cli.jvm.K2JVMCompiler @C:\Users\roudi\Documents\GitHub\guia\sample\feature-common\build\20230110_8763593384093273817.compiler.options
 
 Host: AMD Ryzen 9 5900X 12-Core Processor            , 24 cores, 31G,  Windows 11 , 64 bit Build 22621 (10.0.22621.1037)
 Time: Tue Jan 10 23:33:17 2023 AUS Eastern Summer Time elapsed time: 0.007892 seconds (0d 0h 0m 0s)
@@ -158,7 +158,7 @@ dbghelp: loaded successfully - version: 4.0.5 - missing functions: none
 symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;F:\Program Files\Android Studio Preview\jbr\bin;C:\WINDOWS\SYSTEM32;C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.22621.436_none_a94247dbc10d8414;F:\Program Files\Android Studio Preview\jbr\bin\server
 
 VM Arguments:
-java_command: org.jetbrains.kotlin.cli.jvm.K2JVMCompiler @C:\Users\roudi\Documents\GitHub\compose-navigator\sample\feature-common\build\20230110_8763593384093273817.compiler.options
+java_command: org.jetbrains.kotlin.cli.jvm.K2JVMCompiler @C:\Users\roudi\Documents\GitHub\guia\sample\feature-common\build\20230110_8763593384093273817.compiler.options
 java_class_path (initial): F:\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-compiler-embeddable\1.7.20\8db18559a581dd2c36ddfd5046af145650f5b126\kotlin-compiler-embeddable-1.7.20.jar;F:\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-reflect\1.7.20\12b2501e33bb6373e8e347c86d85481863629381\kotlin-reflect-1.7.20.jar;F:\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib\1.7.20\726594ea9ba2beb2ee113647fefa9a10f9fabe52\kotlin-stdlib-1.7.20.jar;F:\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-script-runtime\1.7.20\bcd1cc6f865e632550357fcc59f5ffd532615a8\kotlin-script-runtime-1.7.20.jar;F:\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-daemon-embeddable\1.7.20\1e24355adad8d529d75d5b19eab55484057431ba\kotlin-daemon-embeddable-1.7.20.jar;F:\.gradle\caches\modules-2\files-2.1\org.jetbrains.intellij.deps\trove4j\1.0.20200330\3afb14d5f9ceb459d724e907a21145e8ff394f02\trove4j-1.0.20200330.jar;F:\.gradle\caches\modules-2\files-2.1\net.java.dev.jna\jna\5.6.0\330f2244e9030119ab3030fc3fededc86713d9cc\jna-5.6.0.jar;F:\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib-common\1.7.20\e15351bdaf9fa06f009be5da7a202e4184f00ae3\kotlin-stdlib-common-1.7.20.jar;F:\.gradle\caches\modules-2\files-2.1\org.jetbrains\annotations\13.0\919f0dfe192fb4e063e7dacadee7f8bb9a2672a9\annotations-13.0.jar
 Launcher Type: SUN_STANDARD
 

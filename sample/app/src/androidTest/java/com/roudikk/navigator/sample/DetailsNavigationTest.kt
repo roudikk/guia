@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample
+package com.roudikk.guia.sample
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -6,11 +6,11 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.roudikk.navigator.core.NavigationKey.Companion.tag
-import com.roudikk.navigator.sample.feature.details.DetailsBottomSheetKey
-import com.roudikk.navigator.sample.feature.details.api.DetailsKey
-import com.roudikk.navigator.sample.feature.home.api.HomeKey
-import com.roudikk.navigator.sample.utils.navigateDetails
+import com.roudikk.guia.core.NavigationKey.Companion.tag
+import com.roudikk.guia.sample.feature.details.DetailsBottomSheetKey
+import com.roudikk.guia.sample.feature.details.api.DetailsKey
+import com.roudikk.guia.sample.feature.home.api.HomeKey
+import com.roudikk.guia.sample.utils.navigateDetails
 import org.junit.Rule
 import org.junit.Test
 

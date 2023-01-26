@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.details
+package com.roudikk.guia.sample.feature.details
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets

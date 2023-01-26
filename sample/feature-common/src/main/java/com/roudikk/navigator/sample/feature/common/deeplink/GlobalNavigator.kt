@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.common.deeplink
+package com.roudikk.guia.sample.feature.common.deeplink
 
 import android.net.Uri
 import androidx.compose.runtime.getValue

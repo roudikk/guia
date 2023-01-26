@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample
+package com.roudikk.guia.sample
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.isToggleable
@@ -6,12 +6,12 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.roudikk.navigator.core.NavigationKey.Companion.tag
-import com.roudikk.navigator.sample.feature.dialogs.api.BlockingBottomSheetKey
-import com.roudikk.navigator.sample.feature.dialogs.api.BlockingDialogKey
-import com.roudikk.navigator.sample.feature.dialogs.api.CancelableDialogKey
-import com.roudikk.navigator.sample.feature.dialogs.api.DialogsKey
-import com.roudikk.navigator.sample.utils.navigateDialogsTab
+import com.roudikk.guia.core.NavigationKey.Companion.tag
+import com.roudikk.guia.sample.feature.dialogs.api.BlockingBottomSheetKey
+import com.roudikk.guia.sample.feature.dialogs.api.BlockingDialogKey
+import com.roudikk.guia.sample.feature.dialogs.api.CancelableDialogKey
+import com.roudikk.guia.sample.feature.dialogs.api.DialogsKey
+import com.roudikk.guia.sample.utils.navigateDialogsTab
 import org.junit.Rule
 import org.junit.Test
 

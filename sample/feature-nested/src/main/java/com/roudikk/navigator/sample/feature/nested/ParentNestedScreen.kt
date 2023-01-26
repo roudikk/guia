@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.nested
+package com.roudikk.guia.sample.feature.nested
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -36,19 +36,19 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roudikk.navigator.containers.NavContainer
-import com.roudikk.navigator.core.Navigator
-import com.roudikk.navigator.core.entry
-import com.roudikk.navigator.core.rememberNavigator
-import com.roudikk.navigator.extensions.currentKey
-import com.roudikk.navigator.extensions.popTo
-import com.roudikk.navigator.extensions.popToRoot
-import com.roudikk.navigator.sample.feature.common.deeplink.GlobalNavigator
-import com.roudikk.navigator.sample.feature.common.deeplink.NestedDestination
-import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
-import com.roudikk.navigator.sample.feature.common.navigation.VerticalSlideTransition
-import com.roudikk.navigator.sample.feature.common.theme.AppTheme
-import com.roudikk.navigator.sample.feature.nested.api.NestedKey
+import com.roudikk.guia.containers.NavContainer
+import com.roudikk.guia.core.Navigator
+import com.roudikk.guia.core.entry
+import com.roudikk.guia.core.rememberNavigator
+import com.roudikk.guia.extensions.currentKey
+import com.roudikk.guia.extensions.popTo
+import com.roudikk.guia.extensions.popToRoot
+import com.roudikk.guia.sample.feature.common.deeplink.GlobalNavigator
+import com.roudikk.guia.sample.feature.common.deeplink.NestedDestination
+import com.roudikk.guia.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
+import com.roudikk.guia.sample.feature.common.navigation.VerticalSlideTransition
+import com.roudikk.guia.sample.feature.common.theme.AppTheme
+import com.roudikk.guia.sample.feature.nested.api.NestedKey
 
 @Composable
 fun ParentNestedScreen() {

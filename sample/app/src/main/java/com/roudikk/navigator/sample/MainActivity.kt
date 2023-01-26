@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample
+package com.roudikk.guia.sample
 
 import android.content.Intent
 import android.os.Bundle
@@ -15,30 +15,30 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.roudikk.navigator.containers.NavContainer
-import com.roudikk.navigator.core.Navigator
-import com.roudikk.navigator.core.NavigatorConfigBuilder
-import com.roudikk.navigator.core.rememberNavigator
-import com.roudikk.navigator.extensions.popTo
-import com.roudikk.navigator.extensions.push
-import com.roudikk.navigator.extensions.setRoot
-import com.roudikk.navigator.sample.feature.bottomnav.api.BottomNavKey
-import com.roudikk.navigator.sample.feature.bottomnav.bottomNavNavigation
-import com.roudikk.navigator.sample.feature.common.deeplink.GlobalNavigator
-import com.roudikk.navigator.sample.feature.common.deeplink.MainDestination
-import com.roudikk.navigator.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
-import com.roudikk.navigator.sample.feature.common.navigation.LocalRootNavigator
-import com.roudikk.navigator.sample.feature.common.navigation.MaterialSharedAxisTransitionXY
-import com.roudikk.navigator.sample.feature.common.theme.AppTheme
-import com.roudikk.navigator.sample.feature.custom.viewpager.viewPagerNavigation
-import com.roudikk.navigator.sample.feature.details.detailsNavigation
-import com.roudikk.navigator.sample.feature.dialogs.dialogsNavigation
-import com.roudikk.navigator.sample.feature.home.homeNavigation
-import com.roudikk.navigator.sample.feature.nested.nestedNavigation
-import com.roudikk.navigator.sample.feature.settings.api.SettingsKey
-import com.roudikk.navigator.sample.feature.settings.settingsNavigation
-import com.roudikk.navigator.sample.feature.welcome.api.WelcomeKey
-import com.roudikk.navigator.sample.feature.welcome.welcomeNavigation
+import com.roudikk.guia.containers.NavContainer
+import com.roudikk.guia.core.Navigator
+import com.roudikk.guia.core.NavigatorConfigBuilder
+import com.roudikk.guia.core.rememberNavigator
+import com.roudikk.guia.extensions.popTo
+import com.roudikk.guia.extensions.push
+import com.roudikk.guia.extensions.setRoot
+import com.roudikk.guia.sample.feature.bottomnav.api.BottomNavKey
+import com.roudikk.guia.sample.feature.bottomnav.bottomNavNavigation
+import com.roudikk.guia.sample.feature.common.deeplink.GlobalNavigator
+import com.roudikk.guia.sample.feature.common.deeplink.MainDestination
+import com.roudikk.guia.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
+import com.roudikk.guia.sample.feature.common.navigation.LocalRootNavigator
+import com.roudikk.guia.sample.feature.common.navigation.MaterialSharedAxisTransitionXY
+import com.roudikk.guia.sample.feature.common.theme.AppTheme
+import com.roudikk.guia.sample.feature.custom.viewpager.viewPagerNavigation
+import com.roudikk.guia.sample.feature.details.detailsNavigation
+import com.roudikk.guia.sample.feature.dialogs.dialogsNavigation
+import com.roudikk.guia.sample.feature.home.homeNavigation
+import com.roudikk.guia.sample.feature.nested.nestedNavigation
+import com.roudikk.guia.sample.feature.settings.api.SettingsKey
+import com.roudikk.guia.sample.feature.settings.settingsNavigation
+import com.roudikk.guia.sample.feature.welcome.api.WelcomeKey
+import com.roudikk.guia.sample.feature.welcome.welcomeNavigation
 
 class MainActivity : ComponentActivity() {
 

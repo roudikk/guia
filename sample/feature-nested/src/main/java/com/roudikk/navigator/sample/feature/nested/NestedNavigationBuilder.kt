@@ -1,8 +1,8 @@
-package com.roudikk.navigator.sample.feature.nested
+package com.roudikk.guia.sample.feature.nested
 
-import com.roudikk.navigator.core.NavigatorConfigBuilder
-import com.roudikk.navigator.sample.feature.nested.api.NestedKey
-import com.roudikk.navigator.sample.feature.nested.api.ParentNestedKey
+import com.roudikk.guia.core.NavigatorConfigBuilder
+import com.roudikk.guia.sample.feature.nested.api.NestedKey
+import com.roudikk.guia.sample.feature.nested.api.ParentNestedKey
 
 fun NavigatorConfigBuilder.nestedNavigation() {
     screen<ParentNestedKey> { ParentNestedScreen() }

@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.utils
+package com.roudikk.guia.sample.utils
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasText
@@ -8,13 +8,13 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import com.roudikk.navigator.core.NavigationKey.Companion.tag
-import com.roudikk.navigator.sample.MainActivity
-import com.roudikk.navigator.sample.feature.details.api.DetailsKey
-import com.roudikk.navigator.sample.feature.dialogs.api.DialogsKey
-import com.roudikk.navigator.sample.feature.home.api.HomeKey
-import com.roudikk.navigator.sample.feature.nested.api.ParentNestedKey
-import com.roudikk.navigator.sample.feature.welcome.api.WelcomeKey
+import com.roudikk.guia.core.NavigationKey.Companion.tag
+import com.roudikk.guia.sample.MainActivity
+import com.roudikk.guia.sample.feature.details.api.DetailsKey
+import com.roudikk.guia.sample.feature.dialogs.api.DialogsKey
+import com.roudikk.guia.sample.feature.home.api.HomeKey
+import com.roudikk.guia.sample.feature.nested.api.ParentNestedKey
+import com.roudikk.guia.sample.feature.welcome.api.WelcomeKey
 
 // rule.mainClock.autoAdvance is used in these tests because Lottie prevents the rule from
 // becoming idle since it's an infinite animation

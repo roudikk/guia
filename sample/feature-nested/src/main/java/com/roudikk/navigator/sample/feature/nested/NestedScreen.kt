@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.nested
+package com.roudikk.guia.sample.feature.nested
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -26,12 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.extensions.canGoBack
-import com.roudikk.navigator.extensions.push
-import com.roudikk.navigator.extensions.pop
-import com.roudikk.navigator.extensions.requireLocalNavigator
-import com.roudikk.navigator.sample.feature.common.theme.AppTheme
-import com.roudikk.navigator.sample.feature.nested.api.NestedKey
+import com.roudikk.guia.extensions.canGoBack
+import com.roudikk.guia.extensions.push
+import com.roudikk.guia.extensions.pop
+import com.roudikk.guia.extensions.requireLocalNavigator
+import com.roudikk.guia.sample.feature.common.theme.AppTheme
+import com.roudikk.guia.sample.feature.nested.api.NestedKey
 
 @Composable
 internal fun NestedScreen(

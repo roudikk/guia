@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.dialogs
+package com.roudikk.guia.sample.feature.dialogs
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
@@ -18,11 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.backstack.NavBackHandler
-import com.roudikk.navigator.core.BottomSheet
-import com.roudikk.navigator.extensions.localBottomSheet
-import com.roudikk.navigator.sample.feature.common.composables.SampleSurfaceContainer
-import com.roudikk.navigator.sample.feature.common.theme.AppTheme
+import com.roudikk.guia.backstack.NavBackHandler
+import com.roudikk.guia.core.BottomSheet
+import com.roudikk.guia.extensions.localBottomSheet
+import com.roudikk.guia.sample.feature.common.composables.SampleSurfaceContainer
+import com.roudikk.guia.sample.feature.common.theme.AppTheme
 
 @Composable
 internal fun BlockingBottomSheetScreen() {

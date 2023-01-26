@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.home
+package com.roudikk.guia.sample.feature.home
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf

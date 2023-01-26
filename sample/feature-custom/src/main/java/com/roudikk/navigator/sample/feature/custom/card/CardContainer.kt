@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.custom.card
+package com.roudikk.guia.sample.feature.custom.card
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.gestures.Orientation
@@ -24,9 +24,9 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.backstack.id
-import com.roudikk.navigator.containers.NavigationEntryContainer
-import com.roudikk.navigator.core.Navigator
+import com.roudikk.guia.backstack.id
+import com.roudikk.guia.containers.NavigationEntryContainer
+import com.roudikk.guia.core.Navigator
 import kotlin.math.abs
 
 fun Navigator.popFirst() {

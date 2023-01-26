@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.roudikk.navigator.sample",
+  "applicationId": "com.roudikk.guia.sample",
   "variantName": "release",
   "elements": [
     {

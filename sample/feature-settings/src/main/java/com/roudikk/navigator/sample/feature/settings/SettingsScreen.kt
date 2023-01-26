@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.settings
+package com.roudikk.guia.sample.feature.settings
 
 import android.content.res.Configuration
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -39,10 +39,10 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.navigator.animation.NavigationVisibilityScope
-import com.roudikk.navigator.extensions.pop
-import com.roudikk.navigator.extensions.requireLocalNavigator
-import com.roudikk.navigator.sample.feature.common.theme.AppTheme
+import com.roudikk.guia.animation.NavigationVisibilityScope
+import com.roudikk.guia.extensions.pop
+import com.roudikk.guia.extensions.requireLocalNavigator
+import com.roudikk.guia.sample.feature.common.theme.AppTheme
 
 @Composable
 internal fun SettingsScreen() {
@@ -67,7 +67,7 @@ private fun SettingsContent(
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
-                title = { Text(text = "Compose Navigator") },
+                title = { Text(text = "Guia") },
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(
@@ -99,7 +99,7 @@ private fun SettingsContent(
             ) {
                 item {
                     Text(
-                        text = "Compose Navigator is an alternative to the androidx compose navigation component."
+                        text = "Guia is an alternative to the androidx compose navigation component."
                     )
                 }
 
@@ -113,7 +113,7 @@ private fun SettingsContent(
 
                 item {
                     Text(
-                        text = "Compose navigator also supports dialog and bottom sheet navigation out of the box. " +
+                        text = "Guia also supports dialog and bottom sheet navigation out of the box. " +
                             "A navigation node can be defined by simply extending " +
                             "any of Screen, Dialog or BottomSheet"
                     )
@@ -134,7 +134,7 @@ private fun SettingsContent(
                     val annotatedString = buildAnnotatedString {
                         pushStringAnnotation(
                             tag = "URL",
-                            annotation = "https://github.com/roudikk/compose-navigator",
+                            annotation = "https://github.com/roudikk/guia",
                         )
                         withStyle(
                             SpanStyle(
@@ -142,7 +142,7 @@ private fun SettingsContent(
                                 textDecoration = TextDecoration.Underline
                             )
                         ) {
-                            append("https://github.com/roudikk/compose-navigator")
+                            append("https://github.com/roudikk/guia")
                         }
                     }
                     ClickableText(
@@ -183,10 +183,8 @@ private fun SettingsContent(
                     ),
                     modifier = Modifier
                         .animateEnterExit(
-                            enter = slideInVertically { it * 3 } +
-                                fadeIn(),
-                            exit = slideOutVertically { it } +
-                                fadeOut()
+                            enter = slideInVertically { it * 3 } + fadeIn(),
+                            exit = slideOutVertically { it } + fadeOut()
                         )
                         .padding(16.dp),
                     text = annotatedString,

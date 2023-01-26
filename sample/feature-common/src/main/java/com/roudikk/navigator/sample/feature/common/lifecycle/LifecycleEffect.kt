@@ -1,4 +1,4 @@
-package com.roudikk.navigator.sample.feature.common.lifecycle
+package com.roudikk.guia.sample.feature.common.lifecycle
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
