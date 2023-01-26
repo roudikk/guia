@@ -24,6 +24,6 @@ android {
 
 dependencies {
     implementation(project(":sample:feature-common"))
-    implementation(project(":sample:feature-nested:api"))
+    implementation(project(":sample:feature-nested:navigation"))
     implementation(project(":guia"))
 }

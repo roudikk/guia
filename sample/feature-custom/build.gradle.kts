@@ -24,7 +24,7 @@ android {
 
 dependencies {
     implementation(project(":sample:feature-common"))
-    implementation(project(":sample:feature-custom:api"))
+    implementation(project(":sample:feature-custom:navigation"))
     implementation(project(":guia"))
     implementation(libs.accompanist.pager)
 }

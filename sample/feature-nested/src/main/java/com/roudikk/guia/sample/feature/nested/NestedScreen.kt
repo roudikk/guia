@@ -31,7 +31,7 @@ import com.roudikk.guia.extensions.push
 import com.roudikk.guia.extensions.pop
 import com.roudikk.guia.extensions.requireLocalNavigator
 import com.roudikk.guia.sample.feature.common.theme.AppTheme
-import com.roudikk.guia.sample.feature.nested.api.NestedKey
+import com.roudikk.guia.sample.feature.nested.navigation.NestedKey
 
 @Composable
 internal fun NestedScreen(

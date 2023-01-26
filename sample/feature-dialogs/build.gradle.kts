@@ -24,6 +24,6 @@ android {
 
 dependencies {
     implementation(project(":sample:feature-common"))
-    implementation(project(":sample:feature-dialogs:api"))
+    implementation(project(":sample:feature-dialogs:navigation"))
     implementation(project(":guia"))
 }

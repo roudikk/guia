@@ -24,7 +24,7 @@ android {
 
 dependencies {
     implementation(project(":sample:feature-common"))
-    implementation(project(":sample:feature-welcome:api"))
-    implementation(project(":sample:feature-bottomnav:api"))
+    implementation(project(":sample:feature-welcome:navigation"))
+    implementation(project(":sample:feature-bottomnav:navigation"))
     implementation(project(":guia"))
 }

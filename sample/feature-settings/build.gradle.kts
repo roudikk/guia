@@ -24,6 +24,6 @@ android {
 
 dependencies {
     implementation(project(":sample:feature-common"))
-    implementation(project(":sample:feature-settings:api"))
+    implementation(project(":sample:feature-settings:navigation"))
     implementation(project(":guia"))
 }
