@@ -23,6 +23,7 @@
 * [Multi module navigation](the-lore/multi-module-navigation.md)
   * [NavHost Multi module](the-lore/multi-module-navigation/navhost-multi-module.md)
 * [Deep Linking](the-lore/deep-linking.md)
+* [Results](the-lore/results.md)
 
 ## 🤖 Advanced
 
