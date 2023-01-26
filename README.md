@@ -8,6 +8,8 @@ Guia also has proper android Lifecycle, ViewModel and saved state support.
 
 To get started, check the [Setup](setup.md) page.
 
+For a comprehensive guide on how Guia works check [The Lore](broken-reference), for a quick start and a small overview check [The Small Lore](the-small-lore/).
+
 
 
 _Guia \~ \[ˈɡia] feminine noun. Means guidance._
