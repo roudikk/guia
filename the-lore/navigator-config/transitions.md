@@ -2,6 +2,15 @@
 
 Guia uses Compose's `EnterTransition` and `ExitTransition` for animation.
 
+The order of deciding which transition to run goes like this:
+
+* Check if the current transition is being [overriden ](transitions.md#overriding-transitions)
+* Check if there's a key transition, a transition for a specific [NavigationKey ](../navigation-key.md)
+* Check if there's a node transition, a transition for a specific type of [NavigationNode](../navigation-node/)
+* Finally fall back to a default transition
+
+The above can be set through the `NavigatorConfig`
+
 First we need to declare a `NavigationTranstion`, for example:
 
 ```kotlin
@@ -30,17 +39,22 @@ val navigator = rememberNavigator {
     defaultTransition { -> MaterialSharedAxisTransitionX }
     
     // Provide a transtion based on what the previous key and the new key are.
-    defaultTransition { previousKey, newKey -> 
-        // Some logic
+    // Add some logic, this returns EnterExitTransition.
+    defaultTransition { previousKey, newKey, isPop -> 
+        if (isPop) {
+            MaterialSharedAxisTransitionX.popEnterExit
+        } else {
+            MaterialSharedAxisTransitionX.enterExit
+        }
     }
     
-    // Define transitions for specific Navigation Keys. If one doesn't exist
-    // when navigating to navigation key of a certain type, the navigator will 
-    // fall back to defaultTransition
-    transition<DetailsBottomSheetKey> { -> CrossFadeTransition }
-    transition<DetailsDialogKey> { -> VerticalSlideTransition }
-    transition<DynamicDetailsKey> { -> CrossFadeTransition }
-    transition<DetailsKey> { -> MaterialSharedAxisTransitionX }
+    // Key transitions
+    keyTransition<MySpecificKey> { -> CrossFadeTransition }
+    
+    // Node transitions
+    nodeTransition<Screen> { -> MaterialSharedAxisTransitionX }
+    nodeTransition<BottomSheet> { -> CrossFadeTransition }
+    nodeTransition<Dialog> { -> VerticalSlideTransition }
 }
 ```
 
@@ -62,4 +76,24 @@ navigator.setBackstack(..)
 // Override the next Dialogtransition
 navigator.overrideTransition<Dialog>(MaterialSharedAxisTransitionX)
 navigator.setBackstack(..)
+```
+
+### Animating elements with navigation transitions
+
+All navigation nodes are animated within an `AnimatedContent` which provides an `AnimatedVisibilityScope`. We can gain access to that scope in our Composables using  `NavigationVisibilityScope`:
+
+```kotlin
+@Composable
+fun HomeScreen() {
+    NavigationVisibilityScope {
+        Text(
+            text = "I animate with the navigation transition",
+            modifier = Modifier
+                .animateEnterExit(
+                     enter = slideInVertically { it * 3 } + fadeIn(),
+                     exit = slideOutVertically { it } + fadeOut()
+                 )          
+        )
+    }
+}
 ```
