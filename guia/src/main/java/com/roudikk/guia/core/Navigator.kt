@@ -104,8 +104,14 @@ class Navigator(
      *
      * @param entries, the new back stack entries.
      */
-    fun setBackstack(vararg entries: BackstackEntry) {
-        setBackstack(entries.toList())
+    fun setBackstack(
+        vararg entries: BackstackEntry,
+        isPop: Boolean = backstack.contains(entries.lastOrNull())
+    ) {
+        setBackstack(
+            entries = entries.toList(),
+            isPop = isPop
+        )
     }
 
     /**
@@ -115,12 +121,11 @@ class Navigator(
      */
     fun setBackstack(
         entries: List<BackstackEntry>,
+        isPop: Boolean = backstack.contains(entries.lastOrNull())
     ) {
         val newEntry = entries.lastOrNull()
 
         if (newEntry != null) {
-            val isPop = backstack.contains(newEntry)
-
             navigatorConfig.supportedNavigationNodes.forEach { kClass ->
                 transitions[kClass] = getTransition(
                     previousEntry = backstack.lastOrNull { entry ->
