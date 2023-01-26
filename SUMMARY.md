@@ -24,7 +24,7 @@
   * [NavHost Multi module](the-lore/multi-module-navigation/navhost-multi-module.md)
 * [Deep Linking / Global Navigation](the-lore/deep-linking-global-navigation.md)
 * [Results](the-lore/results.md)
-* [Lifecycle Management](the-lore/lifecycle-management.md)
+* [Lifecycle, ViewModel, Saved State](the-lore/lifecycle-viewmodel-saved-state.md)
 
 ***
 
