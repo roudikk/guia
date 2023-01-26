@@ -103,6 +103,7 @@ class Navigator(
      * Updates the current back stack.
      *
      * @param entries, the new back stack entries.
+     * @param isPop, whether or not this is a pop operation.
      */
     fun setBackstack(
         vararg entries: BackstackEntry,
@@ -118,6 +119,7 @@ class Navigator(
      * Updates the current back stack.
      *
      * @param entries, the new back stack entries.
+     * @param isPop, whether or not this is a pop operation.
      */
     fun setBackstack(
         entries: List<BackstackEntry>,
@@ -146,10 +148,26 @@ class Navigator(
     }
 }
 
+private fun Navigator.optionalNode(backstackEntry: BackstackEntry): NavigationNode? {
+    return try {
+        navigationNode(backstackEntry)
+    } catch (_: Exception) {
+        null
+    }
+}
+
+/**
+ * Returns the current [EnterExitTransition] for a given [Node] type.
+ */
 inline fun <reified Node : NavigationNode> Navigator.transition(): EnterExitTransition {
     return transitions[Node::class] ?: EnterExitTransition.None
 }
 
+/**
+ * Override the next transition for [Node] type.
+ *
+ * @param transition, the transition to override with.
+ */
 inline fun <reified Node : NavigationNode> Navigator.overrideTransition(
     transition: EnterExitTransition
 ) {
@@ -180,14 +198,6 @@ private fun Navigator.getTransition(
 
         // Otherwise we don't show any transition.
         else -> EnterExitTransition.None
-    }
-}
-
-private fun Navigator.optionalNode(backstackEntry: BackstackEntry): NavigationNode? {
-    return try {
-        navigationNode(backstackEntry)
-    } catch (_: Exception) {
-        null
     }
 }
 
