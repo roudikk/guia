@@ -5,11 +5,11 @@
 
 ## 📖 The Lore
 
+* [Navigation Key](the-lore/navigation-key.md)
 * [Navigation Node](the-lore/navigation-node/README.md)
   * [Screen](the-lore/navigation-node/screen.md)
   * [Bottom Sheet](the-lore/navigation-node/bottom-sheet.md)
   * [Dialog](the-lore/navigation-node/dialog.md)
-* [Navigation Key](the-lore/navigation-key.md)
 * [Navigator](the-lore/navigator/README.md)
   * [Navigation Operations](the-lore/navigator/navigation-operations.md)
   * [Navigator Instance](the-lore/navigator/navigator-instance.md)
