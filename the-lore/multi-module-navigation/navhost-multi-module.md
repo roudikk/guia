@@ -24,7 +24,7 @@ class OnboardingKey(): NavigationKey
 Then, inside our `:feature:onboarding` we can create an extension function on `NavigatorConfigBuilder`  to tie our key to a Composable:
 
 ```kotlin
-ProfileNavigationBuilder.kt
+OnboardingNavigationBuilder.kt
 
 fun NavigatorConfigBuilder.onboardingNavigation() {
     screen<OnboardingKey> { key -> OnboardingScreen() }
