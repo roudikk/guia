@@ -26,7 +26,7 @@ val navigator = rememberNavigator {
 }
 ```
 
-Alternatively, a key can host its own Composable, called a [NavigationNode](../the-lore/navigation-node/), then we don't need to delcare it in our builder, the builder if very convenient in [Multi Module projects](../the-lore/multi-module-navigation.md)
+Alternatively, a key can host its own Composable, called a [NavigationNode](../the-lore/navigation-node/), then we don't need to delcare it in our builder, the builder if very convenient in [Multi Module projects](../the-lore/multi-module-navigation/)
 
 ```kotlin
 class DetailsBottomSheetKey(
@@ -62,4 +62,4 @@ Finally we render the navigator's state:
 navigator.NavContainer()
 ```
 
-We can also add some [Transitions](../the-lore/navigator-config/transitions.md) and pass type-safe [Results](../the-lore/results.md). Check [The Lore](../the-lore/) for more comprehensive usage of Guia.
+We can also add some [Transitions](../the-lore/navigator-config/transitions.md), type-safe [Results](../the-lore/results.md), [bottom-nav](../the-lore/navhost/) behaviour and more. Check [The Lore](../the-lore/) for more comprehensive usage of Guia.
