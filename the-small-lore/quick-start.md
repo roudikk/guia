@@ -56,4 +56,10 @@ fun HomeScreen() {
 }
 ```
 
-We can also add some [Transitions](../the-lore/navigator-config/transitions.md) and pass type-safe [Results](../the-lore/results.md). Check [The Lore](broken-reference) for more comprehensive usage of Guia.
+Finally we render the navigator's state:
+
+```kotlin
+navigator.NavContainer()
+```
+
+We can also add some [Transitions](../the-lore/navigator-config/transitions.md) and pass type-safe [Results](../the-lore/results.md). Check [The Lore](../the-lore/) for more comprehensive usage of Guia.
