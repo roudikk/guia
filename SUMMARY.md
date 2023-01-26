@@ -26,6 +26,11 @@
 * [Results](the-lore/results.md)
 * [Lifecycle Management](the-lore/lifecycle-management.md)
 
+***
+
+* [📔 THE SMALL LORE](the-small-lore/README.md)
+  * [Quick Start](the-small-lore/quick-start.md)
+
 ## 🤖 Advanced
 
 * [Custom BackstackManager](advanced/updating-bottomsheet-state.md)
