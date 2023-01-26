@@ -16,7 +16,6 @@ Similar to [BottomSheet](bottom-sheet.md), a `Dialog` has stateful `DialogOption
 
 ```kotlin
 data class DialogOptions(
-    val modifier: Modifier = Modifier.widthIn(max = 350.dp),
     val dismissOnClickOutside: Boolean = true,
     val dismissOnBackPress: Boolean = true,
     val securePolicy: SecureFlagPolicy = SecureFlagPolicy.Inherit,
