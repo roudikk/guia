@@ -1,4 +1,4 @@
-package com.roudikk.guia.sample.feature.common.theme
+ package com.roudikk.guia.sample.feature.common.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material.MaterialTheme as MaterialTheme2
 
-private val LightThemeColors = lightColorScheme(
+private val lightThemeColors = lightColorScheme(
     primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
     primaryContainer = md_theme_light_primaryContainer,
@@ -42,7 +42,7 @@ private val LightThemeColors = lightColorScheme(
     inverseSurface = md_theme_light_inverseSurface,
 )
 
-private val DarkThemeColors = darkColorScheme(
+private val darkThemeColors = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
     primaryContainer = md_theme_dark_primaryContainer,
@@ -81,33 +81,33 @@ fun AppTheme(
     val colors = when {
         useDynamicColorScheme && useDarkTheme -> dynamicDarkColorScheme(context)
         useDynamicColorScheme && !useDarkTheme -> dynamicLightColorScheme(context)
-        useDarkTheme -> DarkThemeColors
-        else -> LightThemeColors
+        useDarkTheme -> darkThemeColors
+        else -> lightThemeColors
     }
 
     val colors2 = if (useDarkTheme) {
         darkColors(
-            primary = DarkThemeColors.primary,
-            secondary = DarkThemeColors.secondary,
-            secondaryVariant = DarkThemeColors.secondary,
-            background = DarkThemeColors.background,
-            surface = DarkThemeColors.surface,
-            onPrimary = DarkThemeColors.onPrimary,
-            onSecondary = DarkThemeColors.onSecondary,
-            onBackground = DarkThemeColors.onBackground,
-            onSurface = DarkThemeColors.onSurface
+            primary = darkThemeColors.primary,
+            secondary = darkThemeColors.secondary,
+            secondaryVariant = darkThemeColors.secondary,
+            background = darkThemeColors.background,
+            surface = darkThemeColors.surface,
+            onPrimary = darkThemeColors.onPrimary,
+            onSecondary = darkThemeColors.onSecondary,
+            onBackground = darkThemeColors.onBackground,
+            onSurface = darkThemeColors.onSurface
         )
     } else {
         lightColors(
-            primary = LightThemeColors.primary,
-            secondary = LightThemeColors.secondary,
-            secondaryVariant = LightThemeColors.secondary,
-            background = LightThemeColors.background,
-            surface = LightThemeColors.surface,
-            onPrimary = LightThemeColors.onPrimary,
-            onSecondary = LightThemeColors.onSecondary,
-            onBackground = LightThemeColors.onBackground,
-            onSurface = LightThemeColors.onSurface
+            primary = lightThemeColors.primary,
+            secondary = lightThemeColors.secondary,
+            secondaryVariant = lightThemeColors.secondary,
+            background = lightThemeColors.background,
+            surface = lightThemeColors.surface,
+            onPrimary = lightThemeColors.onPrimary,
+            onSecondary = lightThemeColors.onSecondary,
+            onBackground = lightThemeColors.onBackground,
+            onSurface = lightThemeColors.onSurface
         )
     }
 
@@ -116,7 +116,7 @@ fun AppTheme(
     ) {
         MaterialTheme(
             colorScheme = colors,
-            typography = AppTypography,
+            typography = AppTypography
         ) {
             Surface(content = content)
         }
