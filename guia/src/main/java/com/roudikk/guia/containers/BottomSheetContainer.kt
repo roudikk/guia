@@ -27,7 +27,7 @@ import com.roudikk.guia.containers.BottomSheetValue.Hidden
 import com.roudikk.guia.core.BottomSheet
 import com.roudikk.guia.core.Navigator
 import com.roudikk.guia.core.navigationNode
-import com.roudikk.guia.core.transition
+import com.roudikk.guia.core.keyTransition
 import com.roudikk.guia.extensions.pop
 import kotlinx.coroutines.launch
 
@@ -84,7 +84,7 @@ fun Navigator.BottomSheetContainer(
                 BottomSheetContent(
                     sheetState = bottomSheetState,
                     bottomSheetEntry = bottomSheetEntry,
-                    currentTransition = transition<BottomSheet>(),
+                    currentTransition = keyTransition<BottomSheet>(),
                     content = content
                 )
             }

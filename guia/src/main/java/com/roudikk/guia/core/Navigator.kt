@@ -1,6 +1,5 @@
 package com.roudikk.guia.core
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisallowComposableCalls
@@ -161,7 +160,7 @@ private fun Navigator.optionalNode(backstackEntry: BackstackEntry): NavigationNo
 /**
  * Returns the current [EnterExitTransition] for a given [Node] type.
  */
-inline fun <reified Node : NavigationNode> Navigator.transition(): EnterExitTransition {
+inline fun <reified Node : NavigationNode> Navigator.keyTransition(): EnterExitTransition {
     return transitions[Node::class] ?: EnterExitTransition.None
 }
 
@@ -183,22 +182,22 @@ private fun Navigator.getTransition(
     overrideTransition: EnterExitTransition?,
     isPop: Boolean
 ): EnterExitTransition {
-    Log.d("Node", "$nodeClass")
     return when {
         previousEntry == null || newEntry == null -> EnterExitTransition.None
 
         // If the current transition is being overridden, then we use that transition.
         overrideTransition != null -> overrideTransition
 
-        backstack.isNotEmpty() -> // First we check if there's a transition defined for a certain key.
-            // If a key transition doesn't exist, we check for a node transition.
-            // Finally we fall back to the default transition.
+        backstack.isNotEmpty() ->
+            // First we check if there's a transition defined for a certain key.
             navigatorConfig.keyTransitions[newEntry.navigationKey::class]
                 ?.invoke(previousEntry.navigationKey, newEntry.navigationKey, isPop)
 
+                // If a key transition doesn't exist, we check for a node transition.
                 ?: navigatorConfig.nodeTransitions[nodeClass]
                     ?.invoke(previousEntry.navigationKey, newEntry.navigationKey, isPop)
 
+                // Finally we fall back to the default transition.
                 ?: navigatorConfig.defaultTransition(
                     previousEntry.navigationKey,
                     newEntry.navigationKey,

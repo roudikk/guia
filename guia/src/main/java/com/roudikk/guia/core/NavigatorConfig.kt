@@ -136,7 +136,7 @@ class NavigatorConfigBuilder internal constructor() {
      * @param transition, lambda that returns a [EnterExitTransition], it's provided the previous key,
      * the new key and whether or not the current transition is a push/pop.
      */
-    inline fun <reified Key : NavigationKey> transition(
+    inline fun <reified Key : NavigationKey> keyTransition(
         noinline transition: (previous: NavigationKey, new: Key, isPop: Boolean) -> EnterExitTransition
     ) {
         keyTransitions[Key::class] = transition as Transition
@@ -148,10 +148,10 @@ class NavigatorConfigBuilder internal constructor() {
      * @param transition, lambda that returns a [NavigationTransition], the full enterExit and popEnterExit
      * transitions between a given previous/new key.
      */
-    inline fun <reified Key : NavigationKey> transition(
+    inline fun <reified Key : NavigationKey> keyTransition(
         noinline transition: (previous: NavigationKey, new: Key) -> NavigationTransition
     ) {
-        transition<Key> { previous, new, isPop ->
+        keyTransition<Key> { previous, new, isPop ->
             val navigationTransition = transition(previous, new)
             if (isPop) navigationTransition.popEnterExit else navigationTransition.enterExit
         }
@@ -163,10 +163,10 @@ class NavigatorConfigBuilder internal constructor() {
      * @param transition, lambda that returns a [NavigationTransition], the full enterExit and popEnterExit
      * transitions between two navigation keys.
      */
-    inline fun <reified Key : NavigationKey> transition(
+    inline fun <reified Key : NavigationKey> keyTransition(
         noinline transition: () -> NavigationTransition
     ) {
-        transition<Key> { _, _, isPop ->
+        keyTransition<Key> { _, _, isPop ->
             val navigationTransition = transition()
             if (isPop) navigationTransition.popEnterExit else navigationTransition.enterExit
         }

@@ -10,9 +10,14 @@ import com.roudikk.guia.sample.feature.common.navigation.VerticalSlideTransition
 import com.roudikk.guia.sample.feature.home.api.HomeKey
 
 fun NavigatorConfigBuilder.homeNavigation() {
+    // Define node transitions
     nodeTransition<Screen> { -> MaterialSharedAxisTransitionX }
     nodeTransition<BottomSheet> { -> CrossFadeTransition }
     nodeTransition<Dialog> { -> VerticalSlideTransition }
-//    defaultTransition { -> MaterialSharedAxisTransitionX }
+
+    // Default transition
+    defaultTransition { -> MaterialSharedAxisTransitionX }
+
+    // Presentations
     screen<HomeKey> { HomeScreen() }
 }

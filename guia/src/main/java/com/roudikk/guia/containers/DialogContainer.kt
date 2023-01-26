@@ -11,7 +11,7 @@ import com.roudikk.guia.core.Dialog
 import com.roudikk.guia.core.Navigator
 import com.roudikk.guia.core.navigationNode
 import com.roudikk.guia.core.toDialogProperties
-import com.roudikk.guia.core.transition
+import com.roudikk.guia.core.keyTransition
 import com.roudikk.guia.extensions.pop
 
 /**
@@ -36,7 +36,7 @@ fun Navigator.DialogContainer(
             AnimatedContent(
                 targetState = dialogEntry,
                 transitionSpec = {
-                    transition<Dialog>().let { it.enter with it.exit }
+                    keyTransition<Dialog>().let { it.enter with it.exit }
                 }
             ) { dialogEntry ->
                 ProvideNavigationVisibilityScope {

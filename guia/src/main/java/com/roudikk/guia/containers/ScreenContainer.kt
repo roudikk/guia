@@ -10,7 +10,7 @@ import com.roudikk.guia.animation.ProvideNavigationVisibilityScope
 import com.roudikk.guia.backstack.LifecycleEntry
 import com.roudikk.guia.core.Navigator
 import com.roudikk.guia.core.Screen
-import com.roudikk.guia.core.transition
+import com.roudikk.guia.core.keyTransition
 
 /**
  * Renders the content of a screen if a [Navigator]'s current entry is a [Screen].
@@ -26,7 +26,7 @@ fun Navigator.ScreenContainer(
         modifier = Modifier
             .fillMaxSize(),
         transitionSpec = {
-            transition<Screen>().let { it.enter with it.exit }
+            keyTransition<Screen>().let { it.enter with it.exit }
         }
     ) { backstackEntry ->
         backstackEntry?.let {

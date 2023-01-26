@@ -14,7 +14,7 @@ import com.roudikk.guia.core.Screen
 import com.roudikk.guia.core.entries
 import com.roudikk.guia.core.entry
 import com.roudikk.guia.core.navigationNode
-import com.roudikk.guia.core.transition
+import com.roudikk.guia.core.keyTransition
 import com.roudikk.guia.util.TestKey
 import com.roudikk.guia.util.TestKey2
 import com.roudikk.guia.util.TestKey3
@@ -97,8 +97,8 @@ class NavigatorTest {
                     screen<TestKey> { }
                     screen<TestKey2> { }
                     screen<TestKey3> { }
-                    transition<TestNavigationKey> { -> navigationKeyTransition }
-                    transition<TestKey> { -> testKeyTransition }
+                    keyTransition<TestNavigationKey> { -> navigationKeyTransition }
+                    keyTransition<TestKey> { -> testKeyTransition }
                     defaultTransition { _, newKey, _ ->
                         if (newKey is TestKey2) {
                             EnterExitTransition.None
@@ -111,19 +111,19 @@ class NavigatorTest {
         )
 
         navigator.setBackstack(navigator.backstack + testKey.entry())
-        assertThat(navigator.transition<Screen>().enter).isEqualTo(testKeyTransition.enterExit.enter)
-        assertThat(navigator.transition<Screen>().exit).isEqualTo(testKeyTransition.enterExit.exit)
+        assertThat(navigator.keyTransition<Screen>().enter).isEqualTo(testKeyTransition.enterExit.enter)
+        assertThat(navigator.keyTransition<Screen>().exit).isEqualTo(testKeyTransition.enterExit.exit)
 
         navigator.setBackstack(navigator.backstack.dropLast(1))
-        assertThat(navigator.transition<Screen>().enter).isEqualTo(navigationKeyTransition.popEnterExit.enter)
-        assertThat(navigator.transition<Screen>().exit).isEqualTo(navigationKeyTransition.popEnterExit.exit)
+        assertThat(navigator.keyTransition<Screen>().enter).isEqualTo(navigationKeyTransition.popEnterExit.enter)
+        assertThat(navigator.keyTransition<Screen>().exit).isEqualTo(navigationKeyTransition.popEnterExit.exit)
 
         navigator.setBackstack(navigator.backstack + testKey2.entry())
-        assertThat(navigator.transition<Screen>().enter).isEqualTo(EnterTransition.None)
-        assertThat(navigator.transition<Screen>().exit).isEqualTo(ExitTransition.None)
+        assertThat(navigator.keyTransition<Screen>().enter).isEqualTo(EnterTransition.None)
+        assertThat(navigator.keyTransition<Screen>().exit).isEqualTo(ExitTransition.None)
 
         navigator.setBackstack(navigator.backstack + testKey3.entry())
-        assertThat(navigator.transition<Screen>().enter).isEqualTo(fadeIn())
-        assertThat(navigator.transition<Screen>().exit).isEqualTo(fadeOut())
+        assertThat(navigator.keyTransition<Screen>().enter).isEqualTo(fadeIn())
+        assertThat(navigator.keyTransition<Screen>().exit).isEqualTo(fadeOut())
     }
 }
