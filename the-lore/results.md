@@ -69,3 +69,22 @@ val resultManager = rememberResultManager()
 
 Now we can provide this result manager as `CompositionLocal` to children Composables, that can potentially be hosting different navigators.&#x20;
 
+```kotlin
+val LocalParentResultManager = compositionLocalOf<ResultManager> { error() }
+
+@Composable
+fun ParentScreen() { // That hosts multiple navigators
+    CompositionLocalProvider(
+        LocalParentResultManager provides resultManager
+    ) {
+        // Nested navigation
+    }
+}
+
+@Composable
+fun SomewhereNested() {
+    val parentResultManager = LocalParentResultManager.current
+    // Do stuff
+}
+```
+
