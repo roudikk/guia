@@ -31,4 +31,4 @@
 
 ## 🤖 Advanced
 
-* [Custom BackstackManager](advanced/updating-bottomsheet-state.md)
+* [Custom BackstackManager](advanced/custom-backstack-manager.md)
