@@ -112,7 +112,9 @@ Then we pass them down to our screen where we will create a `NavHost`:
 Finally, we can tie everything up together in our app module!
 
 ```kotlin
-val navigator = rememberNavigator {
+val navigator = rememberNavigator(
+    initialKey = OnboardingKey()
+) {
     onboardingNavigation()
     bottomNavNavigation(
         homeNavigation = { homeNavigation() },

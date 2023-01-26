@@ -22,7 +22,7 @@
   * [Back Handling](the-lore/navhost/back-handling.md)
 * [Multi module navigation](the-lore/multi-module-navigation.md)
   * [NavHost Multi module](the-lore/multi-module-navigation/navhost-multi-module.md)
-* [Deep Linking](the-lore/deep-linking.md)
+* [Deep Linking / Global Navigation](the-lore/deep-linking-global-navigation.md)
 * [Results](the-lore/results.md)
 
 ## 🤖 Advanced
