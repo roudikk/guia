@@ -1,6 +1,6 @@
 # Results
 
-Passing results between navigation keys is done in Guia using the `ResultManager` API:
+Passing results between navigation keys is done in Guia using the `ResultManager` API, it's type safe and stateful.
 
 ```kotlin
 interface ResultManager {
@@ -13,7 +13,7 @@ interface ResultManager {
 A [Navigator](navigator/) itself is a `ResultManager` backed by a stateful key/value map.
 
 ```kotlin
-data class Result(val item: String) 
+data class Result(val item: String)
 
 @Composable
 fun HomeScreen() {
@@ -49,3 +49,23 @@ fun AnotherScreen() {
     }
 }
 ```
+
+### Survive state restoration
+
+By simply marking our result as `Parcelable` our result can now be saved and restored, the `ResultManager`  will handle that internally.
+
+```kotlin
+@Parcelize
+data class Result(val item: String): Parcelable
+```
+
+### Passing data between different navigators
+
+The `ResultManager` API is public can be used to create our own:
+
+```kotlin
+val resultManager = rememberResultManager()
+```
+
+Now we can provide this result manager as `CompositionLocal` to child Composables, that can potentially be hosting different navigators.&#x20;
+
