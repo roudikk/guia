@@ -74,6 +74,8 @@ val LocalParentResultManager = compositionLocalOf<ResultManager> { error() }
 
 @Composable
 fun ParentScreen() { // That hosts multiple navigators
+    val resultManager = rememberResultManager()
+
     CompositionLocalProvider(
         LocalParentResultManager provides resultManager
     ) {
