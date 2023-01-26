@@ -67,5 +67,5 @@ The `ResultManager` API is public can be used to create our own:
 val resultManager = rememberResultManager()
 ```
 
-Now we can provide this result manager as `CompositionLocal` to child Composables, that can potentially be hosting different navigators.&#x20;
+Now we can provide this result manager as `CompositionLocal` to children Composables, that can potentially be hosting different navigators.&#x20;
 
