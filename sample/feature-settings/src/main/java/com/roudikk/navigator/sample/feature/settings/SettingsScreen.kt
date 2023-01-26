@@ -44,7 +44,6 @@ import com.roudikk.navigator.extensions.pop
 import com.roudikk.navigator.extensions.requireLocalNavigator
 import com.roudikk.navigator.sample.feature.common.theme.AppTheme
 
-
 @Composable
 internal fun SettingsScreen() {
     val navigator = requireLocalNavigator()
@@ -107,16 +106,16 @@ private fun SettingsContent(
                 item {
                     Text(
                         text = "The main difference is that, unlike navigation component, destinations don't" +
-                                " need to be declared beforehand with their transitions " +
-                                "(With Accompanist navigation transitions). "
+                            " need to be declared beforehand with their transitions " +
+                            "(With Accompanist navigation transitions). "
                     )
                 }
 
                 item {
                     Text(
                         text = "Compose navigator also supports dialog and bottom sheet navigation out of the box. " +
-                                "A navigation node can be defined by simply extending " +
-                                "any of Screen, Dialog or BottomSheet"
+                            "A navigation node can be defined by simply extending " +
+                            "any of Screen, Dialog or BottomSheet"
                     )
                 }
 
@@ -160,7 +159,6 @@ private fun SettingsContent(
                         }
                     )
                 }
-
             }
 
             val uriHandler = LocalUriHandler.current
@@ -185,10 +183,10 @@ private fun SettingsContent(
                     ),
                     modifier = Modifier
                         .animateEnterExit(
-                            enter = slideInVertically { it * 3 }
-                                    + fadeIn(),
-                            exit = slideOutVertically { it }
-                                    + fadeOut()
+                            enter = slideInVertically { it * 3 } +
+                                fadeIn(),
+                            exit = slideOutVertically { it } +
+                                fadeOut()
                         )
                         .padding(16.dp),
                     text = annotatedString,
