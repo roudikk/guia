@@ -13,7 +13,7 @@ class ProfileKey(val profileId: String): NavigationKey
 Then we declare a [Navigator](../the-lore/navigator/):
 
 ```kotlin
-val navigator = rememberNavigator()
+val navigator = rememberNavigator(initialKey = HomeKey()) // Initial Key is optional
 ```
 
 To link a [NavigationKey](../the-lore/navigation-key.md) to a Composable we can use the `builder` parameter in `rememberNavigator`:
