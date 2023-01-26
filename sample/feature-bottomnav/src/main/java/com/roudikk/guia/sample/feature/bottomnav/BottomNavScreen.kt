@@ -56,18 +56,18 @@ import com.roudikk.guia.sample.feature.common.deeplink.GlobalNavigator
 import com.roudikk.guia.sample.feature.common.deeplink.HomeDestination
 import com.roudikk.guia.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.guia.sample.feature.common.theme.AppTheme
-import com.roudikk.guia.sample.feature.custom.api.CustomStackKey
-import com.roudikk.guia.sample.feature.custom.api.ViewPagerRootKey
-import com.roudikk.guia.sample.feature.details.api.DetailsKey
-import com.roudikk.guia.sample.feature.dialogs.api.BlockingBottomSheetKey
-import com.roudikk.guia.sample.feature.dialogs.api.BlockingDialogKey
-import com.roudikk.guia.sample.feature.dialogs.api.CancelableDialogKey
-import com.roudikk.guia.sample.feature.dialogs.api.DialogsKey
-import com.roudikk.guia.sample.feature.dialogs.api.DialogsStackKey
-import com.roudikk.guia.sample.feature.home.api.HomeKey
-import com.roudikk.guia.sample.feature.home.api.HomeStackKey
-import com.roudikk.guia.sample.feature.nested.api.NestedStackKey
-import com.roudikk.guia.sample.feature.nested.api.ParentNestedKey
+import com.roudikk.guia.sample.feature.custom.navigation.CustomStackKey
+import com.roudikk.guia.sample.feature.custom.navigation.ViewPagerRootKey
+import com.roudikk.guia.sample.feature.details.navigation.DetailsKey
+import com.roudikk.guia.sample.feature.dialogs.navigation.BlockingBottomSheetKey
+import com.roudikk.guia.sample.feature.dialogs.navigation.BlockingDialogKey
+import com.roudikk.guia.sample.feature.dialogs.navigation.CancelableDialogKey
+import com.roudikk.guia.sample.feature.dialogs.navigation.DialogsKey
+import com.roudikk.guia.sample.feature.dialogs.navigation.DialogsStackKey
+import com.roudikk.guia.sample.feature.home.navigation.HomeKey
+import com.roudikk.guia.sample.feature.home.navigation.HomeStackKey
+import com.roudikk.guia.sample.feature.nested.navigation.NestedStackKey
+import com.roudikk.guia.sample.feature.nested.navigation.ParentNestedKey
 
 @Composable
 fun rememberBottomNavHost(

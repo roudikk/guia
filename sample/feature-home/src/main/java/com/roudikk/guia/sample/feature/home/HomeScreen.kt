@@ -52,7 +52,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.guia.backstack.NavBackHandler
 import com.roudikk.guia.extensions.requireLocalNavigator
 import com.roudikk.guia.extensions.result
-import com.roudikk.guia.sample.feature.details.api.DetailsResult
+import com.roudikk.guia.sample.feature.details.navigation.DetailsResult
 import kotlinx.coroutines.launch
 
 @Composable

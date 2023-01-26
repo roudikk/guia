@@ -22,7 +22,7 @@ import com.roudikk.guia.core.rememberNavigator
 import com.roudikk.guia.extensions.popTo
 import com.roudikk.guia.extensions.push
 import com.roudikk.guia.extensions.setRoot
-import com.roudikk.guia.sample.feature.bottomnav.api.BottomNavKey
+import com.roudikk.guia.sample.feature.bottomnav.navigation.BottomNavKey
 import com.roudikk.guia.sample.feature.bottomnav.bottomNavNavigation
 import com.roudikk.guia.sample.feature.common.deeplink.GlobalNavigator
 import com.roudikk.guia.sample.feature.common.deeplink.MainDestination
@@ -35,9 +35,9 @@ import com.roudikk.guia.sample.feature.details.detailsNavigation
 import com.roudikk.guia.sample.feature.dialogs.dialogsNavigation
 import com.roudikk.guia.sample.feature.home.homeNavigation
 import com.roudikk.guia.sample.feature.nested.nestedNavigation
-import com.roudikk.guia.sample.feature.settings.api.SettingsKey
+import com.roudikk.guia.sample.feature.settings.navigation.SettingsKey
 import com.roudikk.guia.sample.feature.settings.settingsNavigation
-import com.roudikk.guia.sample.feature.welcome.api.WelcomeKey
+import com.roudikk.guia.sample.feature.welcome.navigation.WelcomeKey
 import com.roudikk.guia.sample.feature.welcome.welcomeNavigation
 
 class MainActivity : ComponentActivity() {

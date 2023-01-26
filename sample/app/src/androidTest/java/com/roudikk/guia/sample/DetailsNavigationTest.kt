@@ -8,8 +8,8 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.roudikk.guia.core.NavigationKey.Companion.tag
 import com.roudikk.guia.sample.feature.details.DetailsBottomSheetKey
-import com.roudikk.guia.sample.feature.details.api.DetailsKey
-import com.roudikk.guia.sample.feature.home.api.HomeKey
+import com.roudikk.guia.sample.feature.details.navigation.DetailsKey
+import com.roudikk.guia.sample.feature.home.navigation.HomeKey
 import com.roudikk.guia.sample.utils.navigateDetails
 import org.junit.Rule
 import org.junit.Test

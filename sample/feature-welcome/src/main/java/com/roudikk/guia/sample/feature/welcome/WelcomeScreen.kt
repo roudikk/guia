@@ -29,7 +29,7 @@ import com.roudikk.guia.animation.NavigationVisibilityScope
 import com.roudikk.guia.extensions.push
 import com.roudikk.guia.extensions.requireLocalNavigator
 import com.roudikk.guia.extensions.setRoot
-import com.roudikk.guia.sample.feature.bottomnav.api.BottomNavKey
+import com.roudikk.guia.sample.feature.bottomnav.navigation.BottomNavKey
 import com.roudikk.guia.sample.feature.common.composables.NavigationAnimationPreview
 import com.roudikk.guia.sample.feature.common.theme.AppTheme
 

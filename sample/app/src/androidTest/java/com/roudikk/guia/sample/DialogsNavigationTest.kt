@@ -7,10 +7,10 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.roudikk.guia.core.NavigationKey.Companion.tag
-import com.roudikk.guia.sample.feature.dialogs.api.BlockingBottomSheetKey
-import com.roudikk.guia.sample.feature.dialogs.api.BlockingDialogKey
-import com.roudikk.guia.sample.feature.dialogs.api.CancelableDialogKey
-import com.roudikk.guia.sample.feature.dialogs.api.DialogsKey
+import com.roudikk.guia.sample.feature.dialogs.navigation.BlockingBottomSheetKey
+import com.roudikk.guia.sample.feature.dialogs.navigation.BlockingDialogKey
+import com.roudikk.guia.sample.feature.dialogs.navigation.CancelableDialogKey
+import com.roudikk.guia.sample.feature.dialogs.navigation.DialogsKey
 import com.roudikk.guia.sample.utils.navigateDialogsTab
 import org.junit.Rule
 import org.junit.Test

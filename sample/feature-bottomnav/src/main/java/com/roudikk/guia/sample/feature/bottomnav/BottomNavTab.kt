@@ -7,10 +7,10 @@ import androidx.compose.material.icons.filled.StackedBarChart
 import androidx.compose.material.icons.filled.Window
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.roudikk.guia.navhost.StackKey
-import com.roudikk.guia.sample.feature.custom.api.CustomStackKey
-import com.roudikk.guia.sample.feature.dialogs.api.DialogsStackKey
-import com.roudikk.guia.sample.feature.home.api.HomeStackKey
-import com.roudikk.guia.sample.feature.nested.api.NestedStackKey
+import com.roudikk.guia.sample.feature.custom.navigation.CustomStackKey
+import com.roudikk.guia.sample.feature.dialogs.navigation.DialogsStackKey
+import com.roudikk.guia.sample.feature.home.navigation.HomeStackKey
+import com.roudikk.guia.sample.feature.nested.navigation.NestedStackKey
 
 enum class BottomNavTab(
     val label: String,

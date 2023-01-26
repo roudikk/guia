@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import com.roudikk.guia.core.Navigator
 import com.roudikk.guia.core.entries
 import com.roudikk.guia.core.rememberNavigator
-import com.roudikk.guia.sample.feature.custom.api.CardKey
+import com.roudikk.guia.sample.feature.custom.navigation.CardKey
 
 private fun Navigator.addCards() {
     setBackstack((0..20).map { CardKey(it) }.entries())

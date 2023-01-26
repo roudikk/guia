@@ -9,7 +9,7 @@ import com.roudikk.guia.backstack.id
 import com.roudikk.guia.backstack.manager.rememberBackstackManager
 import com.roudikk.guia.core.Navigator
 import com.roudikk.guia.core.entry
-import com.roudikk.guia.sample.feature.custom.api.PageKey
+import com.roudikk.guia.sample.feature.custom.navigation.PageKey
 
 @Composable
 fun rememberViewPagerBackstackManager(navigator: Navigator): BackstackManager<ViewPagerVisibleStack> {

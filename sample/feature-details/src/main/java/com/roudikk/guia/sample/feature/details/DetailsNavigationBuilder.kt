@@ -13,7 +13,7 @@ import com.roudikk.guia.extensions.localBottomSheet
 import com.roudikk.guia.extensions.pop
 import com.roudikk.guia.extensions.requireLocalNavigator
 import com.roudikk.guia.sample.feature.common.navigation.CrossFadeTransition
-import com.roudikk.guia.sample.feature.details.api.DetailsKey
+import com.roudikk.guia.sample.feature.details.navigation.DetailsKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

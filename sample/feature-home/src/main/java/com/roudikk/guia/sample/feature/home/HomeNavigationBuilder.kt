@@ -7,7 +7,7 @@ import com.roudikk.guia.core.Screen
 import com.roudikk.guia.sample.feature.common.navigation.CrossFadeTransition
 import com.roudikk.guia.sample.feature.common.navigation.MaterialSharedAxisTransitionX
 import com.roudikk.guia.sample.feature.common.navigation.VerticalSlideTransition
-import com.roudikk.guia.sample.feature.home.api.HomeKey
+import com.roudikk.guia.sample.feature.home.navigation.HomeKey
 
 fun NavigatorConfigBuilder.homeNavigation() {
     // Define node transitions

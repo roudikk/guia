@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import com.roudikk.guia.core.NavigationKey
 import com.roudikk.guia.core.NavigatorConfigBuilder
 import com.roudikk.guia.sample.feature.common.navigation.CrossFadeTransition
-import com.roudikk.guia.sample.feature.custom.api.CardKey
+import com.roudikk.guia.sample.feature.custom.navigation.CardKey
 
 inline fun <reified Key : NavigationKey> NavigatorConfigBuilder.card(
     noinline content: @Composable (Key) -> Unit

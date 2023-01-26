@@ -27,7 +27,7 @@ import com.roudikk.guia.extensions.push
 import com.roudikk.guia.extensions.pop
 import com.roudikk.guia.extensions.requireLocalNavigator
 import com.roudikk.guia.sample.feature.common.theme.AppTheme
-import com.roudikk.guia.sample.feature.dialogs.api.CancelableDialogKey
+import com.roudikk.guia.sample.feature.dialogs.navigation.CancelableDialogKey
 
 @Composable
 internal fun BlockingDialogScreen(

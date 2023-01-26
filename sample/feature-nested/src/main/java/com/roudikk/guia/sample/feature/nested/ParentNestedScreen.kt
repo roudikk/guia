@@ -48,7 +48,7 @@ import com.roudikk.guia.sample.feature.common.deeplink.NestedDestination
 import com.roudikk.guia.sample.feature.common.navigation.LocalNavHostViewModelStoreOwner
 import com.roudikk.guia.sample.feature.common.navigation.VerticalSlideTransition
 import com.roudikk.guia.sample.feature.common.theme.AppTheme
-import com.roudikk.guia.sample.feature.nested.api.NestedKey
+import com.roudikk.guia.sample.feature.nested.navigation.NestedKey
 
 @Composable
 fun ParentNestedScreen() {

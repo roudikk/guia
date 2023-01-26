@@ -14,9 +14,9 @@ import com.roudikk.guia.extensions.setResult
 import com.roudikk.guia.extensions.singleInstance
 import com.roudikk.guia.extensions.singleTop
 import com.roudikk.guia.sample.feature.common.navigation.CrossFadeTransition
-import com.roudikk.guia.sample.feature.details.api.DetailsKey
-import com.roudikk.guia.sample.feature.details.api.DetailsResult
-import com.roudikk.guia.sample.feature.dialogs.api.BlockingBottomSheetKey
+import com.roudikk.guia.sample.feature.details.navigation.DetailsKey
+import com.roudikk.guia.sample.feature.details.navigation.DetailsResult
+import com.roudikk.guia.sample.feature.dialogs.navigation.BlockingBottomSheetKey
 
 @Suppress("CyclomaticComplexMethod")
 @Composable

@@ -10,9 +10,9 @@ import com.roudikk.guia.extensions.push
 import com.roudikk.guia.extensions.setResult
 import com.roudikk.guia.extensions.requireLocalNavigator
 import com.roudikk.guia.sample.feature.common.navigation.requireRootNavigator
-import com.roudikk.guia.sample.feature.details.api.DetailsKey
-import com.roudikk.guia.sample.feature.details.api.DetailsResult
-import com.roudikk.guia.sample.feature.settings.api.SettingsKey
+import com.roudikk.guia.sample.feature.details.navigation.DetailsKey
+import com.roudikk.guia.sample.feature.details.navigation.DetailsResult
+import com.roudikk.guia.sample.feature.settings.navigation.SettingsKey
 
 @Composable
 fun HomeEventEffect(
