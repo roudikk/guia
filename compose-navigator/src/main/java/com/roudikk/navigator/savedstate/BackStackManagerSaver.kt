@@ -1,5 +1,6 @@
 package com.roudikk.navigator.savedstate
 
+import android.app.Application
 import android.os.Parcelable
 import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.Saver
@@ -16,13 +17,14 @@ import kotlinx.parcelize.Parcelize
 /**
  * Used to save and restore the state of a [BackstackManager].
  */
-internal fun <VB : VisibleBackstack> backStackManagerSaver(
+internal fun <VB : VisibleBackstack> backstackManagerSaver(
     navigator: Navigator,
+    application: Application,
     viewModelStoreOwner: ViewModelStoreOwner,
     saveableStateHolder: SaveableStateHolder,
     lifecycle: Lifecycle,
     savedStateRegistry: SavedStateRegistry,
-    getVisibleBackstack: (backStack: List<BackstackEntry>, createEntry: (BackstackEntry) -> LifecycleEntry) -> VB,
+    getVisibleBackstack: (backstack: List<BackstackEntry>, createEntry: (BackstackEntry) -> LifecycleEntry) -> VB,
     updateLifecycles: (visibleBackstack: VB, entries: List<LifecycleEntry>) -> Unit
 ) = Saver<BackstackManager<VB>, BackstackManagerState>(
     save = {
@@ -36,6 +38,7 @@ internal fun <VB : VisibleBackstack> backStackManagerSaver(
             id = it.id,
             initialEntryIds = it.entryIds,
             navigator = navigator,
+            application = application,
             viewModelStoreOwner = viewModelStoreOwner,
             saveableStateHolder = saveableStateHolder,
             hostLifecycle = lifecycle,

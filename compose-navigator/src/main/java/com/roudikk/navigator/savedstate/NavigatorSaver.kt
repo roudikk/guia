@@ -27,7 +27,7 @@ internal fun navigatorSaver(
 )
 
 private fun Navigator.save() = NavigatorState(
-    backstack = backStack,
+    backstack = backstack,
     overrideBackPress = overrideBackPress
 )
 

@@ -26,7 +26,7 @@ fun Navigator.DialogContainer(
 ) {
     dialogEntry ?: return
 
-    val dialog = navigationNode(dialogEntry.backStackEntry) as Dialog
+    val dialog = navigationNode(dialogEntry.backstackEntry) as Dialog
 
     Dialog(
         onDismissRequest = ::pop,

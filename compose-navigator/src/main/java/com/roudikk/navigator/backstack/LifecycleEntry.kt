@@ -1,5 +1,6 @@
 package com.roudikk.navigator.backstack
 
+import android.app.Application
 import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -31,8 +32,9 @@ import com.roudikk.navigator.core.NavigationNode
  * state restoration and [ViewModel] creation and restoration.
  */
 class LifecycleEntry(
-    val backStackEntry: BackstackEntry,
+    val backstackEntry: BackstackEntry,
     val saveableStateHolder: SaveableStateHolder,
+    private val application: Application,
     private val viewModelStore: ViewModelStore,
 ) : ViewModelStoreOwner,
     LifecycleOwner,
@@ -59,7 +61,7 @@ class LifecycleEntry(
     }
 
     private val defaultFactory by lazy {
-        SavedStateViewModelFactory(null, this)
+        SavedStateViewModelFactory(application, this)
     }
 
     private fun updateLifecycleRegistry() {
@@ -85,7 +87,7 @@ class LifecycleEntry(
 }
 
 val LifecycleEntry.id: String
-    get() = backStackEntry.id
+    get() = backstackEntry.id
 
 @Composable
 internal fun LifecycleEntry.SaveableStateProvider(

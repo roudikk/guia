@@ -60,8 +60,8 @@ fun rememberNavigator(
  * @property overrideBackPress, enable or disable the current [BackHandler] used in the navigator's [NavContainer]
  * @property overrideTransitions, use this to override the next transition used in the next [setBackstack] call.
  * After the back stack is set, this is reset back to null.
- * @property backStack, the current back stack. To update, use [setBackstack].
- * @property backStackKeys, the current back stack keys.
+ * @property backstack, the current back stack. To update, use [setBackstack].
+ * @property backstackKeys, the current back stack keys.
  */
 class Navigator(
     internal val navigatorConfig: NavigatorConfig,
@@ -76,12 +76,15 @@ class Navigator(
         setBackstack(initialKey.entry())
     }
 
-    internal val navigationNodes = mutableMapOf<String, NavigationNode>()
+    @set:JvmName("setNavigatorBackstack")
+    var backstack by mutableStateOf(listOf<BackstackEntry>())
+        private set
+
+    val backstackKeys by derivedStateOf { backstack.map { it.navigationKey } }
 
     var overrideBackPress by mutableStateOf(true)
-    var backStack by mutableStateOf(listOf<BackstackEntry>())
-        private set
-    val backStackKeys by derivedStateOf { backStack.map { it.navigationKey } }
+
+    internal val navigationNodes = mutableMapOf<String, NavigationNode>()
 
     @PublishedApi
     internal val transitions = mutableStateMapOf<KClass<out NavigationNode>, EnterExitTransition>()
@@ -116,11 +119,11 @@ class Navigator(
         val newEntry = entries.lastOrNull()
 
         if (newEntry != null) {
-            val isPop = backStack.contains(newEntry)
+            val isPop = backstack.contains(newEntry)
 
             navigatorConfig.supportedNavigationNodes.forEach { kClass ->
                 transitions[kClass] = getTransition(
-                    previousEntry = backStack.lastOrNull { entry ->
+                    previousEntry = backstack.lastOrNull { entry ->
                         optionalNode(entry)?.let { it::class } == kClass
                     },
                     newEntry = entries.lastOrNull { entry ->
@@ -134,7 +137,7 @@ class Navigator(
             overrideTransitions.clear()
         }
 
-        backStack = entries
+        backstack = entries
     }
 }
 
@@ -162,7 +165,7 @@ private fun Navigator.getTransition(
 
         // We check if the current backstack is not empty and get the appropriate
         // transition from previous backstack to the new backstack.
-        backStack.isNotEmpty() -> navigatorConfig.transitions[newEntry.navigationKey::class]
+        backstack.isNotEmpty() -> navigatorConfig.transitions[newEntry.navigationKey::class]
             ?.invoke(previousEntry.navigationKey, newEntry.navigationKey, isPop)
             ?: navigatorConfig.defaultTransition(
                 previousEntry.navigationKey,
@@ -175,9 +178,9 @@ private fun Navigator.getTransition(
     }
 }
 
-private fun Navigator.optionalNode(backStackEntry: BackstackEntry): NavigationNode? {
+private fun Navigator.optionalNode(backstackEntry: BackstackEntry): NavigationNode? {
     return try {
-        navigationNode(backStackEntry)
+        navigationNode(backstackEntry)
     } catch (_: Exception) {
         null
     }
@@ -189,14 +192,14 @@ private fun Navigator.optionalNode(backStackEntry: BackstackEntry): NavigationNo
  * If the entry's key is a [NavigationKey.WithNode] then the key itself provides its navigation node.
  * Otherwise the key must have a defined presentation inside [NavigatorConfig.presentations]
  *
- * @param backStackEntry, the entry that requires a navigation node.
+ * @param backstackEntry, the entry that requires a navigation node.
  *
  * @throws IllegalStateException if there is not presentation defined in [NavigatorConfig.presentations]
  * for the type of [BackstackEntry] provided.
  */
-fun Navigator.navigationNode(backStackEntry: BackstackEntry): NavigationNode {
-    return navigationNodes.getOrPut(backStackEntry.id) {
-        backStackEntry.navigationKey.let { navigationKey ->
+fun Navigator.navigationNode(backstackEntry: BackstackEntry): NavigationNode {
+    return navigationNodes.getOrPut(backstackEntry.id) {
+        backstackEntry.navigationKey.let { navigationKey ->
             if (navigationKey is NavigationKey.WithNode<*>) {
                 navigationKey.navigationNode()
             } else {

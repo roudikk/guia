@@ -37,7 +37,7 @@ fun CardRootScreen() {
         }
 
         AnimatedVisibility(
-            visible = navigator.backStack.isNotEmpty(),
+            visible = navigator.backstack.isNotEmpty(),
             enter = fadeIn(),
             exit = fadeOut()
         ) {

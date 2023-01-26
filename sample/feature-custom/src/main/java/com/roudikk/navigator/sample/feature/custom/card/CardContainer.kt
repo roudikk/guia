@@ -30,7 +30,7 @@ import com.roudikk.navigator.core.Navigator
 import kotlin.math.abs
 
 fun Navigator.popFirst() {
-    setBackstack(backStack.drop(1))
+    setBackstack(backstack.drop(1))
 }
 
 enum class CardState {
@@ -79,7 +79,7 @@ internal fun Navigator.CardContainer(
                         )
                 ) {
                     NavigationEntryContainer(
-                        backStackManager = customBackstackManager,
+                        backstackManager = customBackstackManager,
                         lifecycleEntry = entry
                     )
 

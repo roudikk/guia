@@ -24,14 +24,14 @@ fun Navigator.ViewPagerContainer(
     HorizontalPager(
         modifier = modifier,
         state = pagerState,
-        count = backStack.size,
+        count = backstack.size,
         contentPadding = PaddingValues(horizontal = 32.dp)
     ) { page ->
         backstackManager.visibleBackstack.entries
-            .firstOrNull { it.backStackEntry.id == backStack[page].id }
+            .firstOrNull { it.backstackEntry.id == backstack[page].id }
             ?.let {
                 NavigationEntryContainer(
-                    backStackManager = backstackManager,
+                    backstackManager = backstackManager,
                     lifecycleEntry = it
                 )
             }
@@ -41,7 +41,7 @@ fun Navigator.ViewPagerContainer(
         setActive(pagerState.currentPage)
     }
 
-    LaunchedEffect(backStack) {
+    LaunchedEffect(backstack) {
         if (abs(pagerState.currentPage - activeIndex) == 1) {
             pagerState.animateScrollToPage(activeIndex)
         } else {

@@ -24,9 +24,9 @@ import com.roudikk.navigator.extensions.LocalNavigationNode
  */
 @Composable
 fun <VB : VisibleBackstack> Navigator.NavigationEntryContainer(
-    backStackManager: BackstackManager<VB>,
+    backstackManager: BackstackManager<VB>,
     lifecycleEntry: LifecycleEntry
-) = with(lifecycleEntry.backStackEntry) {
+) = with(lifecycleEntry.backstackEntry) {
     lifecycleEntry.LocalProvider {
         Box(modifier = Modifier.testTag(navigationKey.tag())) {
             val navigationNode = navigationNode(this@with)
@@ -36,8 +36,8 @@ fun <VB : VisibleBackstack> Navigator.NavigationEntryContainer(
             )
         }
 
-        DisposableEffect(backStackManager, lifecycleEntry) {
-            onDispose { backStackManager.onEntryDisposed() }
+        DisposableEffect(backstackManager, lifecycleEntry) {
+            onDispose { backstackManager.onEntryDisposed() }
         }
     }
 }

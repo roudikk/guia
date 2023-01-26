@@ -28,10 +28,10 @@ fun Navigator.ScreenContainer(
         transitionSpec = {
             transition<Screen>().let { it.enter with it.exit }
         }
-    ) { backStackEntry ->
-        backStackEntry?.let {
+    ) { backstackEntry ->
+        backstackEntry?.let {
             ProvideNavigationVisibilityScope {
-                content(backStackEntry)
+                content(backstackEntry)
             }
         }
     }

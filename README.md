@@ -199,7 +199,7 @@ val myNavigator = remmeberNavigator(
         NavigationConfig.MultiStack(
             entries = this,
             initialStackKey = this[0].key,
-            backStackStrategy = BackstackStrategy.Default,
+            backstackStrategy = BackstackStrategy.Default,
             defaultTransition = MaterialSharedAxisTransitionX, // Optional
             stackEnterExitTransition = navFadeIn() to navFadeOut() // Optional
         )

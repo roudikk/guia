@@ -13,9 +13,9 @@ import com.roudikk.navigator.core.Navigator
 internal fun rememberCardBackstackManager(navigator: Navigator): BackstackManager<VisibleCardStack> {
     return rememberBackstackManager(
         navigator = navigator,
-        getVisibleBackstack = { backStack, createEntry ->
+        getVisibleBackstack = { backstack, createEntry ->
             VisibleCardStack(
-                backStack
+                backstack
                     .reversed()
                     .takeLast(2)
                     .map(createEntry)
@@ -26,7 +26,7 @@ internal fun rememberCardBackstackManager(navigator: Navigator): BackstackManage
                 .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
 
             visibleBackstack.entries.forEach {
-                if (it.id == navigator.backStack.first().id) {
+                if (it.id == navigator.backstack.first().id) {
                     it.maxLifecycleState = Lifecycle.State.RESUMED
                 } else {
                     it.maxLifecycleState = Lifecycle.State.STARTED

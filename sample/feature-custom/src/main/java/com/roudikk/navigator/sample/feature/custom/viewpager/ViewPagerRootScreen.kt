@@ -32,7 +32,7 @@ fun ViewPagerRootScreen() {
 
     val backEnabled by remember {
         derivedStateOf {
-            navigator.activeIndex != 0 && navigator.backStack.isNotEmpty()
+            navigator.activeIndex != 0 && navigator.backstack.isNotEmpty()
         }
     }
 
@@ -45,7 +45,7 @@ fun ViewPagerRootScreen() {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = if (navigator.backStack.isNotEmpty()) {
+                        text = if (navigator.backstack.isNotEmpty()) {
                             "Page No: ${navigator.activeIndex + 1}"
                         } else {
                             "Add pages"
@@ -85,8 +85,8 @@ fun ViewPagerRootScreen() {
                     Button(
                         modifier = Modifier.weight(1F),
                         onClick = { navigator.setActive(navigator.activeIndex + 1) },
-                        enabled = navigator.activeIndex != navigator.backStack.lastIndex &&
-                            navigator.backStack.isNotEmpty()
+                        enabled = navigator.activeIndex != navigator.backstack.lastIndex &&
+                            navigator.backstack.isNotEmpty()
                     ) {
                         Text("Next")
                     }
@@ -104,7 +104,7 @@ fun ViewPagerRootScreen() {
                     Button(
                         modifier = Modifier.weight(1F),
                         onClick = { navigator.addPage() },
-                        enabled = navigator.backStack.size < 10
+                        enabled = navigator.backstack.size < 10
                     ) {
                         Text("Add Page")
                     }
@@ -112,7 +112,7 @@ fun ViewPagerRootScreen() {
                     Button(
                         modifier = Modifier.weight(1F),
                         onClick = { navigator.removePage() },
-                        enabled = navigator.backStack.isNotEmpty()
+                        enabled = navigator.backstack.isNotEmpty()
                     ) {
                         Text("Remove Page")
                     }

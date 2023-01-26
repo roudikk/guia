@@ -8,11 +8,11 @@ import com.roudikk.navigator.extensions.canGoBack
 import com.roudikk.navigator.extensions.currentEntry
 import com.roudikk.navigator.extensions.currentKey
 import com.roudikk.navigator.extensions.moveToTop
-import com.roudikk.navigator.extensions.push
 import com.roudikk.navigator.extensions.none
 import com.roudikk.navigator.extensions.pop
 import com.roudikk.navigator.extensions.popTo
 import com.roudikk.navigator.extensions.popToRoot
+import com.roudikk.navigator.extensions.push
 import com.roudikk.navigator.extensions.removeAll
 import com.roudikk.navigator.extensions.replaceLast
 import com.roudikk.navigator.extensions.replaceUpTo
@@ -37,7 +37,7 @@ class NavigatorExtensionsTest {
         val navigator = testNavigator(initialKey)
 
         assertThat(navigator.currentEntry?.navigationKey).isEqualTo(initialKey)
-        assertThat(navigator.currentEntry).isEqualTo(navigator.backStack.last())
+        assertThat(navigator.currentEntry).isEqualTo(navigator.backstack.last())
     }
 
     @Test
@@ -46,7 +46,7 @@ class NavigatorExtensionsTest {
         val navigator = testNavigator(initialKey)
 
         assertThat(navigator.currentKey).isEqualTo(initialKey)
-        assertThat(navigator.currentKey).isEqualTo(navigator.backStack.last().navigationKey)
+        assertThat(navigator.currentKey).isEqualTo(navigator.backstack.last().navigationKey)
     }
 
     @Test

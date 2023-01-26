@@ -33,12 +33,12 @@ fun NavHost.StackHistoryBackHandler() {
     // Add an history entry whenever the current stack entry has been changed.
     LaunchedEffect(currentEntry) {
         val currentEntry = currentEntry ?: return@LaunchedEffect
-        val backStackEntry = currentEntry.navigator.currentEntry ?: return@LaunchedEffect
+        val backstackEntry = currentEntry.navigator.currentEntry ?: return@LaunchedEffect
         if (stackHistory.lastOrNull()?.stackKey != currentEntry.stackKey) {
             stackHistory.add(
                 StackHistoryEntry(
                     stackKey = currentEntry.stackKey,
-                    backStackEntry = backStackEntry
+                    backstackEntry = backstackEntry
                 )
             )
         }
@@ -46,19 +46,19 @@ fun NavHost.StackHistoryBackHandler() {
 
     val fullBackstack = stackEntries
         .map { it.navigator }
-        .map { it.backStack }
+        .map { it.backstack }
         .flatten()
 
     // Cleanup history entries if their associated navigation key is no longer in any backstack.
     LaunchedEffect(fullBackstack) {
-        stackHistory.removeAll { entry -> fullBackstack.none { it.id == entry.backStackEntry.id } }
+        stackHistory.removeAll { entry -> fullBackstack.none { it.id == entry.backstackEntry.id } }
     }
 
     val overrideBackPress by remember {
         derivedStateOf {
             stackHistory.size > 1 &&
                     stackHistory.lastOrNull()?.stackKey == currentEntry?.stackKey &&
-                    stackHistory.lastOrNull()?.backStackEntry?.id == currentEntry?.navigator?.currentEntry?.id
+                    stackHistory.lastOrNull()?.backstackEntry?.id == currentEntry?.navigator?.currentEntry?.id
         }
     }
 
@@ -83,10 +83,10 @@ fun NavHost.StackHistoryBackHandler() {
  * An entry in the stack history.
  *
  * @property stackKey, the stack key at that point in history.
- * @property backStackEntry, the navigation key at that point in history.
+ * @property backstackEntry, the navigation key at that point in history.
  */
 @Parcelize
 internal class StackHistoryEntry(
     val stackKey: StackKey,
-    val backStackEntry: BackstackEntry
+    val backstackEntry: BackstackEntry
 ) : Parcelable

@@ -15,11 +15,11 @@ import com.roudikk.navigator.sample.feature.custom.api.PageKey
 fun rememberViewPagerBackstackManager(navigator: Navigator): BackstackManager<ViewPagerVisibleStack> {
     return rememberBackstackManager(
         navigator = navigator,
-        getVisibleBackstack = { backStack, createEntry ->
+        getVisibleBackstack = { backstack, createEntry ->
             val activeIndex = navigator.activeIndex
-            val left = backStack.getOrNull(activeIndex - 1)
-            val center = backStack.getOrNull(activeIndex)
-            val right = backStack.getOrNull(activeIndex + 1)
+            val left = backstack.getOrNull(activeIndex - 1)
+            val center = backstack.getOrNull(activeIndex)
+            val right = backstack.getOrNull(activeIndex + 1)
             ViewPagerVisibleStack(
                 left = left?.let(createEntry),
                 center = center?.let(createEntry),
@@ -51,34 +51,34 @@ class ViewPagerVisibleStack(
 }
 
 val Navigator.activeIndex: Int
-    get() = backStack.indexOfFirst { (it.navigationKey as PageKey).isActive }
+    get() = backstack.indexOfFirst { (it.navigationKey as PageKey).isActive }
         .takeIf { it != -1 } ?: 0
 
 fun Navigator.setActive(activeIndex: Int) {
     setBackstack(
-        backStack.mapIndexed { index, entry ->
+        backstack.mapIndexed { index, entry ->
             entry.copy(navigationKey = PageKey(isActive = index == activeIndex))
         }
     )
 }
 
 fun Navigator.addPage() {
-    val shouldSetActive = backStack.isEmpty()
-    setBackstack(backStack + PageKey(isActive = shouldSetActive).entry())
+    val shouldSetActive = backstack.isEmpty()
+    setBackstack(backstack + PageKey(isActive = shouldSetActive).entry())
 }
 
 fun Navigator.removePage() {
-    val shouldSetPreviousActive = ((activeIndex == backStack.lastIndex) && backStack.size > 1)
+    val shouldSetPreviousActive = ((activeIndex == backstack.lastIndex) && backstack.size > 1)
     val newBackstack = if (shouldSetPreviousActive) {
-        backStack.mapIndexed { index, entry ->
-            if (index == backStack.lastIndex - 1) {
+        backstack.mapIndexed { index, entry ->
+            if (index == backstack.lastIndex - 1) {
                 entry.copy(navigationKey = PageKey(isActive = true))
             } else {
                 entry
             }
-        } - backStack.last()
+        } - backstack.last()
     } else {
-        (backStack - backStack.last())
+        (backstack - backstack.last())
     }
     setBackstack(newBackstack)
 }

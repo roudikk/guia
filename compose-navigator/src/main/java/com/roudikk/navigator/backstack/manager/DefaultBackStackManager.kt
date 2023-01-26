@@ -20,13 +20,13 @@ fun rememberDefaultBackstackManager(navigator: Navigator): BackstackManager<Defa
         /**
          * Update the current visible back stack.
          */
-        getVisibleBackstack = { backStack, createLifecycleEntry ->
-            val currentEntry = backStack.lastOrNull()
+        getVisibleBackstack = { backstack, createLifecycleEntry ->
+            val currentEntry = backstack.lastOrNull()
                 ?: return@rememberBackstackManager DefaultVisibleBackstack()
 
             // Check if there's a valid screen that should be visible.
             // It's the last entry that is a screen.
-            val screenEntry = backStack.lastOrNull {
+            val screenEntry = backstack.lastOrNull {
                 navigator.navigationNode(it) is Screen
             }?.let(createLifecycleEntry)
 
@@ -39,12 +39,12 @@ fun rememberDefaultBackstackManager(navigator: Navigator): BackstackManager<Defa
             // Check if there's a valid bottom sheet that should be visible.
             // It's either the top most destination, in between a screen and a dialog
             // or just by itself.
-            val bottomSheetEntry = backStack
+            val bottomSheetEntry = backstack
                 .lastOrNull { navigator.navigationNode(it) is BottomSheet }
                 .takeIf {
                     if (currentEntry == it) return@takeIf true
-                    val bottomSheetIndex = backStack.indexOf(it)
-                    val entriesAfter = backStack.subList(bottomSheetIndex + 1, backStack.size)
+                    val bottomSheetIndex = backstack.indexOf(it)
+                    val entriesAfter = backstack.subList(bottomSheetIndex + 1, backstack.size)
                     entriesAfter.all { entry -> navigator.navigationNode(entry) is Dialog }
                 }?.let(createLifecycleEntry)
 
@@ -55,11 +55,11 @@ fun rememberDefaultBackstackManager(navigator: Navigator): BackstackManager<Defa
             )
 
             val navigatingToDialog = navigator.navigationNode(currentEntry) is Dialog &&
-                backStack.getOrNull(backStack.lastIndex - 1)
+                backstack.getOrNull(backstack.lastIndex - 1)
                     ?.let(navigator::navigationNode) !is Dialog
 
             val navigatingToBottomSheet = navigator.navigationNode(currentEntry) is BottomSheet &&
-                backStack.getOrNull(backStack.lastIndex - 1)
+                backstack.getOrNull(backstack.lastIndex - 1)
                     ?.let(navigator::navigationNode) !is BottomSheet
 
             visibleBackstack.entries.forEach {
@@ -103,7 +103,7 @@ fun rememberDefaultBackstackManager(navigator: Navigator): BackstackManager<Defa
                 .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
 
             visibleBackstack.entries.forEach {
-                if (it.id == navigator.backStack.lastOrNull()?.id) {
+                if (it.id == navigator.backstack.lastOrNull()?.id) {
                     it.maxLifecycleState = Lifecycle.State.RESUMED
                 } else {
                     it.maxLifecycleState = Lifecycle.State.STARTED

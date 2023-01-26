@@ -80,7 +80,7 @@ private fun Navigator.navigateToIndex(index: Int) {
     val currentKey = currentKey as NestedKey
     if (index > currentKey.index) {
         setBackstack(
-            backStack + (currentKey.index + 1 until index + 1)
+            backstack + (currentKey.index + 1 until index + 1)
                 .map { NestedKey(it).entry() }
         )
     } else {

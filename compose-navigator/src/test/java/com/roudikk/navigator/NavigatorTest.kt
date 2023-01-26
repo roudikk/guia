@@ -31,9 +31,9 @@ class NavigatorTest {
         val navigationKey = TestNavigationKey()
         val navigator = testNavigator(navigationKey)
 
-        assertThat(navigator.backStackKeys).isEqualTo(listOf(navigationKey))
-        assertThat(navigator.backStack.size).isEqualTo(1)
-        assertThat(navigator.backStack.any { it.navigationKey == navigationKey }).isTrue()
+        assertThat(navigator.backstackKeys).isEqualTo(listOf(navigationKey))
+        assertThat(navigator.backstack.size).isEqualTo(1)
+        assertThat(navigator.backstack.any { it.navigationKey == navigationKey }).isTrue()
     }
 
     @Test
@@ -45,9 +45,9 @@ class NavigatorTest {
 
         navigator.setBackstack(newKeys.entries())
 
-        assertThat(navigator.backStackKeys).isEqualTo(newKeys)
-        assertThat(navigator.backStack.size).isEqualTo(3)
-        assertThat(navigator.backStack.all { newKeys.contains(it.navigationKey) }).isTrue()
+        assertThat(navigator.backstackKeys).isEqualTo(newKeys)
+        assertThat(navigator.backstack.size).isEqualTo(3)
+        assertThat(navigator.backstack.all { newKeys.contains(it.navigationKey) }).isTrue()
     }
 
     @Test
@@ -110,19 +110,19 @@ class NavigatorTest {
                 .build()
         )
 
-        navigator.setBackstack(navigator.backStack + testKey.entry())
+        navigator.setBackstack(navigator.backstack + testKey.entry())
         assertThat(navigator.transition<Screen>().enter).isEqualTo(testKeyTransition.enterExit.enter)
         assertThat(navigator.transition<Screen>().exit).isEqualTo(testKeyTransition.enterExit.exit)
 
-        navigator.setBackstack(navigator.backStack.dropLast(1))
+        navigator.setBackstack(navigator.backstack.dropLast(1))
         assertThat(navigator.transition<Screen>().enter).isEqualTo(navigationKeyTransition.popEnterExit.enter)
         assertThat(navigator.transition<Screen>().exit).isEqualTo(navigationKeyTransition.popEnterExit.exit)
 
-        navigator.setBackstack(navigator.backStack + testKey2.entry())
+        navigator.setBackstack(navigator.backstack + testKey2.entry())
         assertThat(navigator.transition<Screen>().enter).isEqualTo(EnterTransition.None)
         assertThat(navigator.transition<Screen>().exit).isEqualTo(ExitTransition.None)
 
-        navigator.setBackstack(navigator.backStack + testKey3.entry())
+        navigator.setBackstack(navigator.backstack + testKey3.entry())
         assertThat(navigator.transition<Screen>().enter).isEqualTo(fadeIn())
         assertThat(navigator.transition<Screen>().exit).isEqualTo(fadeOut())
     }

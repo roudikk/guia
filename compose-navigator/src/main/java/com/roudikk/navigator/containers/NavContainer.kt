@@ -67,8 +67,8 @@ private fun Navigator.NavContainerContent(
     dialogContainer: Container,
 ) = Box(modifier = modifier) {
     val canGoBack by navigator.canGoBack()
-    val backStackManager = rememberDefaultBackstackManager(navigator = navigator)
-    val visibleBackstack = backStackManager.visibleBackstack
+    val backstackManager = rememberDefaultBackstackManager(navigator = navigator)
+    val visibleBackstack = backstackManager.visibleBackstack
 
     val backEnabled by remember(canGoBack, navigator.overrideBackPress) {
         derivedStateOf { canGoBack && navigator.overrideBackPress }
@@ -83,7 +83,7 @@ private fun Navigator.NavContainerContent(
         screenEntry = visibleBackstack.screenEntry
     ) { entry ->
         NavigationEntryContainer(
-            backStackManager = backStackManager,
+            backstackManager = backstackManager,
             lifecycleEntry = entry
         )
     }
@@ -99,7 +99,7 @@ private fun Navigator.NavContainerContent(
         }
 
         NavigationEntryContainer(
-            backStackManager = backStackManager,
+            backstackManager = backstackManager,
             lifecycleEntry = entry
         )
     }
@@ -110,12 +110,12 @@ private fun Navigator.NavContainerContent(
         container = dialogContainer,
     ) { entry ->
         NavigationEntryContainer(
-            backStackManager = backStackManager,
+            backstackManager = backstackManager,
             lifecycleEntry = entry
         )
     }
 
     DisposableEffect(Unit) {
-        onDispose(backStackManager::onDispose)
+        onDispose(backstackManager::onDispose)
     }
 }
