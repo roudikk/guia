@@ -3,7 +3,7 @@
 * [Overview](README.md)
 * [Setup](setup.md)
 
-## 🚀 Using Guia
+## Using Guia
 
 * [📖 The Lore](using-guia/the-lore/README.md)
   * [Navigation Key](using-guia/the-lore/navigation-key.md)

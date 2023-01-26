@@ -26,7 +26,7 @@ val navigator = rememberNavigator {
 }
 ```
 
-Alternatively, a key can host its own Composable, called a [NavigationNode](../the-lore/navigation-node/), then we don't need to delcare it in our builder, the builder if very convenient in [Multi Module projects](../the-lore/multi-module-navigation/)
+Alternatively, a key can host its own Composable, called a [NavigationNode](../the-lore/navigation-node/), then we don't need to declare it in our builder, the builder is convenient in [Multi Module projects](../the-lore/multi-module-navigation/)
 
 ```kotlin
 class DetailsBottomSheetKey(
@@ -39,7 +39,7 @@ class DetailsBottomSheetKey(
 }
 ```
 
-To get instance to our navigator and do some navigation:
+To get the instance of our navigator and do some navigation:
 
 _(For a list of all default operations provided by Guia check_ [_Navigation Operations_](../the-lore/navigator/navigation-operations.md)_)_
 
