@@ -1,5 +1,6 @@
 package com.roudikk.guia.core
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisallowComposableCalls
@@ -130,6 +131,7 @@ class Navigator(
         if (newEntry != null) {
             navigatorConfig.supportedNavigationNodes.forEach { kClass ->
                 transitions[kClass] = getTransition(
+                    nodeClass = kClass,
                     previousEntry = backstack.lastOrNull { entry ->
                         optionalNode(entry)?.let { it::class } == kClass
                     },
@@ -175,26 +177,33 @@ inline fun <reified Node : NavigationNode> Navigator.overrideTransition(
 }
 
 private fun Navigator.getTransition(
+    nodeClass: KClass<out NavigationNode>,
     previousEntry: BackstackEntry?,
     newEntry: BackstackEntry?,
     overrideTransition: EnterExitTransition?,
     isPop: Boolean
 ): EnterExitTransition {
+    Log.d("Node", "$nodeClass")
     return when {
         previousEntry == null || newEntry == null -> EnterExitTransition.None
 
         // If the current transition is being overridden, then we use that transition.
         overrideTransition != null -> overrideTransition
 
-        // We check if the current backstack is not empty and get the appropriate
-        // transition from previous backstack to the new backstack.
-        backstack.isNotEmpty() -> navigatorConfig.transitions[newEntry.navigationKey::class]
-            ?.invoke(previousEntry.navigationKey, newEntry.navigationKey, isPop)
-            ?: navigatorConfig.defaultTransition(
-                previousEntry.navigationKey,
-                newEntry.navigationKey,
-                isPop
-            )
+        backstack.isNotEmpty() -> // First we check if there's a transition defined for a certain key.
+            // If a key transition doesn't exist, we check for a node transition.
+            // Finally we fall back to the default transition.
+            navigatorConfig.keyTransitions[newEntry.navigationKey::class]
+                ?.invoke(previousEntry.navigationKey, newEntry.navigationKey, isPop)
+
+                ?: navigatorConfig.nodeTransitions[nodeClass]
+                    ?.invoke(previousEntry.navigationKey, newEntry.navigationKey, isPop)
+
+                ?: navigatorConfig.defaultTransition(
+                    previousEntry.navigationKey,
+                    newEntry.navigationKey,
+                    isPop
+                )
 
         // Otherwise we don't show any transition.
         else -> EnterExitTransition.None

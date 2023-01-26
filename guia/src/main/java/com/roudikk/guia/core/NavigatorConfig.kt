@@ -2,14 +2,16 @@
 
 package com.roudikk.guia.core
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import com.roudikk.guia.animation.EnterExitTransition
 import com.roudikk.guia.animation.NavigationTransition
 import com.roudikk.guia.core.BottomSheet.BottomSheetOptions
 import com.roudikk.guia.core.Dialog.DialogOptions
+import com.roudikk.guia.extensions.KeyTransitions
+import com.roudikk.guia.extensions.NodeTransitions
 import com.roudikk.guia.extensions.Presentations
 import com.roudikk.guia.extensions.Transition
-import com.roudikk.guia.extensions.Transitions
 import kotlin.reflect.KClass
 
 private val defaultNavigationNodes = listOf(
@@ -22,13 +24,14 @@ private val defaultNavigationNodes = listOf(
  * A Navigator's configuration.
  *
  * @property presentations, defines how a [NavigationKey] is rendered using a [NavigationNode].
- * @property transitions, defines how transitions happen between [NavigationKey].
+ * @property keyTransitions, defines how transitions happen between [NavigationKey].
  * @property defaultTransition, the default transition
  * @property supportedNavigationNodes, the supported navigation nodes for transitions.
  */
 class NavigatorConfig internal constructor(
     internal val presentations: Presentations = hashMapOf(),
-    internal val transitions: Transitions = hashMapOf(),
+    internal val keyTransitions: KeyTransitions = hashMapOf(),
+    internal val nodeTransitions: NodeTransitions = hashMapOf(),
     internal val defaultTransition: Transition = { _, _, _ -> EnterExitTransition.None },
     internal val supportedNavigationNodes: List<KClass<out NavigationNode>> = defaultNavigationNodes
 )
@@ -37,23 +40,19 @@ class NavigatorConfig internal constructor(
  * Builder for [NavigatorConfig]
  */
 class NavigatorConfigBuilder internal constructor() {
-    private val presentations: Presentations = hashMapOf()
-    private val transitions: Transitions = hashMapOf()
-    private var defaultTransition: Transition = { _, _, _ -> EnterExitTransition.None }
-    private var supportedNavigationNodes: List<KClass<out NavigationNode>> = defaultNavigationNodes
 
-    /**
-     * Define a [NavigationNode] presentation between a type of [NavigationKey].
-     *
-     * @param keyClass, the class associated with a [NavigationNode].
-     * @param navigationNodeBuilder, builder that returns a [NavigationNode] for a specific [keyClass].
-     */
-    fun navigationNode(
-        keyClass: KClass<NavigationKey>,
-        navigationNodeBuilder: (NavigationKey) -> NavigationNode
-    ) {
-        presentations[keyClass] = navigationNodeBuilder
-    }
+    @PublishedApi
+    internal val presentations: Presentations = hashMapOf()
+
+    @PublishedApi
+    internal val keyTransitions: KeyTransitions = hashMapOf()
+
+    @PublishedApi
+    internal val nodeTransitions: NodeTransitions = hashMapOf()
+
+    private var defaultTransition: Transition = { _, _, _ -> EnterExitTransition.None }
+
+    private var supportedNavigationNodes: List<KClass<out NavigationNode>> = defaultNavigationNodes
 
     /**
      * Define a [NavigationNode] presentation for a type of [Key].
@@ -63,10 +62,7 @@ class NavigatorConfigBuilder internal constructor() {
     inline fun <reified Key : NavigationKey> navigationNode(
         noinline navigationNodeBuilder: (Key) -> NavigationNode
     ) {
-        navigationNode(
-            Key::class as KClass<NavigationKey>,
-            navigationNodeBuilder as (NavigationKey) -> NavigationNode
-        )
+        presentations[Key::class] = navigationNodeBuilder as (NavigationKey) -> NavigationNode
     }
 
     /**
@@ -113,16 +109,25 @@ class NavigatorConfigBuilder internal constructor() {
     }
 
     /**
-     * Define a [Transition] for a given [keyClass].
-     *
-     * @param keyClass, the type of key to associate a transition with.
-     * @param transition, the transition for a given [keyClass]
+     * Define a transition for a given [Node]
      */
-    fun transition(
-        keyClass: KClass<NavigationKey>,
-        transition: Transition
+    inline fun <reified Node : NavigationNode> nodeTransition(
+        noinline transition: Transition
     ) {
-        transitions[keyClass] = transition
+        nodeTransitions[Node::class] = transition
+    }
+
+    /**
+     * Define a transition for a given [Node]
+     */
+    inline fun <reified Node : NavigationNode> nodeTransition(
+        noinline transition: () -> NavigationTransition
+    ) {
+        Log.d("Node", "${Node::class}")
+        nodeTransitions[Node::class] = { _, _, isPop ->
+            val navigationTransition = transition()
+            if (isPop) navigationTransition.popEnterExit else navigationTransition.enterExit
+        }
     }
 
     /**
@@ -134,10 +139,7 @@ class NavigatorConfigBuilder internal constructor() {
     inline fun <reified Key : NavigationKey> transition(
         noinline transition: (previous: NavigationKey, new: Key, isPop: Boolean) -> EnterExitTransition
     ) {
-        transition(
-            keyClass = Key::class as KClass<NavigationKey>,
-            transition = transition as Transition
-        )
+        keyTransitions[Key::class] = transition as Transition
     }
 
     /**
@@ -220,7 +222,8 @@ class NavigatorConfigBuilder internal constructor() {
      */
     internal fun build() = NavigatorConfig(
         presentations = presentations,
-        transitions = transitions,
+        keyTransitions = keyTransitions,
+        nodeTransitions = nodeTransitions,
         defaultTransition = defaultTransition,
         supportedNavigationNodes = supportedNavigationNodes
     )

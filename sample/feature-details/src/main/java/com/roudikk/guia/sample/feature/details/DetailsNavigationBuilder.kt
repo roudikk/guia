@@ -13,8 +13,6 @@ import com.roudikk.guia.extensions.localBottomSheet
 import com.roudikk.guia.extensions.pop
 import com.roudikk.guia.extensions.requireLocalNavigator
 import com.roudikk.guia.sample.feature.common.navigation.CrossFadeTransition
-import com.roudikk.guia.sample.feature.common.navigation.MaterialSharedAxisTransitionX
-import com.roudikk.guia.sample.feature.common.navigation.VerticalSlideTransition
 import com.roudikk.guia.sample.feature.details.api.DetailsKey
 import kotlinx.parcelize.Parcelize
 
@@ -81,8 +79,5 @@ fun NavigatorConfigBuilder.detailsNavigation(screenWidth: Int) {
 
     screen<DetailsKey> { DetailsScaffold(item = it.item) }
 
-    transition<DetailsBottomSheetKey> { -> CrossFadeTransition }
-    transition<DetailsDialogKey> { -> VerticalSlideTransition }
     transition<DynamicDetailsKey> { -> CrossFadeTransition }
-    transition<DetailsKey> { -> MaterialSharedAxisTransitionX }
 }
