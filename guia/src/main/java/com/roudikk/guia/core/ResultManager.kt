@@ -30,7 +30,7 @@ fun rememberResultManager(): ResultManager {
  */
 class NavigatorResultManager : ResultManager {
 
-    internal var results = mutableStateMapOf<String, Any?>()
+    internal val results = mutableStateMapOf<String, Any?>()
 
     override fun result(key: String) = results[key]
 
