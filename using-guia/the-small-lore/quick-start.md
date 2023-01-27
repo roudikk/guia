@@ -2,13 +2,12 @@
 
 First, let's declare some destinations, in Guia, they are called a [NavigationKey](../the-lore/navigation-key.md)
 
-```kotlin
-@Parcelize
-class HomeKey: NavigationKey
+<pre class="language-kotlin"><code class="lang-kotlin"><strong>@Parcelize
+</strong>class HomeKey: NavigationKey
 
 @Parcelize
 class ProfileKey(val profileId: String): NavigationKey
-```
+</code></pre>
 
 Then we declare a [Navigator](../the-lore/navigator/):
 
@@ -19,7 +18,7 @@ val navigator = rememberNavigator(initialKey = HomeKey()) // Initial Key is opti
 To link a [NavigationKey](../the-lore/navigation-key.md) to a Composable we can use the `builder` parameter in `rememberNavigator`:
 
 ```kotlin
-val navigator = rememberNavigator {
+val navigator = rememberNavigator(initialKey = HomeKey()) {
     screen<HomeKey> { HomeScreen() }
     bottomSheet<ProfileKey> { key -> ProfileScreen(profileId = key.profileId) }
     dialog<DialogKey> { DialogScreen() }

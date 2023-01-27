@@ -5,6 +5,8 @@
 
 ## Using Guia
 
+* [📔 Express Lore](using-guia/the-small-lore/README.md)
+  * [Quick Start](using-guia/the-small-lore/quick-start.md)
 * [📖 The Lore](using-guia/the-lore/README.md)
   * [Navigation Key](using-guia/the-lore/navigation-key.md)
   * [Navigation Node](using-guia/the-lore/navigation-node/README.md)
@@ -26,8 +28,6 @@
   * [Deep Linking / Global Navigation](using-guia/the-lore/deep-linking-global-navigation.md)
   * [Results](using-guia/the-lore/results.md)
   * [Lifecycle, ViewModel, Saved State](using-guia/the-lore/lifecycle-viewmodel-saved-state.md)
-* [📔 The Small Lore](using-guia/the-small-lore/README.md)
-  * [Quick Start](using-guia/the-small-lore/quick-start.md)
 
 ## 🤖 Advanced
 
