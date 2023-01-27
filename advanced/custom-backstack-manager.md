@@ -6,3 +6,6 @@ In this section we will see how we can use the `BackstackManager` API to create 
 * Card Stack
 
 You can find both examples in the [Sample app's custom feature.](https://github.com/roudikk/compose-navigator/tree/rkk/playground-bs/sample/feature-custom)
+
+<figure><img src="../.gitbook/assets/view-pager-stack.gif" alt=""><figcaption><p>ViewPager and Card Stacks using custom navigation containers and lifecycle management</p></figcaption></figure>
+
