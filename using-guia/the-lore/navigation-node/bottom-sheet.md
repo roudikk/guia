@@ -51,3 +51,13 @@ fun MyBottomSheet() {
     }
 }
 ```
+
+<div>
+
+<figure><img src="../../../.gitbook/assets/bottom-sheet.gif" alt=""><figcaption></figcaption></figure>
+
+ 
+
+<figure><img src="../../../.gitbook/assets/Screenshot_1674847133.png" alt=""><figcaption></figcaption></figure>
+
+</div>

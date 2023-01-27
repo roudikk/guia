@@ -73,3 +73,6 @@ val navHost = localNavHost()
 // Use when you are 100% sure there's a nav host in the tree hierarchy
 val navHost = requireLocalNavHost()
 ```
+
+<figure><img src="../../../.gitbook/assets/nav-host.gif" alt=""><figcaption></figcaption></figure>
+

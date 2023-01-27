@@ -48,3 +48,14 @@ fun MyDialog() {
     }
 }
 ```
+
+<div>
+
+<figure><img src="../../../.gitbook/assets/dialog.gif" alt=""><figcaption></figcaption></figure>
+
+ 
+
+<figure><img src="../../../.gitbook/assets/more-dialogs.gif" alt=""><figcaption></figcaption></figure>
+
+</div>
+

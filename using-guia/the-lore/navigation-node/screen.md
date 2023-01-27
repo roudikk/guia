@@ -7,3 +7,17 @@ class Screen(
     override val content: @Composable () -> Unit
 ) : NavigationNode
 ```
+
+<div>
+
+<figure><img src="../../../.gitbook/assets/Screenshot_1674844905.png" alt=""><figcaption></figcaption></figure>
+
+ 
+
+<figure><img src="../../../.gitbook/assets/Screenshot_1674847011.png" alt=""><figcaption></figcaption></figure>
+
+ 
+
+<figure><img src="../../../.gitbook/assets/screen.gif" alt=""><figcaption></figcaption></figure>
+
+</div>
