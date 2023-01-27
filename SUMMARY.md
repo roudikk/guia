@@ -5,8 +5,8 @@
 
 ## Using Guia
 
-* [📔 Express Lore](using-guia/the-small-lore/README.md)
-  * [Quick Start](using-guia/the-small-lore/quick-start.md)
+* [📔 Express Lore](using-guia/express-lore/README.md)
+  * [Quick Start](using-guia/express-lore/quick-start.md)
 * [📖 The Lore](using-guia/the-lore/README.md)
   * [Navigation Key](using-guia/the-lore/navigation-key.md)
   * [Navigation Node](using-guia/the-lore/navigation-node/README.md)
