@@ -20,7 +20,7 @@ jobs:
         run: ./gradlew clean
 
       - name: Build and upload archives to the Maven Central Repository
-        run: ./gradlew compose-navigator:publishAllPublicationsToMavenCentralRepository --no-daemon --no-parallel
+        run: ./gradlew guia:publishAllPublicationsToMavenCentralRepository --no-daemon --no-parallel
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
