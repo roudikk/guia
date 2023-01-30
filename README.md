@@ -12,4 +12,22 @@ For a comprehensive guide on how Guia works check [The Lore](using-guia/the-lore
 
 
 
+<div>
+
+<figure><img src=".gitbook/assets/screen.gif" alt=""><figcaption></figcaption></figure>
+
+ 
+
+<figure><img src=".gitbook/assets/nav-host.gif" alt=""><figcaption></figcaption></figure>
+
+ 
+
+<figure><img src=".gitbook/assets/dialog.gif" alt=""><figcaption></figcaption></figure>
+
+ 
+
+<figure><img src=".gitbook/assets/bottom-sheet.gif" alt=""><figcaption></figcaption></figure>
+
+</div>
+
 _Guia \~ \[ˈɡia] feminine noun. Means guidance._
