@@ -10,23 +10,25 @@ To get started, check the [Setup](setup.md) page.
 
 For a comprehensive guide on how Guia works check [The Lore](using-guia/the-lore/), for a quick start and a small overview check [The Small Lore](using-guia/express-lore/).
 
-
-
 <div>
 
-<figure><img src=".gitbook/assets/screen.gif" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/viewmodel (1).png" alt=""><figcaption></figcaption></figure>
 
  
 
-<figure><img src=".gitbook/assets/nav-host.gif" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/bottomsheet (1).png" alt=""><figcaption></figcaption></figure>
 
  
 
-<figure><img src=".gitbook/assets/dialog.gif" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/nested.png" alt=""><figcaption></figcaption></figure>
 
  
 
-<figure><img src=".gitbook/assets/bottom-sheet.gif" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/viewpager-stack.png" alt=""><figcaption></figcaption></figure>
+
+ 
+
+<figure><img src=".gitbook/assets/dialogs.png" alt=""><figcaption></figcaption></figure>
 
 </div>
 
