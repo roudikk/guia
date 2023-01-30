@@ -7,7 +7,7 @@ import com.roudikk.guia.core.NavigatorResultManager
 /**
  * Used to save and restore the state of a [NavigatorResultManager].
  */
-fun resultManagerSaver() = Saver<NavigatorResultManager, HashMap<String, Parcelable>>(
+internal fun resultManagerSaver() = Saver<NavigatorResultManager, HashMap<String, Parcelable>>(
     save = { resultManager ->
         hashMapOf<String, Parcelable>().apply {
             resultManager.results
