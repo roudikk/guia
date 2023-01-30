@@ -1,7 +1,6 @@
 package com.roudikk.guia.backstack.navhost
 
 import android.os.Parcelable
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -57,8 +56,8 @@ fun NavHost.StackHistoryBackHandler() {
     val overrideBackPress by remember {
         derivedStateOf {
             stackHistory.size > 1 &&
-                    stackHistory.lastOrNull()?.stackKey == currentEntry?.stackKey &&
-                    stackHistory.lastOrNull()?.backstackEntry?.id == currentEntry?.navigator?.currentEntry?.id
+                stackHistory.lastOrNull()?.stackKey == currentEntry?.stackKey &&
+                stackHistory.lastOrNull()?.backstackEntry?.id == currentEntry?.navigator?.currentEntry?.id
         }
     }
 
@@ -67,8 +66,6 @@ fun NavHost.StackHistoryBackHandler() {
     LaunchedEffect(overrideBackPress) {
         currentNavigator?.overrideBackPress = !overrideBackPress
     }
-
-    Log.d("TEST", "$stackHistory ${stackHistory.toList()} $overrideBackPress")
 
     // Get the previous entry and navigate to its Stack Key.
     NavBackHandler(overrideBackPress) {

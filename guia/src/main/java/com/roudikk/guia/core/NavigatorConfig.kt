@@ -2,10 +2,9 @@
 
 package com.roudikk.guia.core
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import com.roudikk.guia.animation.EnterExitTransition
-import com.roudikk.guia.animation.NavigationTransition
+import com.roudikk.guia.animation.NavTransition
 import com.roudikk.guia.core.BottomSheet.BottomSheetOptions
 import com.roudikk.guia.core.Dialog.DialogOptions
 import com.roudikk.guia.extensions.KeyTransitions
@@ -121,9 +120,8 @@ class NavigatorConfigBuilder internal constructor() {
      * Define a transition for a given [Node]
      */
     inline fun <reified Node : NavigationNode> nodeTransition(
-        noinline transition: () -> NavigationTransition
+        noinline transition: () -> NavTransition
     ) {
-        Log.d("Node", "${Node::class}")
         nodeTransitions[Node::class] = { _, _, isPop ->
             val navigationTransition = transition()
             if (isPop) navigationTransition.popEnterExit else navigationTransition.enterExit
@@ -145,11 +143,11 @@ class NavigatorConfigBuilder internal constructor() {
     /**
      * Define a transition for a given [Key].
      *
-     * @param transition, lambda that returns a [NavigationTransition], the full enterExit and popEnterExit
+     * @param transition, lambda that returns a [NavTransition], the full enterExit and popEnterExit
      * transitions between a given previous/new key.
      */
     inline fun <reified Key : NavigationKey> keyTransition(
-        noinline transition: (previous: NavigationKey, new: Key) -> NavigationTransition
+        noinline transition: (previous: NavigationKey, new: Key) -> NavTransition
     ) {
         keyTransition<Key> { previous, new, isPop ->
             val navigationTransition = transition(previous, new)
@@ -160,11 +158,11 @@ class NavigatorConfigBuilder internal constructor() {
     /**
      * Define a transition for a given [Key].
      *
-     * @param transition, lambda that returns a [NavigationTransition], the full enterExit and popEnterExit
+     * @param transition, lambda that returns a [NavTransition], the full enterExit and popEnterExit
      * transitions between two navigation keys.
      */
     inline fun <reified Key : NavigationKey> keyTransition(
-        noinline transition: () -> NavigationTransition
+        noinline transition: () -> NavTransition
     ) {
         keyTransition<Key> { _, _, isPop ->
             val navigationTransition = transition()
@@ -189,7 +187,7 @@ class NavigatorConfigBuilder internal constructor() {
      * @param transition, the default Transition between previous/new key.
      */
     fun defaultTransition(
-        transition: (previous: NavigationKey, new: NavigationKey) -> NavigationTransition
+        transition: (previous: NavigationKey, new: NavigationKey) -> NavTransition
     ) {
         defaultTransition = { previous, new, isPop ->
             val navigationTransition = transition(previous, new)
@@ -203,7 +201,7 @@ class NavigatorConfigBuilder internal constructor() {
      * @param transition, the default Transition between any two navigation keys.
      */
     fun defaultTransition(
-        transition: () -> NavigationTransition
+        transition: () -> NavTransition
     ) {
         defaultTransition = { _, _, isPop ->
             val navigationTransition = transition()
@@ -211,6 +209,11 @@ class NavigatorConfigBuilder internal constructor() {
         }
     }
 
+    /**
+     * Define the supported navigation nodes the [Navigator] will generate transitions for.
+     *
+     * @see [Navigator.transitions].
+     */
     fun supportedNavigationNodes(
         vararg navigationNodeClass: KClass<out NavigationNode>
     ) {

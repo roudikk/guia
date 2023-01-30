@@ -14,7 +14,10 @@ import androidx.compose.runtime.DisposableEffect
  * reference: https://issuetracker.google.com/issues/182284739
  */
 @Composable
-fun NavBackHandler(enabled: Boolean, onBack: () -> Unit) {
+fun NavBackHandler(
+    enabled: Boolean = true,
+    onBack: () -> Unit
+) {
     val backDispatcher = requireNotNull(LocalOnBackPressedDispatcherOwner.current)
         .onBackPressedDispatcher
 

@@ -7,7 +7,7 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import com.google.common.truth.Truth.assertThat
 import com.roudikk.guia.animation.EnterExitTransition
-import com.roudikk.guia.animation.NavigationTransition
+import com.roudikk.guia.animation.NavTransition
 import com.roudikk.guia.animation.to
 import com.roudikk.guia.core.NavigatorConfigBuilder
 import com.roudikk.guia.core.Screen
@@ -81,11 +81,11 @@ class NavigatorTest {
         val testKey2 = TestKey2()
         val testKey3 = TestKey3()
         val navigationKey = TestNavigationKey()
-        val navigationKeyTransition = NavigationTransition(
+        val navigationKeyTransition = NavTransition(
             enterExit = fadeIn() to fadeOut(),
             popEnterExit = fadeIn() to fadeOut()
         )
-        val testKeyTransition = NavigationTransition(
+        val testKeyTransition = NavTransition(
             enterExit = scaleIn() to scaleOut(),
             popEnterExit = scaleIn() to scaleOut()
         )

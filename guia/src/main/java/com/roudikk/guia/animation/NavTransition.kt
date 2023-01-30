@@ -9,13 +9,13 @@ import androidx.compose.animation.ExitTransition
  * @property enterExit, is the transition when the navigation key is initially added to the backstack.
  * @property popEnterExit, is the transition when the navigation key is popped to in the backstack.
  */
-class NavigationTransition(
+class NavTransition(
     val enterExit: EnterExitTransition,
     val popEnterExit: EnterExitTransition
 ) {
     companion object {
         // Empty Navigation Transition.
-        val None = NavigationTransition(
+        val None = NavTransition(
             enterExit = EnterExitTransition.None,
             popEnterExit = EnterExitTransition.None
         )
@@ -23,11 +23,11 @@ class NavigationTransition(
 }
 
 /**
- * Helper for creating a [NavigationTransition] from two [EnterExitTransition].
+ * Helper for creating a [NavTransition] from two [EnterExitTransition].
  */
 infix fun EnterExitTransition.to(
     popEnterExit: EnterExitTransition
-) = NavigationTransition(
+) = NavTransition(
     enterExit = this,
     popEnterExit = popEnterExit
 )

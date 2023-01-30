@@ -18,29 +18,29 @@ import com.roudikk.guia.core.NavigationKey
  * For Composable previews where this Local wouldn't be provided. Make sure to provide a value yourself
  * using the [CompositionLocalProvider].
  */
-val LocalNavigationVisibilityScope = compositionLocalOf<AnimatedVisibilityScope> {
+val LocalNavVisibilityScope = compositionLocalOf<AnimatedVisibilityScope> {
     error("Must be used inside a navigation node contained in a NavContainer")
 }
 
 /**
- * Provides an instance of [LocalNavigationVisibilityScope], used by the Composable containers.
+ * Provides an instance of [LocalNavVisibilityScope], used by the Composable containers.
  */
 @Composable
-internal fun AnimatedVisibilityScope.ProvideNavigationVisibilityScope(
+internal fun AnimatedVisibilityScope.ProvideNavVisibilityScope(
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
-        LocalNavigationVisibilityScope provides this,
+        LocalNavVisibilityScope provides this,
         content = content
     )
 }
 
 /**
- * Call this to execute a [block] within the context of a [LocalNavigationVisibilityScope].
+ * Call this to execute a [block] within the context of a [LocalNavVisibilityScope].
  */
 @Composable
-fun NavigationVisibilityScope(block: @Composable AnimatedVisibilityScope.() -> Unit) {
-    with(LocalNavigationVisibilityScope.current) {
+fun NavVisibilityScope(block: @Composable AnimatedVisibilityScope.() -> Unit) {
+    with(LocalNavVisibilityScope.current) {
         block()
     }
 }

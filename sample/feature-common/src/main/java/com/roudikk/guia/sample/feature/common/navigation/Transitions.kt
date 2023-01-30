@@ -10,10 +10,10 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
-import com.roudikk.guia.animation.NavigationTransition
+import com.roudikk.guia.animation.NavTransition
 import com.roudikk.guia.animation.to
 
-val MaterialSharedAxisTransitionX = NavigationTransition(
+val MaterialSharedAxisTransitionX = NavTransition(
     enterExit = slideInHorizontally { (it * 0.2f).toInt() } + fadeIn(
         animationSpec = tween(300)
     ) to slideOutHorizontally { -(it * 0.1f).toInt() } + fadeOut(
@@ -28,7 +28,7 @@ val MaterialSharedAxisTransitionX = NavigationTransition(
 )
 
 @OptIn(ExperimentalAnimationApi::class)
-val MaterialSharedAxisTransitionXY = NavigationTransition(
+val MaterialSharedAxisTransitionXY = NavTransition(
     enterExit = fadeIn(animationSpec = tween(300)) + scaleIn(
         initialScale = 0.8f,
         animationSpec = tween(300)
@@ -46,7 +46,7 @@ val MaterialSharedAxisTransitionXY = NavigationTransition(
     ) + fadeOut(animationSpec = tween(durationMillis = 150))
 )
 
-val VerticalSlideTransition = NavigationTransition(
+val VerticalSlideTransition = NavTransition(
     enterExit = slideInVertically { it / 2 } + fadeIn() to slideOutVertically {
         -it / 2
     } + fadeOut(),
@@ -55,7 +55,7 @@ val VerticalSlideTransition = NavigationTransition(
     } + fadeOut()
 )
 
-val CrossFadeTransition = NavigationTransition(
+val CrossFadeTransition = NavTransition(
     enterExit = fadeIn() to fadeOut(),
     popEnterExit = fadeIn() to fadeOut()
 )

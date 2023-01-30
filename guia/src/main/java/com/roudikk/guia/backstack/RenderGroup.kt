@@ -4,16 +4,17 @@ import com.roudikk.guia.core.BottomSheet
 import com.roudikk.guia.core.Dialog
 import com.roudikk.guia.core.Navigator
 import com.roudikk.guia.core.Screen
+import com.roudikk.guia.lifecycle.LifecycleEntry
 
 /**
- * Collection of the currently visible [LifecycleEntry]s.
+ * Collection of the currently rendered [LifecycleEntry]s.
  **/
-interface VisibleBackstack {
+interface RenderGroup {
     val entries: List<LifecycleEntry>
 }
 
 /**
- * A [DefaultVisibleBackstack] will be determined based on the current state of the [Navigator].
+ * A [DefaultRenderGroup] will be determined based on the current state of the [Navigator].
  *
  * - [screenEntry] will be the last entry with navigation node being a [Screen], if it exists.
  * - [dialogEntry] will be the last entry if it is a [Dialog], if it exists.
@@ -44,11 +45,11 @@ interface VisibleBackstack {
  * - [..], [Screen], [Dialog], [BottomSheet]
  * Then [screenEntry] and [bottomSheetEntry] will be available.
  */
-class DefaultVisibleBackstack(
+class DefaultRenderGroup(
     val screenEntry: LifecycleEntry? = null,
     val dialogEntry: LifecycleEntry? = null,
     val bottomSheetEntry: LifecycleEntry? = null
-) : VisibleBackstack {
+) : RenderGroup {
 
     override val entries: List<LifecycleEntry>
         get() = listOfNotNull(screenEntry, dialogEntry, bottomSheetEntry)

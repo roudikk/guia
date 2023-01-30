@@ -16,7 +16,6 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.roudikk.guia.backstack.NavBackHandler
-import com.roudikk.guia.backstack.manager.rememberDefaultBackstackManager
 import com.roudikk.guia.containers.BottomSheetContainer
 import com.roudikk.guia.containers.DialogContainer
 import com.roudikk.guia.containers.NavEntryContainer
@@ -28,6 +27,7 @@ import com.roudikk.guia.extensions.pop
 import com.roudikk.guia.extensions.popTo
 import com.roudikk.guia.extensions.push
 import com.roudikk.guia.extensions.setRoot
+import com.roudikk.guia.lifecycle.rememberDefaultLifecycleManager
 import com.roudikk.guia.sample.feature.bottomnav.bottomNavNavigation
 import com.roudikk.guia.sample.feature.bottomnav.navigation.BottomNavKey
 import com.roudikk.guia.sample.feature.common.deeplink.GlobalNavigator
@@ -82,47 +82,49 @@ class MainActivity : ComponentActivity() {
                     LocalRootNavigator provides rootNavigator,
                     LocalNavHostViewModelStoreOwner provides requireNotNull(LocalViewModelStoreOwner.current)
                 ) {
-                    val backStackManager = rememberDefaultBackstackManager(rootNavigator)
+                    // This is just an examples of how we can break down the containers provided
+                    // by Guia. In most cases you can simply use Navigator.NavContainer
+                    val lifecycleManager = rememberDefaultLifecycleManager(rootNavigator)
 
                     NavBackHandler(
-                        enabled = rootNavigator.backstack.size > 1
-                            && rootNavigator.overrideBackPress
+                        enabled = rootNavigator.backstack.size > 1 &&
+                            rootNavigator.overrideBackPress
                     ) {
                         rootNavigator.pop()
                     }
 
                     rootNavigator.ScreenContainer(
-                        screenEntry = backStackManager.visibleBackstack.screenEntry
+                        screenEntry = lifecycleManager.renderGroup.screenEntry
                     ) { entry ->
                         rootNavigator.NavEntryContainer(
-                            backstackManager = backStackManager,
+                            lifecycleManager = lifecycleManager,
                             lifecycleEntry = entry
                         )
                     }
 
                     rootNavigator.BottomSheetContainer(
                         container = { content -> Surface { content() } },
-                        bottomSheetEntry = backStackManager.visibleBackstack.bottomSheetEntry,
+                        bottomSheetEntry = lifecycleManager.renderGroup.bottomSheetEntry,
                         bottomSheetScrimColor = Color.Black.copy(alpha = 0.32f)
                     ) { entry ->
                         rootNavigator.NavEntryContainer(
-                            backstackManager = backStackManager,
+                            lifecycleManager = lifecycleManager,
                             lifecycleEntry = entry
                         )
                     }
 
                     rootNavigator.DialogContainer(
                         container = { content -> Surface { content() } },
-                        dialogEntry = backStackManager.visibleBackstack.dialogEntry
+                        dialogEntry = lifecycleManager.renderGroup.dialogEntry
                     ) { entry ->
                         rootNavigator.NavEntryContainer(
-                            backstackManager = backStackManager,
+                            lifecycleManager = lifecycleManager,
                             lifecycleEntry = entry
                         )
                     }
 
                     DisposableEffect(Unit) {
-                        onDispose(backStackManager::onDispose)
+                        onDispose(lifecycleManager::onDispose)
                     }
                 }
 

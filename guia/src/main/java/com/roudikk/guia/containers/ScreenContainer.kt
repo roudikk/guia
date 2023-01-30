@@ -6,11 +6,11 @@ import androidx.compose.animation.with
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.roudikk.guia.animation.ProvideNavigationVisibilityScope
-import com.roudikk.guia.backstack.LifecycleEntry
+import com.roudikk.guia.animation.ProvideNavVisibilityScope
 import com.roudikk.guia.core.Navigator
 import com.roudikk.guia.core.Screen
 import com.roudikk.guia.core.keyTransition
+import com.roudikk.guia.lifecycle.LifecycleEntry
 
 /**
  * Renders the content of a screen if a [Navigator]'s current entry is a [Screen].
@@ -30,7 +30,7 @@ fun Navigator.ScreenContainer(
         }
     ) { backstackEntry ->
         backstackEntry?.let {
-            ProvideNavigationVisibilityScope {
+            ProvideNavVisibilityScope {
                 content(backstackEntry)
             }
         }

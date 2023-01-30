@@ -2,18 +2,18 @@ package com.roudikk.guia.sample.feature.custom.card
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.Lifecycle
-import com.roudikk.guia.backstack.LifecycleEntry
-import com.roudikk.guia.backstack.VisibleBackstack
-import com.roudikk.guia.backstack.id
-import com.roudikk.guia.backstack.manager.BackstackManager
-import com.roudikk.guia.backstack.manager.rememberBackstackManager
+import com.roudikk.guia.backstack.RenderGroup
 import com.roudikk.guia.core.Navigator
+import com.roudikk.guia.lifecycle.LifecycleEntry
+import com.roudikk.guia.lifecycle.LifecycleManager
+import com.roudikk.guia.lifecycle.id
+import com.roudikk.guia.lifecycle.rememberLifecycleManager
 
 @Composable
-internal fun rememberCardBackstackManager(navigator: Navigator): BackstackManager<VisibleCardStack> {
-    return rememberBackstackManager(
+internal fun rememberCardLifecycleManager(navigator: Navigator): LifecycleManager<VisibleCardStack> {
+    return rememberLifecycleManager(
         navigator = navigator,
-        getVisibleBackstack = { backstack, createEntry ->
+        getRenderGroup = { backstack, createEntry ->
             VisibleCardStack(
                 backstack
                     .reversed()
@@ -38,4 +38,4 @@ internal fun rememberCardBackstackManager(navigator: Navigator): BackstackManage
 
 class VisibleCardStack(
     override val entries: List<LifecycleEntry>
-) : VisibleBackstack
+) : RenderGroup

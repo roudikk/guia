@@ -20,15 +20,15 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.roudikk.guia.animation.EnterExitTransition
-import com.roudikk.guia.animation.ProvideNavigationVisibilityScope
-import com.roudikk.guia.backstack.LifecycleEntry
+import com.roudikk.guia.animation.ProvideNavVisibilityScope
 import com.roudikk.guia.containers.BottomSheetValue.Expanded
 import com.roudikk.guia.containers.BottomSheetValue.Hidden
 import com.roudikk.guia.core.BottomSheet
 import com.roudikk.guia.core.Navigator
-import com.roudikk.guia.core.navigationNode
 import com.roudikk.guia.core.keyTransition
+import com.roudikk.guia.core.navigationNode
 import com.roudikk.guia.extensions.pop
+import com.roudikk.guia.lifecycle.LifecycleEntry
 import kotlinx.coroutines.launch
 
 private fun Navigator.currentBottomSheet(): BottomSheet? {
@@ -146,7 +146,7 @@ private fun BottomSheetContent(
         }
     ) { targetEntry ->
         if (targetEntry != null) {
-            ProvideNavigationVisibilityScope {
+            ProvideNavVisibilityScope {
                 content(targetEntry)
             }
         } else {

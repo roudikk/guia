@@ -6,11 +6,12 @@ import com.roudikk.guia.core.NavigationKey
 import com.roudikk.guia.core.Navigator
 import com.roudikk.guia.core.NavigatorConfig
 import com.roudikk.guia.core.NavigatorResultManager
+import com.roudikk.guia.core.ResultManager
 
 fun testNavigator(
     navigationKey: NavigationKey,
     navigatorConfig: NavigatorConfig = NavigatorConfig(),
-    resultManager: NavigatorResultManager = NavigatorResultManager()
+    resultManager: ResultManager = NavigatorResultManager()
 ) = Navigator(
     initialKey = navigationKey,
     navigatorConfig = navigatorConfig,
