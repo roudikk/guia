@@ -193,7 +193,7 @@ private fun Navigator.getTransition(
             navigatorConfig.keyTransitions[newEntry.navigationKey::class]
                 ?.invoke(previousEntry.navigationKey, newEntry.navigationKey, isPop)
 
-                // If a key transition doesn't exist, we check for a node transition.
+            // If a key transition doesn't exist, we check for a node transition.
                 ?: navigatorConfig.nodeTransitions[nodeClass]
                     ?.invoke(previousEntry.navigationKey, newEntry.navigationKey, isPop)
 

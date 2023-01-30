@@ -11,7 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.roudikk.guia.backstack.NavBackHandler
-import com.roudikk.guia.backstack.manager.rememberDefaultBackstackManager
 import com.roudikk.guia.core.Navigator
 import com.roudikk.guia.core.Screen
 import com.roudikk.guia.extensions.LocalNavigator
@@ -19,6 +18,7 @@ import com.roudikk.guia.extensions.LocalParentNavigator
 import com.roudikk.guia.extensions.canGoBack
 import com.roudikk.guia.extensions.localNavigator
 import com.roudikk.guia.extensions.pop
+import com.roudikk.guia.lifecycle.rememberDefaultLifecycleManager
 
 internal typealias Container = @Composable (
     content: @Composable () -> Unit
@@ -67,8 +67,8 @@ private fun Navigator.NavContainerContent(
     dialogContainer: Container,
 ) = Box(modifier = modifier) {
     val canGoBack by navigator.canGoBack()
-    val backstackManager = rememberDefaultBackstackManager(navigator = navigator)
-    val visibleBackstack = backstackManager.visibleBackstack
+    val lifecycleManager = rememberDefaultLifecycleManager(navigator = navigator)
+    val visibleBackstack = lifecycleManager.renderGroup
 
     val backEnabled by remember(canGoBack, navigator.overrideBackPress) {
         derivedStateOf { canGoBack && navigator.overrideBackPress }
@@ -83,7 +83,7 @@ private fun Navigator.NavContainerContent(
         screenEntry = visibleBackstack.screenEntry
     ) { entry ->
         NavEntryContainer(
-            backstackManager = backstackManager,
+            lifecycleManager = lifecycleManager,
             lifecycleEntry = entry
         )
     }
@@ -99,7 +99,7 @@ private fun Navigator.NavContainerContent(
         }
 
         NavEntryContainer(
-            backstackManager = backstackManager,
+            lifecycleManager = lifecycleManager,
             lifecycleEntry = entry
         )
     }
@@ -110,12 +110,12 @@ private fun Navigator.NavContainerContent(
         container = dialogContainer,
     ) { entry ->
         NavEntryContainer(
-            backstackManager = backstackManager,
+            lifecycleManager = lifecycleManager,
             lifecycleEntry = entry
         )
     }
 
     DisposableEffect(Unit) {
-        onDispose(backstackManager::onDispose)
+        onDispose(lifecycleManager::onDispose)
     }
 }

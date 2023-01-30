@@ -1,28 +1,33 @@
-package com.roudikk.guia.backstack.manager
+package com.roudikk.guia.lifecycle
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.Lifecycle
-import com.roudikk.guia.backstack.DefaultVisibleBackstack
-import com.roudikk.guia.backstack.id
+import com.roudikk.guia.backstack.DefaultRenderGroup
+import com.roudikk.guia.containers.NavContainer
 import com.roudikk.guia.core.BottomSheet
 import com.roudikk.guia.core.Dialog
 import com.roudikk.guia.core.Navigator
 import com.roudikk.guia.core.Screen
 import com.roudikk.guia.core.navigationNode
 
+/**
+ * Default implementation of a [LifecycleManager] used by [NavContainer].
+ *
+ * This will generate a [DefaultRenderGroup] containing the current [Screen], [Dialog] and
+ * [BottomSheet].
+ */
 @Composable
-fun rememberDefaultBackstackManager(navigator: Navigator): BackstackManager<DefaultVisibleBackstack> {
-    return rememberBackstackManager(
+fun rememberDefaultLifecycleManager(
+    navigator: Navigator
+): LifecycleManager<DefaultRenderGroup> {
+    return rememberLifecycleManager(
         navigator = navigator,
         /**
          * Update the current visible back stack.
          */
-        /**
-         * Update the current visible back stack.
-         */
-        getVisibleBackstack = { backstack, createLifecycleEntry ->
+        getRenderGroup = { backstack, createLifecycleEntry ->
             val currentEntry = backstack.lastOrNull()
-                ?: return@rememberBackstackManager DefaultVisibleBackstack()
+                ?: return@rememberLifecycleManager DefaultRenderGroup()
 
             // Check if there's a valid screen that should be visible.
             // It's the last entry that is a screen.
@@ -48,7 +53,7 @@ fun rememberDefaultBackstackManager(navigator: Navigator): BackstackManager<Defa
                     entriesAfter.all { entry -> navigator.navigationNode(entry) is Dialog }
                 }?.let(createLifecycleEntry)
 
-            val visibleBackstack = DefaultVisibleBackstack(
+            val visibleBackstack = DefaultRenderGroup(
                 screenEntry = screenEntry,
                 dialogEntry = dialogEntry,
                 bottomSheetEntry = bottomSheetEntry
@@ -80,15 +85,6 @@ fun rememberDefaultBackstackManager(navigator: Navigator): BackstackManager<Defa
 
             visibleBackstack
         },
-        /**
-         * Make sure all entries' lifecycle is up to date.
-         *
-         * All entries that are not in the current visibleBackstack will be in the destroyed state.
-         *
-         * We then check the entries that are in the visibleBackstack:
-         * - If the entry is the current last entry in the [Navigator] backstack, it's resumed.
-         * - If the entry is not the current last entry, then it's paused.
-         */
         /**
          * Make sure all entries' lifecycle is up to date.
          *

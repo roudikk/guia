@@ -18,7 +18,7 @@ import kotlin.math.abs
 fun Navigator.ViewPagerContainer(
     modifier: Modifier
 ) {
-    val backstackManager = rememberViewPagerBackstackManager(navigator = this)
+    val lifecycleManager = rememberViewPagerLifecycleManager(navigator = this)
     val pagerState = rememberPagerState(initialPage = activeIndex)
 
     HorizontalPager(
@@ -27,11 +27,11 @@ fun Navigator.ViewPagerContainer(
         count = backstack.size,
         contentPadding = PaddingValues(horizontal = 32.dp)
     ) { page ->
-        backstackManager.visibleBackstack.entries
+        lifecycleManager.renderGroup.entries
             .firstOrNull { it.backstackEntry.id == backstack[page].id }
             ?.let {
                 NavEntryContainer(
-                    backstackManager = backstackManager,
+                    lifecycleManager = lifecycleManager,
                     lifecycleEntry = it
                 )
             }
@@ -50,6 +50,6 @@ fun Navigator.ViewPagerContainer(
     }
 
     DisposableEffect(Unit) {
-        onDispose(backstackManager::onDispose)
+        onDispose(lifecycleManager::onDispose)
     }
 }

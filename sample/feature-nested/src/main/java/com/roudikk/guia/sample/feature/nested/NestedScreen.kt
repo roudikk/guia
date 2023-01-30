@@ -39,6 +39,7 @@ internal fun NestedScreen(
 ) {
     val navigator = requireLocalNavigator()
     val canGoBack by navigator.canGoBack()
+
     NestedContent(
         count = count,
         canGoBack = canGoBack,

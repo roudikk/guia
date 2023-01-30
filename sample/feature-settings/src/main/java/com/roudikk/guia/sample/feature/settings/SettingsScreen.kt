@@ -39,7 +39,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.guia.animation.NavigationVisibilityScope
+import com.roudikk.guia.animation.NavVisibilityScope
 import com.roudikk.guia.extensions.pop
 import com.roudikk.guia.extensions.requireLocalNavigator
 import com.roudikk.guia.sample.feature.common.theme.AppTheme
@@ -176,7 +176,7 @@ private fun SettingsContent(
                 }
             }
 
-            NavigationVisibilityScope {
+            NavVisibilityScope {
                 ClickableText(
                     style = MaterialTheme.typography.bodyLarge.copy(
                         color = MaterialTheme.colorScheme.onSurface

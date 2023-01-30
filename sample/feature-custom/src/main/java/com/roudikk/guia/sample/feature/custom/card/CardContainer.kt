@@ -24,7 +24,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.roudikk.guia.backstack.id
+import com.roudikk.guia.lifecycle.id
 import com.roudikk.guia.containers.NavEntryContainer
 import com.roudikk.guia.core.Navigator
 import kotlin.math.abs
@@ -44,8 +44,8 @@ enum class CardState {
 internal fun Navigator.CardContainer(
     modifier: Modifier = Modifier
 ) {
-    val customBackstackManager = rememberCardBackstackManager(navigator = this)
-    val entries = customBackstackManager.visibleBackstack.entries
+    val lifecycleManager = rememberCardLifecycleManager(navigator = this)
+    val entries = lifecycleManager.renderGroup.entries
 
     entries.forEach { entry ->
         key(entry.id) {
@@ -79,7 +79,7 @@ internal fun Navigator.CardContainer(
                         )
                 ) {
                     NavEntryContainer(
-                        backstackManager = customBackstackManager,
+                        lifecycleManager = lifecycleManager,
                         lifecycleEntry = entry
                     )
 
@@ -94,6 +94,6 @@ internal fun Navigator.CardContainer(
     }
 
     DisposableEffect(Unit) {
-        onDispose(customBackstackManager::onDispose)
+        onDispose(lifecycleManager::onDispose)
     }
 }

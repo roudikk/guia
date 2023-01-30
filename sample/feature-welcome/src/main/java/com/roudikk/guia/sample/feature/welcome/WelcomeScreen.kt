@@ -25,7 +25,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.roudikk.guia.animation.NavigationVisibilityScope
+import com.roudikk.guia.animation.NavVisibilityScope
 import com.roudikk.guia.extensions.push
 import com.roudikk.guia.extensions.requireLocalNavigator
 import com.roudikk.guia.extensions.setRoot
@@ -74,7 +74,7 @@ private fun WelcomeContent(
             )
         }
 
-        NavigationVisibilityScope {
+        NavVisibilityScope {
             Button(
                 modifier = Modifier
                     .widthIn(min = 300.dp)

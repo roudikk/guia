@@ -6,15 +6,15 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import com.roudikk.guia.backstack.manager.BackstackManager
-import com.roudikk.guia.backstack.LifecycleEntry
-import com.roudikk.guia.backstack.LocalProvider
-import com.roudikk.guia.backstack.VisibleBackstack
+import com.roudikk.guia.backstack.RenderGroup
 import com.roudikk.guia.core.NavigationKey
 import com.roudikk.guia.core.Navigator
 import com.roudikk.guia.core.navigationNode
 import com.roudikk.guia.extensions.LocalNavigationNode
 import com.roudikk.guia.extensions.LocalNavigator
+import com.roudikk.guia.lifecycle.LifecycleEntry
+import com.roudikk.guia.lifecycle.LifecycleManager
+import com.roudikk.guia.lifecycle.LocalProvider
 
 /**
  * Renders the [LifecycleEntry].
@@ -24,8 +24,8 @@ import com.roudikk.guia.extensions.LocalNavigator
  * for usage.
  */
 @Composable
-fun <VB : VisibleBackstack> Navigator.NavEntryContainer(
-    backstackManager: BackstackManager<VB>,
+fun <VB : RenderGroup> Navigator.NavEntryContainer(
+    lifecycleManager: LifecycleManager<VB>,
     lifecycleEntry: LifecycleEntry
 ) = with(lifecycleEntry.backstackEntry) {
     lifecycleEntry.LocalProvider {
@@ -38,8 +38,8 @@ fun <VB : VisibleBackstack> Navigator.NavEntryContainer(
             )
         }
 
-        DisposableEffect(backstackManager, lifecycleEntry) {
-            onDispose { backstackManager.onEntryDisposed() }
+        DisposableEffect(lifecycleManager, lifecycleEntry) {
+            onDispose { lifecycleManager.onEntryDisposed() }
         }
     }
 }
