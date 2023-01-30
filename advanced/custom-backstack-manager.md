@@ -1,6 +1,6 @@
-# Custom BackstackManager
+# Custom LifecycleManager
 
-In this section we will see how we can use the `BackstackManager` API to create custom containers for our backstack for different use cases. In this doc we will see two examples
+In this section we will see how we can use the `LifecycleManager` API to create custom containers for our backstack for different use cases. In this doc we will see two examples
 
 * ViewPager
 * Card Stack

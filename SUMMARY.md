@@ -31,4 +31,4 @@
 
 ## 🤖 Advanced
 
-* [Custom BackstackManager](advanced/custom-backstack-manager.md)
+* [Custom LifecycleManager](advanced/custom-backstack-manager.md)
