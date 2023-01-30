@@ -28,7 +28,7 @@ fun rememberResultManager(): ResultManager {
  * [ResultManager] implementation that uses a [mutableStateMapOf] to manage the results
  * in a stateful manner.
  */
-class NavigatorResultManager : ResultManager {
+internal class NavigatorResultManager : ResultManager {
 
     internal val results = mutableStateMapOf<String, Any?>()
 
