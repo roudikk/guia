@@ -53,7 +53,7 @@ fun rememberDefaultLifecycleManager(
                     entriesAfter.all { entry -> navigator.navigationNode(entry) is Dialog }
                 }?.let(createLifecycleEntry)
 
-            val visibleBackstack = DefaultRenderGroup(
+            val renderGroup = DefaultRenderGroup(
                 screenEntry = screenEntry,
                 dialogEntry = dialogEntry,
                 bottomSheetEntry = bottomSheetEntry
@@ -67,7 +67,7 @@ fun rememberDefaultLifecycleManager(
                 backstack.getOrNull(backstack.lastIndex - 1)
                     ?.let(navigator::navigationNode) !is BottomSheet
 
-            visibleBackstack.entries.forEach {
+            renderGroup.entries.forEach {
                 // If the current destination is a bottom sheet or a dialog
                 // we need to pause whatever is behind it. In the case of a dialog
                 // we might have a bottom sheet and/or a screen behind it, whereas a bottom sheet
@@ -83,22 +83,22 @@ fun rememberDefaultLifecycleManager(
                 }
             }
 
-            visibleBackstack
+            renderGroup
         },
         /**
          * Make sure all entries' lifecycle is up to date.
          *
-         * All entries that are not in the current visibleBackstack will be in the destroyed state.
+         * All entries that are not in the current renderGroup will be in the destroyed state.
          *
-         * We then check the entries that are in the visibleBackstack:
+         * We then check the entries that are in the render group:
          * - If the entry is the current last entry in the [Navigator] backstack, it's resumed.
          * - If the entry is not the current last entry, then it's paused.
          */
-        updateLifecycles = { visibleBackstack, lifeCycleEntries ->
-            lifeCycleEntries.filter { it !in visibleBackstack.entries }
+        updateLifecycles = { renderGroup, lifeCycleEntries ->
+            lifeCycleEntries.filter { it !in renderGroup.entries }
                 .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
 
-            visibleBackstack.entries.forEach {
+            renderGroup.entries.forEach {
                 if (it.id == navigator.backstack.lastOrNull()?.id) {
                     it.maxLifecycleState = Lifecycle.State.RESUMED
                 } else {

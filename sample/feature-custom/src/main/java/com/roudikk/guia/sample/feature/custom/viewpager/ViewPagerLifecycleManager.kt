@@ -26,12 +26,12 @@ fun rememberViewPagerLifecycleManager(navigator: Navigator): LifecycleManager<Vi
                 right = right?.let(createEntry)
             )
         },
-        updateLifecycles = { visibleBackstack, entries ->
-            entries.filter { it !in visibleBackstack.entries }
+        updateLifecycles = { renderGroup, entries ->
+            entries.filter { it !in renderGroup.entries }
                 .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
 
-            visibleBackstack.entries.forEach {
-                if (it.id == visibleBackstack.center?.id) {
+            renderGroup.entries.forEach {
+                if (it.id == renderGroup.center?.id) {
                     it.maxLifecycleState = Lifecycle.State.RESUMED
                 } else {
                     it.maxLifecycleState = Lifecycle.State.STARTED

@@ -222,16 +222,23 @@ class LifecycleManager<RG : RenderGroup> internal constructor(
     private fun savedStateKey(id: String) = "back-stack-manager-$id"
 }
 
-fun interface GetRenderGroup<VB : RenderGroup> {
+/**
+ * Generates a [RenderGroup] given a [Navigator]'s current backstack.
+ */
+fun interface GetRenderGroup<RG : RenderGroup> {
     operator fun invoke(
         backstack: List<BackstackEntry>,
         createEntry: (BackstackEntry) -> LifecycleEntry
-    ): VB
+    ): RG
 }
 
-fun interface UpdateLifecycles<VB : RenderGroup> {
+/**
+ * Updates the lifecycle of a [LifecycleManager]'s current lifecycle entries given the
+ * current [RenderGroup].
+ */
+fun interface UpdateLifecycles<RG : RenderGroup> {
     operator fun invoke(
-        visibleBackstack: VB,
+        renderGroup: RG,
         lifecycleEntries: List<LifecycleEntry>
     )
 }

@@ -21,11 +21,11 @@ internal fun rememberCardLifecycleManager(navigator: Navigator): LifecycleManage
                     .map(createEntry)
             )
         },
-        updateLifecycles = { visibleBackstack, entries ->
-            entries.filter { it !in visibleBackstack.entries }
+        updateLifecycles = { renderGroup, entries ->
+            entries.filter { it !in renderGroup.entries }
                 .forEach { it.maxLifecycleState = Lifecycle.State.CREATED }
 
-            visibleBackstack.entries.forEach {
+            renderGroup.entries.forEach {
                 if (it.id == navigator.backstack.first().id) {
                     it.maxLifecycleState = Lifecycle.State.RESUMED
                 } else {

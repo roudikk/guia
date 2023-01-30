@@ -68,7 +68,7 @@ private fun Navigator.NavContainerContent(
 ) = Box(modifier = modifier) {
     val canGoBack by navigator.canGoBack()
     val lifecycleManager = rememberDefaultLifecycleManager(navigator = navigator)
-    val visibleBackstack = lifecycleManager.renderGroup
+    val renderGroup = lifecycleManager.renderGroup
 
     val backEnabled by remember(canGoBack, navigator.overrideBackPress) {
         derivedStateOf { canGoBack && navigator.overrideBackPress }
@@ -80,7 +80,7 @@ private fun Navigator.NavContainerContent(
 
     // Screen content
     ScreenContainer(
-        screenEntry = visibleBackstack.screenEntry
+        screenEntry = renderGroup.screenEntry
     ) { entry ->
         NavEntryContainer(
             lifecycleManager = lifecycleManager,
@@ -90,7 +90,7 @@ private fun Navigator.NavContainerContent(
 
     // Bottom sheet content
     BottomSheetContainer(
-        bottomSheetEntry = visibleBackstack.bottomSheetEntry,
+        bottomSheetEntry = renderGroup.bottomSheetEntry,
         bottomSheetScrimColor = bottomSheetScrimColor,
         container = bottomSheetContainer,
     ) { entry ->
@@ -106,7 +106,7 @@ private fun Navigator.NavContainerContent(
 
     // Dialog content
     DialogContainer(
-        dialogEntry = visibleBackstack.dialogEntry,
+        dialogEntry = renderGroup.dialogEntry,
         container = dialogContainer,
     ) { entry ->
         NavEntryContainer(
