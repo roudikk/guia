@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import com.roudikk.guia.containers.NavigationEntryContainer
+import com.roudikk.guia.containers.NavEntryContainer
 import com.roudikk.guia.core.Navigator
 import kotlin.math.abs
 
@@ -30,7 +30,7 @@ fun Navigator.ViewPagerContainer(
         backstackManager.visibleBackstack.entries
             .firstOrNull { it.backstackEntry.id == backstack[page].id }
             ?.let {
-                NavigationEntryContainer(
+                NavEntryContainer(
                     backstackManager = backstackManager,
                     lifecycleEntry = it
                 )

@@ -82,7 +82,7 @@ private fun Navigator.NavContainerContent(
     ScreenContainer(
         screenEntry = visibleBackstack.screenEntry
     ) { entry ->
-        NavigationEntryContainer(
+        NavEntryContainer(
             backstackManager = backstackManager,
             lifecycleEntry = entry
         )
@@ -98,7 +98,7 @@ private fun Navigator.NavContainerContent(
             navigator.pop()
         }
 
-        NavigationEntryContainer(
+        NavEntryContainer(
             backstackManager = backstackManager,
             lifecycleEntry = entry
         )
@@ -109,7 +109,7 @@ private fun Navigator.NavContainerContent(
         dialogEntry = visibleBackstack.dialogEntry,
         container = dialogContainer,
     ) { entry ->
-        NavigationEntryContainer(
+        NavEntryContainer(
             backstackManager = backstackManager,
             lifecycleEntry = entry
         )

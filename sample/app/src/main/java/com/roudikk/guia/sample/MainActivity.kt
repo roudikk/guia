@@ -6,21 +6,25 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.roudikk.guia.containers.NavContainer
+import com.roudikk.guia.backstack.NavBackHandler
+import com.roudikk.guia.backstack.manager.rememberDefaultBackstackManager
+import com.roudikk.guia.containers.BottomSheetContainer
+import com.roudikk.guia.containers.DialogContainer
+import com.roudikk.guia.containers.NavEntryContainer
+import com.roudikk.guia.containers.ScreenContainer
 import com.roudikk.guia.core.Navigator
 import com.roudikk.guia.core.NavigatorConfigBuilder
 import com.roudikk.guia.core.rememberNavigator
+import com.roudikk.guia.extensions.pop
 import com.roudikk.guia.extensions.popTo
 import com.roudikk.guia.extensions.push
 import com.roudikk.guia.extensions.setRoot
@@ -78,16 +82,48 @@ class MainActivity : ComponentActivity() {
                     LocalRootNavigator provides rootNavigator,
                     LocalNavHostViewModelStoreOwner provides requireNotNull(LocalViewModelStoreOwner.current)
                 ) {
-                    rootNavigator.NavContainer(
-                        bottomSheetContainer = { content ->
-                            Surface(
-                                modifier = Modifier.navigationBarsPadding(),
-                                tonalElevation = 4.dp,
-                                content = content
-                            )
-                        },
-                        bottomSheetScrimColor = Color.Black.copy(alpha = 0.32F),
-                    )
+                    val backStackManager = rememberDefaultBackstackManager(rootNavigator)
+
+                    NavBackHandler(
+                        enabled = rootNavigator.backstack.size > 1
+                            && rootNavigator.overrideBackPress
+                    ) {
+                        rootNavigator.pop()
+                    }
+
+                    rootNavigator.ScreenContainer(
+                        screenEntry = backStackManager.visibleBackstack.screenEntry
+                    ) { entry ->
+                        rootNavigator.NavEntryContainer(
+                            backstackManager = backStackManager,
+                            lifecycleEntry = entry
+                        )
+                    }
+
+                    rootNavigator.BottomSheetContainer(
+                        container = { content -> Surface { content() } },
+                        bottomSheetEntry = backStackManager.visibleBackstack.bottomSheetEntry,
+                        bottomSheetScrimColor = Color.Black.copy(alpha = 0.32f)
+                    ) { entry ->
+                        rootNavigator.NavEntryContainer(
+                            backstackManager = backStackManager,
+                            lifecycleEntry = entry
+                        )
+                    }
+
+                    rootNavigator.DialogContainer(
+                        container = { content -> Surface { content() } },
+                        dialogEntry = backStackManager.visibleBackstack.dialogEntry
+                    ) { entry ->
+                        rootNavigator.NavEntryContainer(
+                            backstackManager = backStackManager,
+                            lifecycleEntry = entry
+                        )
+                    }
+
+                    DisposableEffect(Unit) {
+                        onDispose(backStackManager::onDispose)
+                    }
                 }
 
                 LaunchedEffect(globalNavigator.destinations) {

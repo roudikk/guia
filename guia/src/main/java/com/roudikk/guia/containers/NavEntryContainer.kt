@@ -14,6 +14,7 @@ import com.roudikk.guia.core.NavigationKey
 import com.roudikk.guia.core.Navigator
 import com.roudikk.guia.core.navigationNode
 import com.roudikk.guia.extensions.LocalNavigationNode
+import com.roudikk.guia.extensions.LocalNavigator
 
 /**
  * Renders the [LifecycleEntry].
@@ -23,7 +24,7 @@ import com.roudikk.guia.extensions.LocalNavigationNode
  * for usage.
  */
 @Composable
-fun <VB : VisibleBackstack> Navigator.NavigationEntryContainer(
+fun <VB : VisibleBackstack> Navigator.NavEntryContainer(
     backstackManager: BackstackManager<VB>,
     lifecycleEntry: LifecycleEntry
 ) = with(lifecycleEntry.backstackEntry) {
@@ -32,6 +33,7 @@ fun <VB : VisibleBackstack> Navigator.NavigationEntryContainer(
             val navigationNode = navigationNode(this@with)
             CompositionLocalProvider(
                 LocalNavigationNode provides navigationNode,
+                LocalNavigator provides this@NavEntryContainer,
                 content = navigationNode.content
             )
         }

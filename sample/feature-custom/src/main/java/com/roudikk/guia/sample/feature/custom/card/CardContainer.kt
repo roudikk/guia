@@ -25,7 +25,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.roudikk.guia.backstack.id
-import com.roudikk.guia.containers.NavigationEntryContainer
+import com.roudikk.guia.containers.NavEntryContainer
 import com.roudikk.guia.core.Navigator
 import kotlin.math.abs
 
@@ -78,7 +78,7 @@ internal fun Navigator.CardContainer(
                             orientation = Orientation.Horizontal
                         )
                 ) {
-                    NavigationEntryContainer(
+                    NavEntryContainer(
                         backstackManager = customBackstackManager,
                         lifecycleEntry = entry
                     )
