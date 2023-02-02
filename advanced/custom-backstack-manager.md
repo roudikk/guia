@@ -5,7 +5,7 @@ In this section we will see how we can use the `LifecycleManager` API to create 
 * ViewPager
 * Card Stack
 
-You can find both examples in the [Sample app's custom feature.](https://github.com/roudikk/compose-navigator/tree/rkk/playground-bs/sample/feature-custom)
+You can find both examples in the [Sample app's custom feature.](https://github.com/roudikk/guia/tree/master/sample/feature-custom/src/main/java/com/roudikk/guia/sample/feature/custom)
 
 <figure><img src="../.gitbook/assets/view-pager-stack.gif" alt=""><figcaption><p>ViewPager and Card Stacks using custom navigation containers and lifecycle management</p></figcaption></figure>
 
