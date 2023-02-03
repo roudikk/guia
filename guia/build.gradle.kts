@@ -81,31 +81,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
 }
 
-mavenPublishing {
-    publishToMavenCentral(SonatypeHost.S01)
-    signAllPublications()
-}
-
-tasks.withType<Sign>().configureEach {
-    onlyIf { !project.version.toString().endsWith("SNAPSHOT") }
-}
-
-publishing {
-    repositories {
-        maven {
-            val releasesRepoUrl = "$buildDir/repos/releases"
-            val snapshotsRepoUrl = "$buildDir/repos/snapshots"
-            setUrl(
-                if ((version.toString()).endsWith("SNAPSHOT")) {
-                    snapshotsRepoUrl
-                } else {
-                    releasesRepoUrl
-                }
-            )
-        }
-    }
-}
-
 detekt {
     autoCorrect = true
     buildUponDefaultConfig = true

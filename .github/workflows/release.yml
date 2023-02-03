@@ -1,8 +1,8 @@
 name: Publish to Maven Central
 
 on:
-  release:
-    types: [ published ]
+  push:
+    branches: [ master ]
 
 jobs:
   publish:
@@ -19,17 +19,14 @@ jobs:
       - name: Remove SNAPSHOT from version
         run: sed -i 's/-SNAPSHOT//g' gradle.properties
 
-      - name: Clean repository before building SDK
-        run: ./gradlew clean
-
       - name: Build and upload archives to the Maven Central Repository
-        run: ./gradlew guia:publishAllPublicationsToMavenCentralRepository --no-daemon --no-parallel
+        run: ./gradlew guia:publishAllPublicationsToMavenCentralRepository
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.PGP_SIGNING_KEY_ID }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.PGP_SIGNING_KEY }}
-          ORG_GRADLE_PROJECT_signingInMemoryPassword: ${{ secrets.PGP_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.PGP_SIGNING_PASSWORD }}
 
       - name: Publish release to the Maven Central Repository
         run: ./gradlew closeAndReleaseRepository
