@@ -24,6 +24,6 @@ class DetailsKey(val item: String) : NavigationKey {
 Then we will be able to test different instances of that key:
 
 ```kotlin
-rule.onNodeWithTag("DetailsKey_1").assertIsDisplayed()
-rule.onNodeWithTag("DetailsKey_2").assertIsDisplayed()
+rule.onNodeWithTag(DetailsKey.tag("some_id")).assertIsDisplayed()
+rule.onNodeWithTag(DetailsKey.tag("some_other_id")).assertIsNotDisplayed()
 ```
