@@ -28,6 +28,7 @@
   * [Deep Linking / Global Navigation](using-guia/the-lore/deep-linking-global-navigation.md)
   * [Results](using-guia/the-lore/results.md)
   * [Lifecycle, ViewModel, Saved State](using-guia/the-lore/lifecycle-viewmodel-saved-state.md)
+  * [UI Tests](using-guia/the-lore/ui-tests.md)
 
 ## 🤖 Advanced
 
