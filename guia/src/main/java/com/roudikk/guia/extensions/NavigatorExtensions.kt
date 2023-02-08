@@ -6,6 +6,7 @@ import androidx.compose.runtime.derivedStateOf
 import com.roudikk.guia.core.BackstackEntry
 import com.roudikk.guia.core.NavigationKey
 import com.roudikk.guia.core.Navigator
+import com.roudikk.guia.core.entries
 import com.roudikk.guia.core.entry
 
 /**
@@ -29,6 +30,17 @@ fun Navigator.push(
     navigationKey: NavigationKey
 ) {
     setBackstack(backstack + navigationKey.entry())
+}
+
+/**
+ * Adds multiple new keys to the backstack.
+ *
+ * @param navigationKeys, the new keys to be added.
+ */
+fun Navigator.push(
+    vararg navigationKeys: NavigationKey
+) {
+    setBackstack(backstack + navigationKeys.toList().entries())
 }
 
 /**

@@ -50,7 +50,7 @@ class NavigatorExtensionsTest {
     }
 
     @Test
-    fun navigator_navigate_addsEntry() {
+    fun navigator_push_addsEntry() {
         val initialKey = TestNavigationKey()
         val navigator = testNavigator(initialKey)
 
@@ -60,6 +60,20 @@ class NavigatorExtensionsTest {
         navigator.push(newKey)
 
         navigator.assertKeys(initialKey, newKey)
+    }
+
+    @Test
+    fun navigator_pushMultiple_addsEntries() {
+        val initialKey = TestNavigationKey()
+        val navigator = testNavigator(initialKey)
+
+        navigator.assertKeys(initialKey)
+
+        val newKey1 = TestKey()
+        val newKey2 = TestKey()
+        navigator.push(newKey1, newKey2)
+
+        navigator.assertKeys(initialKey, newKey1, newKey2)
     }
 
     @Test
