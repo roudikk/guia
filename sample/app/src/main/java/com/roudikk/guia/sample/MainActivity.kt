@@ -6,10 +6,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.core.view.WindowCompat
@@ -85,13 +88,13 @@ class MainActivity : ComponentActivity() {
                     // This is just an examples of how we can break down the containers provided
                     // by Guia. In most cases you can simply use Navigator.NavContainer
                     val lifecycleManager = rememberDefaultLifecycleManager(rootNavigator)
+                    val backEnabled = rootNavigator.backstack.size > 1 &&
+                        rootNavigator.overrideBackPress
 
                     NavBackHandler(
-                        enabled = rootNavigator.backstack.size > 1 &&
-                            rootNavigator.overrideBackPress
-                    ) {
-                        rootNavigator.pop()
-                    }
+                        enabled = backEnabled,
+                        onBack = rootNavigator::pop
+                    )
 
                     rootNavigator.ScreenContainer(
                         screenEntry = lifecycleManager.renderGroup.screenEntry
@@ -103,10 +106,20 @@ class MainActivity : ComponentActivity() {
                     }
 
                     rootNavigator.BottomSheetContainer(
-                        container = { content -> Surface { content() } },
+                        container = { content ->
+                            Surface(
+                                modifier = Modifier.navigationBarsPadding(),
+                                content = content
+                            )
+                        },
                         bottomSheetEntry = lifecycleManager.renderGroup.bottomSheetEntry,
                         bottomSheetScrimColor = Color.Black.copy(alpha = 0.32f)
                     ) { entry ->
+                        NavBackHandler(
+                            enabled = backEnabled,
+                            onBack = rootNavigator::pop
+                        )
+
                         rootNavigator.NavEntryContainer(
                             lifecycleManager = lifecycleManager,
                             lifecycleEntry = entry

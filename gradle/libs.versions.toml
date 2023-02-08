@@ -19,6 +19,7 @@ accompanist = "0.28.0"
 lottie = "5.2.0"
 googleMaterial = "1.7.0"
 googleTruth = "1.1.3"
+androidxTestCore = "1.5.0"
 
 [libraries]
 
@@ -38,6 +39,7 @@ coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 junit = { group = "junit", name = "junit", version.ref = "junit4" }
 junit-android = { group = "androidx.test.ext", name = "junit", version.ref = "junitAndroid" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
 espresso = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "junitAndroid" }
 lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
 accompanist-pager = { group = "com.google.accompanist", name = "accompanist-pager", version.ref = "accompanist" }

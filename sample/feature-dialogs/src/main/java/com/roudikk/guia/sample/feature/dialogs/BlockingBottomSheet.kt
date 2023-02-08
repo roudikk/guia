@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,6 +52,7 @@ internal fun BlockingBottomSheetScreen() {
         Spacer(modifier = Modifier.size(16.dp))
 
         Switch(
+            modifier = Modifier.testTag("toggle"),
             checked = lockStateChange,
             onCheckedChange = { lockStateChange = it }
         )

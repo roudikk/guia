@@ -24,6 +24,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
@@ -50,6 +51,7 @@ fun DetailsList(
 ) {
     Column(
         modifier = Modifier
+            .testTag("details_list")
             .verticalScroll(rememberScrollState())
             .fillMaxWidth()
             .padding(vertical = 16.dp, horizontal = 16.dp),
@@ -73,7 +75,7 @@ fun DetailsList(
         Spacer(modifier = Modifier.size(16.dp))
 
         DetailsAction(
-            title = "Screen: navigate",
+            title = "Screen: Navigate",
             onClick = onRandomItemSelected
         )
 

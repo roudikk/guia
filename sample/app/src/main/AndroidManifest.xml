@@ -21,6 +21,7 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -40,8 +41,21 @@
                     android:scheme="https" />
 
             </intent-filter>
-
         </activity>
-    </application>
 
+        <activity
+            android:name='androidx.test.core.app.InstrumentationActivityInvoker$BootstrapActivity'
+            android:exported='true'
+            tools:node='merge'>
+            <intent-filter tools:node='removeAll'/>
+        </activity>
+
+        <activity
+            android:name='androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity'
+            android:exported='true'
+            tools:node='merge'>
+            <intent-filter tools:node='removeAll'/>
+        </activity>
+
+    </application>
 </manifest>

@@ -29,7 +29,7 @@ class BottomNavNavigationTest {
         rule.onNodeWithTag("tab_dialogs").performClick()
         rule.onNodeWithTag(tag<DialogsKey>()).assertIsDisplayed()
 
-        rule.onNodeWithTag("tab_custom").performClick()
-        rule.onNodeWithTag(tag<ViewPagerRootKey>()).assertIsDisplayed()
+        rule.onNodeWithTag("tab_home").performClick()
+        rule.onNodeWithTag(tag<HomeKey>()).assertIsDisplayed()
     }
 }
