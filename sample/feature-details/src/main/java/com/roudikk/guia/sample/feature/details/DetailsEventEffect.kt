@@ -14,6 +14,7 @@ import com.roudikk.guia.extensions.setResult
 import com.roudikk.guia.extensions.singleInstance
 import com.roudikk.guia.extensions.singleTop
 import com.roudikk.guia.sample.feature.common.navigation.CrossFadeTransition
+import com.roudikk.guia.sample.feature.details.navigation.DetailsCustomTransitionKey
 import com.roudikk.guia.sample.feature.details.navigation.DetailsKey
 import com.roudikk.guia.sample.feature.details.navigation.DetailsResult
 import com.roudikk.guia.sample.feature.dialogs.navigation.BlockingBottomSheetKey
@@ -76,6 +77,10 @@ fun DetailsEventEffect(
             is DetailsEvent.OverrideScreenTransition -> {
                 navigator.overrideTransition<Screen>(CrossFadeTransition.enterExit)
                 navigator.push(DetailsKey(event.item))
+            }
+
+            is DetailsEvent.CustomScreenTransition -> {
+                navigator.push(DetailsCustomTransitionKey(event.item))
             }
 
             is DetailsEvent.SendResult -> {

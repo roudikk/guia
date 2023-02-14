@@ -10,3 +10,6 @@ value class DetailsResult(val value: String) : Parcelable
 
 @Parcelize
 class DetailsKey(val item: String) : NavigationKey
+
+@Parcelize
+class DetailsCustomTransitionKey(val item: String) : NavigationKey

@@ -80,6 +80,7 @@ internal fun DetailsContent(
         onReplaceSelected = viewModel::onReplaceSelected,
         onOpenDialogSelected = viewModel::onOpenDialogSelected,
         onOpenBlockingBottomSheet = viewModel::onOpenBlockingBottomSheet,
-        onOverrideScreenTransitionSelected = viewModel::onOverrideScreenTransitionSelected
+        onOverrideScreenTransitionSelected = viewModel::onOverrideScreenTransitionSelected,
+        onCustomScreenTransitionSelected = viewModel::onCustomScreenTransitionSelected,
     )
 }

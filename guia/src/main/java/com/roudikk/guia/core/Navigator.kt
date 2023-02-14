@@ -188,9 +188,12 @@ private fun Navigator.getTransition(
         // If the current transition is being overridden, then we use that transition.
         overrideTransition != null -> overrideTransition
 
-        backstack.isNotEmpty() ->
+        backstack.isNotEmpty() -> {
+            val entryClass =
+                if (isPop) previousEntry.navigationKey::class else newEntry.navigationKey::class
+
             // First we check if there's a transition defined for a certain key.
-            navigatorConfig.keyTransitions[newEntry.navigationKey::class]
+            navigatorConfig.keyTransitions[entryClass]
                 ?.invoke(previousEntry.navigationKey, newEntry.navigationKey, isPop)
 
             // If a key transition doesn't exist, we check for a node transition.
@@ -203,6 +206,7 @@ private fun Navigator.getTransition(
                     newEntry.navigationKey,
                     isPop
                 )
+        }
 
         // Otherwise we don't show any transition.
         else -> EnterExitTransition.None

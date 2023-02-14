@@ -115,8 +115,8 @@ class NavigatorTest {
         assertThat(navigator.keyTransition<Screen>().exit).isEqualTo(testKeyTransition.enterExit.exit)
 
         navigator.setBackstack(navigator.backstack.dropLast(1))
-        assertThat(navigator.keyTransition<Screen>().enter).isEqualTo(navigationKeyTransition.popEnterExit.enter)
-        assertThat(navigator.keyTransition<Screen>().exit).isEqualTo(navigationKeyTransition.popEnterExit.exit)
+        assertThat(navigator.keyTransition<Screen>().enter).isEqualTo(testKeyTransition.popEnterExit.enter)
+        assertThat(navigator.keyTransition<Screen>().exit).isEqualTo(testKeyTransition.popEnterExit.exit)
 
         navigator.setBackstack(navigator.backstack + testKey2.entry())
         assertThat(navigator.keyTransition<Screen>().enter).isEqualTo(EnterTransition.None)
