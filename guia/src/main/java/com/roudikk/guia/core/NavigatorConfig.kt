@@ -54,6 +54,19 @@ class NavigatorConfigBuilder internal constructor() {
     private var supportedNavigationNodes: List<KClass<out NavigationNode>> = defaultNavigationNodes
 
     /**
+     * Define a [NavigationNode] presentation for [NavigationKey] class.
+     *
+     * @param keyClass, the [NavigationKey] class.
+     * @param navigationNodeBuilder, builder that returns a [NavigationNode] for a given [NavigationKey]
+     */
+    fun navigationNode(
+        keyClass: KClass<out NavigationKey>,
+        navigationNodeBuilder: (NavigationKey) -> NavigationNode
+    ) {
+        presentations[keyClass] = navigationNodeBuilder
+    }
+
+    /**
      * Define a [NavigationNode] presentation for a type of [Key].
      *
      * @param navigationNodeBuilder, builder that returns a [NavigationNode] for a type [Key].
@@ -61,7 +74,10 @@ class NavigatorConfigBuilder internal constructor() {
     inline fun <reified Key : NavigationKey> navigationNode(
         noinline navigationNodeBuilder: (Key) -> NavigationNode
     ) {
-        presentations[Key::class] = navigationNodeBuilder as (NavigationKey) -> NavigationNode
+        navigationNode(
+            keyClass = Key::class,
+            navigationNodeBuilder = navigationNodeBuilder as (NavigationKey) -> NavigationNode
+        )
     }
 
     /**
