@@ -25,7 +25,7 @@ import com.roudikk.guia.containers.BottomSheetValue.Expanded
 import com.roudikk.guia.containers.BottomSheetValue.Hidden
 import com.roudikk.guia.core.BottomSheet
 import com.roudikk.guia.core.Navigator
-import com.roudikk.guia.core.keyTransition
+import com.roudikk.guia.core.nodeTransition
 import com.roudikk.guia.core.navigationNode
 import com.roudikk.guia.extensions.pop
 import com.roudikk.guia.lifecycle.LifecycleEntry
@@ -84,7 +84,7 @@ fun Navigator.BottomSheetContainer(
                 BottomSheetContent(
                     sheetState = bottomSheetState,
                     bottomSheetEntry = bottomSheetEntry,
-                    currentTransition = keyTransition<BottomSheet>(),
+                    currentTransition = nodeTransition<BottomSheet>(),
                     content = content
                 )
             }
