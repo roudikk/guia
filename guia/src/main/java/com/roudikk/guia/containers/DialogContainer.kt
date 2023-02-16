@@ -8,7 +8,7 @@ import androidx.compose.ui.window.Dialog
 import com.roudikk.guia.animation.ProvideNavVisibilityScope
 import com.roudikk.guia.core.Dialog
 import com.roudikk.guia.core.Navigator
-import com.roudikk.guia.core.keyTransition
+import com.roudikk.guia.core.nodeTransition
 import com.roudikk.guia.core.navigationNode
 import com.roudikk.guia.core.toDialogProperties
 import com.roudikk.guia.extensions.pop
@@ -36,7 +36,7 @@ fun Navigator.DialogContainer(
             AnimatedContent(
                 targetState = dialogEntry,
                 transitionSpec = {
-                    keyTransition<Dialog>().let { it.enter with it.exit }
+                    nodeTransition<Dialog>().let { it.enter with it.exit }
                 }
             ) { dialogEntry ->
                 ProvideNavVisibilityScope {

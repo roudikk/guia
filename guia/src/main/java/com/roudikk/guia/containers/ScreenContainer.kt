@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import com.roudikk.guia.animation.ProvideNavVisibilityScope
 import com.roudikk.guia.core.Navigator
 import com.roudikk.guia.core.Screen
-import com.roudikk.guia.core.keyTransition
+import com.roudikk.guia.core.nodeTransition
 import com.roudikk.guia.lifecycle.LifecycleEntry
 
 /**
@@ -26,7 +26,7 @@ fun Navigator.ScreenContainer(
         modifier = Modifier
             .fillMaxSize(),
         transitionSpec = {
-            keyTransition<Screen>().let { it.enter with it.exit }
+            nodeTransition<Screen>().let { it.enter with it.exit }
         }
     ) { backstackEntry ->
         backstackEntry?.let {

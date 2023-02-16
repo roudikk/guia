@@ -22,3 +22,8 @@ data class StackEntry(
         return stackKey.hashCode()
     }
 }
+
+infix fun StackKey.to(navigator: Navigator) = StackEntry(
+    stackKey = this,
+    navigator = navigator
+)

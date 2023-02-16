@@ -14,7 +14,7 @@ import com.roudikk.guia.core.Screen
 import com.roudikk.guia.core.entries
 import com.roudikk.guia.core.entry
 import com.roudikk.guia.core.navigationNode
-import com.roudikk.guia.core.keyTransition
+import com.roudikk.guia.core.nodeTransition
 import com.roudikk.guia.util.TestKey
 import com.roudikk.guia.util.TestKey2
 import com.roudikk.guia.util.TestKey3
@@ -111,19 +111,19 @@ class NavigatorTest {
         )
 
         navigator.setBackstack(navigator.backstack + testKey.entry())
-        assertThat(navigator.keyTransition<Screen>().enter).isEqualTo(testKeyTransition.enterExit.enter)
-        assertThat(navigator.keyTransition<Screen>().exit).isEqualTo(testKeyTransition.enterExit.exit)
+        assertThat(navigator.nodeTransition<Screen>().enter).isEqualTo(testKeyTransition.enterExit.enter)
+        assertThat(navigator.nodeTransition<Screen>().exit).isEqualTo(testKeyTransition.enterExit.exit)
 
         navigator.setBackstack(navigator.backstack.dropLast(1))
-        assertThat(navigator.keyTransition<Screen>().enter).isEqualTo(testKeyTransition.popEnterExit.enter)
-        assertThat(navigator.keyTransition<Screen>().exit).isEqualTo(testKeyTransition.popEnterExit.exit)
+        assertThat(navigator.nodeTransition<Screen>().enter).isEqualTo(testKeyTransition.popEnterExit.enter)
+        assertThat(navigator.nodeTransition<Screen>().exit).isEqualTo(testKeyTransition.popEnterExit.exit)
 
         navigator.setBackstack(navigator.backstack + testKey2.entry())
-        assertThat(navigator.keyTransition<Screen>().enter).isEqualTo(EnterTransition.None)
-        assertThat(navigator.keyTransition<Screen>().exit).isEqualTo(ExitTransition.None)
+        assertThat(navigator.nodeTransition<Screen>().enter).isEqualTo(EnterTransition.None)
+        assertThat(navigator.nodeTransition<Screen>().exit).isEqualTo(ExitTransition.None)
 
         navigator.setBackstack(navigator.backstack + testKey3.entry())
-        assertThat(navigator.keyTransition<Screen>().enter).isEqualTo(fadeIn())
-        assertThat(navigator.keyTransition<Screen>().exit).isEqualTo(fadeOut())
+        assertThat(navigator.nodeTransition<Screen>().enter).isEqualTo(fadeIn())
+        assertThat(navigator.nodeTransition<Screen>().exit).isEqualTo(fadeOut())
     }
 }

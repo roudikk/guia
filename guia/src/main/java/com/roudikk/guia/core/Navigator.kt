@@ -160,7 +160,7 @@ private fun Navigator.optionalNode(backstackEntry: BackstackEntry): NavigationNo
 /**
  * Returns the current [EnterExitTransition] for a given [Node] type.
  */
-inline fun <reified Node : NavigationNode> Navigator.keyTransition(): EnterExitTransition {
+inline fun <reified Node : NavigationNode> Navigator.nodeTransition(): EnterExitTransition {
     return transitions[Node::class] ?: EnterExitTransition.None
 }
 
