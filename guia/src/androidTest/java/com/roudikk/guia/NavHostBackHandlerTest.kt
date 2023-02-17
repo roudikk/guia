@@ -48,7 +48,7 @@ class NavHostBackHandlerTest {
             LaunchedEffect(testStep) {
                 when (testStep) {
                     1 -> {
-                        assert(navHost.currentKey == TestStackKey)
+                        assertThat(navHost.currentKey).isEqualTo(TestStackKey)
                         navHost.setActive(TestStackKey2)
                         assertThat(navHost.currentKey).isEqualTo(TestStackKey2)
                         testStep = 2
