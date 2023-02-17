@@ -56,6 +56,8 @@ class NavHost {
 
     val currentNavigator by derivedStateOf { currentEntry?.navigator }
 
+    val currentKey by derivedStateOf { currentEntry?.stackKey }
+
     /**
      * Returns the navigator identified by a [StackKey]
      *
