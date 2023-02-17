@@ -1,26 +1,19 @@
 package com.roudikk.guia.sample
 
-import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performKeyPress
-import androidx.compose.ui.test.performScrollTo
-import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performScrollToNode
 import com.roudikk.guia.core.NavigationKey.Companion.tag
 import com.roudikk.guia.sample.feature.details.DetailsBottomSheetKey
 import com.roudikk.guia.sample.feature.details.navigation.DetailsKey
 import com.roudikk.guia.sample.feature.home.navigation.HomeKey
 import com.roudikk.guia.sample.utils.navigateDetails
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 
