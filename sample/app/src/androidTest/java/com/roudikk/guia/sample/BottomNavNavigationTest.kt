@@ -5,7 +5,6 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import com.roudikk.guia.core.NavigationKey.Companion.tag
-import com.roudikk.guia.sample.feature.custom.navigation.ViewPagerRootKey
 import com.roudikk.guia.sample.feature.dialogs.navigation.DialogsKey
 import com.roudikk.guia.sample.feature.home.navigation.HomeKey
 import com.roudikk.guia.sample.feature.nested.navigation.ParentNestedKey

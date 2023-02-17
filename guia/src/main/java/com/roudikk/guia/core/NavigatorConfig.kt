@@ -20,11 +20,12 @@ private val defaultNavigationNodes = listOf(
 )
 
 /**
- * A Navigator's configuration.
+ * A [Navigator]'s configuration.
  *
  * @property presentations, defines how a [NavigationKey] is rendered using a [NavigationNode].
  * @property keyTransitions, defines how transitions happen between [NavigationKey].
- * @property defaultTransition, the default transition
+ * @property nodeTransitions, defines how transitions happen between [NavigationNode].
+ * @property defaultTransition, the default transition.
  * @property supportedNavigationNodes, the supported navigation nodes for transitions.
  */
 class NavigatorConfig internal constructor(
@@ -36,7 +37,7 @@ class NavigatorConfig internal constructor(
 )
 
 /**
- * Builder for [NavigatorConfig]
+ * Builder for [NavigatorConfig].
  */
 class NavigatorConfigBuilder internal constructor() {
 

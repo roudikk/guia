@@ -42,6 +42,7 @@ import com.roudikk.guia.navhost.NavHost
 import com.roudikk.guia.navhost.StackEntry
 import com.roudikk.guia.navhost.StackKey
 import com.roudikk.guia.navhost.rememberNavHost
+import com.roudikk.guia.navhost.to
 import com.roudikk.guia.sample.feature.common.composables.SampleSurfaceContainer
 import com.roudikk.guia.sample.feature.common.deeplink.BottomTabDestination
 import com.roudikk.guia.sample.feature.common.deeplink.BottomTabDestination.CustomTab
@@ -100,10 +101,10 @@ fun rememberBottomNavHost(
     return rememberNavHost(
         initialKey = HomeStackKey,
         entries = setOf(
-            StackEntry(HomeStackKey, homeNavigator),
-            StackEntry(NestedStackKey, nestedNavigator),
-            StackEntry(DialogsStackKey, dialogsNavigator),
-            StackEntry(CustomStackKey, customNavigator),
+            HomeStackKey to homeNavigator,
+            NestedStackKey to nestedNavigator,
+            DialogsStackKey to dialogsNavigator,
+            CustomStackKey to customNavigator,
         ),
         initialize = initialize,
     )

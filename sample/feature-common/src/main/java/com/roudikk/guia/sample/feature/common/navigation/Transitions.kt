@@ -29,20 +29,20 @@ val MaterialSharedAxisTransitionX = NavTransition(
 
 @OptIn(ExperimentalAnimationApi::class)
 val MaterialSharedAxisTransitionXY = NavTransition(
-    enterExit = fadeIn(animationSpec = tween(300)) + scaleIn(
+    enterExit = fadeIn(animationSpec = tween(durationMillis = 300)) + scaleIn(
         initialScale = 0.8f,
-        animationSpec = tween(300)
+        animationSpec = tween(durationMillis = 300)
     ) to scaleOut(
         targetScale = 1.1f,
-        animationSpec = tween(300)
+        animationSpec = tween(durationMillis = 300)
     ) + fadeOut(animationSpec = tween(durationMillis = 150)),
 
     popEnterExit = fadeIn(animationSpec = tween(durationMillis = 300)) + scaleIn(
         initialScale = 1.1f,
-        animationSpec = tween(300)
+        animationSpec = tween(durationMillis = 300)
     ) to scaleOut(
         targetScale = 0.8f,
-        animationSpec = tween(300)
+        animationSpec = tween(durationMillis = 300)
     ) + fadeOut(animationSpec = tween(durationMillis = 150))
 )
 
