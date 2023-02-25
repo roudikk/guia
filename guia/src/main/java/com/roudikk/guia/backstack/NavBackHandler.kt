@@ -23,7 +23,9 @@ fun NavBackHandler(
 
     DisposableEffect(enabled) {
         val callback = object : OnBackPressedCallback(enabled) {
-            override fun handleOnBackPressed() = onBack()
+            override fun handleOnBackPressed() {
+                onBack()
+            }
         }
         backDispatcher.addCallback(callback)
         onDispose { callback.remove() }

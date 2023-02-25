@@ -1,3 +1,5 @@
+package com.roudikk.guia
+
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -112,15 +114,15 @@ class NavigatorTest {
 
         navigator.setBackstack(navigator.backstack + testKey.entry())
         assertThat(navigator.nodeTransition<Screen>().enter).isEqualTo(testKeyTransition.enterExit.enter)
-        assertThat(navigator.nodeTransition<Screen>().exit).isEqualTo(fadeOut())
+        assertThat(navigator.nodeTransition<Screen>().exit).isEqualTo(testKeyTransition.enterExit.exit)
 
         navigator.setBackstack(navigator.backstack.dropLast(1))
-        assertThat(navigator.nodeTransition<Screen>().enter).isEqualTo(navigationKeyTransition.popEnterExit.enter)
+        assertThat(navigator.nodeTransition<Screen>().enter).isEqualTo(testKeyTransition.popEnterExit.enter)
         assertThat(navigator.nodeTransition<Screen>().exit).isEqualTo(testKeyTransition.popEnterExit.exit)
 
         navigator.setBackstack(navigator.backstack + testKey2.entry())
         assertThat(navigator.nodeTransition<Screen>().enter).isEqualTo(EnterTransition.None)
-        assertThat(navigator.nodeTransition<Screen>().exit).isEqualTo(navigationKeyTransition.enterExit.exit)
+        assertThat(navigator.nodeTransition<Screen>().exit).isEqualTo(ExitTransition.None)
 
         navigator.setBackstack(navigator.backstack + testKey3.entry())
         assertThat(navigator.nodeTransition<Screen>().enter).isEqualTo(fadeIn())

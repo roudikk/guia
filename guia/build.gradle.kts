@@ -75,6 +75,7 @@ dependencies {
     androidTestImplementation(libs.junit.android)
     androidTestImplementation(libs.compose.ui.junit)
     androidTestImplementation(libs.espresso)
+    androidTestImplementation(libs.google.truth)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
