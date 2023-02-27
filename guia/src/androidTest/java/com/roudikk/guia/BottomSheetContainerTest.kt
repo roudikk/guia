@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalCoroutinesApi::class, ExperimentalCoroutinesApi::class)
-
 package com.roudikk.guia
 
 import androidx.compose.foundation.layout.Box
@@ -14,9 +12,6 @@ import com.roudikk.guia.core.entry
 import com.roudikk.guia.core.rememberNavigator
 import com.roudikk.guia.util.TestKey
 import com.roudikk.guia.util.rememberLifecycleEntry
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.TestScope
 import org.junit.Rule
 import org.junit.Test
 
@@ -40,11 +35,9 @@ class BottomSheetContainerTest {
             )
         }
 
-        TestScope().launch {
-            rule.awaitIdle()
-            rule.onNodeWithTag("bottom_sheet_container").assertDoesNotExist()
-            rule.onNodeWithTag("content").assertDoesNotExist()
-        }
+        rule.waitForIdle()
+        rule.onNodeWithTag("bottom_sheet_container").assertDoesNotExist()
+        rule.onNodeWithTag("content").assertDoesNotExist()
     }
 
     @Test
@@ -57,7 +50,11 @@ class BottomSheetContainerTest {
             val entry = rememberLifecycleEntry(backstackEntry = backStackEntry)
 
             navigator.BottomSheetContainer(
-                container = {},
+                container = { content ->
+                    Box(modifier = Modifier.testTag("custom_container")) {
+                        content()
+                    }
+                },
                 bottomSheetEntry = entry,
                 bottomSheetScrimColor = Color.Black,
                 content = {
@@ -66,11 +63,9 @@ class BottomSheetContainerTest {
             )
         }
 
-        TestScope().launch {
-            rule.awaitIdle()
-            rule.onNodeWithTag("bottom_sheet_container").assertExists()
-            rule.onNodeWithTag("content").assertExists()
-        }
+        rule.waitForIdle()
+        rule.onNodeWithTag("bottom_sheet_container").assertExists()
+        rule.onNodeWithTag("content").assertExists()
     }
 
     @Test
@@ -96,11 +91,9 @@ class BottomSheetContainerTest {
             )
         }
 
-        TestScope().launch {
-            rule.awaitIdle()
-            rule.onNodeWithTag("bottom_sheet_container").assertExists()
-            rule.onNodeWithTag("custom_container").assertExists()
-            rule.onNodeWithTag("content").assertExists()
-        }
+        rule.waitForIdle()
+        rule.onNodeWithTag("bottom_sheet_container").assertExists()
+        rule.onNodeWithTag("custom_container").assertExists()
+        rule.onNodeWithTag("content").assertExists()
     }
 }

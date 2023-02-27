@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalCoroutinesApi::class)
-
 package com.roudikk.guia
 
 import androidx.compose.foundation.layout.Box
@@ -13,9 +11,6 @@ import com.roudikk.guia.core.entry
 import com.roudikk.guia.core.rememberNavigator
 import com.roudikk.guia.util.TestKey
 import com.roudikk.guia.util.rememberLifecycleEntry
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.TestScope
 import org.junit.Rule
 import org.junit.Test
 
@@ -32,11 +27,9 @@ class ScreenContainerTest {
             }
         }
 
-        TestScope().launch {
-            rule.awaitIdle()
-            rule.onNodeWithTag("screen_container").assertDoesNotExist()
-            rule.onNodeWithTag("content").assertDoesNotExist()
-        }
+        rule.waitForIdle()
+        rule.onNodeWithTag("screen_container").assertDoesNotExist()
+        rule.onNodeWithTag("content").assertDoesNotExist()
     }
 
     @Test
@@ -52,10 +45,8 @@ class ScreenContainerTest {
             }
         }
 
-        TestScope().launch {
-            rule.awaitIdle()
-            rule.onNodeWithTag("screen_container").assertExists()
-            rule.onNodeWithTag("content").assertExists()
-        }
+        rule.waitForIdle()
+        rule.onNodeWithTag("screen_container").assertExists()
+        rule.onNodeWithTag("content").assertExists()
     }
 }

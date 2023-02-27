@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalCoroutinesApi::class, ExperimentalCoroutinesApi::class)
-
 package com.roudikk.guia
 
 import androidx.compose.foundation.layout.Box
@@ -13,9 +11,6 @@ import com.roudikk.guia.core.entry
 import com.roudikk.guia.core.rememberNavigator
 import com.roudikk.guia.util.TestKey
 import com.roudikk.guia.util.rememberLifecycleEntry
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.TestScope
 import org.junit.Rule
 import org.junit.Test
 
@@ -38,11 +33,9 @@ class DialogContainerTest {
             )
         }
 
-        TestScope().launch {
-            rule.awaitIdle()
-            rule.onNodeWithTag("dialog_container").assertDoesNotExist()
-            rule.onNodeWithTag("content").assertDoesNotExist()
-        }
+        rule.waitForIdle()
+        rule.onNodeWithTag("dialog_container").assertDoesNotExist()
+        rule.onNodeWithTag("content").assertDoesNotExist()
     }
 
     @Test
@@ -55,7 +48,7 @@ class DialogContainerTest {
             val entry = rememberLifecycleEntry(backstackEntry = backStackEntry)
 
             navigator.DialogContainer(
-                container = {},
+                container = { Box { it() } },
                 dialogEntry = entry,
                 content = {
                     Box(modifier = Modifier.testTag("content"))
@@ -63,11 +56,9 @@ class DialogContainerTest {
             )
         }
 
-        TestScope().launch {
-            rule.awaitIdle()
-            rule.onNodeWithTag("dialog_container").assertExists()
-            rule.onNodeWithTag("content").assertExists()
-        }
+        rule.waitForIdle()
+        rule.onNodeWithTag("dialog_container").assertExists()
+        rule.onNodeWithTag("content").assertExists()
     }
 
     @Test
@@ -92,11 +83,9 @@ class DialogContainerTest {
             )
         }
 
-        TestScope().launch {
-            rule.awaitIdle()
-            rule.onNodeWithTag("dialog_container").assertExists()
-            rule.onNodeWithTag("custom_container").assertExists()
-            rule.onNodeWithTag("content").assertExists()
-        }
+        rule.waitForIdle()
+        rule.onNodeWithTag("dialog_container").assertExists()
+        rule.onNodeWithTag("custom_container").assertExists()
+        rule.onNodeWithTag("content").assertExists()
     }
 }
