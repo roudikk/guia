@@ -4,6 +4,8 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.with
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.window.Dialog
 import com.roudikk.guia.animation.ProvideNavVisibilityScope
 import com.roudikk.guia.core.Dialog
@@ -34,6 +36,7 @@ fun Navigator.DialogContainer(
     ) {
         container {
             AnimatedContent(
+                modifier = Modifier.testTag("dialog_container"),
                 targetState = dialogEntry,
                 transitionSpec = {
                     nodeTransition<Dialog>().let { it.enter with it.exit }
