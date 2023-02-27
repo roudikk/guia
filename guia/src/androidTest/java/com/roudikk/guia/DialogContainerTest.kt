@@ -32,13 +32,16 @@ class DialogContainerTest {
             navigator.DialogContainer(
                 container = {},
                 dialogEntry = null,
-                content = {}
+                content = {
+                    Box(modifier = Modifier.testTag("content"))
+                }
             )
         }
 
         TestScope().launch {
             rule.awaitIdle()
             rule.onNodeWithTag("dialog_container").assertDoesNotExist()
+            rule.onNodeWithTag("content").assertDoesNotExist()
         }
     }
 
@@ -54,45 +57,21 @@ class DialogContainerTest {
             navigator.DialogContainer(
                 container = {},
                 dialogEntry = entry,
-                content = {}
+                content = {
+                    Box(modifier = Modifier.testTag("content"))
+                }
             )
         }
 
         TestScope().launch {
             rule.awaitIdle()
             rule.onNodeWithTag("dialog_container").assertExists()
+            rule.onNodeWithTag("content").assertExists()
         }
     }
 
     @Test
     fun dialogContainer_customContainer_rendered() {
-        rule.setContent {
-            val backStackEntry = remember { TestKey().entry() }
-            val navigator = rememberNavigator {
-                dialog<TestKey> { }
-            }
-            val entry = rememberLifecycleEntry(backstackEntry = backStackEntry)
-
-            navigator.DialogContainer(
-                container = { content ->
-                    Box(
-                        modifier = Modifier.testTag("custom_container"),
-                    ) { content() }
-                },
-                dialogEntry = entry,
-                content = {}
-            )
-        }
-
-        TestScope().launch {
-            rule.awaitIdle()
-            rule.onNodeWithTag("dialog_container").assertExists()
-            rule.onNodeWithTag("custom_container").assertExists()
-        }
-    }
-
-    @Test
-    fun dialogContainer_content_rendered() {
         rule.setContent {
             val backStackEntry = remember { TestKey().entry() }
             val navigator = rememberNavigator {
