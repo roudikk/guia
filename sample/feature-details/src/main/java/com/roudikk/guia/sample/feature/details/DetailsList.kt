@@ -47,7 +47,8 @@ fun DetailsList(
     onReplaceSelected: () -> Unit = {},
     onOpenDialogSelected: () -> Unit = {},
     onOpenBlockingBottomSheet: () -> Unit = {},
-    onOverrideScreenTransitionSelected: () -> Unit = {}
+    onOverrideScreenTransitionSelected: () -> Unit = {},
+    onCustomScreenTransitionSelected: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -127,6 +128,11 @@ fun DetailsList(
         DetailsAction(
             title = "Override screen transition",
             onClick = onOverrideScreenTransitionSelected
+        )
+
+        DetailsAction(
+            title = "Custom screen transition",
+            onClick = onCustomScreenTransitionSelected
         )
 
         DetailsAction(

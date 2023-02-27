@@ -20,6 +20,7 @@ sealed class DetailsEvent {
     data class OpenReplaced(val item: String) : DetailsEvent()
     data class OpenDialog(val item: String) : DetailsEvent()
     data class OverrideScreenTransition(val item: String) : DetailsEvent()
+    data class CustomScreenTransition(val item: String) : DetailsEvent()
 }
 
 class DetailsViewModel(
@@ -81,6 +82,10 @@ class DetailsViewModel(
 
     fun onOverrideScreenTransitionSelected() {
         event = DetailsEvent.OverrideScreenTransition(newItem())
+    }
+
+    fun onCustomScreenTransitionSelected() {
+        event = DetailsEvent.CustomScreenTransition(newItem())
     }
 
     fun onEventHandled() {
