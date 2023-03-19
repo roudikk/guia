@@ -39,7 +39,6 @@ import com.roudikk.guia.core.rememberNavigator
 import com.roudikk.guia.extensions.popToRoot
 import com.roudikk.guia.extensions.push
 import com.roudikk.guia.navhost.NavHost
-import com.roudikk.guia.navhost.StackEntry
 import com.roudikk.guia.navhost.StackKey
 import com.roudikk.guia.navhost.rememberNavHost
 import com.roudikk.guia.navhost.to

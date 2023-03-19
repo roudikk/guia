@@ -1,11 +1,13 @@
 package com.roudikk.guia.sample.feature.home
 
+import android.os.Parcelable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
 sealed class HomeEvent {
@@ -15,6 +17,11 @@ sealed class HomeEvent {
     object OpenSettings : HomeEvent()
     object ClearResult : HomeEvent()
 }
+
+@Parcelize
+data class HomeState(
+    val items: List<String>
+) : Parcelable
 
 class HomeViewModel(
     private val savedStateHandle: SavedStateHandle,
@@ -27,24 +34,24 @@ class HomeViewModel(
         private set
 
     init {
-        listItems.addAll(savedStateHandle["items"] ?: emptyList())
+        listItems.addAll(savedStateHandle.get<HomeState>("state")?.items ?: emptyList())
     }
 
     private fun newItem() = UUID.randomUUID().toString().split("-")[0]
 
     fun onAddItemSelected() {
         listItems.add(newItem())
-        savedStateHandle["items"] = listItems.toList()
+        savedStateHandle["state"] = HomeState(listItems.toList())
     }
 
     fun onRemoveItemSelected(item: String) {
         listItems.remove(item)
-        savedStateHandle["items"] = listItems.toList()
+        savedStateHandle["items"] = HomeState(listItems.toList())
     }
 
     fun onClearAllSelected() {
         listItems.clear()
-        savedStateHandle["items"] = emptyList<String>()
+        savedStateHandle["items"] = HomeState(emptyList())
     }
 
     fun onItemSelected(item: String) {
