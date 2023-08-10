@@ -73,17 +73,11 @@ class LifecycleEntry(
         savedStateRegistryController.performRestore(savedState)
     }
 
-    override val savedStateRegistry: SavedStateRegistry
-        get() = savedStateRegistryController.savedStateRegistry
-
-    override val lifecycle: Lifecycle
-        get() = lifecycleRegistry
-
-    override val defaultViewModelProviderFactory: ViewModelProvider.Factory
-        get() = defaultFactory
+    override val lifecycle = lifecycleRegistry
+    override val savedStateRegistry = savedStateRegistryController.savedStateRegistry
+    override val defaultViewModelProviderFactory = defaultFactory
 
     override fun equals(other: Any?) = (this.id == (other as? LifecycleEntry)?.id)
-
     override fun hashCode() = id.hashCode()
 }
 

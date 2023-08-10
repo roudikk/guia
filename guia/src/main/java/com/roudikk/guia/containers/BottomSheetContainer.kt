@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.roudikk.guia.animation.EnterExitTransition
 import com.roudikk.guia.animation.ProvideNavVisibilityScope
@@ -145,8 +146,10 @@ private fun BottomSheetContent(
         }
     ) { targetEntry ->
         if (targetEntry != null) {
-            ProvideNavVisibilityScope {
-                content(targetEntry)
+            Box(modifier = Modifier.testTag("bottom_sheet_container")) {
+                ProvideNavVisibilityScope {
+                    content(targetEntry)
+                }
             }
         } else {
             Box(
