@@ -3,10 +3,9 @@ package com.roudikk.guia.containers
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -117,7 +116,6 @@ fun Navigator.BottomSheetContainer(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun BottomSheetContent(
     sheetState: BottomSheetState,
@@ -128,6 +126,7 @@ private fun BottomSheetContent(
     val density = LocalDensity.current
 
     AnimatedContent(
+        label = "BottomSheetContent_entry",
         targetState = bottomSheetEntry,
         transitionSpec = {
             val enterTransition = when {
@@ -142,7 +141,7 @@ private fun BottomSheetContent(
                 else -> currentTransition.exit
             }
 
-            enterTransition with exitTransition
+            enterTransition togetherWith exitTransition
         }
     ) { targetEntry ->
         if (targetEntry != null) {

@@ -13,6 +13,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
@@ -35,7 +36,7 @@ class LifecycleEntry(
     val backstackEntry: BackstackEntry,
     val saveableStateHolder: SaveableStateHolder,
     private val application: Application,
-    private val viewModelStore: ViewModelStore,
+    override val viewModelStore: ViewModelStore,
 ) : ViewModelStoreOwner,
     LifecycleOwner,
     SavedStateRegistryOwner,
@@ -75,11 +76,11 @@ class LifecycleEntry(
     override val savedStateRegistry: SavedStateRegistry
         get() = savedStateRegistryController.savedStateRegistry
 
-    override fun getViewModelStore() = viewModelStore
+    override val lifecycle: Lifecycle
+        get() = lifecycleRegistry
 
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
-
-    override fun getDefaultViewModelProviderFactory() = defaultFactory
+    override val defaultViewModelProviderFactory: ViewModelProvider.Factory
+        get() = defaultFactory
 
     override fun equals(other: Any?) = (this.id == (other as? LifecycleEntry)?.id)
 

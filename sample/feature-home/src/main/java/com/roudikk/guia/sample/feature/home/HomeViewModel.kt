@@ -34,17 +34,17 @@ class HomeViewModel(
 
     fun onAddItemSelected() {
         listItems.add(newItem())
-        savedStateHandle["items"] = listItems.toList()
+        savedStateHandle["items"] = ArrayList(listItems)
     }
 
     fun onRemoveItemSelected(item: String) {
         listItems.remove(item)
-        savedStateHandle["items"] = listItems.toList()
+        savedStateHandle["items"] = ArrayList(listItems)
     }
 
     fun onClearAllSelected() {
         listItems.clear()
-        savedStateHandle["items"] = emptyList<String>()
+        savedStateHandle["items"] = arrayListOf<String>()
     }
 
     fun onItemSelected(item: String) {

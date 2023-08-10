@@ -7,6 +7,6 @@ import com.roudikk.guia.backstack.navhost.StackHistoryEntry
 internal fun stackHistorySaver() = Saver<
     SnapshotStateList<StackHistoryEntry>,
     List<StackHistoryEntry>>(
-    save = { it.toList() },
+    save = { ArrayList(it) },
     restore = { SnapshotStateList<StackHistoryEntry>().apply { addAll(it) } }
 )

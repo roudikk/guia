@@ -1,38 +1,34 @@
 [versions]
 
-composeAnimation = "1.3.2"
-composeCompiler = "1.3.2"
-composeFoundation = "1.3.1"
-composeMaterial = "1.3.1"
-composeMatieral3 = "1.0.1"
-composeRuntime = "1.3.2"
-composeViewModel = "2.5.1"
-composeUi = "1.3.2"
-composeActivity = "1.7.0-alpha02"
+composeBom = "2023.08.00"
+composeCompiler = "1.5.1"
+composeViewModel = "2.6.1"
+composeActivity = "1.7.2"
 junit4 = "4.13.2"
-detekt = "1.22.0"
-coroutines = "1.6.4"
-kotlin = "1.7.20"
+detekt = "1.23.1"
+coroutines = "1.7.3"
+kotlin = "1.9.0"
 junitAndroid = "1.1.5"
 espresso = "3.5.1"
-accompanist = "0.28.0"
-lottie = "5.2.0"
-googleMaterial = "1.7.0"
+accompanist = "0.30.1"
+lottie = "6.1.0"
+googleMaterial = "1.9.0"
 googleTruth = "1.1.3"
 androidxTestCore = "1.5.0"
 
 [libraries]
 
 compose-viewModel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "composeViewModel" }
-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "composeUi" }
-compose-ui-test = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "composeUi" }
-compose-ui-junit = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "composeUi" }
-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "composeUi" }
-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "composeMatieral3" }
-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "composeMaterial" }
-compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "composeMaterial" }
-compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "composeAnimation" }
-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "composeFoundation" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+compose-ui = { group = "androidx.compose.ui", name = "ui" }
+compose-ui-test = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+compose-ui-junit = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+compose-material = { group = "androidx.compose.material", name = "material" }
+compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended" }
+compose-animation = { group = "androidx.compose.animation", name = "animation" }
+compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "composeActivity" }
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
@@ -40,7 +36,7 @@ detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-form
 junit = { group = "junit", name = "junit", version.ref = "junit4" }
 junit-android = { group = "androidx.test.ext", name = "junit", version.ref = "junitAndroid" }
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
-espresso = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "junitAndroid" }
+espresso = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
 accompanist-pager = { group = "com.google.accompanist", name = "accompanist-pager", version.ref = "accompanist" }
 accompanist-pager-indicators = { group = "com.google.accompanist", name = "accompanist-pager-indicators", version.ref = "accompanist" }
