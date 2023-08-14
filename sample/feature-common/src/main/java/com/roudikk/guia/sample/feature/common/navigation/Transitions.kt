@@ -1,6 +1,5 @@
 package com.roudikk.guia.sample.feature.common.navigation
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -27,7 +26,6 @@ val MaterialSharedAxisTransitionX = NavTransition(
     ),
 )
 
-@OptIn(ExperimentalAnimationApi::class)
 val MaterialSharedAxisTransitionXY = NavTransition(
     enterExit = fadeIn(animationSpec = tween(durationMillis = 300)) + scaleIn(
         initialScale = 0.8f,

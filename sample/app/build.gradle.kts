@@ -9,12 +9,11 @@ plugins {
 }
 
 android {
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.roudikk.guia.sample"
         minSdk = 24
-        targetSdk = 33
         versionCode = 3
         versionName = "1.2"
         signingConfig = signingConfigs.getByName("debug")
@@ -51,6 +50,15 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
     namespace = "com.roudikk.guia.sample"
 }
 
@@ -76,8 +84,9 @@ dependencies {
     implementation(project(":guia"))
 
     // Test
-    testImplementation(libs.junit)
     debugImplementation(libs.compose.ui.test)
+    testImplementation(libs.junit)
+    androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.compose.ui.junit)
     androidTestImplementation(libs.espresso)

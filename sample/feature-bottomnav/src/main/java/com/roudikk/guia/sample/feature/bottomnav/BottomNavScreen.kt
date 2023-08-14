@@ -1,12 +1,11 @@
 package com.roudikk.guia.sample.feature.bottomnav
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -142,7 +140,6 @@ fun BottomNavScreen(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun NavHostContainer(
     navHost: NavHost,
@@ -182,12 +179,12 @@ private fun NavHostContainer(
         },
         transitionSpec = {
             if (targetState?.stackKey is CustomStackKey) {
-                slideInHorizontally { it } with slideOutHorizontally { -it }
+                slideInHorizontally { it } togetherWith slideOutHorizontally { -it }
             } else {
                 if (initialState?.stackKey is CustomStackKey) {
-                    slideInHorizontally { -it } with slideOutHorizontally { it }
+                    slideInHorizontally { -it } togetherWith slideOutHorizontally { it }
                 } else {
-                    fadeIn() with fadeOut()
+                    fadeIn() togetherWith fadeOut()
                 }
             }
         }
@@ -239,7 +236,6 @@ private fun NavHost.deeplink(globalNavigator: GlobalNavigator) {
     globalNavigator.onDialogsDestinationsHandled()
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BottomNavContent(
     currentStackKey: StackKey?,

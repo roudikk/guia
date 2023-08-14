@@ -9,11 +9,10 @@ plugins {
 
 android {
     namespace = "com.roudikk.guia.sample.feature.common"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 24
-        targetSdk = 33
     }
 
     buildFeatures {
@@ -32,6 +31,15 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }
 
 dependencies {
@@ -42,6 +50,7 @@ dependencies {
     api(libs.coroutines)
 
     // Compose
+    api(platform(libs.compose.bom))
     api(libs.compose.material)
     api(libs.compose.ui)
     api(libs.compose.viewModel)
@@ -87,9 +96,9 @@ tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
 }
 
 tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-    jvmTarget = "1.8"
+    jvmTarget = "17"
 }
 
 tasks.withType<io.gitlab.arturbosch.detekt.DetektCreateBaselineTask>().configureEach {
-    jvmTarget = "1.8"
+    jvmTarget = "17"
 }
