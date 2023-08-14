@@ -2,7 +2,6 @@ package com.roudikk.guia
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -76,7 +75,6 @@ class NavigatorTest {
         }
     }
 
-    @OptIn(ExperimentalAnimationApi::class)
     @Test
     fun navigationConfig_transitions_returnsProperTransition() {
         val testKey = TestKey()

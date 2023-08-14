@@ -1,8 +1,7 @@
 package com.roudikk.guia.containers
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -19,7 +18,6 @@ import com.roudikk.guia.lifecycle.LifecycleEntry
 /**
  * Renders a Compose Dialog if a [Navigator]'s current entry is a [Dialog].
  */
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Navigator.DialogContainer(
     container: Container,
@@ -37,9 +35,10 @@ fun Navigator.DialogContainer(
         container {
             AnimatedContent(
                 modifier = Modifier.testTag("dialog_container"),
+                label = "DialogContainer_entry",
                 targetState = dialogEntry,
                 transitionSpec = {
-                    nodeTransition<Dialog>().let { it.enter with it.exit }
+                    nodeTransition<Dialog>().let { it.enter togetherWith it.exit }
                 }
             ) { dialogEntry ->
                 ProvideNavVisibilityScope {

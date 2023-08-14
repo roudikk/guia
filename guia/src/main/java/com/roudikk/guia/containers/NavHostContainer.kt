@@ -1,12 +1,11 @@
 package com.roudikk.guia.containers
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -32,7 +31,6 @@ internal typealias StackKeyContainer = @Composable (
  * @param dialogContainer, the container for the [NavContainer] dialog for a given [StackKey].
  * @param transitionSpec, the transition between the stack entries.
  */
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavHost.NavContainer(
     modifier: (StackKey) -> Modifier = { Modifier },
@@ -41,14 +39,15 @@ fun NavHost.NavContainer(
     },
     bottomSheetContainer: StackKeyContainer = { _, content -> content() },
     dialogContainer: StackKeyContainer = { _, content -> content() },
-    transitionSpec: AnimatedContentScope<StackEntry?>.() -> ContentTransform = {
-        EnterTransition.None with ExitTransition.None
+    transitionSpec: AnimatedContentTransitionScope<StackEntry?>.() -> ContentTransform = {
+        EnterTransition.None togetherWith ExitTransition.None
     }
 ) {
     val saveableStateHolder = rememberSaveableStateHolder()
 
     CompositionLocalProvider(LocalNavHost provides this) {
         AnimatedContent(
+            label = "NavHostContainer_currentEntry",
             targetState = currentEntry,
             transitionSpec = transitionSpec
         ) { targetEntry ->

@@ -165,11 +165,12 @@ private fun Scrim(
     onDismiss: () -> Unit,
     visible: Boolean
 ) {
-    val animatedColor by animateColorAsState(color)
+    val animatedColor by animateColorAsState(color, label = "Scrim_color")
     val resources = LocalContext.current.resources
     val alpha by animateFloatAsState(
         targetValue = if (visible) 1f else 0f,
-        animationSpec = tween()
+        animationSpec = tween(),
+        label = "Scrim_alpha"
     )
 
     // We want to use Composes "Close sheet" announcement for TalkBack.
