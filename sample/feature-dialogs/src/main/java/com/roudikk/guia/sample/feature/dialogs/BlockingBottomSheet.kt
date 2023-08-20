@@ -21,13 +21,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roudikk.guia.backstack.NavBackHandler
 import com.roudikk.guia.core.BottomSheet
-import com.roudikk.guia.extensions.localBottomSheet
+import com.roudikk.guia.extensions.LocalNavigationNode
+import com.roudikk.guia.extensions.currentAsBottomSheet
 import com.roudikk.guia.sample.feature.common.composables.SampleSurfaceContainer
 import com.roudikk.guia.sample.feature.common.theme.AppTheme
 
 @Composable
 internal fun BlockingBottomSheetScreen() {
-    val bottomSheet = localBottomSheet()
+    val bottomSheet = LocalNavigationNode.currentAsBottomSheet
     var lockStateChange by rememberSaveable { mutableStateOf(true) }
 
     LaunchedEffect(lockStateChange) {

@@ -16,7 +16,6 @@ import com.roudikk.guia.core.Screen
 import com.roudikk.guia.extensions.LocalNavigator
 import com.roudikk.guia.extensions.LocalParentNavigator
 import com.roudikk.guia.extensions.canGoBack
-import com.roudikk.guia.extensions.localNavigator
 import com.roudikk.guia.extensions.pop
 import com.roudikk.guia.lifecycle.rememberDefaultLifecycleManager
 
@@ -42,7 +41,7 @@ fun Navigator.NavContainer(
     bottomSheetContainer: Container = { content -> content() },
     dialogContainer: Container = { content -> content() }
 ) {
-    val parentNavigator = localNavigator()
+    val parentNavigator = LocalNavigator.current
 
     CompositionLocalProvider(
         LocalParentNavigator provides parentNavigator,

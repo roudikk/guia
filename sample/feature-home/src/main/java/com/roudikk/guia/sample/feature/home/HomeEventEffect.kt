@@ -5,11 +5,12 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
+import com.roudikk.guia.extensions.LocalNavigator
 import com.roudikk.guia.extensions.clearResult
+import com.roudikk.guia.extensions.currentOrThrow
 import com.roudikk.guia.extensions.push
-import com.roudikk.guia.extensions.requireLocalNavigator
 import com.roudikk.guia.extensions.setResult
-import com.roudikk.guia.sample.feature.common.navigation.requireRootNavigator
+import com.roudikk.guia.sample.feature.common.navigation.LocalRootNavigator
 import com.roudikk.guia.sample.feature.details.navigation.DetailsKey
 import com.roudikk.guia.sample.feature.details.navigation.DetailsResult
 import com.roudikk.guia.sample.feature.settings.navigation.SettingsKey
@@ -18,8 +19,8 @@ import com.roudikk.guia.sample.feature.settings.navigation.SettingsKey
 fun HomeEventEffect(
     viewModel: HomeViewModel
 ) {
-    val navigator = requireLocalNavigator()
-    val rootNavigator = requireRootNavigator()
+    val navigator = LocalNavigator.currentOrThrow
+    val rootNavigator = LocalRootNavigator.current
     val context = LocalContext.current
     val event = viewModel.event
 
