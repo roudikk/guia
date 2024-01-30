@@ -9,9 +9,11 @@ import com.roudikk.guia.core.BottomSheet
 import com.roudikk.guia.core.Dialog
 import com.roudikk.guia.core.NavigationKey
 import com.roudikk.guia.core.NavigatorConfigBuilder
-import com.roudikk.guia.extensions.localBottomSheet
+import com.roudikk.guia.extensions.LocalNavigationNode
+import com.roudikk.guia.extensions.LocalNavigator
+import com.roudikk.guia.extensions.currentAsBottomSheet
+import com.roudikk.guia.extensions.currentOrThrow
 import com.roudikk.guia.extensions.pop
-import com.roudikk.guia.extensions.requireLocalNavigator
 import com.roudikk.guia.sample.feature.common.navigation.CrossFadeTransition
 import com.roudikk.guia.sample.feature.common.navigation.VerticalSlideTransition
 import com.roudikk.guia.sample.feature.details.navigation.DetailsCustomTransitionKey
@@ -42,8 +44,8 @@ private val colorSaver = Saver<Color, List<Float>>(
 @Parcelize
 class DetailsBottomSheetKey(val item: String) : NavigationKey.WithNode<BottomSheet> {
     override fun navigationNode() = BottomSheet {
-        val navigator = requireLocalNavigator()
-        val bottomSheet = localBottomSheet()
+        val navigator = LocalNavigator.currentOrThrow
+        val bottomSheet = LocalNavigationNode.currentAsBottomSheet
         val scrimColor = rememberSaveable(key = "color", saver = colorSaver) {
             Color(
                 red = (0..255).random(),

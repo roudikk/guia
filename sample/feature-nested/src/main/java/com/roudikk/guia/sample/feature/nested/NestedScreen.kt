@@ -26,10 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.roudikk.guia.extensions.LocalNavigator
 import com.roudikk.guia.extensions.canGoBack
-import com.roudikk.guia.extensions.push
+import com.roudikk.guia.extensions.currentOrThrow
 import com.roudikk.guia.extensions.pop
-import com.roudikk.guia.extensions.requireLocalNavigator
+import com.roudikk.guia.extensions.push
 import com.roudikk.guia.sample.feature.common.theme.AppTheme
 import com.roudikk.guia.sample.feature.nested.navigation.NestedKey
 
@@ -37,7 +38,7 @@ import com.roudikk.guia.sample.feature.nested.navigation.NestedKey
 internal fun NestedScreen(
     count: Int
 ) {
-    val navigator = requireLocalNavigator()
+    val navigator = LocalNavigator.currentOrThrow
     val canGoBack by navigator.canGoBack()
 
     NestedContent(

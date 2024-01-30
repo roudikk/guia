@@ -50,7 +50,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roudikk.guia.backstack.NavBackHandler
-import com.roudikk.guia.extensions.requireLocalNavigator
+import com.roudikk.guia.extensions.LocalNavigator
+import com.roudikk.guia.extensions.currentOrThrow
 import com.roudikk.guia.extensions.result
 import com.roudikk.guia.sample.feature.details.navigation.DetailsResult
 import kotlinx.coroutines.launch
@@ -58,7 +59,7 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun HomeScreen() {
     val viewModel = viewModel<HomeViewModel>()
-    val navigator = requireLocalNavigator()
+    val navigator = LocalNavigator.currentOrThrow
 
     val result = navigator.result<DetailsResult>()
 

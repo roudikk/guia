@@ -22,10 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.roudikk.guia.extensions.localDialog
-import com.roudikk.guia.extensions.push
+import com.roudikk.guia.extensions.LocalNavigationNode
+import com.roudikk.guia.extensions.LocalNavigator
+import com.roudikk.guia.extensions.currentAsDialog
+import com.roudikk.guia.extensions.currentOrThrow
 import com.roudikk.guia.extensions.pop
-import com.roudikk.guia.extensions.requireLocalNavigator
+import com.roudikk.guia.extensions.push
 import com.roudikk.guia.sample.feature.common.theme.AppTheme
 import com.roudikk.guia.sample.feature.dialogs.navigation.CancelableDialogKey
 
@@ -33,7 +35,7 @@ import com.roudikk.guia.sample.feature.dialogs.navigation.CancelableDialogKey
 internal fun BlockingDialogScreen(
     showNextButton: Boolean
 ) {
-    val navigator = requireLocalNavigator()
+    val navigator = LocalNavigator.currentOrThrow
 
     BlockingDialogContent(
         showNextButton = showNextButton,
@@ -48,7 +50,7 @@ private fun BlockingDialogContent(
     onNextClicked: () -> Unit = {},
     onCancelClicked: () -> Unit = {}
 ) {
-    val dialog = localDialog()
+    val dialog = LocalNavigationNode.currentAsDialog
     var dismissDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(dismissDialog) {

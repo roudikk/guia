@@ -4,12 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.roudikk.guia.core.Screen
 import com.roudikk.guia.core.overrideTransition
-import com.roudikk.guia.extensions.push
+import com.roudikk.guia.extensions.LocalNavigator
+import com.roudikk.guia.extensions.LocalParentNavigator
+import com.roudikk.guia.extensions.currentOrThrow
 import com.roudikk.guia.extensions.pop
 import com.roudikk.guia.extensions.popToRoot
+import com.roudikk.guia.extensions.push
 import com.roudikk.guia.extensions.replaceLast
-import com.roudikk.guia.extensions.requireLocalNavigator
-import com.roudikk.guia.extensions.requireLocalParentNavigator
 import com.roudikk.guia.extensions.setResult
 import com.roudikk.guia.extensions.singleInstance
 import com.roudikk.guia.extensions.singleTop
@@ -24,8 +25,8 @@ import com.roudikk.guia.sample.feature.dialogs.navigation.BlockingBottomSheetKey
 fun DetailsEventEffect(
     viewModel: DetailsViewModel
 ) {
-    val navigator = requireLocalNavigator()
-    val parentNavigator = requireLocalParentNavigator()
+    val navigator = LocalNavigator.currentOrThrow
+    val parentNavigator = LocalParentNavigator.currentOrThrow
     val event = viewModel.event
 
     LaunchedEffect(event) {

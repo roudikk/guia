@@ -21,9 +21,10 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.roudikk.guia.extensions.LocalNavigator
+import com.roudikk.guia.extensions.currentOrThrow
 import com.roudikk.guia.extensions.push
-import com.roudikk.guia.extensions.requireLocalNavigator
-import com.roudikk.guia.sample.feature.common.navigation.requireRootNavigator
+import com.roudikk.guia.sample.feature.common.navigation.LocalRootNavigator
 import com.roudikk.guia.sample.feature.common.theme.AppTheme
 import com.roudikk.guia.sample.feature.dialogs.navigation.BlockingBottomSheetKey
 import com.roudikk.guia.sample.feature.dialogs.navigation.BlockingDialogKey
@@ -31,8 +32,8 @@ import com.roudikk.guia.sample.feature.dialogs.navigation.CancelableDialogKey
 
 @Composable
 internal fun DialogsScreen() {
-    val navigator = requireLocalNavigator()
-    val rootNavigator = requireRootNavigator()
+    val navigator = LocalNavigator.currentOrThrow
+    val rootNavigator = LocalRootNavigator.current
 
     DialogsContent(
         onCancelableDialogClicked = { navigator.push(CancelableDialogKey(false)) },

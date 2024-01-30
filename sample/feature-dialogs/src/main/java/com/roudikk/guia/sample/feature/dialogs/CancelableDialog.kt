@@ -16,15 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.roudikk.guia.extensions.LocalNavigator
+import com.roudikk.guia.extensions.currentOrThrow
 import com.roudikk.guia.extensions.popToRoot
-import com.roudikk.guia.extensions.requireLocalNavigator
 import com.roudikk.guia.sample.feature.common.theme.AppTheme
 
 @Composable
 internal fun CancelableDialogScreen(
     showNextButton: Boolean
 ) {
-    val navigator = requireLocalNavigator()
+    val navigator = LocalNavigator.currentOrThrow
     CancelableDialogContent(
         showNextButton = showNextButton,
         onBackToRootClicked = navigator::popToRoot
