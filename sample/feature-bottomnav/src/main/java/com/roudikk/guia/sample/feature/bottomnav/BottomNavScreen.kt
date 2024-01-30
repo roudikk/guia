@@ -264,7 +264,7 @@ private fun BottomNavigationBar(
     setActive: (StackKey) -> Unit
 ) {
     NavigationBar {
-        BottomNavTab.values().forEach { tab ->
+        BottomNavTab.entries.forEach { tab ->
             NavigationBarItem(
                 modifier = Modifier
                     .navigationBarsPadding()

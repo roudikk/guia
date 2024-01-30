@@ -57,7 +57,10 @@ internal fun Navigator.CardContainer(
                 val widthPx = with(LocalDensity.current) { (maxWidth + 16.dp).toPx() }
                 val offset = swipeableState.offset.value.toInt()
                 val alphaMaxWidth = 0.8F * widthPx
-                val scale by animateFloatAsState(if (entry == entries.lastOrNull()) 1F else 0.9F)
+                val scale by animateFloatAsState(
+                    targetValue = if (entry == entries.lastOrNull()) 1F else 0.9F,
+                    label = "Scale animation"
+                )
 
                 Card(
                     shape = RoundedCornerShape(32.dp),
